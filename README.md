@@ -4,9 +4,10 @@ This repository contain a collection of Terraform modules to be used to handle C
 
 ## Modules
 
-| Name | Description                                                                                      | Souce                                              |
-| ---- | ------------------------------------------------------------------------------------------------ | -------------------------------------------------- |
-| ROKS | Provision an OpenShift cluster. An OpenShift cluster is required to install any Cloud Pak module | `github.com/ibm-pett/terraform-ibm-cloud-pak/roks` |
+| Name    | Description                                                                                      | Souce                                                |
+| ------- | ------------------------------------------------------------------------------------------------ | ---------------------------------------------------- |
+| ROKS    | Provision an OpenShift cluster. An OpenShift cluster is required to install any Cloud Pak module | `github.com/ibm-pett/terraform-ibm-cloud-pak/roks`   |
+| CP\$MCM | Install MultiCloud Management Cloud Pak on an existing OpenShift cluster                         | `github.com/ibm-pett/terraform-ibm-cloud-pak/cp4mcm` |
 
 ## Use
 
@@ -32,20 +33,7 @@ export IC_API_KEY="< IBM Cloud API Key >"
 
 Before using any of the Cloud Pak modules it's required to have an OpenShift cluster, this could be an existing cluster or you can provision it in your code.
 
-To use an existing OpenShift cluster, before using a module, add a code like the following to get the cluster configuration. The variable `cluster_name_id` can have either the cluster name or ID.
-
-```hcl
-data "ibm_container_cluster_config" "cluster_config" {
-  cluster_name_id   = var.cluster_name_id
-  resource_group_id = data.ibm_resource_group.group.id
-  download          = true
-  config_dir        = "./kube/config"     // Create this directory in advance
-  admin             = var.config_admin
-  network           = var.config_network
-}
-```
-
-The output parameters of the cluster configuration data resource are used as input parameters for the Cloud Pak module to use.
+### Build a ROKS cluster
 
 To build the cluster in your code, use the ROKS module, using the `module` resource pointing the `source` to the location of this module (GitHub link in the table above). Then pass the input parameters with the cluster specification.
 
@@ -56,14 +44,46 @@ module "cluster" {
 }
 ```
 
-The output parameters of the ROKS module are used as input parameters for the Cloud Pak module to use.
+**IMPORTANT**: The output parameters of the ROKS module are used as input parameters to the Cloud Pak module to use however, at this time it recommended to not pass the parameters from the module, instead use the data resource `ibm_container_cluster_config` to get the cluster configuration and pass it to the module.
 
-For example, to install CP4MCM in your provisioned cluster on IBM Classic, the code may look like this:
+### Use an existing ROKS cluster
+
+To use an existing OpenShift cluster, before using a cloud pak module, add a code similar the following to get the cluster configuration:
 
 ```hcl
-data "ibm_container_cluster" "cluster" {
-  name              = var.cluster_name_id
+data "ibm_resource_group" "group" {
+  name = var.resource_group
+}
+
+data "ibm_container_cluster_config" "cluster_config" {
+  cluster_name_id   = var.cluster_name_id
   resource_group_id = data.ibm_resource_group.group.id
+  download          = true
+  config_dir        = "./kube/config"     // Create this directory in advance
+  admin             = false
+  network           = false
+}
+```
+
+The variable `cluster_name_id` can have either the cluster name or ID, the resource group where the cluster is running is also required, for this one use the data resource `ibm_resource_group`.
+
+The output parameters of the cluster configuration data resource `ibm_container_cluster_config` are used as input parameters for the Cloud Pak module to use and install.
+
+### Examples
+
+For Terraform 0.12 each module has the `enable` parameter which could be `true` or `false`, by default is `true`. If this parameter is set to `false` the Cloud Pak is not installed. This parameter is not required with Terraform 0.13 which allows to use the `count` general block parameter to specify how many instances of the resource are needed, including zero, meaning that this module won't be executed.
+
+For example, to install CP4MCM in a previously provisioned cluster on IBM Classic, the code may look like this:
+
+```hcl
+data "ibm_resource_group" "group" {
+  name = var.resource_group
+}
+
+data "ibm_container_cluster_config" "cluster_config" {
+  cluster_name_id   = var.cluster_id
+  resource_group_id = data.ibm_resource_group.group.id
+  config_dir        = var.config_dir
 }
 
 module "cp4mcm" {
@@ -117,6 +137,8 @@ module "cp4app" {
   ...
 }
 ```
+
+**IMPORTANT**: If you are getting errors because the cluster configuration is not correct, this can be solved using the data resource `ibm_container_cluster_config` to get the provisioned cluster configuration. Similar to the example for CP4MCM above.
 
 ## Testing
 

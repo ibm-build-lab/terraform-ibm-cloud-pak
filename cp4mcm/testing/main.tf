@@ -23,7 +23,6 @@ module "cp4mcm" {
   enable = true
 
   // ROKS cluster parameters:
-  resource_group    = var.resource_group
   openshift_version = var.openshift_version
   cluster_config = {
     host               = data.ibm_container_cluster_config.cluster_config.host
