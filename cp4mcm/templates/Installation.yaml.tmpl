@@ -1,0 +1,131 @@
+apiVersion: orchestrator.management.ibm.com/v1alpha1
+kind: Installation
+metadata:
+  name: ibm-management
+  namespace: ${ namespace }
+spec:
+  storageClass: ibmc-block-retain-gold
+  imagePullSecret: ibm-management-pull-secret
+  license:
+    accept: true
+  mcmCoreDisabled: false
+  pakModules:
+  - config:
+    - enabled: true
+      name: ibm-management-im-install
+    - enabled: true
+      name: ibm-management-infra-grc
+    - enabled: true
+      name: ibm-management-infra-vm
+    - enabled: true
+      name: ibm-management-cam-install
+      spec:
+        manageservice:
+          camLogsPV:
+            name: cam-logs-pv
+            persistence:
+              accessMode: ReadWriteMany
+              enabled: true
+              existingClaimName: ""
+              existingDynamicVolume: false
+              size: 10Gi
+              storageClassName: ibmc-file-gold
+              useDynamicProvisioning: true
+          camMongoPV:
+            name: cam-mongo-pv
+            persistence:
+              accessMode: ReadWriteOnce
+              enabled: true
+              existingClaimName: ""
+              existingDynamicVolume: false
+              size: 30Gi
+              storageClassName: ibmc-block-gold
+              useDynamicProvisioning: true
+          camTerraformPV:
+            name: cam-terraform-pv
+            persistence:
+              accessMode: ReadWriteMany
+              enabled: true
+              existingClaimName: ""
+              existingDynamicVolume: false
+              size: 15Gi
+              storageClassName: ibmc-file-gold
+              useDynamicProvisioning: true
+          roks: true
+          roksRegion: us-south
+          roksZone: dal10
+    - enabled: true
+      name: ibm-management-service-library
+    enabled: ${ install_infr_mgt_module }
+    name: infrastructureManagement
+  - config:
+    - enabled: false
+      name: ibm-management-monitoring
+      spec:
+        monitoringDeploy:
+          global:
+            environmentSize: size0
+            persistence:
+              storageClassOption:
+                cassandrabak: none
+                cassandradata: ibmc-block-gold
+                couchdbdata: ibmc-block-gold
+                datalayerjobs: ibmc-block-gold
+                elasticdata: ibmc-block-gold
+                kafkadata: ibmc-block-gold
+                zookeeperdata: ibmc-block-gold
+              storageSize:
+                cassandrabak: 500Gi
+                cassandradata: 500Gi
+                couchdbdata: 50Gi
+                datalayerjobs: 50Gi
+                elasticdata: 50Gi
+                kafkadata: 100Gi
+                zookeeperdata: 10Gi
+        operandRequest: {}
+    enabled: ${ install_monitoring_module }
+    name: monitoring
+  - config:
+    - enabled: true
+      name: ibm-management-notary
+    - enabled: true
+      name: ibm-management-image-security-enforcement
+    - enabled: true
+      name: ibm-management-mutation-advisor
+    - enabled: true
+      name: ibm-management-vulnerability-advisor
+      spec:
+        annotator:
+          esSecretCA: ca.crt
+          esSecretCert: curator.crt
+          esSecretKey: curator.key
+          esSecretName: logging-elk-certs
+          esSecurityEnabled: true
+          esServiceName: elasticsearch.ibm-common-services
+        controlplane:
+          esSecretCA: ca.crt
+          esSecretCert: curator.crt
+          esSecretKey: curator.key
+          esSecretName: logging-elk-certs
+          esSecurityEnabled: true
+          esServiceName: elasticsearch.ibm-common-services
+        indexer:
+          esSecretCA: ca.crt
+          esSecretCert: curator.crt
+          esSecretKey: curator.key
+          esSecretName: logging-elk-certs
+          esSecurityEnabled: true
+          esServiceName: elasticsearch.ibm-common-services
+    enabled: ${ install_security_svcs_module }
+    name: securityServices
+  - config:
+    - enabled: true
+      name: ibm-management-sre-chatops
+    enabled: ${ install_operations_module }
+    name: operations
+  - config:
+    - enabled: true
+      name: ibm-management-manage-runtime
+    enabled: ${ install_tech_prev_module }
+    name: techPreview
+
