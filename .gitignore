@@ -2,6 +2,7 @@
 credentials*.sh
 *.key
 credentials.tfvars
+.terraform_key.json
 
 # Output files from Terraform and modules to ignore
 **/.kube
