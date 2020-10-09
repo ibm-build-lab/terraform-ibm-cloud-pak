@@ -55,3 +55,9 @@ variable "public_vlan_number" {
 }
 
 // IBM VPC input parameters and default values are in str_to_list.tf
+
+// Output the resource group used as input, it may be needed
+
+output "resource_group" {
+  value = var.resource_group
+}

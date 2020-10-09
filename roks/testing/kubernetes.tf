@@ -1,10 +1,15 @@
+data "ibm_container_cluster_config" "cluster_config" {
+  cluster_name_id   = module.cluster.id
+  resource_group_id = module.cluster.config.resource_group_id
+  config_dir        = var.config_dir
+}
+
 provider "kubernetes" {
-  version            = "~> 1.13"
   load_config_file   = false
-  host               = module.cluster.config.host
-  client_certificate = module.cluster.config.admin_certificate
-  client_key         = module.cluster.config.admin_key
-  token              = module.cluster.config.token
+  host               = data.ibm_container_cluster_config.cluster_config.host
+  client_certificate = data.ibm_container_cluster_config.cluster_config.admin_certificate
+  client_key         = data.ibm_container_cluster_config.cluster_config.admin_key
+  token              = data.ibm_container_cluster_config.cluster_config.token
 }
 
 locals {
