@@ -36,7 +36,7 @@ var-%:
 	@echo "infra = \"$*\""												> $(TEST_TF_VAR_FILE)
 	@echo "config_dir = \"$(CONFIG_DIR)\"" 				>> $(TEST_TF_VAR_FILE)
 	@echo "cluster_id = \"$$TF_VAR_cluster_id\"" 	>> $(TEST_TF_VAR_FILE)
-	@echo "entitled_registry_user_email = \"$$TF_VAR_entitled_registry_user_email\"" >> $(TEST_TF_VAR_FILE)
+	@echo "entitled_registry_user_email = \"$$TF_VAR_entitled_registry_user_email\"" 					>> $(TEST_TF_VAR_FILE)
 	@[[ -z $$TF_VAR_resource_group ]] || echo "resource_group = \"$$TF_VAR_resource_group\""  >> $(TEST_TF_VAR_FILE)
 	@terraform fmt $(TEST_TF_VAR_FILE)
 
