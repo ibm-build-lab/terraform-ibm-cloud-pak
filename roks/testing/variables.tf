@@ -6,6 +6,11 @@ variable "infra" {
 
 // Cluster configuration input variables and default values:
 
+variable "cluster_id" {
+  default     = ""
+  description = "An existing cluster ID or name to install Cloud Paks on. If left blank, a new ROKS cluster will be provisioned."
+}
+
 variable "config_dir" {
   default     = "./.kube/config"
   description = "directory to store the kubeconfig file, set the value to empty string to not download the config"

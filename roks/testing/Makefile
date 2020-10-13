@@ -17,6 +17,7 @@ check-classic-cred: check-api-key
 var-%:
 	@echo "owner = \"$(USER)\""		> $(TEST_TF_VAR_FILE)
 	@echo "infra = \"$*\""			 >> $(TEST_TF_VAR_FILE)
+	@[[ -z $$TF_VAR_cluster_id ]] || echo "cluster_id = \"$$TF_VAR_cluster_id\"" >> $(TEST_TF_VAR_FILE)
 	@terraform fmt $(TEST_TF_VAR_FILE)
 
 validate:
@@ -28,6 +29,7 @@ validate:
 	terraform plan -lock=false -input=false
 
 init:
+	mkdir -p .kube/config
 	terraform init
 
 test-vpc: check-api-key var-vpc init validate
@@ -49,5 +51,3 @@ clean: destroy
 	$(RM) terraform.tfstate*
 	$(RM) -r .terraform
 	$(RM) -r .kube
-
-

@@ -8,8 +8,13 @@ provider "ibm" {
 
 // Module
 
+locals {
+  enable = length(var.cluster_id) == 0
+}
+
 module "cluster" {
   source = "./.."
+  enable = local.enable
   on_vpc = var.infra == "classic" ? false : true
 
   // General
@@ -57,5 +62,5 @@ output "config" {
 }
 
 output "config_file_path" {
-  value = module.cluster.config.config_file_path
+  value = data.ibm_container_cluster_config.cluster_config.config_file_path
 }
