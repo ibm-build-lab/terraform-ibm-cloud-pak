@@ -1,5 +1,5 @@
 resource "ibm_resource_instance" "cos" {
-  count    = var.on_vpc ? 1 : 0
+  count    = var.enable && var.on_vpc ? 1 : 0
   name     = "${var.project_name}-${var.environment}-cos"
   service  = "cloud-object-storage"
   plan     = "standard"
@@ -7,7 +7,7 @@ resource "ibm_resource_instance" "cos" {
 }
 
 resource "ibm_container_vpc_cluster" "cluster" {
-  count             = var.on_vpc ? 1 : 0
+  count             = var.enable && var.on_vpc ? 1 : 0
   name              = "${var.project_name}-${var.environment}-cluster"
   vpc_id            = var.on_vpc ? ibm_is_vpc.vpc[0].id : 0
   flavor            = var.flavors[0]
@@ -31,7 +31,7 @@ resource "ibm_container_vpc_cluster" "cluster" {
 }
 
 resource "ibm_container_vpc_worker_pool" "cluster_pool" {
-  count             = var.on_vpc ? local.max_size - 1 : 0
+  count             = var.enable && var.on_vpc ? local.max_size - 1 : 0
   cluster           = var.on_vpc ? ibm_container_vpc_cluster.cluster[0].id : 0
   worker_pool_name  = "${var.project_name}-${var.environment}-wp-${format("%02s", count.index + 1)}"
   flavor            = var.flavors[count.index + 1]

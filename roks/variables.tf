@@ -1,5 +1,11 @@
 // ROKS Module Variables
 
+variable "enable" {
+  type        = bool
+  default     = true
+  description = "if false the ROKS cluster will not be created. This variable won't be required for Terraform 0.13+"
+}
+
 variable "on_vpc" {
   type        = bool
   default     = true

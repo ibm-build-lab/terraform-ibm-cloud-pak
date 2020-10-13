@@ -2,13 +2,14 @@ resource "null_resource" "mkdir_config_dir" {
   triggers = { always_run = timestamp() }
 
   provisioner "local-exec" {
-    command = "[[ '${var.download_config}' == 'true' ]] && mkdir -p ${var.config_dir}"
+    command = "if [[ '${var.download_config}' == 'true' && '${var.enable}' == 'true' ]]; then mkdir -p ${var.config_dir}; fi"
   }
 }
 
 // The local_cluster_config store the kubeconfig in the local filesystem for the
 // local-exec with kubectl to use it
 data "ibm_container_cluster_config" "cluster_config" {
+  count      = var.enable ? 1 : 0
   depends_on = [null_resource.mkdir_config_dir]
 
   cluster_name_id   = local.cluster_name_id

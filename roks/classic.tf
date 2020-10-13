@@ -1,5 +1,5 @@
 resource "ibm_container_cluster" "cluster" {
-  count             = ! var.on_vpc ? 1 : 0
+  count             = var.enable && ! var.on_vpc ? 1 : 0
   name              = "${var.project_name}-${var.environment}-cluster"
   datacenter        = var.datacenter
   default_pool_size = var.size
