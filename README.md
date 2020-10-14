@@ -4,10 +4,11 @@ This repository contain a collection of Terraform modules to be used to handle C
 
 ## Modules
 
-| Name   | Description                                                                                      | Souce                                                |
-| ------ | ------------------------------------------------------------------------------------------------ | ---------------------------------------------------- |
-| ROKS   | Provision an OpenShift cluster. An OpenShift cluster is required to install any Cloud Pak module | `github.com/ibm-pett/terraform-ibm-cloud-pak/roks`   |
-| CP4MCM | Install MultiCloud Management Cloud Pak on an existing OpenShift cluster                         | `github.com/ibm-pett/terraform-ibm-cloud-pak/cp4mcm` |
+| Name   | Description                                                                                      | Source                                                                 |
+| ------ | ------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------- |
+| ROKS   | Provision an OpenShift cluster. An OpenShift cluster is required to install any Cloud Pak module | `git::https://github.com/ibm-pett/terraform-ibm-cloud-pak.git//roks`   |
+| CP4MCM | Install MultiCloud Management Cloud Pak on an existing OpenShift cluster                         | `git::https://github.com/ibm-pett/terraform-ibm-cloud-pak.git//cp4mcm` |
+| CP4APP | Install Applications Cloud Pak on an existing OpenShift cluster                                  | `git::https://github.com/ibm-pett/terraform-ibm-cloud-pak.git//cp4app` |
 
 ## Use
 

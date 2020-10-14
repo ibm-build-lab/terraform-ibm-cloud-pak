@@ -2,8 +2,11 @@
 
 This Terraform Module creates an Openshift (ROKS) cluster on IBM Cloud Classic or VPC Gen 2 infrastructure.
 
+**Module Source**: `git::https://github.com/ibm-pett/terraform-ibm-cloud-pak.git//roks`
+
 - [Terraform Module to Create an OpenShift Cluster on IBM Cloud](#terraform-module-to-create-an-openshift-cluster-on-ibm-cloud)
   - [Use](#use)
+    - [Enable or Disable the Module](#enable-or-disable-the-module)
   - [Input Variables](#input-variables)
   - [Output Parameters](#output-parameters)
 
@@ -29,13 +32,13 @@ export IAAS_CLASSIC_API_KEY="< Your IBM Cloud Classic API Key here >"
 export IC_API_KEY="< IBM Cloud API Key >"
 ```
 
-Use the `module` resource pointing the `source` to the location of this module, either local (i.e. `../roks`) or remote (`github.com/ibm-pett/terraform-ibm-cloud-pak/roks`). Then pass the input parameters depending of the infrastructure to deploy the cluster: Classic or VPC
+Use the `module` resource pointing the `source` to the location of this module, either local (i.e. `../roks`) or remote (`git::https://github.com/ibm-pett/terraform-ibm-cloud-pak.git//roks`). Then pass the input parameters depending of the infrastructure to deploy the cluster: Classic or VPC
 
 - ROKS on **IBM Cloud Classic**
 
 ```hcl
 module "cluster" {
-  source = "github.com/ibm-pett/terraform-ibm-cloud-pak/roks"
+  source = "git::https://github.com/ibm-pett/terraform-ibm-cloud-pak.git//roks"
 
   // General variables:
   on_vpc         = false
@@ -64,7 +67,7 @@ module "cluster" {
 
 ```hcl
 module "cluster" {
-  source = "github.com/ibm-pett/terraform-ibm-cloud-pak/roks"
+  source = "git::https://github.com/ibm-pett/terraform-ibm-cloud-pak.git//roks"
 
   // General variables:
   on_vpc         = true
@@ -111,12 +114,19 @@ When you finish using the cluster, you can release the resources executing the f
 terraform destroy
 ```
 
+### Enable or Disable the Module
+
+In Terraform the block parameter `count` is used to define how many instances of the resource are needed, including zero, meaning the resource won't be created. The `count` parameter on `module` blocks is only available since Terraform version 0.13.
+
+Using Terraform 0.12 the workaround is to use the boolean input parameter `enable` with default value `true`. If the `enable` parameter is set to `false` the Openshift cluster is not provisioned. Use the `enable` parameter only if using Terraform 0.12 or lower, this parameter may be deprecated when Terraform 0.12 is not longer supported.
+
 ## Input Variables
 
 Besides the access credentials the Terraform script requires the following list of input parameters, here are some instructions to set their values for Terraform and how to get their values from IBM Cloud.
 
 | Name             | Description                                                                                                                                                                                                                                                            | Default   | Required |
 | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | -------- |
+| `enable`         | If set to `false` does not provision the Openshift cluster. By default it's enabled                                                                                                                                                                                    | `true`    | No       |
 | `on_vpc`         | If `true` provision the cluster on IBM Cloud VPC Gen 2, otherwise provision on IBM Cloud Classic                                                                                                                                                                       | `true`    | No       |
 | `project_name`   | The project name is used to name the cluster with the environment name. It's also used to label the cluster and other resources                                                                                                                                        |           | Yes      |
 | `owner`          | Use your user name or team name. The owner is used to label the cluster and other resources                                                                                                                                                                            |           | Yes      |
