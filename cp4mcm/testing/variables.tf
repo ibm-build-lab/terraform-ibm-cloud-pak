@@ -18,7 +18,5 @@ variable "resource_group" {
 
 variable "config_dir" {
   default     = "./.kube/config"
-  description = "directory to store the kubeconfig file, set the value to empty string to not download the config"
+  description = "directory to store the kubeconfig file"
 }
-
-
