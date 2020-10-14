@@ -82,14 +82,14 @@ resource "kubernetes_job" "icpa_installer_job" {
           command = ["/bin/sh"]
           args = [
             "-c",
-            "/bin/bash /installer/scripts/extra/patch.sh && /installer/entrypoint.sh ${var.cp4app_installer_comand}",
+            "/bin/bash /installer/scripts/extra/patch.sh && /installer/entrypoint.sh ${var.cp4app_installer_command}",
           ]
           // FIX: There is a bug in the icpa-installer container, this bug and its fix is documented at:
           // https://github.ibm.com/IBMCloudPak4Apps/icpa-install/issues/902
           // To fix it, the above 'patch.sh` script is mounted from a ConfigMap, then it is executed.
           // When the bug is fixed, remove the volume and volume_mount parameters for 'patch-volume',
           // the command parameter and replace the 'args' parameter for:
-          //    args  = [ var.cp4app_installer_comand ]
+          //    args  = [ var.cp4app_installer_command ]
 
           // DEBUG: You can debug this job either (1) Viewing the logs or (2) Login into the container:
           // 1) Execute:

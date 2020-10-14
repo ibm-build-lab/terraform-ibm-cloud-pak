@@ -15,7 +15,7 @@ variable "cluster_config_path" {
   description = "location of the kubernetes config file"
 }
 
-variable "cp4app_installer_comand" {
+variable "cp4app_installer_command" {
   default     = "install"
   description = "Command to execute by the icpa installer, the most common are: install, uninstall, check, upgrade"
 }
