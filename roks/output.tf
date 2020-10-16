@@ -11,11 +11,18 @@ output "name" {
 }
 
 output "config" {
-  value = var.enable ? data.ibm_container_cluster_config.cluster_config.0 : null
+  value = var.enable && length(data.ibm_container_cluster_config.cluster_config) > 0 ? data.ibm_container_cluster_config.cluster_config.0 : null
 }
 
 output "resource_group" {
   value = data.ibm_resource_group.group
+}
+
+output "vlan_number" {
+  value = {
+    private = local.private_vlan_number
+    public  = local.public_vlan_number
+  }
 }
 
 // output "cluster" {

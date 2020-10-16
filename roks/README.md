@@ -56,8 +56,8 @@ module "cluster" {
 
   // IBM Cloud Classic variables:
   datacenter          = "dal10"
-  size                = 1
-  flavor              = "b3c.4x16"
+  workers_count       = [1]
+  flavors             = ["b3c.4x16"]
   private_vlan_number = "2832804"
   public_vlan_number  = "2832802"
 }
@@ -145,21 +145,26 @@ The following input parameters are for the cluster configuration. If you'll use 
 
 The following input parameters are required only if the selected infrastructure is **IBM Cloud Classic** (`on_vpc` = `false`).
 
-| Name                  | Description                                                                                                                                                                                             | Default    | Required |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | -------- |
-| `datacenter`          | Datacenter or Zone in the IBM Cloud Classic region to provision the cluster. List all available zones with: `ibmcloud ks zone ls --provider classic`                                                    | `dal10`    | No       |
-| `size`                | Cluster size, number of workers in the cluster.                                                                                                                                                         | `1`        | No       |
-| `flavor`              | Flavor or Machine Type for the workers. List all available flavors in the zone: `ibmcloud ks flavors --zone dal10`                                                                                      | `b3c.4x16` | No       |
-| `private_vlan_number` | Private VLAN assigned to your zone. List available VLAN's in the zone: `ibmcloud ks vlan ls --zone`, make sure the the VLAN type is `private` and the router begins with `bc`. Use the `ID` or `Number` |            | Yes      |
-| `public_vlan_number`  | Public VLAN assigned to your zone. List available VLAN's in the zone: `ibmcloud ks vlan ls --zone`, make sure the the VLAN type is `public` and the router begins with `fc`. Use the `ID` or `Number`   |            | Yes      |
+| Name                  | Description                                                                                                                                                                                                          | Default | Required |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | -------- |
+| `datacenter`          | Datacenter or Zone in the IBM Cloud Classic region to provision the cluster. List all available zones with: `ibmcloud ks zone ls --provider classic`                                                                 | `dal10` | No       |
+| `private_vlan_number` | Private VLAN assigned to your zone. List available VLAN's in the zone: `ibmcloud ks vlan ls --zone <datacenter>`, make sure the the VLAN type is `private` and the router begins with `bc`. Use the `ID` or `Number` |         | No       |
+| `public_vlan_number`  | Public VLAN assigned to your zone. List available VLAN's in the zone: `ibmcloud ks vlan ls --zone <datacenter>`, make sure the the VLAN type is `public` and the router begins with `fc`. Use the `ID` or `Number`   |         | No       |
+
+The parameters for the VLANs are optional, if they are not provided the module select an **unnamed** VLAN on the given zone or datacenter. To list the available VLAN's in the zone/datacenter use the command: `ibmcloud ks vlan ls --zone <datacenter>`.
 
 The following input parameters are required only if the selected infrastructure is **IBM Cloud VPC Gen 2** (`on_vpc` = `true`).
 
-| Name             | Description                                                                                                                                                                                                         | Default          | Required |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- | -------- |
-| `vpc_zone_names` | Array with the subzones in the region, to create the workers groups. List all the zones with: `ibmcloud ks zone ls --provider vpc-gen2`. Example: `['us-south-1', 'us-south-2', 'us-south-3']`                      | `["us-south-1"]` | No       |
-| `flavors`        | Array with the flavors or machine types of each the workers group. List all flavors for each zone with: `ibmcloud ks flavors --zone us-south-1 --provider vpc-gen2`. Example: `['mx2.4x32', 'mx2.8x64', 'cx2.4x8']` | `["mx2.4x32"]`   | No       |
-| `workers_count`  | Array with the amount of workers on each workers group. Example: `[1, 3, 5]`                                                                                                                                        | `[2]`            | No       |
+| Name             | Description                                                                                                                                                                                    | Default          | Required |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- | -------- |
+| `vpc_zone_names` | Array with the subzones in the region, to create the workers groups. List all the zones with: `ibmcloud ks zone ls --provider vpc-gen2`. Example: `["us-south-1", "us-south-2", "us-south-3"]` | `["us-south-1"]` | No       |
+
+No matter what infrastructure is selected (Classic or VPC), these are the parameters for the Worker Nodes:
+
+| Name            | Description                                                                                                                                                                                                                                                                                                                                   | Default        | Required |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | -------- |
+| `flavors`       | Array with the flavors or machine types of each the workers group. On Classic it's only possible to have one workers group, so only the first flavor in the list is taken. List all flavors for each zone with: `ibmcloud ks flavors --zone us-south-1 --provider vpc-gen2`. Example: `["mx2.4x32", "mx2.8x64", "cx2.4x8"]` or `["mx2.4x32"]` | `["mx2.4x32"]` | No       |
+| `workers_count` | Array with the amount of workers on each workers group. On Classic it's only possible to have one workers group, so only the first number in the list is taken for the cluster size. Example: `[1, 3, 5]` or `[2]`                                                                                                                            | `[2]`          | No       |
 
 ## Output Parameters
 

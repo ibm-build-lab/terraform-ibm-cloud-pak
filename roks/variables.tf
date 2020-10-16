@@ -30,7 +30,7 @@ variable "resource_group" {
 }
 
 variable "roks_version" {
-  default     = "4.4_openshift"
+  default     = "4.4"
   description = "List available versions: ibmcloud ks versions"
 }
 
@@ -59,51 +59,48 @@ variable "config_network" {
   description = "if set to true, the Calico configuration file, TLS certificates, and permission files that are required to run calicoctl commands in your cluster are downloaded in addition to the configuration files for the administrator"
 }
 
-// ROKS Module : On IBM Cloud Classic
-
-variable "datacenter" {
-  default     = "dal10"
-  description = "List all available datacenters/zones with: ibmcloud ks zone ls --provider classic"
-}
-
-variable "size" {
-  default = 1
-}
-
-variable "flavor" {
-  default     = "b3c.4x16"
-  description = "List all available flavors in the zone: ibmcloud ks flavors --zone dal10"
-}
-
-variable "private_vlan_number" {
-  default     = "2832804"
-  description = "List available VLANs in the zone: ibmcloud ks vlan ls --zone dal10"
-}
-
-variable "public_vlan_number" {
-  default     = "2832802"
-  description = "List available VLANs in the zone: ibmcloud ks vlan ls --zone dal10"
-}
-
-// ROKS Module : On IBM Cloud VPC Gen 2 (Only for Terraform >= 0.12)
-
-variable "vpc_zone_names" {
-  type        = list(string)
-  default     = ["us-south-1"]
-  description = "Array with the subzones in the region, to create the workers groups. List all the zones with: 'ibmcloud ks zone ls --provider vpc-gen2'. Example: ['us-south-1', 'us-south-2', 'us-south-3']"
-}
+// General Cluster Parameters:
 
 variable "flavors" {
   type        = list(string)
   default     = ["mx2.4x32"]
-  description = "Array with the flavors or machine types of each the workers group. List all flavors for each zone with: 'ibmcloud ks flavors --zone us-south-1 --provider vpc-gen2'. Example: ['mx2.4x32', 'mx2.8x64', 'cx2.4x8']"
+  description = "Array with the flavors or machine types of each the workers group. Classic only takes the first flavor of the list. List all flavors for each zone with: 'ibmcloud ks flavors --zone us-south-1 --provider vpc-gen2'. Example: ['mx2.4x32', 'mx2.8x64', 'cx2.4x8']"
 }
 
 variable "workers_count" {
   type        = list(number)
   default     = [2]
-  description = "Array with the amount of workers on each workers group. Example: [1, 3, 5]"
+  description = "Array with the amount of workers on each workers group. Classic only takes the first number of the list. Example: [1, 3, 5]"
 }
+
+variable "force_delete_storage" {
+  type        = bool
+  default     = false
+  description = "If set to true, force the removal of persistent storage associated with the cluster during cluster deletion. Default value is false"
+}
+
+// ROKS Module : On IBM Cloud Classic
+
+variable "datacenter" {
+  description = "List all available datacenters/zones with: ibmcloud ks zone ls --provider classic"
+}
+
+variable "private_vlan_number" {
+  description = "List available VLANs in the zone: ibmcloud ks vlan ls --zone dal10"
+}
+
+variable "public_vlan_number" {
+  description = "List available VLANs in the zone: ibmcloud ks vlan ls --zone dal10"
+}
+
+// ROKS Module : On IBM Cloud VPC Gen 2
+
+variable "vpc_zone_names" {
+  type        = list(string)
+  description = "Array with the subzones in the region, to create the workers groups. List all the zones with: 'ibmcloud ks zone ls --provider vpc-gen2'. Example: ['us-south-1', 'us-south-2', 'us-south-3']"
+}
+
+
 
 // ROKS Module : Local Variables
 

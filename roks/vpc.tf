@@ -7,16 +7,17 @@ resource "ibm_resource_instance" "cos" {
 }
 
 resource "ibm_container_vpc_cluster" "cluster" {
-  count             = var.enable && var.on_vpc ? 1 : 0
-  name              = "${var.project_name}-${var.environment}-cluster"
-  vpc_id            = var.on_vpc ? ibm_is_vpc.vpc[0].id : 0
-  flavor            = var.flavors[0]
-  worker_count      = var.workers_count[0]
-  kube_version      = local.roks_version
-  resource_group_id = data.ibm_resource_group.group.id
-  cos_instance_crn  = ibm_resource_instance.cos[0].id
-  wait_till         = "OneWorkerNodeReady"
-  entitlement       = "cloud_pak"
+  count                = var.enable && var.on_vpc ? 1 : 0
+  name                 = "${var.project_name}-${var.environment}-cluster"
+  vpc_id               = var.on_vpc ? ibm_is_vpc.vpc[0].id : 0
+  flavor               = var.flavors[0]
+  worker_count         = var.workers_count[0]
+  kube_version         = local.roks_version
+  resource_group_id    = data.ibm_resource_group.group.id
+  cos_instance_crn     = ibm_resource_instance.cos[0].id
+  wait_till            = "OneWorkerNodeReady"
+  entitlement          = "cloud_pak"
+  force_delete_storage = var.force_delete_storage
 
   zones {
     name      = var.vpc_zone_names[0]
