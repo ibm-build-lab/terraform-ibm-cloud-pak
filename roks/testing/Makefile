@@ -1,4 +1,6 @@
-TEST_TF_VAR_FILE := test.auto.tfvars
+TEST_TF_VAR_FILE	:= test.auto.tfvars
+TF_VAR_datacenter	?= dal10
+TF_VAR_region			?= us-south
 
 default: test-classic
 
@@ -15,9 +17,11 @@ check-classic-cred: check-api-key
 	@[[ -n $$IAAS_CLASSIC_USERNAME && -n $$IAAS_CLASSIC_API_KEY ]]
 
 var-%:
-	@echo "owner = \"$(USER)\""		> $(TEST_TF_VAR_FILE)
-	@echo "infra = \"$*\""			 >> $(TEST_TF_VAR_FILE)
-	@[[ -z $$TF_VAR_cluster_id ]] || echo "cluster_id = \"$$TF_VAR_cluster_id\"" >> $(TEST_TF_VAR_FILE)
+	@echo "owner = \"$(USER)\""						 > $(TEST_TF_VAR_FILE)
+	@echo "infra = \"$*\""			 					>> $(TEST_TF_VAR_FILE)
+	@echo "region = \"$(TF_VAR_region)\""	>> $(TEST_TF_VAR_FILE)
+	@[[ -z $$TF_VAR_cluster_id ]] || echo "cluster_id = \"$$TF_VAR_cluster_id\"" 	>> $(TEST_TF_VAR_FILE)
+	@[[ "$*" != "classic" ]]      || echo "datacenter = \"$(TF_VAR_datacenter)\""	>> $(TEST_TF_VAR_FILE);
 	@terraform fmt $(TEST_TF_VAR_FILE)
 
 validate:

@@ -21,7 +21,7 @@ variable "vpc_zone_names_list" {
 }
 variable "flavors_list" {
   type    = string
-  default = "mx2.4x32"
+  default = "b3c.4x16"
 }
 variable "workers_count_list" {
   type    = string

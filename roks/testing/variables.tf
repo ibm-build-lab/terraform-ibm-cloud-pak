@@ -4,6 +4,10 @@ variable "infra" {
   description = "infrastructure to install the cluster, the available options are: 'classic' and 'vpc'"
 }
 
+variable "region" {
+  description = "List all available regions with: ibmcloud regions"
+}
+
 // Cluster configuration input variables and default values:
 
 variable "cluster_id" {
@@ -17,7 +21,7 @@ variable "config_dir" {
 }
 
 variable "project_name" {
-  default     = "roks-tfmod"
+  default     = "roks-tfmod-01"
   description = "The project name is used to name the cluster with the environment name"
 }
 variable "owner" {
@@ -33,29 +37,21 @@ variable "resource_group" {
   description = "List all available resource groups with: ibmcloud resource groups"
 }
 variable "roks_version" {
-  default     = "4.4_openshift"
+  default     = "4.4"
   description = "List available versions: ibmcloud ks versions"
 }
 
 // IBM Classic input parameters and default values:
 
 variable "datacenter" {
-  default     = "dal10"
   description = "List all available datacenters/zones with: ibmcloud ks zone ls --provider classic"
 }
-variable "size" {
-  default = 1
-}
-variable "flavor" {
-  default     = "b3c.4x16"
-  description = "List all available flavors in the zone: ibmcloud ks flavors --zone dal10"
-}
 variable "private_vlan_number" {
-  default     = "2832804"
+  default     = ""
   description = "List available VLANs in the zone: ibmcloud ks vlan ls --zone dal10"
 }
 variable "public_vlan_number" {
-  default     = "2832802"
+  default     = ""
   description = "List available VLANs in the zone: ibmcloud ks vlan ls --zone dal10"
 }
 

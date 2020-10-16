@@ -3,7 +3,7 @@
 provider "ibm" {
   version    = "~> 1.13"
   generation = var.infra == "classic" ? 1 : 2
-  region     = "us-south"
+  region     = var.region
 }
 
 // Module
@@ -30,17 +30,17 @@ module "cluster" {
   config_admin    = false
   config_network  = false
 
+  // Parameters for the Workers
+  flavors       = local.flavors
+  workers_count = local.workers_count
+
   // Parameters for IBM Cloud Classic
   datacenter          = var.datacenter
-  size                = var.size
-  flavor              = var.flavor
   private_vlan_number = var.private_vlan_number
   public_vlan_number  = var.public_vlan_number
 
   // Parameters for IBM Cloud VPC
   vpc_zone_names = local.vpc_zone_names
-  flavors        = local.flavors
-  workers_count  = local.workers_count
 }
 
 // Test Output Parameters
@@ -63,4 +63,8 @@ output "config" {
 
 output "config_file_path" {
   value = data.ibm_container_cluster_config.cluster_config.config_file_path
+}
+
+output "vlan_number" {
+  value = module.cluster.vlan_number
 }
