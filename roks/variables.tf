@@ -86,17 +86,20 @@ variable "datacenter" {
 }
 
 variable "private_vlan_number" {
-  description = "List available VLANs in the zone: ibmcloud ks vlan ls --zone dal10"
+  default     = ""
+  description = "The ID of the private VLAN that you want to use for your worker nodes. If empty the cluster is connected to a private unnamed VLAN. You can list the available VLANs in the zone: ibmcloud ks vlan ls --zone dal10"
 }
 
 variable "public_vlan_number" {
-  description = "List available VLANs in the zone: ibmcloud ks vlan ls --zone dal10"
+  default     = ""
+  description = "The ID of the public VLAN that you want to use for your worker nodes. If empty the cluster is connected to a public unnamed VLAN. You can list the available VLANs in the zone: ibmcloud ks vlan ls --zone dal10"
 }
 
 // ROKS Module : On IBM Cloud VPC Gen 2
 
 variable "vpc_zone_names" {
   type        = list(string)
+  default     = []
   description = "Array with the subzones in the region, to create the workers groups. List all the zones with: 'ibmcloud ks zone ls --provider vpc-gen2'. Example: ['us-south-1', 'us-south-2', 'us-south-3']"
 }
 

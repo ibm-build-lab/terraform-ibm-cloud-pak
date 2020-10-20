@@ -15,7 +15,7 @@ locals {
 module "cluster" {
   source = "./.."
   enable = local.enable
-  on_vpc = var.infra == "classic" ? false : true
+  on_vpc = var.infra == "vpc"
 
   // General
   project_name   = var.project_name
