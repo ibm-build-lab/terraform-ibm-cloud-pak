@@ -69,15 +69,20 @@ while (( "$#" )); do
   shift
 done
 
-if [[ -z $IC_API_KEY ]]; then
-  [[ -n $verbose ]] && echo "[ERROR] IBM API Key not found. Export 'IC_API_KEY' with the IBM Cloud API Key" >&2
-  exit 1
-fi
+# The API Token on the Schematics container is set in the env variable IC_IAM_TOKEN
+TOKEN=$IC_IAM_TOKEN
 
-TOKEN=$(getToken)
-if [[ -z $TOKEN ]]; then
-  [[ -n $verbose ]] && echo "[ERROR] Fail to get the IBM Cloud API Token" >&2
-  exit 1
+if [[ -z $IC_IAM_TOKEN ]]; then
+  if [[ -z $IC_API_KEY ]]; then
+    [[ -n $verbose ]] && echo "[ERROR] neither the IBM API Key or a Token were found. Export 'IC_API_KEY' with the IBM Cloud API Key" >&2
+    exit 1
+  fi
+
+  TOKEN=$(getToken)
+  if [[ -z $TOKEN ]]; then
+    [[ -n $verbose ]] && echo "[ERROR] Fail to get the IBM Cloud API Token" >&2
+    exit 1
+  fi
 fi
 
 if ! echo $(datacenters) | grep -q $datacenter; then
