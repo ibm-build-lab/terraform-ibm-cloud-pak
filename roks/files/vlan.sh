@@ -69,6 +69,8 @@ while (( "$#" )); do
   shift
 done
 
+[[ -z $IC_API_KEY ]] && IC_API_KEY=$IC_IAM_TOKEN
+
 if [[ -z $IC_API_KEY ]]; then
   [[ -n $verbose ]] && echo "[ERROR] IBM API Key not found. Export 'IC_API_KEY' with the IBM Cloud API Key" >&2
   exit 1
