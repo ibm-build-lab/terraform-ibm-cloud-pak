@@ -6,8 +6,8 @@ command -v jq > /dev/null && JQ=1
 fin() {
   [[ -n $verbose && -n $1 ]] && echo -ne "$1 \n" >&2
 
-  [[ -z $priv_vlan ]] && priv_vlan=0
-  [[ -z $pub_vlan ]]  && pub_vlan=0
+  [[ -z $priv_vlan ]] && priv_vlan="0"
+  [[ -z $pub_vlan ]]  && pub_vlan="0"
 
   case "$output" in
     json|JSON)
