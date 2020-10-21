@@ -3,6 +3,29 @@
 JQ=
 command -v jq > /dev/null && JQ=1
 
+fin() {
+  [[ -n $verbose && -n $1 ]] && echo -ne "$1 \n" >&2
+
+  [[ -z $priv_vlan ]] && priv_vlan=0
+  [[ -z $pub_vlan ]]  && pub_vlan=0
+
+  case "$output" in
+    json|JSON)
+      if [[ -n $JQ ]]; then
+        jq -n --arg private "$priv_vlan" --arg public "$pub_vlan" '{ "private": $private, "public": $public }'
+      else
+        echo "{ \"private\": \"$priv_vlan\", \"public\": \"$pub_vlan\" }"
+      fi
+    ;;
+    *)
+      echo "${priv_vlan}:${pub_vlan}"
+    ;;
+  esac
+
+  # The script will fail at planning on Schematics, so return 0 always or the planning will fail
+  [[ -n $2 ]] && exit 0
+}
+
 getToken() {
   T=$(curl -s -k -X POST \
     --header "Content-Type: application/x-www-form-urlencoded" \
@@ -10,6 +33,9 @@ getToken() {
     --data-urlencode "apikey=$IC_API_KEY" \
     "https://iam.cloud.ibm.com/identity/token"
   )
+
+  echo $T | grep -q "incidentID" && return
+
   if [[ -n $JQ ]]; then
     echo $T | jq  -r .access_token
   else
@@ -20,7 +46,7 @@ getToken() {
 datacenters() {
   curl -s -X GET \
     https://containers.cloud.ibm.com/global/v1/datacenters \
-    -H "Authorization: Bearer $TOKEN" \
+    -H "Authorization: Bearer $IC_IAM_TOKEN" \
     -H 'accept: application/json'
 }
 
@@ -29,12 +55,12 @@ vlans_at_dc() {
 
   all_vlans_json=$(curl -s -X GET \
     https://containers.cloud.ibm.com/global/v1/datacenters/$DC/vlans \
-      -H "Authorization: Bearer $TOKEN" \
+      -H "Authorization: Bearer $IC_IAM_TOKEN" \
       -H 'accept: application/json'
   )
 
   if echo $all_vlans_json | grep -q '"incidentID":'; then
-    [[ -n $verbose ]] && echo "[ERROR] Fail to get the IBM Cloud API Token. $all_vlans_json" >&2
+    fin "[ERROR] Fail to get the VLANs from DC $DC. $all_vlans_json"
     return
   fi
 
@@ -70,27 +96,15 @@ while (( "$#" )); do
 done
 
 # The API Token on the Schematics container is set in the env variable IC_IAM_TOKEN
-TOKEN=$IC_IAM_TOKEN
-
 if [[ -z $IC_IAM_TOKEN ]]; then
-  if [[ -z $IC_API_KEY ]]; then
-    [[ -n $verbose ]] && echo "[ERROR] neither the IBM API Key or a Token were found. Export 'IC_API_KEY' with the IBM Cloud API Key" >&2
-    exit 1
-  fi
+  [[ -z $IC_API_KEY ]] && fin "[ERROR] neither the IBM API Key or a Token were found. Export 'IC_API_KEY' with the IBM Cloud API Key" 1
 
-  TOKEN=$(getToken)
-  if [[ -z $TOKEN ]]; then
-    [[ -n $verbose ]] && echo "[ERROR] Fail to get the IBM Cloud API Token" >&2
-    exit 1
-  fi
+  IC_IAM_TOKEN=$(getToken)
+  [[ -z $IC_IAM_TOKEN ]] && fin "[ERROR] Fail to get the IBM Cloud API Token" 1
 fi
 
-if ! echo $(datacenters) | grep -q $datacenter; then
-  if [[ -n $verbose ]]; then
-    echo "[ERROR] datacenter '$datacenter' is not supported by IBM Cloud Classic" >&2
-    echo "        The supported datacenters are: $(datacenters)" >&2
-  fi
-  exit 1
+if ! echo $(datacenters) | grep -q "\"$datacenter\""; then
+  fin "[ERROR] datacenter '$datacenter' is not supported by IBM Cloud Classic\n        The supported datacenters are: $(datacenters)" 1
 fi
 
 vlans_json=$(vlans_at_dc $datacenter)
@@ -104,15 +118,4 @@ else
   pub_vlan=$(type="public"; echo $vlans_json | sed 's/.*"id":"\([^"]*\)","type":"'$type'","properties":{"name":"",.*/\1/')
 fi
 
-case "$output" in
-  json|JSON)
-    if [[ -n $JQ ]]; then
-      jq -n --arg private "$priv_vlan" --arg public "$pub_vlan" '{ "private": $private, "public": $public }'
-    else
-      echo "{ \"private\": \"$priv_vlan\", \"public\": \"$pub_vlan\" }"
-    fi
-  ;;
-  *)
-    echo "${priv_vlan}:${pub_vlan}"
-  ;;
-esac
+fin ""
