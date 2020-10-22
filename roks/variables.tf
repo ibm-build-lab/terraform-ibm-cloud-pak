@@ -59,7 +59,7 @@ variable "config_network" {
   description = "if set to true, the Calico configuration file, TLS certificates, and permission files that are required to run calicoctl commands in your cluster are downloaded in addition to the configuration files for the administrator"
 }
 
-// General Cluster Parameters:
+// ROKS Cluster Parameters:
 
 variable "flavors" {
   type        = list(string)
@@ -79,31 +79,15 @@ variable "force_delete_storage" {
   description = "If set to true, force the removal of persistent storage associated with the cluster during cluster deletion. Default value is false"
 }
 
-// ROKS Module : On IBM Cloud Classic
-
 variable "datacenter" {
-  description = "List all available datacenters/zones with: ibmcloud ks zone ls --provider classic"
+  description = "On IBM Cloud Classic, this is the datacenter where the cluster will be provisioned. List all available datacenters/zones with: ibmcloud ks zone ls --provider classic"
 }
-
-variable "private_vlan_number" {
-  default     = ""
-  description = "The ID of the private VLAN that you want to use for your worker nodes. If it's an empty string a new VLAN is created, if it's '-1' the cluster is connected to a private unnamed VLAN. You can list the available VLANs in the zone: ibmcloud ks vlan ls --zone dal10"
-}
-
-variable "public_vlan_number" {
-  default     = ""
-  description = "The ID of the public VLAN that you want to use for your worker nodes. If it's an empty string a new VLAN is created, if it's '-1' the cluster is connected to a public unnamed VLAN. You can list the available VLANs in the zone: ibmcloud ks vlan ls --zone dal10"
-}
-
-// ROKS Module : On IBM Cloud VPC Gen 2
 
 variable "vpc_zone_names" {
   type        = list(string)
   default     = []
-  description = "Array with the subzones in the region, to create the workers groups. List all the zones with: 'ibmcloud ks zone ls --provider vpc-gen2'. Example: ['us-south-1', 'us-south-2', 'us-south-3']"
+  description = "On IBM Cloud VPC Gen 2, this is an array with the subzones in the region to create the workers groups. List all the zones with: 'ibmcloud ks zone ls --provider vpc-gen2'. Example: ['us-south-1', 'us-south-2', 'us-south-3']"
 }
-
-
 
 // ROKS Module : Local Variables
 
