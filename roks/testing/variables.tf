@@ -46,14 +46,6 @@ variable "roks_version" {
 variable "datacenter" {
   description = "List all available datacenters/zones with: ibmcloud ks zone ls --provider classic"
 }
-variable "private_vlan_number" {
-  default     = ""
-  description = "List available VLANs in the zone: ibmcloud ks vlan ls --zone dal10"
-}
-variable "public_vlan_number" {
-  default     = ""
-  description = "List available VLANs in the zone: ibmcloud ks vlan ls --zone dal10"
-}
 
 // IBM VPC input parameters and default values are in str_to_list.tf
 

@@ -33,13 +33,7 @@ module "cluster" {
   // Parameters for the Workers
   flavors       = local.flavors
   workers_count = local.workers_count
-
-  // Parameters for IBM Cloud Classic
   datacenter          = var.datacenter
-  private_vlan_number = var.private_vlan_number
-  public_vlan_number  = var.public_vlan_number
-
-  // Parameters for IBM Cloud VPC
   vpc_zone_names = local.vpc_zone_names
 }
 

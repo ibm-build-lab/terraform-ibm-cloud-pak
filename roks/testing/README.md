@@ -58,16 +58,10 @@ You can set the other variables using the `-var` flag method, exporting the envi
 - `environment`: the environment is used as a tag/label and to name the cluster, like: `{project_name}-{environment}-cluster`. Default value is `test`
 - `resource_group`: resource group where to create the cluster. Default value is `default`
 - `roks_version`: Kubernetes version to install, for Openshift clusters the version suffix is `_openshift`. List the available versions executing `ibmcloud ks versions` or check the version in [IBM Cloud Kubernetes Service](https://cloud.ibm.com/docs/containers?topic=containers-cs_versions) or [Red Hat OpenShift on IBM Cloud](https://cloud.ibm.com/docs/openshift?topic=openshift-openshift_versions#version_types). Default value is `4.4_openshift`.
-- Input variables for IBM Cloud Classic:
-  - `datacenter`: List all available datacenters/zones with: `ibmcloud ks zone ls --provider classic`. Default value is `dal10`
-  - `size` Cluster size or total number of workers. Default value is `1`
-  - `flavor`: List all available flavors in the zone: `ibmcloud ks flavors --zone dal10`. Default value is `b3c.4x16`
-  - `private_vlan_number`: List available VLANs in the zone: `ibmcloud ks vlan ls --zone dal10`. Default value is `2832804`
-  - `public_vlan_number`: List available VLANs in the zone: `ibmcloud ks vlan ls --zone dal10`. Default value is `2832802`
-- Input variables for IBM Cloud VPC:
-  - `vpc_zone_names`: List with the subzones in the region, to create the workers groups. List all the zones with: `ibmcloud ks zone ls --provider vpc-gen2`. Example: `us-south-1, us-south-2, us-south-3`. Default value is `us-south-1`
-  - `flavors`: List with the flavors or machine types of each the workers group. List all flavors for each zone with: `ibmcloud ks flavors --zone us-south-1 --provider vpc-gen2`. Example: `mx2.4x32, mx2.8x64, cx2.4x8`. Default value is `mx2.4x32`
-  - `workers_count`: List with the amount of workers on each workers group. Example: `1, 3, 5`. Default value is `2`
+- `flavors`: List with the flavors or machine types of each the workers group. List all flavors for each zone with: `ibmcloud ks flavors --zone us-south-1 --provider vpc-gen2`. Example: `[mx2.4x32, mx2.8x64, cx2.4x8]`. Default value is `[mx2.4x32]`
+- `workers_count`: List with the amount of workers on each workers group. Example: `[1, 3, 5]`. Default value is `[2]`
+- `datacenter`: Input variables only for IBM Cloud Classic. List all available datacenters/zones with: `ibmcloud ks zone ls --provider classic`. Default value is `dal10`
+- `vpc_zone_names`: Input variables only for IBM Cloud VPC. List with the subzones in the region, to create the workers groups. List all the zones with: `ibmcloud ks zone ls --provider vpc-gen2`. Example: `[us-south-1, us-south-2, us-south-3]`. Default value is `[us-south-1]`
 
 ## 3. Test the Kubernetes cluster
 
