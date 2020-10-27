@@ -18,6 +18,13 @@ output "resource_group" {
   value = data.ibm_resource_group.group
 }
 
+output "vlan_number" {
+  value = {
+    private = local.private_vlan_number
+    public  = local.public_vlan_number
+  }
+}
+
 // output "cluster" {
 //   value = var.on_vpc ? data.ibm_container_vpc_cluster.cluster.0 : data.ibm_container_cluster.cluster.0
 // }

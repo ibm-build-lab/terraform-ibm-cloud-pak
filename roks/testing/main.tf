@@ -31,9 +31,9 @@ module "cluster" {
   config_network  = false
 
   // Parameters for the Workers
-  flavors       = local.flavors
-  workers_count = local.workers_count
-  datacenter          = var.datacenter
+  flavors        = local.flavors
+  workers_count  = local.workers_count
+  datacenter     = var.datacenter
   vpc_zone_names = local.vpc_zone_names
 }
 
@@ -57,4 +57,8 @@ output "config" {
 
 output "config_file_path" {
   value = data.ibm_container_cluster_config.cluster_config.config_file_path
+}
+
+output "vlan_number" {
+  value = module.cluster.vlan_number
 }

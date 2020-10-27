@@ -83,6 +83,16 @@ variable "datacenter" {
   description = "On IBM Cloud Classic, this is the datacenter where the cluster will be provisioned. List all available datacenters/zones with: ibmcloud ks zone ls --provider classic"
 }
 
+variable "private_vlan_number" {
+  default     = ""
+  description = "On IBM Cloud Classic, the ID of the private VLAN that you want to use for your worker nodes. If it's an empty string a private unnamed VLAN is choose or a new VLAN is created if there isn't any (i.e. this is the first cluster in the zone). You can list the available VLANs in the zone: ibmcloud ks vlan ls --zone dal10"
+}
+
+variable "public_vlan_number" {
+  default     = ""
+  description = "On IBM Cloud Classic, the ID of the public VLAN that you want to use for your worker nodes. If it's an empty string a public unnamed VLAN is choose or a new VLAN is created if there isn't any (i.e. this is the first cluster in the zone). You can list the available VLANs in the zone: ibmcloud ks vlan ls --zone dal10"
+}
+
 variable "vpc_zone_names" {
   type        = list(string)
   default     = []
