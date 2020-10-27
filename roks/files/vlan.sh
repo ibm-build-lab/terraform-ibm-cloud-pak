@@ -4,27 +4,33 @@ JQ=
 command -v jq > /dev/null && JQ=1
 
 printOutput() {
+  error=$1
+
   [[ -z $priv_vlan ]] && priv_vlan=""
   [[ -z $pub_vlan ]]  && pub_vlan=""
 
   case "$output" in
     json|JSON)
       if [[ -n $JQ ]]; then
-        jq -n --arg private "$priv_vlan" --arg public "$pub_vlan" '{ "private": $private, "public": $public }'
+        jq -n \
+          --arg private "$priv_vlan" \
+          --arg public "$pub_vlan" \
+          --arg error "$error" \
+          '{ "private": $private, "public": $public, "error": $error }'
       else
-        echo "{ \"private\": \"$priv_vlan\", \"public\": \"$pub_vlan\" }"
+        echo "{ \"private\": \"$priv_vlan\", \"public\": \"$pub_vlan\", \"error\": \"$error\" }"
       fi
     ;;
     *)
-      echo "${priv_vlan}:${pub_vlan}"
+      echo "${priv_vlan}:${pub_vlan}:${errors}"
     ;;
   esac
 }
 
 die() {
-  [[ -n $verbose && -n $1 ]] && echo -ne "$1 \n" >&2
+  [[ -n $verbose && -n $1 ]] && echo -ne "[ERROR] $1 \n" >&2
 
-  printOutput
+  printOutput "$1"
 
   [[ -z $no_error ]] && exit 1
 
@@ -65,7 +71,7 @@ vlans_at_dc() {
   )
 
   if echo $all_vlans_json | grep -q '"incidentID":'; then
-    die "[ERROR] Fail to get the VLANs from DC $DC. $all_vlans_json"
+    die "Fail to get the VLANs from DC $DC. $all_vlans_json"
     return
   fi
 
@@ -106,14 +112,14 @@ done
 
 # The API Token on the Schematics container is set in the env variable IC_IAM_TOKEN
 if [[ -z $IC_IAM_TOKEN ]]; then
-  [[ -z $IC_API_KEY ]] && die "[ERROR] neither the IBM API Key or a Token were found. Export 'IC_API_KEY' with the IBM Cloud API Key" 1
+  [[ -z $IC_API_KEY ]] && die "neither the IBM API Key or a Token were found. Export 'IC_API_KEY' with the IBM Cloud API Key" 1
 
   IC_IAM_TOKEN=$(getToken)
-  [[ -z $IC_IAM_TOKEN ]] && die "[ERROR] Fail to get the IBM Cloud API Token" 1
+  [[ -z $IC_IAM_TOKEN ]] && die "Fail to get the IBM Cloud API Token" 1
 fi
 
 if ! echo $(datacenters) | grep -q "\"$datacenter\""; then
-  die "[ERROR] datacenter '$datacenter' is not supported by IBM Cloud Classic\n        The supported datacenters are: $(datacenters)" 1
+  die "datacenter '$datacenter' is not supported by IBM Cloud Classic\n        The supported datacenters are: $(datacenters)" 1
 fi
 
 vlans_json=$(vlans_at_dc $datacenter)
