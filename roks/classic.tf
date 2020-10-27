@@ -1,11 +1,19 @@
 data "external" "vlans" {
   count   = var.enable && ! var.on_vpc && (length(var.private_vlan_number) + length(var.private_vlan_number) == 0) ? 1 : 0
-  program = ["sh", "-c", "${path.module}/files/vlan.sh ${var.datacenter} -q -o json"]
+  program = ["sh", "-c", "${path.module}/files/vlan.sh ${var.datacenter} -q -ne -o json"]
 }
 
 locals {
   private_vlan_number = var.private_vlan_number != "" ? var.private_vlan_number : data.external.vlans.0.result.private
   public_vlan_number  = var.public_vlan_number != "" ? var.public_vlan_number : data.external.vlans.0.result.public
+}
+
+resource "null_resource" "debug" {
+  triggers = { always_run = timestamp() }
+
+  provisioner "local-exec" {
+    command = "echo 'Public VLAN: ${local.public_vlan_number}; Private VLAN: ${local.private_vlan_number}"
+  }
 }
 
 resource "ibm_container_cluster" "cluster" {
