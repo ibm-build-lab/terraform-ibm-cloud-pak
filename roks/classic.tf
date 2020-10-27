@@ -12,7 +12,7 @@ resource "null_resource" "debug" {
   triggers = { always_run = timestamp() }
 
   provisioner "local-exec" {
-    command = "echo 'Public VLAN: ${local.public_vlan_number}; Private VLAN: ${local.private_vlan_number}'"
+    command = "echo 'Public VLAN: ${local.public_vlan_number}; Private VLAN: ${local.private_vlan_number}; Error: ${data.external.vlans.0.result.error}'"
   }
 }
 
