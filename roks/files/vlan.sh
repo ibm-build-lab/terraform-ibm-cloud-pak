@@ -3,11 +3,11 @@
 JQ=
 command -v jq > /dev/null && JQ=1
 
+priv_vlan=
+pub_vlan=
+
 printOutput() {
   error=$1
-
-  [[ -z $priv_vlan ]] && priv_vlan=""
-  [[ -z $pub_vlan ]]  && pub_vlan=""
 
   case "$output" in
     json|JSON)
@@ -33,7 +33,6 @@ die() {
   printOutput "$1"
 
   [[ -z $no_error ]] && exit 1
-
   exit 0
 }
 
@@ -72,7 +71,6 @@ vlans_at_dc() {
 
   if echo $all_vlans_json | grep -q '"incidentID":'; then
     die "Fail to get the VLANs from DC $DC. $all_vlans_json"
-    return
   fi
 
   if [[ -n $JQ ]]; then
@@ -112,18 +110,17 @@ done
 
 # The API Token on the Schematics container is set in the env variable IC_IAM_TOKEN
 if [[ -z $IC_IAM_TOKEN ]]; then
-  [[ -z $IC_API_KEY ]] && die "neither the IBM API Key or a Token were found. Export 'IC_API_KEY' with the IBM Cloud API Key" 1
+  [[ -z $IC_API_KEY ]] && die "neither the IBM API Key or a Token were found. Export 'IC_API_KEY' with the IBM Cloud API Key"
 
   IC_IAM_TOKEN=$(getToken)
-  [[ -z $IC_IAM_TOKEN ]] && die "Fail to get the IBM Cloud API Token" 1
+  [[ -z $IC_IAM_TOKEN ]] && die "Fail to get the IBM Cloud API Token"
 fi
 
 if ! echo $(datacenters) | grep -q "\"$datacenter\""; then
-  die "datacenter '$datacenter' is not supported by IBM Cloud Classic\n        The supported datacenters are: $(datacenters)" 1
+  die "datacenter '$datacenter' is not supported by IBM Cloud Classic\n        The supported datacenters are: $(datacenters)"
 fi
 
 vlans_json=$(vlans_at_dc $datacenter)
-[[ -z "$vlans_json" ]] && exit 1
 
 if [[ -n $JQ ]]; then
   priv_vlan=$(echo $vlans_json | jq -r "[.[] | select(.type==\"private\") | .id][0]")
