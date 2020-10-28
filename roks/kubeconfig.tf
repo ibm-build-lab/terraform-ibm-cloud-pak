@@ -15,7 +15,7 @@ data "ibm_container_cluster_config" "cluster_config" {
   cluster_name_id   = local.cluster_name_id
   resource_group_id = data.ibm_resource_group.group.id
   download          = var.download_config
-  config_dir        = var.config_dir
+  config_dir        = var.download_config ? var.config_dir : null
   admin             = var.config_admin
   network           = var.config_network
 }
