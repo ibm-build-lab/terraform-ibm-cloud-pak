@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# echo "Creating namespace ${MCM_NAMESPACE}"
-# kubectl create namespace ${MCM_NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
+echo "Creating namespace ${MCM_NAMESPACE}"
+kubectl create namespace ${MCM_NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
 
 echo "Setting valid route to containers registry for IBM Cloud Pak Multicloud Management images"
 kubectl patch configs.imageregistry.operator.openshift.io/cluster --type merge -p '{"spec":{"defaultRoute":true}}'

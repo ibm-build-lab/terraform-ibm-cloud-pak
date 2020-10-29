@@ -1,18 +1,18 @@
-provider "kubernetes" {
-  config_path = var.enable ? var.cluster_config_path : null
-}
+// provider "kubernetes" {
+//   config_path = var.enable ? var.cluster_config_path : null
+// }
 
-resource "kubernetes_namespace" "mcm_namespace" {
-  count = var.enable ? 1 : 0
+// resource "kubernetes_namespace" "mcm_namespace" {
+//   count = var.enable ? 1 : 0
 
-  metadata {
-    name = local.mcm_namespace
-  }
+//   metadata {
+//     name = local.mcm_namespace
+//   }
 
-  timeouts {
-    delete = "2h"
-  }
-}
+//   timeouts {
+//     delete = "2h"
+//   }
+// }
 
 locals {
   catalogsource_content = templatefile("${path.module}/templates/CatalogSource.yaml.tmpl", {
@@ -33,9 +33,9 @@ locals {
 resource "null_resource" "install_cp4mcm" {
   count = var.enable ? 1 : 0
 
-  depends_on = [
-    kubernetes_namespace.mcm_namespace,
-  ]
+  // depends_on = [
+  //   kubernetes_namespace.mcm_namespace,
+  // ]
   triggers = {
     docker_credentials_sha1 = sha1(join("", [local.entitled_registry_user, var.entitled_registry_key, var.entitled_registry_user_email, local.entitled_registry, local.mcm_namespace]))
     catalogsource_sha1      = sha1(local.catalogsource_content)
@@ -61,17 +61,37 @@ resource "null_resource" "install_cp4mcm" {
   }
 }
 
-data "kubernetes_secret" "mcm_credentials" {
+// data "kubernetes_secret" "mcm_credentials" {
+//   count = var.enable ? 1 : 0
+
+//   depends_on = [
+//     null_resource.install_cp4mcm,
+//   ]
+
+//   metadata {
+//     name      = "platform-auth-idp-credentials"
+//     namespace = "ibm-common-services"
+//   }
+// }
+
+data "external" "kubectl_get_mcm_admin_username" {
   count = var.enable ? 1 : 0
 
   depends_on = [
     null_resource.install_cp4mcm,
   ]
 
-  metadata {
-    name      = "platform-auth-idp-credentials"
-    namespace = "ibm-common-services"
-  }
+  program = ["sh", "-c", "echo \"{ \\\"username\\\": \\\"$(kubectl --kubeconfig ${var.cluster_config_path} get secret platform-auth-idp-credentials -n ibm-common-services -o jsonpath='{.data.admin_username}')\\\" }\""]
+}
+
+data "external" "kubectl_get_mcm_admin_password" {
+  count = var.enable ? 1 : 0
+
+  depends_on = [
+    null_resource.install_cp4mcm,
+  ]
+
+  program = ["sh", "-c", "echo \"{ \\\"password\\\": \\\"$(kubectl --kubeconfig ${var.cluster_config_path} get secret platform-auth-idp-credentials -n ibm-common-services -o jsonpath='{.data.admin_password}')\\\" }\""]
 }
 
 data "external" "kubectl_get_endpoint" {
