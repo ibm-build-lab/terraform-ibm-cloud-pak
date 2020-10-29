@@ -36,28 +36,28 @@ variable "roks_version" {
 
 // Kubernetes Config & Config File(s)
 
-variable "download_config" {
-  type        = bool
-  default     = false
-  description = "if true download the kubernetes configuration files and certificates to the directory that you specified in config_dir"
-}
+// variable "download_config" {
+//   type        = bool
+//   default     = false
+//   description = "if true download the kubernetes configuration files and certificates to the directory that you specified in config_dir"
+// }
 
-variable "config_dir" {
-  default     = "."
-  description = "directory on your local machine where you want to download the Kubernetes config files and certificates"
-}
+// variable "config_dir" {
+//   default     = "."
+//   description = "directory on your local machine where you want to download the Kubernetes config files and certificates"
+// }
 
-variable "config_admin" {
-  type        = bool
-  default     = false
-  description = "if set to true, the Kubernetes configuration for cluster administrators is downloaded"
-}
+// variable "config_admin" {
+//   type        = bool
+//   default     = false
+//   description = "if set to true, the Kubernetes configuration for cluster administrators is downloaded"
+// }
 
-variable "config_network" {
-  type        = bool
-  default     = false
-  description = "if set to true, the Calico configuration file, TLS certificates, and permission files that are required to run calicoctl commands in your cluster are downloaded in addition to the configuration files for the administrator"
-}
+// variable "config_network" {
+//   type        = bool
+//   default     = false
+//   description = "if set to true, the Calico configuration file, TLS certificates, and permission files that are required to run calicoctl commands in your cluster are downloaded in addition to the configuration files for the administrator"
+// }
 
 // ROKS Cluster Parameters:
 
