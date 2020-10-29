@@ -4,15 +4,16 @@ data "external" "vlans" {
 }
 
 locals {
-  private_vlan_number = var.private_vlan_number != "" ? var.private_vlan_number : data.external.vlans.0.result.private
-  public_vlan_number  = var.public_vlan_number != "" ? var.public_vlan_number : data.external.vlans.0.result.public
+  private_vlan_number = var.private_vlan_number != "" ? var.private_vlan_number : length(data.external.vlans) > 0 ? data.external.vlans.0.result.private : ""
+  public_vlan_number  = var.public_vlan_number  != "" ? var.public_vlan_number  : length(data.external.vlans) > 0 ? data.external.vlans.0.result.public  : ""
+  vlan_error = length(data.external.vlans) > 0 ? data.external.vlans.0.result.error  : ""
 }
 
 resource "null_resource" "debug" {
   triggers = { always_run = timestamp() }
 
   provisioner "local-exec" {
-    command = "echo 'Public VLAN: ${local.public_vlan_number}; Private VLAN: ${local.private_vlan_number}; Error: ${data.external.vlans.0.result.error}'"
+    command = "echo 'Public VLAN: ${local.public_vlan_number}; Private VLAN: ${local.private_vlan_number}; Error: ${local.vlan_error}'"
   }
 }
 
