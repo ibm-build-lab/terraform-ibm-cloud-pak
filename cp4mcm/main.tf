@@ -1,9 +1,5 @@
 provider "kubernetes" {
-  load_config_file   = "false"
-  host               = var.enable ? var.cluster_config.host : ""
-  client_certificate = var.enable ? var.cluster_config.client_certificate : ""
-  client_key         = var.enable ? var.cluster_config.client_key : ""
-  token              = var.enable ? var.cluster_config.token : ""
+  config_path = var.enable ? var.cluster_config_path : null
 }
 
 resource "kubernetes_namespace" "mcm_namespace" {

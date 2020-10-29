@@ -3,16 +3,21 @@ variable "enable" {
   description = "If set to true installs Cloud-Pak for Multi Cloud Management on the given cluster"
 }
 
-variable "cluster_config" {
-  type = object({
-    host               = string
-    client_certificate = string
-    client_key         = string
-    token              = string
-    config_file_path   = string
-  })
-  description = "Kubernetes configuration parameters such as host, certificates or token to access your cluster"
+variable "cluster_config_path" {
+  default     = "./.kube/config"
+  description = "Path to the Kubernetes configuration file to access your cluster"
 }
+
+// variable "cluster_config" {
+//   type = object({
+//     host               = string
+//     client_certificate = string
+//     client_key         = string
+//     token              = string
+//     config_file_path   = string
+//   })
+//   description = "Kubernetes configuration parameters such as host, certificates or token to access your cluster"
+// }
 
 variable "openshift_version" {
   description = "Openshift version installed in the cluster"
