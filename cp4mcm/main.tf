@@ -74,6 +74,7 @@ resource "null_resource" "install_cp4mcm" {
 //   }
 // }
 
+// TODO: Move all these data external to a single script
 data "external" "kubectl_get_mcm_admin_username" {
   count = var.enable ? 1 : 0
 
