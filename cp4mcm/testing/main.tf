@@ -23,14 +23,8 @@ module "cp4mcm" {
   enable = true
 
   // ROKS cluster parameters:
-  openshift_version = var.openshift_version
-  cluster_config = {
-    host               = data.ibm_container_cluster_config.cluster_config.host
-    client_certificate = data.ibm_container_cluster_config.cluster_config.admin_certificate
-    client_key         = data.ibm_container_cluster_config.cluster_config.admin_key
-    token              = data.ibm_container_cluster_config.cluster_config.token
-    config_file_path   = data.ibm_container_cluster_config.cluster_config.config_file_path
-  }
+  openshift_version   = var.openshift_version
+  cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
 
   // Entitled Registry parameters:
   // 1. Get the entitlement key from: https://myibm.ibm.com/products-services/containerlibrary
