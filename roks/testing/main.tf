@@ -25,10 +25,10 @@ module "cluster" {
   roks_version   = var.roks_version
 
   // Parameters for Kubernetes Config
-  download_config = length(var.config_dir) > 0
-  config_dir      = var.config_dir
-  config_admin    = false
-  config_network  = false
+  // download_config = length(var.config_dir) > 0
+  // config_dir      = var.config_dir
+  // config_admin    = false
+  // config_network  = false
 
   // Parameters for the Workers
   flavors        = local.flavors
@@ -51,13 +51,13 @@ output "name" {
   value = module.cluster.name
 }
 
-output "config" {
-  value = module.cluster.config
-}
+// output "config" {
+//   value = module.cluster.config
+// }
 
-output "config_file_path" {
-  value = data.ibm_container_cluster_config.cluster_config.config_file_path
-}
+// output "config_file_path" {
+//   value = data.ibm_container_cluster_config.cluster_config.config_file_path
+// }
 
 output "vlan_number" {
   value = module.cluster.vlan_number
