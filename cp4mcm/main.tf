@@ -47,7 +47,7 @@ resource "null_resource" "install_cp4mcm" {
     command = "${path.module}/scripts/install_cp4mcm.sh"
 
     environment = {
-      KUBECONFIG                       = var.cluster_config.config_file_path
+      KUBECONFIG                       = var.cluster_config_path
       MCM_NAMESPACE                    = local.mcm_namespace
       MCM_ENTITLED_REGISTRY_USER       = local.entitled_registry_user
       MCM_ENTITLED_REGISTRY_KEY        = local.entitled_registry_key
@@ -81,7 +81,7 @@ data "external" "kubectl_get_endpoint" {
     null_resource.install_cp4mcm,
   ]
 
-  program = ["sh", "-c", "echo \"{ \\\"host\\\": \\\"$(kubectl --kubeconfig ${var.cluster_config.config_file_path} get route cp-console -n ibm-common-services -o jsonpath='{.spec.host}')\\\" }\""]
+  program = ["sh", "-c", "echo \"{ \\\"host\\\": \\\"$(kubectl --kubeconfig ${var.cluster_config_path} get route cp-console -n ibm-common-services -o jsonpath='{.spec.host}')\\\" }\""]
 }
 
 // TODO: It may be considered in a future version to pass the cluster ID and the
