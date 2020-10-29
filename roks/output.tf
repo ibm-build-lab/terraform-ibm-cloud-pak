@@ -3,7 +3,7 @@ output "endpoint" {
 }
 
 output "id" {
-  value = ! var.enable ? "" : var.on_vpc ? join("", ibm_container_vpc_cluster.cluster.*.id) : join("", ibm_container_cluster.cluster.*.id)
+  var.enable ? (var.on_vpc ? join("", ibm_container_vpc_cluster.cluster.*.id) : join("", ibm_container_cluster.cluster.*.id)) : ""
 }
 
 output "name" {
