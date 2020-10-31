@@ -47,9 +47,11 @@ getToken() {
   echo $T | grep -q "incidentID" && return
 
   if [[ -n $JQ ]]; then
-    echo $T | jq  -r .access_token
+    IC_IAM_TOKEN=$(echo $T | jq  -r .access_token)
+    IC_IAM_REFRESH_TOKEN=$(echo $T | jq  -r .refresh_token)
   else
-    echo $T | sed 's/.*"access_token":"\([^",]*\)",.*/\1/'
+    IC_IAM_TOKEN=$(echo $T | sed 's/.*"access_token":"\([^",]*\)",.*/\1/')
+    IC_IAM_REFRESH_TOKEN=$(echo $T | sed 's/.*"refresh_token":"\([^",]*\)",.*/\1/')
   fi
 }
 
@@ -66,6 +68,7 @@ vlans_at_dc() {
   all_vlans_json=$(curl -s -X GET \
     https://containers.cloud.ibm.com/global/v1/datacenters/$DC/vlans \
       -H "Authorization: Bearer $IC_IAM_TOKEN" \
+      -H "X-Auth-Refresh-Token: $IC_IAM_REFRESH_TOKEN" \
       -H 'accept: application/json'
   )
 
@@ -109,11 +112,11 @@ while (( "$#" )); do
 done
 
 # The API Token on the Schematics container is set in the env variable IC_IAM_TOKEN
-if [[ -z $IC_IAM_TOKEN ]]; then
+if [[ -z $IC_IAM_TOKEN || -z $IC_IAM_REFRESH_TOKEN ]]; then
   [[ -z $IC_API_KEY ]] && die "neither the IBM API Key or a Token were found. Export 'IC_API_KEY' with the IBM Cloud API Key"
 
-  IC_IAM_TOKEN=$(getToken)
-  [[ -z $IC_IAM_TOKEN ]] && die "Fail to get the IBM Cloud API Token"
+  getToken
+  [[ -z $IC_IAM_TOKEN || -z $IC_IAM_REFRESH_TOKEN ]] && die "Fail to get the IBM Cloud API Token"
 fi
 
 if ! echo $(datacenters) | grep -q "\"$datacenter\""; then
