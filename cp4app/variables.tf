@@ -3,19 +3,20 @@ variable "enable" {
   description = "If set to true installs Cloud-Pak for Applications on the given cluster"
 }
 
-variable "entitled_registry_key" {
-  description = "Get the entitlement key from: https://myibm.ibm.com/products-services/containerlibrary and save the key to this variable"
+variable "cluster_config_path" {
+  default     = "./.kube/config"
+  description = "Path to the Kubernetes configuration file to access your cluster"
 }
+
+variable "entitled_registry_key" {
+  description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
+}
+
 variable "entitled_registry_user_email" {
   description = "Docker email address"
 }
 
-variable "cluster_config_path" {
-  default     = "~/.kube/config"
-  description = "location of the kubernetes config file"
-}
-
-variable "cp4app_installer_command" {
+variable "installer_command" {
   default     = "install"
   description = "Command to execute by the icpa installer, the most common are: install, uninstall, check, upgrade"
 }
