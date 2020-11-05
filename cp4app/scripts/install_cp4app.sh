@@ -16,14 +16,14 @@ kubectl create secret docker-registry icpa-installer-pull-secret \
   --dry-run=client -o yaml | kubectl apply -f -
 
 echo "Create ConfigMap with the shell code to patch the ICPA installer"
-kubectl create configmap icpa-config \
+kubectl create configmap icpa-patch \
   --from-file=${ICPA_INSTALLER_PATCH_FILE} \
   --namespace=${ICPA_NAMESPACE} \
   --dry-run=client -o yaml | kubectl apply -f -
 
 echo "Create ConfigMap with Kubeconfig file content"
-kubectl create configmap icpa-config \
-  --from-file=$(dirname $KUBECONFIG) \
+kubectl create configmap icpa-kubeconfig \
+  --from-file=config=${KUBECONFIG} \
   --namespace=${ICPA_NAMESPACE} \
   --dry-run=client -o yaml | kubectl apply -f -
 
@@ -36,5 +36,15 @@ kubectl create configmap icpa-config-data \
 echo "Create and execute Job to install ICPA"
 echo "${ICPA_INSTALLER_JOB_CONTENT}" | kubectl apply -f -
 
-echo "Waiting for the job to complete"
-kubectl wait --for=condition=Complete --timeout=2h job/icpa-installer
+echo "Waiting for a pod to be created by the job"
+while [[ -z $pod ]]; do
+  sleep 1
+  pod=$(kubectl get pods --selector=job-name=icpa-installer -n icpa-installer --output=jsonpath='{.items[*].metadata.name}')
+done
+
+echo "Waiting for the job to complete or timeout in 2hrs"
+kubectl wait \
+  --for=condition=Complete \
+  --timeout=2h \
+  --namespace=${ICPA_NAMESPACE} \
+  job/icpa-installer
