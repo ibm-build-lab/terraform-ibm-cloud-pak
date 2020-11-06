@@ -1,19 +1,3 @@
-// provider "kubernetes" {
-//   config_path = var.enable ? var.cluster_config_path : null
-// }
-
-// resource "kubernetes_namespace" "mcm_namespace" {
-//   count = var.enable ? 1 : 0
-
-//   metadata {
-//     name = local.mcm_namespace
-//   }
-
-//   timeouts {
-//     delete = "2h"
-//   }
-// }
-
 locals {
   catalogsource_content = templatefile("${path.module}/templates/CatalogSource.yaml.tmpl", {
     openshift_version_number = local.openshift_version_number,
@@ -33,9 +17,6 @@ locals {
 resource "null_resource" "install_cp4mcm" {
   count = var.enable ? 1 : 0
 
-  // depends_on = [
-  //   kubernetes_namespace.mcm_namespace,
-  // ]
   triggers = {
     docker_credentials_sha1 = sha1(join("", [local.entitled_registry_user, var.entitled_registry_key, var.entitled_registry_user_email, local.entitled_registry, local.mcm_namespace]))
     catalogsource_sha1      = sha1(local.catalogsource_content)
@@ -61,48 +42,18 @@ resource "null_resource" "install_cp4mcm" {
   }
 }
 
-// data "kubernetes_secret" "mcm_credentials" {
-//   count = var.enable ? 1 : 0
-
-//   depends_on = [
-//     null_resource.install_cp4mcm,
-//   ]
-
-//   metadata {
-//     name      = "platform-auth-idp-credentials"
-//     namespace = "ibm-common-services"
-//   }
-// }
-
-// TODO: Move all these data external to a single script
-data "external" "kubectl_get_mcm_admin_username" {
+data "external" "get_endpoints" {
   count = var.enable ? 1 : 0
 
   depends_on = [
     null_resource.install_cp4mcm,
   ]
 
-  program = ["sh", "-c", "echo \"{ \\\"username\\\": \\\"$(kubectl --kubeconfig ${var.cluster_config_path} get secret platform-auth-idp-credentials -n ibm-common-services -o jsonpath='{.data.admin_username}')\\\" }\""]
-}
+  program = ["/bin/bash", "${path.module}/scripts/get_endpoints.sh"]
 
-data "external" "kubectl_get_mcm_admin_password" {
-  count = var.enable ? 1 : 0
-
-  depends_on = [
-    null_resource.install_cp4mcm,
-  ]
-
-  program = ["sh", "-c", "echo \"{ \\\"password\\\": \\\"$(kubectl --kubeconfig ${var.cluster_config_path} get secret platform-auth-idp-credentials -n ibm-common-services -o jsonpath='{.data.admin_password}')\\\" }\""]
-}
-
-data "external" "kubectl_get_endpoint" {
-  count = var.enable ? 1 : 0
-
-  depends_on = [
-    null_resource.install_cp4mcm,
-  ]
-
-  program = ["sh", "-c", "echo \"{ \\\"host\\\": \\\"$(kubectl --kubeconfig ${var.cluster_config_path} get route cp-console -n ibm-common-services -o jsonpath='{.spec.host}')\\\" }\""]
+  query = {
+    kubeconfig = var.cluster_config_path
+  }
 }
 
 // TODO: It may be considered in a future version to pass the cluster ID and the
