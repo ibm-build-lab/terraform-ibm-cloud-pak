@@ -3,7 +3,7 @@
 ICPA_JOB_NAME="icpa-installer"
 
 # Get the KUBECONFIG variable from STDIN
-eval "$(jq -r '@sh "export KUBECONFIG=\(.kubeconfig)" ICPA_NAMESPACE=\(.namespace)')"
+eval "$(jq -r '@sh "export KUBECONFIG=\(.kubeconfig) ICPA_NAMESPACE=\(.namespace)"')"
 
 pod=$(kubectl get pods --selector=job-name=${ICPA_JOB_NAME} -n ${ICPA_NAMESPACE} --output=jsonpath='{.items[*].metadata.name}')
 
