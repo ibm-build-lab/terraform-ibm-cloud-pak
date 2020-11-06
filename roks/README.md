@@ -2,7 +2,7 @@
 
 This Terraform Module creates an Openshift (ROKS) cluster on IBM Cloud Classic or VPC Gen 2 infrastructure.
 
-**Module Source**: `git::https://github.com/ibm-pett/terraform-ibm-cloud-pak.git//roks`
+**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks`
 
 - [Terraform Module to Create an OpenShift Cluster on IBM Cloud](#terraform-module-to-create-an-openshift-cluster-on-ibm-cloud)
   - [Use](#use)
@@ -32,13 +32,13 @@ export IAAS_CLASSIC_API_KEY="< Your IBM Cloud Classic API Key here >"
 export IC_API_KEY="< IBM Cloud API Key >"
 ```
 
-Use the `module` resource pointing the `source` to the location of this module, either local (i.e. `../roks`) or remote (`git::https://github.com/ibm-pett/terraform-ibm-cloud-pak.git//roks`). Then pass the input parameters depending of the infrastructure to deploy the cluster: Classic or VPC
+Use the `module` resource pointing the `source` to the location of this module, either local (i.e. `../roks`) or remote (`git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks`). Then pass the input parameters depending of the infrastructure to deploy the cluster: Classic or VPC
 
 - ROKS on **IBM Cloud Classic**
 
 ```hcl
 module "cluster" {
-  source = "git::https://github.com/ibm-pett/terraform-ibm-cloud-pak.git//roks"
+  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks"
 
   // General variables:
   on_vpc         = false
@@ -65,7 +65,7 @@ module "cluster" {
 
 ```hcl
 module "cluster" {
-  source = "git::https://github.com/ibm-pett/terraform-ibm-cloud-pak.git//roks"
+  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks"
 
   // General variables:
   on_vpc         = true

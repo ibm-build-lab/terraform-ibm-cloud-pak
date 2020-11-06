@@ -2,7 +2,7 @@
 
 This Terraform Module install **Multi Cloud Management Cloud Pak** on an existing Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `git::https://github.com/ibm-pett/terraform-ibm-cloud-pak.git//cp4mcm`
+**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4mcm`
 
 - [Terraform Module to install Cloud Pak for Multi Cloud Management](#terraform-module-to-install-cloud-pak-for-multi-cloud-management)
   - [Use](#use)
@@ -41,11 +41,11 @@ Before using the Cloud Pak for Multi Cloud Management module it's required to ha
 
 ### Building a ROKS cluster
 
-To build the cluster in your code, use the ROKS module, pointing it with `source` to the location of this module (`git::https://github.com/ibm-pett/terraform-ibm-cloud-pak.git//roks`). Then pass the input parameters with the cluster specification required to run MCM.
+To build the cluster in your code, use the ROKS module, pointing it with `source` to the location of this module (`git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks`). Then pass the input parameters with the cluster specification required to run MCM.
 
 ```hcl
 module "cluster" {
-  source = "git::https://github.com/ibm-pett/terraform-ibm-cloud-pak.git//roks"
+  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks"
   ...
 }
 ```
@@ -85,11 +85,11 @@ Using Terraform 0.12 the workaround is to use the boolean input parameter `enabl
 
 ### Using the CP4MCM Module
 
-Use the `module` block assigning the `source` parameter to the location of this module, either local (i.e. `../cp4mcm`) or remote (`git::https://github.com/ibm-pett/terraform-ibm-cloud-pak.git//cp4mcm`). Then pass the input parameters required to install Cloud Pak for Multi Cloud Management.
+Use the `module` block assigning the `source` parameter to the location of this module, either local (i.e. `../cp4mcm`) or remote (`git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4mcm`). Then pass the input parameters required to install Cloud Pak for Multi Cloud Management.
 
 ```hcl
 module "cp4mcm" {
-  source = "git::https://github.com/ibm-pett/terraform-ibm-cloud-pak.git//cp4mcm"
+  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4mcm"
   enable = true
 
   // ROKS cluster parameters:

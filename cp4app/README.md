@@ -2,7 +2,7 @@
 
 This Terraform Module install **Applications Cloud Pak** on an existing Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `git::https://github.com/ibm-pett/terraform-ibm-cloud-pak.git//cp4app`
+**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4app`
 
 - [Terraform Module to install Cloud Pak for Applications](#terraform-module-to-install-cloud-pak-for-applications)
   - [Use](#use)
@@ -41,11 +41,11 @@ Before using the Cloud Pak for Applications module it's required to have an Open
 
 ### Building a ROKS cluster
 
-To build the cluster in your code, use the ROKS module, pointing it with `source` to the location of this module (`git::https://github.com/ibm-pett/terraform-ibm-cloud-pak.git//roks`). Then pass the input parameters with the cluster specification required to run CP4App.
+To build the cluster in your code, use the ROKS module, pointing it with `source` to the location of this module (`git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks`). Then pass the input parameters with the cluster specification required to run CP4App.
 
 ```hcl
 module "cluster" {
-  source = "git::https://github.com/ibm-pett/terraform-ibm-cloud-pak.git//roks"
+  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks"
   ...
 }
 ```
@@ -85,11 +85,11 @@ Using Terraform 0.12 the workaround is to use the boolean input parameter `enabl
 
 ### Using the cp4app Module
 
-Use the `module` block assigning the `source` parameter to the location of this module, either local (i.e. `../cp4app`) or remote (`git::https://github.com/ibm-pett/terraform-ibm-cloud-pak.git//cp4app`). Then pass the input parameters required to install Cloud Pak for Applications.
+Use the `module` block assigning the `source` parameter to the location of this module, either local (i.e. `../cp4app`) or remote (`git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4app`). Then pass the input parameters required to install Cloud Pak for Applications.
 
 ```hcl
 module "cp4app" {
-  source = "git::https://github.com/ibm-pett/terraform-ibm-cloud-pak.git//cp4app"
+  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4app"
   enable = true
 
   entitled_registry_key        = file("${path.cwd}/entitlement.key")

@@ -6,9 +6,9 @@ This repository contain a collection of Terraform modules to be used to handle C
 
 | Name   | Description                                                                                      | Source                                                                 |
 | ------ | ------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------- |
-| ROKS   | Provision an OpenShift cluster. An OpenShift cluster is required to install any Cloud Pak module | `git::https://github.com/ibm-pett/terraform-ibm-cloud-pak.git//roks`   |
-| CP4MCM | Install MultiCloud Management Cloud Pak on an existing OpenShift cluster                         | `git::https://github.com/ibm-pett/terraform-ibm-cloud-pak.git//cp4mcm` |
-| CP4APP | Install Applications Cloud Pak on an existing OpenShift cluster                                  | `git::https://github.com/ibm-pett/terraform-ibm-cloud-pak.git//cp4app` |
+| ROKS   | Provision an OpenShift cluster. An OpenShift cluster is required to install any Cloud Pak module | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks`   |
+| CP4MCM | Install MultiCloud Management Cloud Pak on an existing OpenShift cluster                         | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4mcm` |
+| CP4APP | Install Applications Cloud Pak on an existing OpenShift cluster                                  | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4app` |
 
 ## Use
 
@@ -42,7 +42,7 @@ To build the cluster in your code, use the ROKS module, using the `module` resou
 
 ```hcl
 module "cluster" {
-  source = "github.com/ibm-pett/terraform-ibm-cloud-pak/roks"
+  source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak/roks"
   ...
 }
 ```
@@ -94,7 +94,7 @@ data "ibm_container_cluster_config" "cluster_config" {
 }
 
 module "cp4mcm" {
-  source = "github.com/ibm-pett/terraform-ibm-cloud-pak/cp4mcm"
+  source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak/cp4mcm"
 
   // ROKS cluster parameters:
   resource_group    = var.resource_group
@@ -119,7 +119,7 @@ To build an OpenShift cluster on IBM VPC and install CP4APP on it, the code may 
 
 ```hcl
 module "cluster" {
-  source = "github.com/ibm-pett/terraform-ibm-cloud-pak/roks"
+  source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak/roks"
 
   on_vpc         = true
   project_name   = "cp4app"
@@ -134,7 +134,7 @@ module "cluster" {
 }
 
 module "cp4app" {
-  source = "github.com/ibm-pett/terraform-ibm-cloud-pak/cp4app"
+  source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak/cp4app"
 
   // ROKS cluster parameters:
   cluster_config_path          = module.cluster.config.config_file_path
