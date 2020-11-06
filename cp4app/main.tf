@@ -52,5 +52,6 @@ data "external" "get_endpoints" {
 
   query = {
     kubeconfig = var.cluster_config_path
+    namespace  = local.icpa_namespace
   }
 }
