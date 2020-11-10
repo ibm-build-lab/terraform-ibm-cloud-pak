@@ -5,8 +5,8 @@ data "external" "vlans" {
 
 locals {
   private_vlan_number = var.private_vlan_number != "" ? var.private_vlan_number : length(data.external.vlans) > 0 ? data.external.vlans.0.result.private : ""
-  public_vlan_number  = var.public_vlan_number  != "" ? var.public_vlan_number  : length(data.external.vlans) > 0 ? data.external.vlans.0.result.public  : ""
-  vlan_error = length(data.external.vlans) > 0 ? data.external.vlans.0.result.error  : ""
+  public_vlan_number  = var.public_vlan_number != "" ? var.public_vlan_number : length(data.external.vlans) > 0 ? data.external.vlans.0.result.public : ""
+  vlan_error          = length(data.external.vlans) > 0 ? data.external.vlans.0.result.error : ""
 }
 
 resource "null_resource" "debug" {

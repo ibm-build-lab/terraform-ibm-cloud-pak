@@ -21,7 +21,7 @@ var-%:
 	@echo "infra = \"$*\""			 					>> $(TEST_TF_VAR_FILE)
 	@echo "region = \"$(TF_VAR_region)\""	>> $(TEST_TF_VAR_FILE)
 	@[[ -z $$TF_VAR_cluster_id ]] || echo "cluster_id = \"$$TF_VAR_cluster_id\"" 	>> $(TEST_TF_VAR_FILE)
-	@[[ "$*" != "classic" ]]      || echo "datacenter = \"$(TF_VAR_datacenter)\""	>> $(TEST_TF_VAR_FILE);
+	@[[ "$*" != "classic" ]]      || echo "datacenter = \"$(TF_VAR_datacenter)\""	>> $(TEST_TF_VAR_FILE)
 	@terraform fmt $(TEST_TF_VAR_FILE)
 
 validate:
