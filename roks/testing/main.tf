@@ -30,11 +30,15 @@ module "cluster" {
   // config_admin    = false
   // config_network  = false
 
+  // Temporary, until the issue with the API permissions issues is fixed
+  private_vlan_number = var.private_vlan_number
+  public_vlan_number  = var.public_vlan_number
+
   // Parameters for the Workers
-  flavors        = local.flavors
-  workers_count  = local.workers_count
+  flavors        = var.flavors
+  workers_count  = var.workers_count
   datacenter     = var.datacenter
-  vpc_zone_names = local.vpc_zone_names
+  vpc_zone_names = var.vpc_zone_names
 }
 
 // Test Output Parameters
