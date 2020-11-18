@@ -1,0 +1,61 @@
+fileservers:
+- url: https://raw.github.com/IBM/cloud-pak/master/repo/cpd3
+registry:
+- url: cp.icr.io/cp/cpd
+  username: cp
+  apikey: ${ entitled_registry_key }
+  name: base-registry
+%{ if install_guardium_external_stap ~}
+- url: store/ibmcorp
+  username: ${ docker_id }
+  apikey: ${ docker_access_token }
+  name: estap-registry
+%{~ endif ~}
+%{ if install_watson_assistant ~}
+- url: cp.icr.io
+  username: "cp"
+  apikey: ${ entitled_registry_key ~}
+  namespace: "cp/watson-assistant"
+  name: wa-registry
+%{~ endif ~}
+%{ if install_watson_assistant_for_voice_interaction ~}
+- url: cp.icr.io/cp
+  username: cp
+  apikey: ${ entitled_registry_key ~}
+  name: voice-gateway
+%{~ endif ~}
+%{ if install_watson_discovery ~}
+- url: cp.icr.io
+  username: cp
+  apikey: ${ entitled_registry_key ~}
+  namespace: "cp/watson-discovery"
+  name: watson-discovery-registry
+%{~ endif ~}
+%{ if install_watson_knowledge_studio ~}
+- url: cp.icr.io
+  username: cp
+  apikey: ${ entitled_registry_key ~}
+  namespace: "cp/knowledge-studio"
+  name: wks-registry
+%{~ endif ~}
+%{ if install_watson_language_translator ~}
+- url: cp.icr.io
+  username: cp
+  apikey: ${ entitled_registry_key ~}
+  namespace: "cp/watson-lt"
+  name: lt-registry
+%{~ endif ~}
+%{ if install_watson_speech_text ~}
+- url: cp.icr.io
+  username: cp
+  apikey: ${ entitled_registry_key ~}
+  namespace: "cp/watson-speech"
+  name: spch-registry
+%{~ endif ~}
+%{ if install_edge_analytics ~}
+- url: cp.icr.io
+  username: cp
+  apikey: ${ entitled_registry_key ~}
+  namespace: "cp/edge"
+  name: edge-analytics
+%{~ endif ~}
