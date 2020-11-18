@@ -1,6 +1,6 @@
 # Test CP4DATA Terraform Module
 
-This module test requires to have a running OpenShift cluster with - at least - the basic DATA requirements. You need the cluster ID or name, and the resource group where it is running. These 2 parameters are passed to the module on environment variables, see below.
+This module test requires to have a running OpenShift cluster with - at least - the basic Cloud Pak for Data requirements. You need the cluster ID or name, and the resource group where it is running. These 2 parameters are passed to the module on environment variables, see below.
 
 The second requirement is to have an Entitlement Key, to obtain such key go to https://myibm.ibm.com/products-services/containerlibrary and store it in the file `entitlement.key` in the root of this repository. If you use that filename, the file won't be published to GitHub. The module also needs the username or email address of the user owner of the entitlement key. Export the username and the cluster parameters in the following environment variables, for example:
 
@@ -73,7 +73,7 @@ The most common variables you can set in the `test.auto.tfvars` file are:
 - `resource_group`: Resource group where the cluster is running. Default value is `default`
 - `config_dir`: Directory to download the kubeconfig file. Default value is `./.kube/config`
 
-One of the Test Scenario is to verify the YAML files rendered to install DATA, these files are generated in the directory `rendered_files`. Go to this directory to validate they are generated correctly.
+One of the Test Scenario is to verify the YAML files rendered to install CP4Data, these files are generated in the directory `rendered_files`. Go to this directory to validate they are generated correctly.
 
 ## 3. Test the Kubernetes cluster
 
@@ -86,32 +86,6 @@ kubectl cluster-info
 
 # Namespace
 kubectl get namespaces $(terraform output namespace)
-
-# Secret
-kubectl get secrets -n $(terraform output namespace) ibm-management-pull-secret -o yaml
-
-# CatalogSource
-kubectl -n openshift-marketplace get catalogsource
-kubectl -n openshift-marketplace get catalogsource ibm-management-orchestrator
-kubectl -n openshift-marketplace get catalogsource opencloud-operators
-
-# Subscription
-kubectl -n openshift-operators get subscription ibm-common-service-operator-stable-v1-opencloud-operators-openshift-marketplace ibm-management-orchestrator operand-deployment-lifecycle-manager-app
-
-# Ingress
-kubectl -n openshift-ingress get route router-default
-
-# Installation
-kubectl -n $(terraform output namespace) get installations.orchestrator.management.ibm.com ibm-management
-
-# URL to DATA Console
-kubectl -n ibm-common-services get route cp-console  -o jsonpath='{.spec.host}'
-
-# DATA Credentials
-# User:
-kubectl -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_username}' | base64 -d
-# Password:
-kubectl -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d
 ```
 
 ## 4. Destroy
