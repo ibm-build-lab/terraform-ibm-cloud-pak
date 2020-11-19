@@ -48,7 +48,7 @@ echo "${FMT_INF} ... from ${INSTALLER_URL}${FMT_END}"
 rm -rf $INSTALL_DIR
 mkdir -p $INSTALL_DIR
 curl -sSL "$INSTALLER_URL" \
-  | tar -xzf - -C $INSTALL_DIR
+  | tar -xvf - -C $INSTALL_DIR
 mv $INSTALL_DIR/bin/cpd-$OS_NAME ./cpd
 # Optional: Remove everything downloaded to save space
 # rm -rf $INSTALL_DIR
