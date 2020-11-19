@@ -60,8 +60,8 @@ v=$(./cpd version | cut -f2 -d' ')
 }
 echo "${FMT_INF} CPD v$v installed${FMT_END}"
 
-echo "${FMT_INF} Creating namespace ${DATA_NAMESPACE}${FMT_END}"
-oc create namespace ${DATA_NAMESPACE} --dry-run=client -o yaml | oc apply -f -
+# echo "${FMT_INF} Creating namespace ${DATA_NAMESPACE}${FMT_END}"
+# oc create namespace ${DATA_NAMESPACE} --dry-run=client -o yaml | oc apply -f -
 
 echo "${FMT_INF} Setting valid route to containers registry for IBM Cloud Pak for Data images${FMT_END}"
 oc patch configs.imageregistry.operator.openshift.io/cluster --type=merge --patch '{"spec":{"defaultRoute":true}}'
