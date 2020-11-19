@@ -44,6 +44,7 @@ FMT_ERR="\x1B[91;1m[INSTALLER : ERROR]\x1B[0m\x1B[91m"
 FMT_END="\x1B[0m"
 
 echo "${FMT_INF} Downloading the cp4data ${EDITION_NAME} installer v${VERSION} ...${FMT_END}"
+echo "${FMT_INF} ... from ${INSTALLER_URL}${FMT_END}"
 rm -rf $INSTALL_DIR
 mkdir -p $INSTALL_DIR
 curl -sSL "$INSTALLER_URL" \
