@@ -2,13 +2,24 @@
 
 This repository contain a collection of Terraform modules to be used to handle Cloud Paks.
 
+- [IBM Terraform Modules to handle Cloud Paks](#ibm-terraform-modules-to-handle-cloud-paks)
+  - [Modules](#modules)
+  - [Use](#use)
+    - [Building a ROKS cluster](#building-a-roks-cluster)
+    - [Using an existing ROKS cluster](#using-an-existing-roks-cluster)
+    - [Enable and Disable Cloud Pak Modules](#enable-and-disable-cloud-pak-modules)
+    - [Examples](#examples)
+  - [Testing](#testing)
+  - [Owners](#owners)
+
 ## Modules
 
-| Name   | Description                                                                                      | Source                                                                 |
-| ------ | ------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------- |
-| ROKS   | Provision an OpenShift cluster. An OpenShift cluster is required to install any Cloud Pak module | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks`   |
-| CP4MCM | Install MultiCloud Management Cloud Pak on an existing OpenShift cluster                         | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4mcm` |
-| CP4APP | Install Applications Cloud Pak on an existing OpenShift cluster                                  | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4app` |
+| Name    | Description                                                                                      | Source                                                                  |
+| ------- | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
+| ROKS    | Provision an OpenShift cluster. An OpenShift cluster is required to install any Cloud Pak module | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks`    |
+| CP4MCM  | Installs the MultiCloud Management Cloud Pak on an existing OpenShift cluster                    | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4mcm`  |
+| CP4APP  | Installs the Applications Cloud Pak on an existing OpenShift cluster                             | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4app`  |
+| CP4DATA | Installs the Cloud Pak for Data on an existing OpenShift cluster                                 | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4data` |
 
 ## Use
 
@@ -42,16 +53,16 @@ To build the cluster in your code, use the ROKS module, using the `module` resou
 
 ```hcl
 module "cluster" {
-  source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak/roks"
+  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks"
   ...
 }
 ```
 
-**IMPORTANT**: The output parameters of the ROKS module are used as input parameters to the Cloud Pak module to use however, at this time it recommended to not pass the parameters from the module, instead use the data resource `ibm_container_cluster_config` to get the cluster configuration and pass it to the module. This is explained in the following section.
+The output parameters of the ROKS module can be used as input parameters to the Cloud Pak module however, there may be some dependency issues depending of the resources in your code. If you experience some of these issues it is recommended to use the data resource `ibm_container_cluster_config` to get the cluster configuration and pass its output to the Cloud Pak module. This is explained in the following section.
 
 ### Using an existing ROKS cluster
 
-To use an existing OpenShift cluster add a code similar the following to get the cluster configuration:
+To use an existing OpenShift cluster add a code similar to the following to get the cluster configuration:
 
 ```hcl
 data "ibm_resource_group" "group" {
@@ -70,13 +81,13 @@ data "ibm_container_cluster_config" "cluster_config" {
 
 The variable `cluster_name_id` can have either the cluster name or ID. The resource group where the cluster is running is also required, use the data resource `ibm_resource_group` to get the ID from the resource group name.
 
-The output parameters of the cluster configuration data resource `ibm_container_cluster_config` are used as input parameters for the Cloud Pak module to use and install.
+The output parameters of the cluster configuration data resource `ibm_container_cluster_config` are used as input parameters for any Cloud Pak module.
 
-### Enable and Disable CP Modules
+### Enable and Disable Cloud Pak Modules
 
 In Terraform the block parameter `count` is used to define how many instances of the resource are needed, including zero, meaning the resource won't be created. The `count` parameter on `module` blocks is only available since Terraform version 0.13.
 
-Using Terraform 0.12 the workaround is to use the input parameter `enable`. Each module has the `enable` boolean input parameter with default value `true`. If the `enable` parameter is set to `false` the Cloud Pak is not installed. Use the `enable` parameter only if using Terraform 0.12 or lower, this parameter may be deprecated when Terraform 0.12 is not longer supported.
+If you are using Terraform 0.12 the workaround is the input parameter `enable`. Each module has the `enable` boolean input parameter with default value `true`. If the `enable` parameter is set to `false` the Cloud Pak is not installed. Use the `enable` parameter only if using Terraform 0.12 or lower, this parameter may be deprecated when Terraform 0.12 is not longer supported.
 
 ### Examples
 
@@ -94,24 +105,18 @@ data "ibm_container_cluster_config" "cluster_config" {
 }
 
 module "cp4mcm" {
-  source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak/cp4mcm"
+  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4mcm"
 
   // ROKS cluster parameters:
-  resource_group    = var.resource_group
-  openshift_version = var.k8s_version
-  cluster_config = {
-    host               = data.ibm_container_cluster_config.cluster_config.host
-    client_certificate = data.ibm_container_cluster_config.cluster_config.admin_certificate
-    client_key         = data.ibm_container_cluster_config.cluster_config.admin_key
-    token              = data.ibm_container_cluster_config.cluster_config.token
-    config_file_path   = data.ibm_container_cluster_config.cluster_config.config_file_path
-  }
+  openshift_version   = local.roks_version
+  cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
 
   // Entitled Registry parameters:
   entitled_registry_key        = var.entitled_registry_key
   entitled_registry_user_email = var.entitled_registry_user_email
 
-  ...
+  install_infr_mgt_module      = true
+  install_operations_module    = true
 }
 ```
 
@@ -119,49 +124,47 @@ To build an OpenShift cluster on IBM VPC and install CP4APP on it, the code may 
 
 ```hcl
 module "cluster" {
-  source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak/roks"
+  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks"
 
   on_vpc         = true
   project_name   = "cp4app"
-  roks_version   = "4.4"
-  ...
+  owner          = var.owner
+  environment    = "demo"
 
-  // Kubernetes Config variables:
-  download_config = true
-  config_dir      = "./.kube/config"
-
-  ...
+  resource_group       = var.resource_group
+  roks_version         = "4.4"
+  flavors              = ["c3c.16x32"]
+  workers_count        = [5]
+  datacenter           = var.datacenter
+  force_delete_storage = true
 }
 
 module "cp4app" {
-  source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak/cp4app"
+  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4app"
 
-  // ROKS cluster parameters:
   cluster_config_path          = module.cluster.config.config_file_path
-
   entitled_registry_key        = var.entitled_registry_key
   entitled_registry_user_email = var.entitled_registry_user_email
-  ...
 }
 ```
 
-**IMPORTANT**: If you are getting errors because the cluster configuration is incorrect or unavailable, the solution may be to use the data resource `ibm_container_cluster_config` to get the provisioned cluster configuration. Similar to the example for CP4MCM above.
+If you are getting errors because the cluster configuration is incorrect or unavailable, the solution may be to use the data resource `ibm_container_cluster_config` to get the provisioned cluster configuration. Similar to the example for CP4MCM above.
 
 ## Testing
 
-Each module has the `testing` directory to test the module manually (before commit any code change) and to be used by the CI/CD pipeline. You can also use the testing code to know how to use the module or to use it directly (not recommended but the option is there).
+Each module has the `testing` directory to test the module manually to test your changes before commiting them and to be used on the CI/CD pipeline. You can also use the testing code as documentation to know how to use the module.
 
-In a nutshell, to run any module test, just go to the `testing` directory, set/export - if required - some environment variables and run `make`, like this:
+In a nutshell, to run any module test, just go to the `testing` directory, set/export some environment variables such as the IBM Cloud credentals, the entitled registry parameters, etc.., then run `make`, like this:
 
 ```bash
 cd testing
-# export some environment variables
+# export environment variables
 make
 make test-kubernetes
 make clean
 ```
 
-For more information about testing read the README on each `testing` directory of the module to test. For more information about development and contributions to the code read the [CONTRIBUTE](./CONTRIBUTE.md) document.
+For more information about testing, such as what environment variables to export, read the README on each `testing` directory of the module to test. Also, read the `Makefile` if you'd like to know more. For more information about development and contributions to the code read the [CONTRIBUTE](./CONTRIBUTE.md) document.
 
 And ... don't forget to keep the Terraform code format clean and readable.
 
@@ -171,4 +174,4 @@ terraform fmt -recursive
 
 ## Owners
 
-Each module has the file `OWNER.md` with the collaborators working actively on this module. Although this project and modules are open source, and everyone can and is encourage to contribute, the module owners are responsible for the merging process. Please, contact them for any questions.
+Each module has the file `OWNER.md` with the collaborators working actively on this module. Although this project and modules are open source, and everyone can and is encourage to contribute, the module owners are responsible of the merging process. Please, contact them for any questions.
