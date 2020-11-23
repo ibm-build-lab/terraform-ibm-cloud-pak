@@ -62,7 +62,7 @@ ID        Name   Number   Type      Router         Supports Virtual Workers
 2979230          2341     public    fcr01a.dal10   true
 ```
 
-If you have multiple VLAN numbers, get the unamed ones. Identify the private and public by the **Type** column and provide just the numbers in the **ID** column. Like so in the `terraform.tfvars` file:
+If you have multiple VLAN numbers, get those without name. Identify the private and public by the **Type** column and provide just the numbers in the **ID** column. Like so in the `terraform.tfvars` file:
 
 ```yaml
 private_vlan_number = "2979232"
@@ -75,7 +75,7 @@ If there isn't any VLAN number in that datacenter, do not provide any as input v
 
 Having the credentials set and the `terraform.tfvars` file with custom parameters, the simplest way to run the test is to execute `make` to test on IBM Cloud Classic, or `make test-vpc` to test on IBM Cloud VPC.
 
-The other manuall way to run the test, is to execute the following Terraform commands:
+The other manual way to run the test, is to execute the following Terraform commands:
 
 ```bash
 terraform init

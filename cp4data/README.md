@@ -169,7 +169,6 @@ terraform destroy
 
 Once the Terraform code finish use the following output variables to access CP4DATA Dashboard:
 
-| Name        | Description                                                  |
-| ----------- | ------------------------------------------------------------ |
+| Name        | Description                                                      |
+| ----------- | ---------------------------------------------------------------- |
 | `namespace` | Kubernetes namespace where all the CP4DATA objects are installed |
-

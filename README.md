@@ -152,9 +152,9 @@ If you are getting errors because the cluster configuration is incorrect or unav
 
 ## Testing
 
-Each module has the `testing` directory to test the module manually to test your changes before commiting them and to be used on the CI/CD pipeline. You can also use the testing code as documentation to know how to use the module.
+Each module has the `testing` directory to test the module manually to test your changes before committing them and to be used on the CI/CD pipeline. You can also use the testing code as documentation to know how to use the module.
 
-In a nutshell, to run any module test, just go to the `testing` directory, set/export some environment variables such as the IBM Cloud credentals, the entitled registry parameters, etc.., then run `make`, like this:
+In a nutshell, to run any module test, just go to the `testing` directory, set/export some environment variables such as the IBM Cloud credentials, the entitled registry parameters, etc.., then run `make`, like this:
 
 ```bash
 cd testing
