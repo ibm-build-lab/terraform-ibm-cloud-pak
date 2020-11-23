@@ -46,13 +46,17 @@ To build the cluster in your code, use the ROKS module, pointing it with `source
 ```hcl
 module "cluster" {
   source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks"
+
+  roks_version         = "4.5"
+  flavors              = ["c3c.16x32"]
+  workers_count        = [5]
+  force_delete_storage = true
+
   ...
 }
 ```
 
-<!-- TODO: Add a link to the App requirements from the IBM documentation -->
-
-**IMPORTANT**: The output parameters of the ROKS module are used as input parameters for the cp4app module however, if this fails do not pass the parameters directly from the module, instead use the data resource `ibm_container_cluster_config` to get the cluster configuration and pass it to the module.
+The recommended parameters for a cluster on IBM Cloud Classic and OpenShift 4.5 or latest, is to have `5` workers machines of type `c3c.16x32`, however read the Cloud Pak for Multi Cloud Management documentation to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
 
 ### Using an existing ROKS cluster
 
@@ -104,7 +108,8 @@ After setting all the input parameters execute the following commands to create 
 ```bash
 terraform init
 terraform plan
-terraform apply
+
+terraform apply -auto-approve
 ```
 
 After around _20 to 30 minutes_ you can configure `kubectl` or `oc` to access the cluster executing:
@@ -121,35 +126,33 @@ kubectl get namespaces $(terraform output namespace)
 kubectl get all --namespace $(terraform output namespace)
 ```
 
-Then, using the following credentials you can open the dashboard in a browser using the `endpoint` output parameter as URL.
+Then, using the following URL endpoints you can open different dashboards in a browser.
 
 ```bash
-terraform output user
-terraform output password
+open $(terraform output endpoint)
 
-open "http://$(terraform output endpoint)"
+open $(terraform output advisor_ui_endpoint)
+
+open $(terraform output navigator_ui_endpoint)
 ```
 
 To clean up or remove cp4app and its dependencies from a cluster, assign `uninstall` to the `cp4app_installer_command` variable and execute `terraform apply`.
 
-**Note**: The uninstall/cleanup up process is a work in progress at this time, we are identifying the objects that needs to be deleted in order to have a successfully re-installation. This process will be included in the Terraform code.
-
 When you finish using the cluster, you can release the resources executing the following command, it should finish in about _8 minutes_:
 
 ```bash
-terraform destroy
+terraform destroy -auto-approve
 ```
 
 ## Input Variables
 
-| Name                           | Description                                                                                                                                                                                                                | Default   | Required |
-| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | -------- |
-| `enable`                       | If set to `false` does not install Cloud-Pak for Applications on the given cluster. By default it's enabled                                                                                                                | `true`    | No       |
-| `openshift_version`            | Openshift version installed in the cluster                                                                                                                                                                                 |           | Yes      |
-| `cluster_config_path`          | The path on your local machine where the cluster configuration file and certificates are downloaded to                                                                                                                     |           | Yes      |
+| Name                           | Description                                                  | Default   | Required |
+| ------------------------------ | ------------------------------------------------------------ | --------- | -------- |
+| `enable`                       | If set to `false` does not install Cloud-Pak for Applications on the given cluster. By default it's enabled | `true`    | No       |
+| `cluster_config_path`          | The path on your local machine where the cluster configuration file and certificates are downloaded to |           | Yes      |
 | `entitled_registry_key`        | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |           | Yes      |
-| `entitled_registry_user_email` | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key                                                                                                                 |           | Yes      |
-| `cp4app_installer_command`     | Command to execute by the icpa installer, the most common are: `install`, `uninstall`, `check`, `upgrade`                                                                                                                  | `install` | No       |
+| `entitled_registry_user_email` | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key |           | Yes      |
+| `cp4app_installer_command`     | Command to execute by the icpa installer, the most common are: `install`, `uninstall`, `check`, `upgrade` | `install` | No       |
 
 ## Output Variables
 

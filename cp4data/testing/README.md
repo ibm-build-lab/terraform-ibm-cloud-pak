@@ -1,6 +1,6 @@
 # Test CP4DATA Terraform Module
 
-This module test requires to have a running OpenShift cluster with - at least - the basic Cloud Pak for Data requirements. You need the cluster ID or name, and the resource group where it is running. These 2 parameters are passed to the module on environment variables, see below.
+This module test requires to have a running OpenShift cluster on IBM Cloud Classic with the basic MCM requirements. You need the cluster ID or name, and the resource group where it is running. These 2 parameters are passed to the testing code on environment variables, see below.
 
 The second requirement is to have an Entitlement Key, to obtain such key go to https://myibm.ibm.com/products-services/containerlibrary and store it in the file `entitlement.key` in the root of this repository. If you use that filename, the file won't be published to GitHub. The module also needs the username or email address of the user owner of the entitlement key. Export the username and the cluster parameters in the following environment variables, for example:
 
@@ -11,23 +11,14 @@ export TF_VAR_resource_group=cloud-pak-testing
 export TF_VAR_entitled_registry_user_email="John.Smith@ibm.com"
 ```
 
-The third and final requirement is to **Export the credentials for IBM Cloud** (step #1 below) in environment variables.
+The third and final requirement is to **[Export the credentials for IBM Cloud](#1-export-the-credentials-for-ibm-cloud)** using environment variables.
 
-For a quick test use `make` to execute the test on IBM Cloud Classic, like so:
+For a quick test use `make`, like so:
 
 ```bash
 make
 make test-kubernetes
 make test-data
-```
-
-To test DATA open in a browser the address from the `endpoint` output parameter using the `user` and `password` output parameters as credentials.
-
-```bash
-terraform output user
-terraform output password
-
-open "https://$(terraform output endpoint)"
 ```
 
 When the test is complete, you may destroy everything executing `make clean`
