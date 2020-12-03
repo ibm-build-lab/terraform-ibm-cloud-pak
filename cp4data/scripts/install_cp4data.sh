@@ -48,7 +48,7 @@ echo "${FMT_INF} ... from ${INSTALLER_URL}${FMT_END}"
 rm -rf $INSTALL_DIR
 mkdir -p $INSTALL_DIR
 curl -sSL "$INSTALLER_URL" \
-  | tar -xvf - -C $INSTALL_DIR
+  | tar -xvzf - -C $INSTALL_DIR
 
 cd $INSTALL_DIR
 
