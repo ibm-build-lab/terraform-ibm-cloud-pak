@@ -29,14 +29,14 @@ ENTITLED_REGISTRY_USER=${ENTITLED_REGISTRY_USER:-cp}
 # - If using OpenShift Container Storage, use 'ocs-storagecluster-cephfs'
 
 # Constants:
-VERSION=3.0.1
+VERSION=3.5.1
 EDITION_NAME="Standard Edition"
-EDITION=ste
+EDITION=SE
 # EDITION_NAME="Enterprise Edition"
-# EDITION=ee
-INSTALLER_URL="https://github.com/IBM/cpd-cli/releases/download/cpd-$VERSION/cloudpak4data-$EDITION-$VERSION.tgz"
+# EDITION=EE
 OS_NAME=$(uname | tr '[:upper:]' '[:lower:]')
 ARCHITECTURE=$(uname -m)
+INSTALLER_URL="https://github.com/IBM/cpd-cli/releases/download/v3.5.0/cpd-cli-$OS_NAME-$EDITION-$VERSION.tgz"
 INSTALL_DIR=./cloudpak4data
 
 FMT_INF="\x1B[93;1m[INSTALLER : INFO ]\x1B[0m\x1B[93m"
@@ -49,11 +49,10 @@ rm -rf $INSTALL_DIR
 mkdir -p $INSTALL_DIR
 curl -sSL "$INSTALLER_URL" \
   | tar -xvf - -C $INSTALL_DIR
-mv $INSTALL_DIR/bin/cpd-$OS_NAME ./cpd
-# Optional: Remove everything downloaded to save space
-# rm -rf $INSTALL_DIR
 
-v=$(./cpd version | cut -f2 -d' ')
+cd $INSTALL_DIR
+
+v=$(./cpd-cli version | grep 'CPD Release Version' | cut -f2 -d: | tr -d ' ')
 [[ "$v" == "$VERSION" ]] || {
   echo "${FMT_ERR} Failed to install CPD version $VERSION${FMT_END}"
   exit 1
@@ -95,13 +94,15 @@ REGISTRY_LOCATION="${DEFAULT_ROUTE}/${DATA_NAMESPACE}"
 # TODO: Setup Portworx if required
 
 echo "${FMT_INF} Setup environment${FMT_END}"
-rm -rf ./cpd-workspace
-./cpd adm --repo repo.yaml \
+# rm -rf ./cpd-cli-workspace
+./cpd-cli adm \
+  --repo repo.yaml \
   --assembly lite \
   --arch $ARCHITECTURE \
   --namespace $DATA_NAMESPACE
 
-./cpd adm --repo repo.yaml \
+./cpd-cli adm \
+  --repo repo.yaml \
   --accept-all-licenses \
   --assembly lite \
   --arch $ARCHITECTURE \
@@ -113,7 +114,8 @@ oc adm policy add-role-to-user cpd-admin-role $ADMIN \
   --namespace $DATA_NAMESPACE
 
 echo "${FMT_INF} Installing Cloud Pak for Data${FMT_END}"
-./cpd --repo repo.yaml \
+./cpd-cli install \
+  --repo repo.yaml \
   --assembly lite \
   --arch $ARCHITECTURE \
   --namespace $DATA_NAMESPACE \
@@ -142,7 +144,7 @@ echo "${FMT_INF} Installing Cloud Pak for Data${FMT_END}"
 }
 
 echo "${FMT_INF} Verifying Cloud Pack for Data installation${FMT_END}"
-./cpd status \
+./cpd-cli status \
   --assembly lite \
   --arch $ARCHITECTURE \
   --namespace $DATA_NAMESPACE
