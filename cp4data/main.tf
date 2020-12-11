@@ -33,7 +33,7 @@ resource "null_resource" "install_cp4data" {
   ]
 
   provisioner "local-exec" {
-    command     = "./install_cp4data.sh"
+    command     = "./install_cp4data_3.0.sh"
     working_dir = "${path.module}/scripts"
 
     environment = {
