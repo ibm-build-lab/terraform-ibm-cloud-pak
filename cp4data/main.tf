@@ -40,7 +40,7 @@ resource "null_resource" "install_cp4data" {
   ]
 
   provisioner "local-exec" {
-    command     = local.installer_filename[var.version]
+    command     = local.installer_filename[var.install_version]
     working_dir = "${path.module}/scripts"
 
     environment = {

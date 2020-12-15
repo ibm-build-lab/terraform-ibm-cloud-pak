@@ -46,7 +46,7 @@ variable "storage_class_name" {
 //   description = "location to "
 // }
 
-variable "version" {
+variable "install_version" {
   default     = "3.0"
   description = "version of Cloud Pak for Data to install. Available versions: 3.0, 3.5"
 }
