@@ -20,6 +20,13 @@ resource "local_file" "repo" {
   // filename = var.cp4data_config_file
 }
 
+locals {
+  installer_filename = {
+    "3.0" = "install_cp4data_3.0.sh"
+    "3.5" = "install_cp4data_3.0.sh"
+  }
+}
+
 resource "null_resource" "install_cp4data" {
   count = var.enable ? 1 : 0
 
@@ -33,7 +40,7 @@ resource "null_resource" "install_cp4data" {
   ]
 
   provisioner "local-exec" {
-    command     = "./install_cp4data_3.0.sh"
+    command     = local.installer_filename[var.version]
     working_dir = "${path.module}/scripts"
 
     environment = {
