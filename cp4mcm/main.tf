@@ -1,6 +1,9 @@
 locals {
-  catalogsource_content = templatefile("${path.module}/templates/CatalogSource.yaml.tmpl", {
-    openshift_version_number = local.openshift_version_number,
+  cs_catalogsource_content = templatefile("${path.module}/templates/CS_CatalogSource.yaml.tmpl", {
+    openshift_version_number = local.openshift_version_number
+  })
+  mgt_catalogsource_content = templatefile("${path.module}/templates/MGT_CatalogSource.yaml.tmpl", {
+    openshift_version_number = local.openshift_version_number
   })
   installation_content = templatefile("${path.module}/templates/Installation.yaml.tmpl", {
     namespace                    = local.mcm_namespace,
@@ -10,8 +13,12 @@ locals {
     install_operations_module    = var.install_operations_module,
     install_tech_prev_module     = var.install_tech_prev_module
   })
-  subscription_file    = "${path.module}/files/Subscription.yaml"
-  subscription_content = file(local.subscription_file)
+  cs_subscription_file    = "${path.module}/files/CS_Subscription.yaml"
+  cs_subscription_content = file(local.cs_subscription_file)
+  mgt_subscription_file    = "${path.module}/files/MGT_Subscription.yaml"
+  mgt_subscription_content = file(local.mgt_subscription_file)
+  commonservice_file    = "${path.module}/files/CommonService.yaml"
+  commonservice_content = file(local.commonservice_file)
 }
 
 resource "null_resource" "install_cp4mcm" {
@@ -19,8 +26,11 @@ resource "null_resource" "install_cp4mcm" {
 
   triggers = {
     docker_credentials_sha1 = sha1(join("", [local.entitled_registry_user, var.entitled_registry_key, var.entitled_registry_user_email, local.entitled_registry, local.mcm_namespace]))
-    catalogsource_sha1      = sha1(local.catalogsource_content)
-    subscription_sha1       = sha1(local.subscription_content)
+    cs_catalogsource_sha1   = sha1(local.cs_catalogsource_content)
+    cs_subscription_sha1    = sha1(local.cs_subscription_content)
+    mgt_catalogsource_sha1  = sha1(local.mgt_catalogsource_content)
+    mgt_subscription_sha1   = sha1(local.mgt_subscription_content)
+    commonservice_sha1      = sha1(local.commonservice_content)
     installation_sha1       = sha1(local.installation_content)
   }
 
@@ -34,9 +44,12 @@ resource "null_resource" "install_cp4mcm" {
       MCM_ENTITLED_REGISTRY_KEY        = local.entitled_registry_key
       MCM_ENTITLED_REGISTRY_USER_EMAIL = var.entitled_registry_user_email
       MCM_ENTITLED_REGISTRY            = local.entitled_registry
-      MCM_CATALOGSOURCE_CONTENT        = local.catalogsource_content
+      MCM_CS_CATALOGSOURCE_CONTENT     = local.cs_catalogsource_content
+      MCM_CS_SUBSCRIPTION_FILE         = local.cs_subscription_file
+      MCM_MGT_CATALOGSOURCE_CONTENT    = local.mgt_catalogsource_content
+      MCM_MGT_SUBSCRIPTION_FILE        = local.mgt_subscription_file
+      MCM_COMMONSERVICE_FILE           = local.commonservice_file
       MCM_INSTALLATION_CONTENT         = local.installation_content
-      MCM_SUBSCRIPTION_FILE            = local.subscription_file
       MCM_WAIT_SEC                     = 30
     }
   }

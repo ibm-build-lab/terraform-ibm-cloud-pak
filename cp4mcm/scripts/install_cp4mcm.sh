@@ -15,18 +15,43 @@ kubectl create secret docker-registry ibm-management-pull-secret \
   --namespace=${MCM_NAMESPACE} \
   --dry-run=client -o yaml | kubectl apply -f -
 
-echo "Creating the CP4MCM Operator catalog source"
+echo "Creating the Common Services Operator CatalogSource resource"
 kubectl apply -f -<<EOF
-${MCM_CATALOGSOURCE_CONTENT}
+${MCM_CS_CATALOGSOURCE_CONTENT}
+EOF
+
+echo "Creating the Common Services Subscription"
+kubectl apply -f ${MCM_CS_SUBSCRIPTION_FILE}
+
+kubectl get CommonService common-service -n ibm-common-services > /dev/null 2>&1
+result=$?
+counter=0
+while [[ "${result}" -ne 0 ]]
+do
+#    if [[ $counter -gt 10 ]]; then
+#        echo "The CommonService CustomResource was not created within five minutes; please attempt to install the product again."
+#        exit 1
+#    fi
+    counter=$((counter + 1))
+    echo "The CommonService CustomResource has not been created yet; delaying modification"
+    sleep ${MCM_WAIT_SEC};
+    oc get CommonService common-service -n ibm-common-services > /dev/null 2>&1
+    result=$?
+done
+
+echo "Modifying CommonService CustomResource"
+kubectl apply -f ${MCM_COMMONSERVICE_FILE}
+
+echo "Creating the IBM Management Orchestrator"
+kubectl apply -f -<<EOF
+${MCM_MGT_CATALOGSOURCE_CONTENT}
 EOF
 
 echo "Creating subscription for IBM Management Orchestrator, which creates other subscriptions"
-kubectl apply -f ${MCM_SUBSCRIPTION_FILE}
+kubectl apply -f ${MCM_MGT_SUBSCRIPTION_FILE}
 
-echo "Waiting for Subscription to be ready before install MCM"
-while ! kubectl get sub ibm-common-service-operator-stable-v1-opencloud-operators-openshift-marketplace ibm-management-orchestrator operand-deployment-lifecycle-manager-app --namespace openshift-operators; do
-  sleep ${MCM_WAIT_SEC};
-done
+sleep ${MCM_WAIT_SEC};
+sleep ${MCM_WAIT_SEC};
 
 echo "Creating the MCM installation"
 kubectl apply -f -<<EOF

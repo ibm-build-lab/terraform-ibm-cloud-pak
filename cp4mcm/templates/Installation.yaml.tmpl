@@ -1,8 +1,11 @@
 apiVersion: orchestrator.management.ibm.com/v1alpha1
 kind: Installation
 metadata:
+  annotations:
+  finalizers:
+  - ibm-management-orchestrator.management.ibm.com/finalizer
   name: ibm-management
-  namespace: ${ namespace }
+  namespace: cp4mcm
 spec:
   storageClass: ibmc-block-retain-gold
   imagePullSecret: ibm-management-pull-secret
@@ -49,7 +52,7 @@ spec:
               existingClaimName: ""
               existingDynamicVolume: false
               size: 15Gi
-              storageClassName: ibmc-file-gold
+              storageClassName: ibmc-file-gold-gid
               useDynamicProvisioning: true
           roks: true
           roksRegion: us-south
@@ -128,4 +131,3 @@ spec:
       name: ibm-management-manage-runtime
     enabled: ${ install_tech_prev_module }
     name: techPreview
-
