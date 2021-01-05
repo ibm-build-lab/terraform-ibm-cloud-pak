@@ -5,7 +5,7 @@ metadata:
   finalizers:
   - ibm-management-orchestrator.management.ibm.com/finalizer
   name: ibm-management
-  namespace: cp4mcm
+  namespace: ${ namespace }
 spec:
   storageClass: ibmc-block-retain-gold
   imagePullSecret: ibm-management-pull-secret
