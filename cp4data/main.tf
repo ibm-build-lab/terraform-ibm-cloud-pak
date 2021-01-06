@@ -23,7 +23,7 @@ resource "local_file" "repo" {
 locals {
   installer_filename = {
     "3.0" = "install_cp4data_3.0.sh"
-    "3.5" = "install_cp4data_3.0.sh"
+    "3.5" = "install_cp4data_3.5.sh"
   }
 }
 
