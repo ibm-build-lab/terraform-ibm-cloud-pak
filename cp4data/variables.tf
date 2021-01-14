@@ -23,10 +23,10 @@ variable "openshift_version" {
   description = "Openshift version installed in the cluster"
 }
 
-variable "cluster_endpoint" {
-  default     = "not-required"
-  description = "URL to access the OpenShift cluster"
-}
+// variable "cluster_endpoint" {
+//   default     = "not-required"
+//   description = "URL to access the OpenShift cluster"
+// }
 
 variable "entitled_registry_key" {
   description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
@@ -37,8 +37,8 @@ variable "entitled_registry_user_email" {
 }
 
 variable "storage_class_name" {
-  default     = "ibmc-file-gold-gid"
-  description = "Storage Class name to use"
+  default     = "ibmc-file-custom-gold-gid"
+  description = "Storage Class name to use. Supported Storage Classes: ibmc-file-custom-gold-gid, portworx-shared-gp3"
 }
 
 // variable "cp4data_config_file" {
@@ -47,12 +47,12 @@ variable "storage_class_name" {
 // }
 
 variable "install_version" {
-  default     = "3.0"
-  description = "version of Cloud Pak for Data to install. Available versions: 3.0, 3.5"
+  default     = "3.5"
+  description = "version of Cloud Pak for Data to install. Supported versions: 3.0, 3.5"
 }
 
 
-// Modules available install
+// Modules available to install
 
 variable "install_guardium_external_stap" {
   default     = false
@@ -95,10 +95,62 @@ variable "install_edge_analytics" {
   description = "Install Edge Analytics module"
 }
 
+// TODO: Identify what are these modules name as well as the default value
+variable "install_WKC" {
+  default     = false
+  description = "Install WKC module"
+}
+variable "install_WSL" {
+  default     = false
+  description = "Install WSL module"
+}
+variable "install_WML" {
+  default     = false
+  description = "Install WML module"
+}
+variable "install_AIOPENSCALE" {
+  default     = false
+  description = "Install AIOPENSCALE module"
+}
+variable "install_DV" {
+  default     = false
+  description = "Install DV module"
+}
+variable "install_STREAMS" {
+  default     = false
+  description = "Install STREAMS module"
+}
+variable "install_CDE" {
+  default     = false
+  description = "Install CDE module"
+}
+variable "install_SPARK" {
+  default     = false
+  description = "Install SPARK module"
+}
+variable "install_DB2WH" {
+  default     = false
+  description = "Install DB2WH module"
+}
+variable "install_DATAGATE" {
+  default     = false
+  description = "Install DATAGATE module"
+}
+variable "install_RSTUDIO" {
+  default     = false
+  description = "Install RSTUDIO module"
+}
+variable "install_DMC" {
+  default     = false
+  description = "Install DMC module"
+}
+
 locals {
-  data_namespace           = "cloudpak4data"
+  namespace                = "cloudpak4data"
   entitled_registry        = "cp.icr.io"
   entitled_registry_user   = "cp"
+  docker_registry          = join("/", [local.entitled_registry, local.entitled_registry_user, "cpd"])
+  docker_username          = "ekey"
   entitled_registry_key    = chomp(var.entitled_registry_key)
   openshift_version_regex  = regex("(\\d+).(\\d+)(.\\d+)*(_openshift)*", var.openshift_version)
   openshift_version_number = local.openshift_version_regex[3] == "_openshift" ? tonumber("${local.openshift_version_regex[0]}.${local.openshift_version_regex[1]}") : 0
