@@ -2,25 +2,25 @@
 
 # Required input parameters
 # - KUBECONFIG : Not used directly but required by oc
-
-# Optional input parameters with default values
-# - DATA_NAMESPACE
+# - DOCKER_REGISTRY_PASS
+# - DOCKER_USER_EMAIL
 # - STORAGE_CLASS_NAME
+# - STORAGE_CLASS_CONTENT
+# - INSTALLER_SENSITIVE_DATA
+# - INSTALLER_JOB_CONTENT
 
 # Software requirements:
 # - oc
-# - curl
+# - kubectl
 
-# TODO: Confirm these parameters are required:
-# - ENTITLED_REGISTRY_KEY         : Required to create the docker-registry secret but maybe this acrtion is not needed
-# - ENTITLED_REGISTRY_USER_EMAIL  : Required to create the docker-registry secret but maybe this acrtion is not needed
-# - CLUSTER_ENDPOINT              : Required to login with oc, but maybe this is not needed
-# - OPENSHIFT_VERSION             : Current actions are just for ROKS 4.5, the actions for previous versions need to be included
-
-DATA_NAMESPACE=${DATA_NAMESPACE:-cloudpak4data}
-STORAGE_CLASS_NAME=${STORAGE_CLASS_NAME:-ibmc-file-gold-gid}
-ADMIN=${ADMIN:-cp4data-sandbox-adm}
-ENTITLED_REGISTRY_USER=${ENTITLED_REGISTRY_USER:-cp}
+# Optional input parameters with default values:
+NAMESPACE=${NAMESPACE:-cloudpak4data}
+DOCKER_USERNAME=${DOCKER_USERNAME:-ekey}
+# TODO: Verify which is the default docker username: ekey or cp
+# DOCKER_USERNAME=${DOCKER_USERNAME:-cp}
+DOCKER_REGISTRY=${DOCKER_REGISTRY:-cp.icr.io/cp/cpd}
+# TODO: For non-production, use:
+# DOCKER_REGISTRY="cp.stg.icr.io/cp/cpd"
 
 # By default the persistent volume, the data, and your physical file storage device are deleted when CP4D is deprovisioned or the cluster destroyed.
 # TODO: Other values for STORAGE_CLASS_NAME could be:
@@ -28,123 +28,94 @@ ENTITLED_REGISTRY_USER=${ENTITLED_REGISTRY_USER:-cp}
 # - If using Portworx, use 'portworx-shared-gp3'
 # - If using OpenShift Container Storage, use 'ocs-storagecluster-cephfs'
 
-# Constants:
-VERSION=3.5.1
-EDITION_NAME="Standard Edition"
-EDITION=SE
-# EDITION_NAME="Enterprise Edition"
-# EDITION=EE
-OS_NAME=$(uname | tr '[:upper:]' '[:lower:]')
-ARCHITECTURE=$(uname -m)
-INSTALLER_URL="https://github.com/IBM/cpd-cli/releases/download/v3.5.0/cpd-cli-$OS_NAME-$EDITION-$VERSION.tgz"
-INSTALL_DIR=./cloudpak4data
 
-FMT_INF="\x1B[93;1m[INSTALLER : INFO ]\x1B[0m\x1B[93m"
-FMT_ERR="\x1B[91;1m[INSTALLER : ERROR]\x1B[0m\x1B[91m"
-FMT_END="\x1B[0m"
+if [[ ${STORAGE_CLASS_NAME} == "portworx-shared-gp3" ]]; then
+  echo "Checking Portworx storage is configured in the cluster"
+  if ! oc get sc | awk '{print $2}' | grep -q 'kubernetes.io/portworx-volume'; then
+    echo "[ERROR] Portworx storage is not configured on this cluster"
+    exit 1
+  fi
+else
+  echo "Creating StorageClass ${STORAGE_CLASS_NAME}"
+  echo "${STORAGE_CLASS_CONTENT}" | kubectl apply -f -
+fi
 
-echo "${FMT_INF} Downloading the cp4data ${EDITION_NAME} installer v${VERSION} ...${FMT_END}"
-echo "${FMT_INF} ... from ${INSTALLER_URL}${FMT_END}"
-rm -rf $INSTALL_DIR
-mkdir -p $INSTALL_DIR
-curl -sSL "$INSTALLER_URL" \
-  | tar -xvzf - -C $INSTALL_DIR
+echo "Creating namespace ${NAMESPACE}"
+kubectl create namespace ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
 
-cd $INSTALL_DIR
+echo "Creating ServiceAccount cpdinstall"
+kubectl create sa cpdinstall -n kube-system --dry-run=client -o yaml | kubectl apply -f -
+kubectl create sa cpdinstall -n ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
 
-v=$(./cpd-cli version | grep 'CPD Release Version' | cut -f2 -d: | tr -d ' ')
-[[ "$v" == "$VERSION" ]] || {
-  echo "${FMT_ERR} Failed to install CPD version $VERSION${FMT_END}"
-  exit 1
-}
-echo "${FMT_INF} CPD v$v installed${FMT_END}"
+echo "${SCC_ZENUID_CONTENT}" | kubectl apply -f -
+oc adm policy add-scc-to-user ${NAMESPACE}-zenuid system:serviceaccount:${NAMESPACE}:cpdinstall
+oc adm policy add-scc-to-user anyuid system:serviceaccount:${NAMESPACE}:icpd-anyuid-sa
+oc adm policy add-cluster-role-to-user cluster-admin system:serviceaccount:${NAMESPACE}:cpdinstall
+oc adm policy add-cluster-role-to-user cluster-admin system:serviceaccount:kube-system:cpdinstall
 
-# echo "${FMT_INF} Creating namespace ${DATA_NAMESPACE}${FMT_END}"
-# oc create namespace ${DATA_NAMESPACE} --dry-run=client -o yaml | oc apply -f -
+if ! oc get route -n openshift-image-registry | awk '{print $1}'| grep -q 'image-registry'; then
+  echo "Creating image registry route"
+  oc create route reencrypt --service=image-registry -n openshift-image-registry
+else
+  policy=`oc get route -n openshift-image-registry | awk '$1 == "image-registry" {print $5}'`
+  if [[ $policy != "reencrypt" ]]; then
+    echo "Recreating image registry route"
+    oc delete route image-registry -n openshift-image-registry
+    oc create route reencrypt --service=image-registry -n openshift-image-registry
+  fi
+fi
 
-echo "${FMT_INF} Setting valid route to containers registry for IBM Cloud Pak for Data images${FMT_END}"
-oc patch configs.imageregistry.operator.openshift.io/cluster --type=merge --patch '{"spec":{"defaultRoute":true}}'
+echo "Ensure the image registry is the default route"
+kubectl patch configs.imageregistry.operator.openshift.io/cluster --type merge -p '{"spec":{"defaultRoute":true}}'
+oc annotate route image-registry --overwrite haproxy.router.openshift.io/balance=source -n openshift-image-registry
 
-# TODO: Is this really required?
-# echo "${FMT_INF} Creating secret from entitlement key${FMT_END}"
-# oc create secret docker-registry ibm-management-pull-secret \
-#   --docker-username=cp \
-#   --docker-password=${ENTITLED_REGISTRY_KEY} \
-#   --docker-email=${ENTITLED_REGISTRY_USER_EMAIL} \
-#   --docker-server=cp.icr.io \
-#   --namespace=${DATA_NAMESPACE} \
-#   --dry-run=client -o yaml | oc apply -f -
+create_secret() {
+  secret_name=$1
+  namespace=$2
+  link=$3
 
-echo "${FMT_INF} Getting OpenShift Registry information${FMT_END}"
-# TODO: Is this really required?
-# oc login ${CLUSTER_ENDPOINT} --kubeconfig $KUBECONFIG
+  echo "Creating secret ${secret_name} on ${namespace} from entitlement key"
+  kubectl create secret docker-registry ${secret_name} \
+    --docker-server=${DOCKER_REGISTRY} \
+    --docker-username=${DOCKER_USERNAME} \
+    --docker-password=${DOCKER_REGISTRY_PASS} \
+    --docker-email=${DOCKER_USER_EMAIL} \
+    --namespace=${namespace} \
+    --dry-run=client -o yaml | kubectl apply -f -
 
-REGISTRY_FROM_CLUSTER="image-registry.openshift-image-registry.svc:5000/$DATA_NAMESPACE"
-
-DEFAULT_ROUTE=$(oc get route default-route -n openshift-image-registry --template='{{ .spec.host }}')
-[[ -z $DEFAULT_ROUTE ]] && {
-  echo "${FMT_ERR} failed to get the OpenShift Registry default route${FMT_END}"
-  exit 1
-}
-REGISTRY_LOCATION="${DEFAULT_ROUTE}/${DATA_NAMESPACE}"
-
-# TODO:
-#   According to the services to install new registries are added to the repo.yaml file.
-#   Instructions at: https://www.ibm.com/support/producthub/icpdata/docs/content/SSQNUZ_current/cpd/install/installation-files.html
-# TODO: Setup Portworx if required
-
-echo "${FMT_INF} Setup environment${FMT_END}"
-# rm -rf ./cpd-cli-workspace
-./cpd-cli adm \
-  --repo repo.yaml \
-  --assembly lite \
-  --arch $ARCHITECTURE \
-  --namespace $DATA_NAMESPACE
-
-./cpd-cli adm \
-  --repo repo.yaml \
-  --accept-all-licenses \
-  --assembly lite \
-  --arch $ARCHITECTURE \
-  --namespace $DATA_NAMESPACE \
-  --apply
-
-oc adm policy add-role-to-user cpd-admin-role $ADMIN \
-  --role-namespace=$DATA_NAMESPACE \
-  --namespace $DATA_NAMESPACE
-
-echo "${FMT_INF} Installing Cloud Pak for Data${FMT_END}"
-./cpd-cli install \
-  --repo repo.yaml \
-  --assembly lite \
-  --arch $ARCHITECTURE \
-  --namespace $DATA_NAMESPACE \
-  --storageclass $STORAGE_CLASS_NAME \
-  --cluster-pull-prefix $REGISTRY_FROM_CLUSTER \
-  --transfer-image-to $REGISTRY_LOCATION \
-  --target-registry-username $(oc whoami) \
-  --target-registry-password $(oc whoami -t) \
-  --insecure-skip-tls-verify \
-  # --accept-all-license \
-  # --dry-run
-
-# TODO:
-# If using Portworx, use:
-# --storageclass portworx-shared-gp3 \
-# --override cp-pwx-x86.YAML \
-
-# TODO:
-# If using OpenShift Container Storage, use:
-# --storageclass ocs-storagecluster-cephfs \
-# --override cp-ocs-x86.YAML \
-
-[[ $? -ne 0 ]] && {
-  echo "${FMT_ERR} failed to install Cloud Pak for Data${FMT_END}"
-  exit 1
+  [[ "${link}" != "no-link" ]] && oc secrets -n ${namespace} link cpdinstall icp4d-anyuid-docker-pull --for=pull
 }
 
-echo "${FMT_INF} Verifying Cloud Pack for Data installation${FMT_END}"
-./cpd-cli status \
-  --assembly lite \
-  --arch $ARCHITECTURE \
-  --namespace $DATA_NAMESPACE
+create_secret icp4d-anyuid-docker-pull ${NAMESPACE}
+create_secret icp4d-anyuid-docker-pull kube-system
+create_secret sa-${NAMESPACE} ${NAMESPACE} no-link
+
+echo "${INSTALLER_SENSITIVE_DATA}" | kubectl apply --namespace ${NAMESPACE} -f -
+
+echo "${INSTALLER_JOB_CONTENT}" | kubectl apply --namespace ${NAMESPACE} -f -
+if [[ $? -ne 0 ]]; then
+  echo "[ERROR] Fail to create the job installer"
+  exit 1
+fi
+
+echo "Waiting for installer pod to be created by the job"
+while [[ -z $pod ]]; do
+  sleep 2
+  pod=$(kubectl get pods --selector=job-name=cloud-installer -l app=cp4data-installer -n ${NAMESPACE} --output=jsonpath='{.items[*].metadata.name}')
+done
+
+echo "The installer job triggered the pod ${pod}"
+
+echo "Waiting for the job to complete or timeout in 2hrs"
+kubectl wait \
+  --for=condition=Complete \
+  --timeout=2h \
+  --namespace=${NAMESPACE} \
+  job/cloud-installer
+
+# Just for debugging, feel free to remove if annoying or not required in the logs
+kubectl describe job cp4data-installer -n ${NAMESPACE}
+if [[ -n $pod ]]; then
+  kubectl describe pod $pod -n ${NAMESPACE}
+  kubectl logs $pod -n ${NAMESPACE}
+fi
