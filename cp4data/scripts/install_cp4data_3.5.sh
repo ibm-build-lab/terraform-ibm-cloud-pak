@@ -2,12 +2,13 @@
 
 # Required input parameters
 # - KUBECONFIG : Not used directly but required by oc
+# - STORAGE_CLASS_NAME
 # - DOCKER_REGISTRY_PASS
 # - DOCKER_USER_EMAIL
-# - STORAGE_CLASS_NAME
 # - STORAGE_CLASS_CONTENT
 # - INSTALLER_SENSITIVE_DATA
 # - INSTALLER_JOB_CONTENT
+# - SCC_ZENUID_CONTENT
 
 # Software requirements:
 # - oc
@@ -90,8 +91,8 @@ create_secret icp4d-anyuid-docker-pull ${NAMESPACE}
 create_secret icp4d-anyuid-docker-pull kube-system
 create_secret sa-${NAMESPACE} ${NAMESPACE} no-link
 
+echo "Creating the job installer"
 echo "${INSTALLER_SENSITIVE_DATA}" | kubectl apply --namespace ${NAMESPACE} -f -
-
 echo "${INSTALLER_JOB_CONTENT}" | kubectl apply --namespace ${NAMESPACE} -f -
 if [[ $? -ne 0 ]]; then
   echo "[ERROR] Fail to create the job installer"
@@ -100,7 +101,7 @@ fi
 
 echo "Waiting for installer pod to be created by the job"
 while [[ -z $pod ]]; do
-  sleep 2
+  sleep 5
   pod=$(kubectl get pods --selector=job-name=cloud-installer -l app=cp4data-installer -n ${NAMESPACE} --output=jsonpath='{.items[*].metadata.name}')
 done
 
