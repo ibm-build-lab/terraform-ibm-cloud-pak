@@ -1,3 +1,5 @@
+TEST_VERSION 		?= 3.5
+
 CONFIG_DIR 			 = .kube/config
 OUTPUT_DIR 			 = rendered_files
 TEST_TF_VAR_FILE = test.auto.tfvars
@@ -7,8 +9,7 @@ default: test-classic
 all: fmt test-classic test-kubernetes
 
 fmt:
-	@terraform fmt
-	@terraform fmt ..
+	@terraform fmt -recursive ..
 
 check-api-key:
 	@[[ -n $$IC_API_KEY ]]
@@ -34,6 +35,7 @@ var-%:
 	@[[ -n $$TF_VAR_cluster_id ]]
 	@[[ -n $$TF_VAR_entitled_registry_user_email ]]
 	@echo "infra = \"$*\""												> $(TEST_TF_VAR_FILE)
+	@echo "install_version = \"$(TEST_VERSION)\"" >> $(TEST_TF_VAR_FILE)
 	@echo "config_dir = \"$(CONFIG_DIR)\"" 				>> $(TEST_TF_VAR_FILE)
 	@echo "cluster_id = \"$$TF_VAR_cluster_id\"" 	>> $(TEST_TF_VAR_FILE)
 	@echo "entitled_registry_user_email = \"$$TF_VAR_entitled_registry_user_email\"" 					>> $(TEST_TF_VAR_FILE)
@@ -44,8 +46,8 @@ validate:
 	@echo "Input Variables:"
 	@cat $(TEST_TF_VAR_FILE)
 	terraform fmt -recursive -check ..
-	terraform validate ..
-	terraform validate .
+	terraform validate ../..
+	terraform validate
 	terraform plan -lock=false -input=false
 
 init:
@@ -60,13 +62,13 @@ test-classic: check-classic-cred check-entitlement var-classic init validate
 	terraform apply -auto-approve
 
 test-kubernetes:
-	export KUBECONFIG=$$(terraform output config_file_path); \
+	export KUBECONFIG=$$(terraform output -state=terraform.tfstate config_file_path); \
 	kubectl cluster-info; \
-	kubectl get namespace $(terraform output namespace)
+	kubectl get namespace $(terraform output -state=terraform.tfstate namespace)
 
 test-data:
-	@kubectl get namespace $$(terraform output namespace) --kubeconfig=$$(terraform output config_file_path) > /dev/null
-	@[[ -n $$(terraform output endpoint) ]]
+	@kubectl get namespace $$(terraform output -state=terraform.tfstate namespace) --kubeconfig=$$(terraform output -state=terraform.tfstate config_file_path) > /dev/null
+	@[[ -n $$(terraform output -state=terraform.tfstate endpoint) ]]
 
 destroy:
 	terraform destroy -auto-approve

@@ -1,5 +1,5 @@
 locals {
-  repo_content = templatefile("../templates/repo.yaml.tmpl", {
+  repo_content = templatefile("../templates/repo.tmpl.yaml", {
     entitled_registry_key                          = local.entitled_registry_key,
     docker_id                                      = local.docker_id,
     docker_access_token                            = local.docker_access_token,
