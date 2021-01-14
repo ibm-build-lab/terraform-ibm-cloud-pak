@@ -4,7 +4,7 @@
 # - KUBECONFIG : Not used directly but required by oc
 
 # Optional input parameters with default values
-# - DATA_NAMESPACE
+# - NAMESPACE
 # - STORAGE_CLASS_NAME
 
 # Software requirements:
@@ -14,10 +14,8 @@
 # TODO: Confirm these parameters are required:
 # - ENTITLED_REGISTRY_KEY         : Required to create the docker-registry secret but maybe this acrtion is not needed
 # - ENTITLED_REGISTRY_USER_EMAIL  : Required to create the docker-registry secret but maybe this acrtion is not needed
-# - CLUSTER_ENDPOINT              : Required to login with oc, but maybe this is not needed
-# - OPENSHIFT_VERSION             : Current actions are just for ROKS 4.5, the actions for previous versions need to be included
 
-DATA_NAMESPACE=${DATA_NAMESPACE:-cloudpak4data}
+NAMESPACE=${NAMESPACE:-cloudpak4data}
 STORAGE_CLASS_NAME=${STORAGE_CLASS_NAME:-ibmc-file-gold-gid}
 ADMIN=${ADMIN:-cp4data-sandbox-adm}
 ENTITLED_REGISTRY_USER=${ENTITLED_REGISTRY_USER:-cp}
@@ -60,8 +58,8 @@ v=$(./cpd version | cut -f2 -d' ')
 }
 echo "${FMT_INF} CPD v$v installed${FMT_END}"
 
-# echo "${FMT_INF} Creating namespace ${DATA_NAMESPACE}${FMT_END}"
-# oc create namespace ${DATA_NAMESPACE} --dry-run=client -o yaml | oc apply -f -
+# echo "${FMT_INF} Creating namespace ${NAMESPACE}${FMT_END}"
+# oc create namespace ${NAMESPACE} --dry-run=client -o yaml | oc apply -f -
 
 echo "${FMT_INF} Setting valid route to containers registry for IBM Cloud Pak for Data images${FMT_END}"
 oc patch configs.imageregistry.operator.openshift.io/cluster --type=merge --patch '{"spec":{"defaultRoute":true}}'
@@ -73,21 +71,21 @@ oc patch configs.imageregistry.operator.openshift.io/cluster --type=merge --patc
 #   --docker-password=${ENTITLED_REGISTRY_KEY} \
 #   --docker-email=${ENTITLED_REGISTRY_USER_EMAIL} \
 #   --docker-server=cp.icr.io \
-#   --namespace=${DATA_NAMESPACE} \
+#   --namespace=${NAMESPACE} \
 #   --dry-run=client -o yaml | oc apply -f -
 
-echo "${FMT_INF} Getting OpenShift Registry information${FMT_END}"
+# echo "${FMT_INF} Getting OpenShift Registry information${FMT_END}"
 # TODO: Is this really required?
 # oc login ${CLUSTER_ENDPOINT} --kubeconfig $KUBECONFIG
 
-REGISTRY_FROM_CLUSTER="image-registry.openshift-image-registry.svc:5000/$DATA_NAMESPACE"
+REGISTRY_FROM_CLUSTER="image-registry.openshift-image-registry.svc:5000/$NAMESPACE"
 
 DEFAULT_ROUTE=$(oc get route default-route -n openshift-image-registry --template='{{ .spec.host }}')
 [[ -z $DEFAULT_ROUTE ]] && {
   echo "${FMT_ERR} failed to get the OpenShift Registry default route${FMT_END}"
   exit 1
 }
-REGISTRY_LOCATION="${DEFAULT_ROUTE}/${DATA_NAMESPACE}"
+REGISTRY_LOCATION="${DEFAULT_ROUTE}/${NAMESPACE}"
 
 # TODO:
 #   According to the services to install new registries are added to the repo.yaml file.
@@ -99,24 +97,24 @@ rm -rf ./cpd-workspace
 ./cpd adm --repo repo.yaml \
   --assembly lite \
   --arch $ARCHITECTURE \
-  --namespace $DATA_NAMESPACE
+  --namespace $NAMESPACE
 
 ./cpd adm --repo repo.yaml \
   --accept-all-licenses \
   --assembly lite \
   --arch $ARCHITECTURE \
-  --namespace $DATA_NAMESPACE \
+  --namespace $NAMESPACE \
   --apply
 
 oc adm policy add-role-to-user cpd-admin-role $ADMIN \
-  --role-namespace=$DATA_NAMESPACE \
-  --namespace $DATA_NAMESPACE
+  --role-namespace=$NAMESPACE \
+  --namespace $NAMESPACE
 
 echo "${FMT_INF} Installing Cloud Pak for Data${FMT_END}"
 ./cpd --repo repo.yaml \
   --assembly lite \
   --arch $ARCHITECTURE \
-  --namespace $DATA_NAMESPACE \
+  --namespace $NAMESPACE \
   --storageclass $STORAGE_CLASS_NAME \
   --cluster-pull-prefix $REGISTRY_FROM_CLUSTER \
   --transfer-image-to $REGISTRY_LOCATION \
@@ -145,4 +143,4 @@ echo "${FMT_INF} Verifying Cloud Pack for Data installation${FMT_END}"
 ./cpd status \
   --assembly lite \
   --arch $ARCHITECTURE \
-  --namespace $DATA_NAMESPACE
+  --namespace $NAMESPACE
