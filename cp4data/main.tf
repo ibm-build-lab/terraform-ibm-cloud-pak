@@ -44,27 +44,18 @@ locals {
     docker_registry    = local.docker_registry,
 
     // Modules to deploy
-    install_WKC         = var.install_WKC,
-    install_WSL         = var.install_WSL,
-    install_WML         = var.install_WML,
-    install_AIOPENSCALE = var.install_AIOPENSCALE,
-    install_DV          = var.install_DV,
-    install_STREAMS     = var.install_STREAMS,
-    install_CDE         = var.install_CDE,
-    install_SPARK       = var.install_SPARK,
-    install_DB2WH       = var.install_DB2WH,
-    install_DATAGATE    = var.install_DATAGATE,
-    install_RSTUDIO     = var.install_RSTUDIO,
-    install_DMC         = var.install_DMC,
-
-    // install_guardium_external_stap                 = var.install_guardium_external_stap,
-    // install_watson_assistant                       = var.install_watson_assistant,
-    // install_watson_assistant_for_voice_interaction = var.install_watson_assistant_for_voice_interaction,
-    // install_watson_discovery                       = var.install_watson_discovery,
-    // install_watson_knowledge_studio                = var.install_watson_knowledge_studio,
-    // install_watson_language_translator             = var.install_watson_language_translator,
-    // install_watson_speech_text                     = var.install_watson_speech_text,
-    // install_edge_analytics                         = var.install_edge_analytics,
+    install_watson_knowledge_catalog = var.install_watson_knowledge_catalog, // WKC
+    install_watson_studio            = var.install_watson_studio,            // WSL
+    install_watson_machine_learning  = var.install_watson_machine_learning,  // WML
+    install_watson_open_scale        = var.install_watson_open_scale,        // AIOPENSCALE
+    install_data_virtualization      = var.install_data_virtualization,      // DV
+    install_streams                  = var.install_streams,                  // STREAMS
+    install_analytics_dashboard      = var.install_analytics_dashboard,      // CDE
+    install_spark                    = var.install_spark,                    // SPARK
+    install_db2_warehouse            = var.install_db2_warehouse,            // DB2WH
+    install_db2_data_gate            = var.install_db2_data_gate,            // DATAGATE
+    install_rstudio                  = var.install_rstudio,                  // RSTUDIO
+    install_db2_data_management      = var.install_db2_data_management,      // DMC
   })
 }
 

@@ -41,29 +41,29 @@ spec:
               name: cp4dinstaller-sensitive-data
               key: docker-registry-password
         - name: DEPLOY_WKC
-          value: "${ install_WKC }"
+          value: "${ install_watson_knowledge_catalog }"
         - name: DEPLOY_WSL
-          value: "${ install_WSL }"
+          value: "${ install_watson_studio }"
         - name: DEPLOY_WML
-          value: "${ install_WML }"
+          value: "${ install_watson_machine_learning }"
         - name: DEPLOY_AIOPENSCALE
-          value: "${ install_AIOPENSCALE }"
+          value: "${ install_watson_open_scale }"
         - name: DEPLOY_DV
-          value: "${ install_DV }"
+          value: "${ install_data_virtualization }"
         - name: DEPLOY_STREAMS
-          value: "${ install_STREAMS }"
+          value: "${ install_streams }"
         - name: DEPLOY_CDE
-          value: "${ install_CDE }"
+          value: "${ install_analytics_dashboard }"
         - name: DEPLOY_SPARK
-          value: "${ install_SPARK }"
+          value: "${ install_spark }"
         - name: DEPLOY_DB2WH
-          value: "${ install_DB2WH }"
+          value: "${ install_db2_warehouse }"
         - name: DEPLOY_DATAGATE
-          value: "${ install_DATAGATE }"
+          value: "${ install_db2_data_gate }"
         - name: DEPLOY_RSTUDIO
-          value: "${ install_RSTUDIO }"
+          value: "${ install_rstudio }"
         - name: DEPLOY_DMC
-          value: "${ install_DMC }"
+          value: "${ install_db2_data_management }"
         name: installer
         image: ${ docker_registry }/cp4d-installer:3.5.0-amd64
         imagePullPolicy: Always

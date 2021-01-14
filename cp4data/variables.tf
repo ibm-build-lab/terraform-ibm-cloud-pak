@@ -52,106 +52,109 @@ variable "install_version" {
 }
 
 
-// Modules available to install
+// Modules available to install on CP4D v3.0
 
 variable "install_guardium_external_stap" {
   default     = false
-  description = "Install Guardium® External S-TAP® module"
+  description = "Install Guardium® External S-TAP® module. Only for Cloud Pak for Data v3.0"
 }
 variable "docker_id" {
   default     = ""
-  description = "Docker ID required to install Guardium® External S-TAP® module"
+  description = "Docker ID required to install Guardium® External S-TAP® module. Only for Cloud Pak for Data v3.0"
 }
 variable "docker_access_token" {
   default     = ""
-  description = "Docker access token required to install Guardium® External S-TAP® module"
+  description = "Docker access token required to install Guardium® External S-TAP® module. Only for Cloud Pak for Data v3.0"
 }
 variable "install_watson_assistant" {
   default     = false
-  description = "Install Watson™ Assistant module"
+  description = "Install Watson™ Assistant module. Only for Cloud Pak for Data v3.0"
 }
 variable "install_watson_assistant_for_voice_interaction" {
   default     = false
-  description = "Install Watson Assistant for Voice Interaction module"
+  description = "Install Watson Assistant for Voice Interaction module. Only for Cloud Pak for Data v3.0"
 }
 variable "install_watson_discovery" {
   default     = false
-  description = "Install Watson Discovery module"
+  description = "Install Watson Discovery module. Only for Cloud Pak for Data v3.0"
 }
 variable "install_watson_knowledge_studio" {
   default     = false
-  description = "Install Watson Knowledge Studio module"
+  description = "Install Watson Knowledge Studio module. Only for Cloud Pak for Data v3.0"
 }
 variable "install_watson_language_translator" {
   default     = false
-  description = "Install Watson Language Translator module"
+  description = "Install Watson Language Translator module. Only for Cloud Pak for Data v3.0"
 }
 variable "install_watson_speech_text" {
   default     = false
-  description = "Install Watson Speech to Text or Watson Text to Speech module"
+  description = "Install Watson Speech to Text or Watson Text to Speech module. Only for Cloud Pak for Data v3.0"
 }
 variable "install_edge_analytics" {
   default     = false
-  description = "Install Edge Analytics module"
+  description = "Install Edge Analytics module. Only for Cloud Pak for Data v3.0"
 }
 
-// TODO: Identify what are these modules name as well as the default value
-variable "install_WKC" {
+// Modules available to install on CP4D v3.5
+
+variable "install_watson_knowledge_catalog" {
   default     = false
-  description = "Install WKC module"
+  description = "Install Watson Knowledge Catalog module. Only for Cloud Pak for Data v3.5"
 }
-variable "install_WSL" {
+variable "install_watson_studio" {
   default     = false
-  description = "Install WSL module"
+  description = "Install Watson Studio module. Only for Cloud Pak for Data v3.5"
 }
-variable "install_WML" {
+variable "install_watson_machine_learning" {
   default     = false
-  description = "Install WML module"
+  description = "Install Watson Machine Learning module. Only for Cloud Pak for Data v3.5"
 }
-variable "install_AIOPENSCALE" {
+variable "install_watson_open_scale" {
   default     = false
-  description = "Install AIOPENSCALE module"
+  description = "Install Watson Open Scale module. Only for Cloud Pak for Data v3.5"
 }
-variable "install_DV" {
+variable "install_data_virtualization" {
   default     = false
-  description = "Install DV module"
+  description = "Install Data Virtualization module. Only for Cloud Pak for Data v3.5"
 }
-variable "install_STREAMS" {
+variable "install_streams" {
   default     = false
-  description = "Install STREAMS module"
+  description = "Install Streams module. Only for Cloud Pak for Data v3.5"
 }
-variable "install_CDE" {
+variable "install_analytics_dashboard" {
   default     = false
-  description = "Install CDE module"
+  description = "Install Analytics Dashboard module. Only for Cloud Pak for Data v3.5"
 }
-variable "install_SPARK" {
+variable "install_spark" {
   default     = false
-  description = "Install SPARK module"
+  description = "Install Analytics Engine powered by Apache Spark module. Only for Cloud Pak for Data v3.5"
 }
-variable "install_DB2WH" {
+variable "install_db2_warehouse" {
   default     = false
-  description = "Install DB2WH module"
+  description = "Install DB2 Warehouse module. Only for Cloud Pak for Data v3.5"
 }
-variable "install_DATAGATE" {
+variable "install_db2_data_gate" {
   default     = false
-  description = "Install DATAGATE module"
+  description = "Install DB2 Data_Gate module. Only for Cloud Pak for Data v3.5"
 }
-variable "install_RSTUDIO" {
+variable "install_rstudio" {
   default     = false
-  description = "Install RSTUDIO module"
+  description = "Install RStudio module. Only for Cloud Pak for Data v3.5"
 }
-variable "install_DMC" {
+variable "install_db2_data_management" {
   default     = false
-  description = "Install DMC module"
+  description = "Install DB2 Data Management module. Only for Cloud Pak for Data v3.5"
 }
 
 locals {
   namespace                = "cloudpak4data"
   entitled_registry        = "cp.icr.io"
   entitled_registry_user   = "cp"
-  docker_registry          = join("/", [local.entitled_registry, local.entitled_registry_user, "cpd"])
-  docker_username          = "ekey"
+  docker_registry          = "cp.icr.io/cp/cpd"
+  docker_username          = "cp" // "ekey"
   entitled_registry_key    = chomp(var.entitled_registry_key)
   openshift_version_regex  = regex("(\\d+).(\\d+)(.\\d+)*(_openshift)*", var.openshift_version)
   openshift_version_number = local.openshift_version_regex[3] == "_openshift" ? tonumber("${local.openshift_version_regex[0]}.${local.openshift_version_regex[1]}") : 0
+  // For Staging, use:
+  // docker_registry          = "cp.stg.icr.io/cp/cpd"
 }
