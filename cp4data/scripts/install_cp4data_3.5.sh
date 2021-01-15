@@ -66,8 +66,8 @@ else
   fi
 fi
 
-echo "Ensure the image registry is the default route"
-kubectl patch configs.imageregistry.operator.openshift.io/cluster --type merge -p '{"spec":{"defaultRoute":true}}'
+# echo "Ensure the image registry is the default route"
+# kubectl patch configs.imageregistry.operator.openshift.io/cluster --type merge -p '{"spec":{"defaultRoute":true}}'
 oc annotate route image-registry --overwrite haproxy.router.openshift.io/balance=source -n openshift-image-registry
 
 create_secret() {
@@ -115,8 +115,12 @@ kubectl wait \
   job/cloud-installer
 
 # Just for debugging, feel free to remove if annoying or not required in the logs
+echo "[DEBUG] Job installer 'cp4data-installer' description."
 kubectl describe job cp4data-installer -n ${NAMESPACE}
+[[ $? -ne 0 ]] && echo "[DEBUG] This error may be because the Job finished successfully"
 if [[ -n $pod ]]; then
+  echo "[DEBUG] Decription of Pod $pod created by the Job installer:"
   kubectl describe pod $pod -n ${NAMESPACE}
+  echo "[DEBUG] Log of Pod $pod created by the Job installer:"
   kubectl logs $pod -n ${NAMESPACE}
 fi
