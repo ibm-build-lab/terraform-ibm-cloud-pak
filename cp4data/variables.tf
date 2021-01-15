@@ -68,30 +68,37 @@ variable "docker_access_token" {
 }
 variable "install_watson_assistant" {
   default     = false
+  type        = bool
   description = "Install Watson™ Assistant module. Only for Cloud Pak for Data v3.0"
 }
 variable "install_watson_assistant_for_voice_interaction" {
   default     = false
+  type        = bool
   description = "Install Watson Assistant for Voice Interaction module. Only for Cloud Pak for Data v3.0"
 }
 variable "install_watson_discovery" {
   default     = false
+  type        = bool
   description = "Install Watson Discovery module. Only for Cloud Pak for Data v3.0"
 }
 variable "install_watson_knowledge_studio" {
   default     = false
+  type        = bool
   description = "Install Watson Knowledge Studio module. Only for Cloud Pak for Data v3.0"
 }
 variable "install_watson_language_translator" {
   default     = false
+  type        = bool
   description = "Install Watson Language Translator module. Only for Cloud Pak for Data v3.0"
 }
 variable "install_watson_speech_text" {
   default     = false
+  type        = bool
   description = "Install Watson Speech to Text or Watson Text to Speech module. Only for Cloud Pak for Data v3.0"
 }
 variable "install_edge_analytics" {
   default     = false
+  type        = bool
   description = "Install Edge Analytics module. Only for Cloud Pak for Data v3.0"
 }
 
@@ -99,50 +106,62 @@ variable "install_edge_analytics" {
 
 variable "install_watson_knowledge_catalog" {
   default     = false
+  type        = bool
   description = "Install Watson Knowledge Catalog module. Only for Cloud Pak for Data v3.5"
 }
 variable "install_watson_studio" {
   default     = false
+  type        = bool
   description = "Install Watson Studio module. Only for Cloud Pak for Data v3.5"
 }
 variable "install_watson_machine_learning" {
   default     = false
+  type        = bool
   description = "Install Watson Machine Learning module. Only for Cloud Pak for Data v3.5"
 }
 variable "install_watson_open_scale" {
   default     = false
+  type        = bool
   description = "Install Watson Open Scale module. Only for Cloud Pak for Data v3.5"
 }
 variable "install_data_virtualization" {
   default     = false
+  type        = bool
   description = "Install Data Virtualization module. Only for Cloud Pak for Data v3.5"
 }
 variable "install_streams" {
   default     = false
+  type        = bool
   description = "Install Streams module. Only for Cloud Pak for Data v3.5"
 }
 variable "install_analytics_dashboard" {
   default     = false
+  type        = bool
   description = "Install Analytics Dashboard module. Only for Cloud Pak for Data v3.5"
 }
 variable "install_spark" {
   default     = false
+  type        = bool
   description = "Install Analytics Engine powered by Apache Spark module. Only for Cloud Pak for Data v3.5"
 }
 variable "install_db2_warehouse" {
   default     = false
+  type        = bool
   description = "Install DB2 Warehouse module. Only for Cloud Pak for Data v3.5"
 }
 variable "install_db2_data_gate" {
   default     = false
+  type        = bool
   description = "Install DB2 Data_Gate module. Only for Cloud Pak for Data v3.5"
 }
 variable "install_rstudio" {
   default     = false
+  type        = bool
   description = "Install RStudio module. Only for Cloud Pak for Data v3.5"
 }
 variable "install_db2_data_management" {
   default     = false
+  type        = bool
   description = "Install DB2 Data Management module. Only for Cloud Pak for Data v3.5"
 }
 
