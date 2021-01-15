@@ -89,33 +89,51 @@ Using Terraform 0.12 the workaround is to use the boolean input parameter `enabl
 
 ### Using the CP4DATA Module
 
-Use the `module` block assigning the `source` parameter to the location of this module, either local (i.e. `../cp4data`) or remote (`git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4data`). Then pass the input parameters required to install Cloud Pak for Data and their modules.
+Use the `module` block assigning the `source` parameter to the location of this module, either local (i.e. `../cp4data`) or remote (`git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4data`). Then pass the input parameters required to install the required Cloud Pak for Data version and their modules.
 
 ```hcl
 module "cp4data" {
-  source = "./.."
-  enable = true
+  source          = "./.."
+  enable          = true
+  install_version = "3.5"
 
   // ROKS cluster parameters:
-  openshift_version   = var.openshift_version
+  openshift_version   = var.roks_version
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
 
-  entitled_registry_key        = local.entitled_registry_key
+  // Entitled Registry parameters:
+  entitled_registry_key        = var.entitled_registry_key
   entitled_registry_user_email = var.entitled_registry_user_email
 
-  // Cloud Pak for Data modules:
-  install_guardium_external_stap                 = local.install_guardium_external_stap
-  docker_id                                      = local.docker_id
-  docker_access_token                            = local.docker_access_token
-  install_watson_assistant                       = local.install_watson_assistant
-  install_watson_assistant_for_voice_interaction = local.install_watson_assistant_for_voice_interaction
-  install_watson_discovery                       = local.install_watson_discovery
-  install_watson_knowledge_studio                = local.install_watson_knowledge_studio
-  install_watson_language_translator             = local.install_watson_language_translator
-  install_watson_speech_text                     = local.install_watson_speech_text
-  install_edge_analytics                         = local.install_edge_analytics
+  // Parameters for v3.0 modules
+  docker_id                                      = var.docker_id
+  docker_access_token                            = var.docker_access_token
+  install_guardium_external_stap                 = var.install_guardium_external_stap
+  install_watson_assistant                       = var.install_watson_assistant
+  install_watson_assistant_for_voice_interaction = var.install_watson_assistant_for_voice_interaction
+  install_watson_discovery                       = var.install_watson_discovery
+  install_watson_knowledge_studio                = var.install_watson_knowledge_studio
+  install_watson_language_translator             = var.install_watson_language_translator
+  install_watson_speech_text                     = var.install_watson_speech_text
+  install_edge_analytics                         = var.install_edge_analytics
+
+  // Parameters for v3.5 modules
+  install_watson_knowledge_catalog = var.install_watson_knowledge_catalog
+  install_watson_studio            = var.install_watson_studio
+  install_watson_machine_learning  = var.install_watson_machine_learning
+  install_watson_open_scale        = var.install_watson_open_scale
+  install_data_virtualization      = var.install_data_virtualization
+  install_streams                  = var.install_streams
+  install_analytics_dashboard      = var.install_analytics_dashboard
+  install_spark                    = var.install_spark
+  install_db2_warehouse            = var.install_db2_warehouse
+  install_db2_data_gate            = var.install_db2_data_gate
+  install_rstudio                  = var.install_rstudio
+  install_db2_data_management      = var.install_db2_data_management
 }
 ```
+
+The example above install Cloud Pak for Data version 3.5, installing the modules listed at the bottom. The list of modules for version 3.0 are optional in this example, they are here just for educational purposes. To install CPD version 3.0, only change the parameter `install_version`.
 
 After setting all the input parameters execute the following commands to create the cluster
 
@@ -147,23 +165,36 @@ terraform destroy
 
 ## Input Variables
 
-| Name                                             | Description                                                                                                                                                                                                                | Default              | Required |
-| ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- | -------- |
-| `enable`                                         | If set to `false` does not install Cloud-Pak for Data on the given cluster. By default it's enabled                                                                                                                        | `true`               | No       |
-| `openshift_version`                              | Openshift version installed in the cluster                                                                                                                                                                                 | `4.5`                | No       |
-| `entitled_registry_key`                          | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                      | Yes      |
-| `entitled_registry_user_email`                   | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key                                                                                                                 |                      | Yes      |
-| `storage_class_name`                             | Storage Class name to use                                                                                                                                                                                                  | `ibmc-file-gold-gid` | No       |
-| `install_guardium_external_stap`                 | Install Guardium® External S-TAP® module                                                                                                                                                                                   | `false`              | No       |
-| `docker_id`                                      | Docker ID required to install Guardium® External S-TAP® module                                                                                                                                                             |                      | No       |
-| `docker_access_token`                            | Docker access token required to install Guardium® External S-TAP® module                                                                                                                                                   |                      | No       |
-| `install_watson_assistant`                       | Install Watson™ Assistant module                                                                                                                                                                                           | `false`              | No       |
-| `install_watson_assistant_for_voice_interaction` | Install Watson Assistant for Voice Interaction module                                                                                                                                                                      | `false`              | No       |
-| `install_watson_discovery`                       | Install Watson Discovery module                                                                                                                                                                                            | `false`              | No       |
-| `install_watson_knowledge_studio`                | Install Watson Knowledge Studio module                                                                                                                                                                                     | `false`              | No       |
-| `install_watson_language_translator`             | Install Watson Language Translator module                                                                                                                                                                                  | `false`              | No       |
-| `install_watson_speech_text`                     | Install Watson Speech to Text or Watson Text to Speech module                                                                                                                                                              | `false`              | No       |
-| `install_edge_analytics`                         | Install Edge Analytics module                                                                                                                                                                                              | `false`              | No       |
+| Name                                             | Description                                                                                                                                                                                                                | Default                     | Required |
+| ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | -------- |
+| `enable`                                         | If set to `false` does not install Cloud-Pak for Data on the given cluster. By default it's enabled                                                                                                                        | `true`                      | No       |
+| `install_version`                                | Version of Cloud Pak for Data to install. The available versions are: `3.0` and `3.5`                                                                                                                                      | `3.5`                       | No       |
+| `openshift_version`                              | Openshift version installed in the cluster                                                                                                                                                                                 | `4.5`                       | No       |
+| `entitled_registry_key`                          | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
+| `entitled_registry_user_email`                   | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key                                                                                                                 |                             | Yes      |
+| `storage_class_name`                             | Storage Class name to use                                                                                                                                                                                                  | `ibmc-file-custom-gold-gid` | No       |
+| `install_guardium_external_stap`                 | Install Guardium® External S-TAP® module. This module is only for Cloud Pak for Data v3.0. By default it's not installed.                                                                                                  | `false`                     | No       |
+| `docker_id`                                      | Docker ID required to install Guardium® External S-TAP® module. This parameter is only for Cloud Pak for Data v3.0. By default it's not installed.                                                                         |                             | No       |
+| `docker_access_token`                            | Docker access token required to install Guardium® External S-TAP® module. This parameter is only for Cloud Pak for Data v3.0. By default it's not installed.                                                               |                             | No       |
+| `install_watson_assistant`                       | Install Watson™ Assistant module. This module is only for Cloud Pak for Data v3.0. By default it's not installed.                                                                                                          | `false`                     | No       |
+| `install_watson_assistant_for_voice_interaction` | Install Watson Assistant for Voice Interaction module. This module is only for Cloud Pak for Data v3.0. By default it's not installed.                                                                                     | `false`                     | No       |
+| `install_watson_discovery`                       | Install Watson Discovery module. This module is only for Cloud Pak for Data v3.0. By default it's not installed.                                                                                                           | `false`                     | No       |
+| `install_watson_knowledge_studio`                | Install Watson Knowledge Studio module. This module is only for Cloud Pak for Data v3.0. By default it's not installed.                                                                                                    | `false`                     | No       |
+| `install_watson_language_translator`             | Install Watson Language Translator module. This module is only for Cloud Pak for Data v3.0. By default it's not installed.                                                                                                 | `false`                     | No       |
+| `install_watson_speech_text`                     | Install Watson Speech to Text or Watson Text to Speech module. This module is only for Cloud Pak for Data v3.0. By default it's not installed.                                                                             | `false`                     | No       |
+| `install_edge_analytics`                         | Install Edge Analytics module. This module is only for Cloud Pak for Data v3.0. By default it's not installed.                                                                                                             | `false`                     | No       |
+| `install_watson_knowledge_catalog`               | Install Watson Knowledge Catalog module. This module is only for Cloud Pak for Data v3.5. By default it's not installed.                                                                                                   | `false`                     | No       |
+| `install_watson_studio`                          | Install Watson Studio module. This module is only for Cloud Pak for Data v3.5. By default it's not installed.                                                                                                              | `false`                     | No       |
+| `install_watson_machine_learning`                | Install Watson Machine Learning module. This module is only for Cloud Pak for Data v3.5. By default it's not installed.                                                                                                    | `false`                     | No       |
+| `install_watson_open_scale`                      | Install Watson Open Scale module. This module is only for Cloud Pak for Data v3.5. By default it's not installed.                                                                                                          | `false`                     | No       |
+| `install_data_virtualization`                    | Install Data Virtualization module. This module is only for Cloud Pak for Data v3.5. By default it's not installed.                                                                                                        | `false`                     | No       |
+| `install_streams`                                | Install Streams module. This module is only for Cloud Pak for Data v3.5. By default it's not installed.                                                                                                                    | `false`                     | No       |
+| `install_analytics_dashboard`                    | Install Analytics Dashboard module. This module is only for Cloud Pak for Data v3.5. By default it's not installed.                                                                                                        | `false`                     | No       |
+| `install_spark`                                  | Install Analytics Engine powered by Apache Spark module. This module is only for Cloud Pak for Data v3.5. By default it's not installed.                                                                                   | `false`                     | No       |
+| `install_db2_warehouse`                          | Install DB2 Warehouse module. This module is only for Cloud Pak for Data v3.5. By default it's not installed.                                                                                                              | `false`                     | No       |
+| `install_db2_data_gate`                          | Install DB2 Data_Gate module. This module is only for Cloud Pak for Data v3.5. By default it's not installed.                                                                                                              | `false`                     | No       |
+| `install_rstudio`                                | Install RStudio module. This module is only for Cloud Pak for Data v3.5. By default it's not installed.                                                                                                                    | `false`                     | No       |
+| `install_db2_data_management`                    | Install DB2 Data Management module. This module is only for Cloud Pak for Data v3.5. By default it's not installed.                                                                                                        | `false`                     | No       |
 
 ## Output Variables
 
