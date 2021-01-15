@@ -13,12 +13,12 @@ locals {
     install_operations_module    = local.install_operations_module,
     install_tech_prev_module     = local.install_tech_prev_module
   })
-  cs_subscription_file    = "../files/CS_Subscription.yaml"
-  cs_subscription_content = file(local.cs_subscription_file)
+  cs_subscription_file     = "../files/CS_Subscription.yaml"
+  cs_subscription_content  = file(local.cs_subscription_file)
   mgt_subscription_file    = "../files/MGT_Subscription.yaml"
   mgt_subscription_content = file(local.mgt_subscription_file)
-  commonservice_file    = "../files/CommonService.yaml"
-  commonservice_content = file(local.commonservice_file)
+  commonservice_file       = "../files/CommonService.yaml"
+  commonservice_content    = file(local.commonservice_file)
 }
 
 resource "local_file" "CS_CatalogSource" {

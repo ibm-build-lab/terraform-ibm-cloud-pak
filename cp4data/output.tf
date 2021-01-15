@@ -1,5 +1,5 @@
 output "namespace" {
-  value = var.enable ? local.data_namespace : ""
+  value = var.enable ? local.namespace : ""
 }
 
 // output "endpoint" {

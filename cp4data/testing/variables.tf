@@ -3,6 +3,10 @@ variable "infra" {
   // default     = "vpc"
 }
 
+variable "install_version" {
+  default = "3.5"
+}
+
 variable "cluster_id" {
   description = "ROKS cluster id. Use the ROKS terraform module or other way to create it"
 }
