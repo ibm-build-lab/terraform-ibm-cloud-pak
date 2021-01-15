@@ -70,13 +70,18 @@ resource "null_resource" "install_cp4data" {
   count = var.enable ? 1 : 0
 
   triggers = {
-    namespace_sha1 = sha1(local.namespace)
-    repo_sha1      = sha1(local.repo_content)
+    namespace_sha1                            = sha1(local.namespace)
+    repo_sha1                                 = sha1(local.repo_content)
+    docker_params_sha1                        = sha1(join("", [var.entitled_registry_user_email, local.entitled_registry_key]))
+    storage_class_content_sha1                = sha1(local.storage_class_content)
+    security_context_constraints_content_sha1 = sha1(local.security_context_constraints_content)
+    installer_sensitive_data_sha1             = sha1(local.installer_sensitive_data)
+    installer_job_content_sha1                = sha1(local.installer_job_content)
   }
 
   depends_on = [
-    local_file.repo,
     var.install_version,
+    local_file.repo,
   ]
 
   provisioner "local-exec" {
