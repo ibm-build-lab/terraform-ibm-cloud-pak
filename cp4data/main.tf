@@ -109,19 +109,20 @@ resource "null_resource" "install_cp4data" {
   }
 }
 
-// data "external" "get_endpoints" {
-//   count = var.enable ? 1 : 0
+data "external" "get_endpoints" {
+  count = var.enable ? 1 : 0
 
-//   depends_on = [
-//     null_resource.install_cp4data,
-//   ]
+  depends_on = [
+    null_resource.install_cp4data,
+  ]
 
-//   program = ["/bin/bash", "${path.module}/scripts/get_endpoints.sh"]
+  program = ["/bin/bash", "${path.module}/scripts/get_endpoints.sh"]
 
-//   query = {
-//     kubeconfig = var.cluster_config_path
-//   }
-// }
+  query = {
+    kubeconfig = var.cluster_config_path
+    namespace  = local.namespace
+  }
+}
 
 // TODO: It may be considered in a future version to pass the cluster ID and the
 // resource group to get the cluster configuration and store it in memory and in
