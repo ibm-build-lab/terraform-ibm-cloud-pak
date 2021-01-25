@@ -3,6 +3,11 @@ variable "enable" {
   description = "If set to true installs Cloud-Pak for Data on the given cluster"
 }
 
+variable "force" {
+  default     = false
+  description = "Force the execution. Useful to execute the job again"
+}
+
 variable "cluster_config_path" {
   description = "Path to the Kubernetes configuration file to access your cluster"
 }
@@ -41,68 +46,7 @@ variable "storage_class_name" {
   description = "Storage Class name to use. Supported Storage Classes: ibmc-file-custom-gold-gid, portworx-shared-gp3"
 }
 
-// variable "cp4data_config_file" {
-//   default = "./repo.yaml"
-//   description = "location to "
-// }
-
-variable "install_version" {
-  default     = "3.5"
-  description = "version of Cloud Pak for Data to install. Supported versions: 3.0, 3.5"
-}
-
-
-// Modules available to install on CP4D v3.0
-
-variable "install_guardium_external_stap" {
-  default     = false
-  description = "Install Guardium® External S-TAP® module. Only for Cloud Pak for Data v3.0"
-}
-variable "docker_id" {
-  default     = ""
-  description = "Docker ID required to install Guardium® External S-TAP® module. Only for Cloud Pak for Data v3.0"
-}
-variable "docker_access_token" {
-  default     = ""
-  description = "Docker access token required to install Guardium® External S-TAP® module. Only for Cloud Pak for Data v3.0"
-}
-variable "install_watson_assistant" {
-  default     = false
-  type        = bool
-  description = "Install Watson™ Assistant module. Only for Cloud Pak for Data v3.0"
-}
-variable "install_watson_assistant_for_voice_interaction" {
-  default     = false
-  type        = bool
-  description = "Install Watson Assistant for Voice Interaction module. Only for Cloud Pak for Data v3.0"
-}
-variable "install_watson_discovery" {
-  default     = false
-  type        = bool
-  description = "Install Watson Discovery module. Only for Cloud Pak for Data v3.0"
-}
-variable "install_watson_knowledge_studio" {
-  default     = false
-  type        = bool
-  description = "Install Watson Knowledge Studio module. Only for Cloud Pak for Data v3.0"
-}
-variable "install_watson_language_translator" {
-  default     = false
-  type        = bool
-  description = "Install Watson Language Translator module. Only for Cloud Pak for Data v3.0"
-}
-variable "install_watson_speech_text" {
-  default     = false
-  type        = bool
-  description = "Install Watson Speech to Text or Watson Text to Speech module. Only for Cloud Pak for Data v3.0"
-}
-variable "install_edge_analytics" {
-  default     = false
-  type        = bool
-  description = "Install Edge Analytics module. Only for Cloud Pak for Data v3.0"
-}
-
-// Modules available to install on CP4D v3.5
+// Modules available to install on CP4D
 
 variable "install_watson_knowledge_catalog" {
   default     = false
