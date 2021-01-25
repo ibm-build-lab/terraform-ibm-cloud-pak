@@ -1,5 +1,3 @@
-TEST_VERSION 		?= 3.5
-
 CONFIG_DIR 			 = .kube/config
 OUTPUT_DIR 			 = rendered_files
 TEST_TF_VAR_FILE = test.auto.tfvars
@@ -35,7 +33,6 @@ var-%:
 	@[[ -n $$TF_VAR_cluster_id ]]
 	@[[ -n $$TF_VAR_entitled_registry_user_email ]]
 	@echo "infra = \"$*\""												> $(TEST_TF_VAR_FILE)
-	@echo "install_version = \"$(TEST_VERSION)\"" >> $(TEST_TF_VAR_FILE)
 	@echo "config_dir = \"$(CONFIG_DIR)\"" 				>> $(TEST_TF_VAR_FILE)
 	@echo "cluster_id = \"$$TF_VAR_cluster_id\"" 	>> $(TEST_TF_VAR_FILE)
 	@echo "entitled_registry_user_email = \"$$TF_VAR_entitled_registry_user_email\"" 					>> $(TEST_TF_VAR_FILE)
