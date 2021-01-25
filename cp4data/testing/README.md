@@ -1,6 +1,6 @@
 # Test CP4DATA Terraform Module
 
-This module test requires to have a running OpenShift cluster on IBM Cloud Classic with the basic MCM requirements. You need the cluster ID or name, and the resource group where it is running. These 2 parameters are passed to the testing code on environment variables, see below.
+This module test requires to have a running OpenShift cluster on IBM Cloud Classic with the basic CPD v3.5 requirements. You need the cluster ID or name, and the resource group where it is running. These 2 parameters are passed to the testing code on environment variables, see below.
 
 The **second requirement** is to have an Entitlement Key, to obtain such key go to https://myibm.ibm.com/products-services/containerlibrary and store it in the file `entitlement.key` in the root of this repository. If you use that filename, the file won't be published to GitHub. The module also needs the username or email address of the user owner of the entitlement key. Export the username and the cluster parameters in the following environment variables, for example:
 
@@ -19,12 +19,6 @@ For a quick test use `make`, like so:
 make
 make test-kubernetes
 make test-data
-```
-
-By default these tests the latest CP4Data version (`3.5`), if you'd like to test other version (i.e `3.0`) export/set the variable `TEST_VERSION` to the version to test before execute `make`. Like so,
-
-```bash
-export TEST_VERSION=3.0
 ```
 
 When the test is complete, you may destroy everything executing `make clean`
