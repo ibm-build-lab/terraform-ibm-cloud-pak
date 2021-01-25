@@ -16,11 +16,13 @@
 
 # Optional input parameters with default values:
 NAMESPACE=${NAMESPACE:-cloudpak4data}
-DOCKER_USERNAME=${DOCKER_USERNAME:-ekey}
-# TODO: Verify which is the default docker username: ekey or cp
-# DOCKER_USERNAME=${DOCKER_USERNAME:-cp}
+FORCE=${FORCE:-false} # Delete the job installer and execute it again
+DEBUG=${DEBUG:-false}
+DOCKER_USERNAME=${DOCKER_USERNAME:-cp}
+# The default docker username is cp, however the original scrip uses: ekey
+# DOCKER_USERNAME=${DOCKER_USERNAME:-ekey}
 DOCKER_REGISTRY=${DOCKER_REGISTRY:-cp.icr.io/cp/cpd}
-# TODO: For non-production, use:
+# For non-production, use:
 # DOCKER_REGISTRY="cp.stg.icr.io/cp/cpd"
 
 # By default the persistent volume, the data, and your physical file storage device are deleted when CP4D is deprovisioned or the cluster destroyed.
@@ -29,6 +31,24 @@ DOCKER_REGISTRY=${DOCKER_REGISTRY:-cp.icr.io/cp/cpd}
 # - If using Portworx, use 'portworx-shared-gp3'
 # - If using OpenShift Container Storage, use 'ocs-storagecluster-cephfs'
 
+JOB_NAME="cloud-installer"
+WAITING_TIME=5
+
+echo "Waiting for Ingress domain to be created"
+while [[ -z $(kubectl get route -n openshift-ingress router-default -o jsonpath='{.spec.host}' 2>/dev/null) ]]; do
+  sleep $WAITING_TIME
+done
+
+if [[ "$FORCE" == "true" ]]; then
+  echo "[WARN] Forcing the execution of the job installer"
+  kubectl delete job -n ${NAMESPACE} ${JOB_NAME}
+  # if [[ $? -eq 0 ]]; then
+  #   echo "[WARN] deleting the job installer"
+  #   kubectl wait --for=delete --namespace=${NAMESPACE} --timeout=10m job/${JOB_NAME}
+  # else
+  #   echo "[WARN] the job installer was not found or was not created"
+  # fi
+fi
 
 if [[ ${STORAGE_CLASS_NAME} == "portworx-shared-gp3" ]]; then
   echo "Checking Portworx storage is configured in the cluster"
@@ -101,8 +121,8 @@ fi
 
 echo "Waiting for installer pod to be created by the job"
 while [[ -z $pod ]]; do
-  sleep 5
-  pod=$(kubectl get pods --selector=job-name=cloud-installer -l app=cp4data-installer -n ${NAMESPACE} --output=jsonpath='{.items[*].metadata.name}')
+  sleep $WAITING_TIME
+  pod=$(kubectl get pods --selector=job-name=${JOB_NAME} -l app=cp4data-installer -n ${NAMESPACE} --output=jsonpath='{.items[*].metadata.name}')
 done
 
 echo "The installer job triggered the pod ${pod}"
@@ -112,12 +132,12 @@ kubectl wait \
   --for=condition=Complete \
   --timeout=2h \
   --namespace=${NAMESPACE} \
-  job/cloud-installer
+  job/${JOB_NAME}
 
-# Just for debugging, feel free to remove if annoying or not required in the logs
-echo "[DEBUG] Job installer 'cp4data-installer' description."
-kubectl describe job cp4data-installer -n ${NAMESPACE}
-[[ $? -ne 0 ]] && echo "[DEBUG] This error may be because the Job finished successfully"
+[[ "$DEBUG" == "false" ]] && exit
+
+echo "[DEBUG] Job installer '${JOB_NAME}' description."
+kubectl describe job ${JOB_NAME} -n ${NAMESPACE}
 if [[ -n $pod ]]; then
   echo "[DEBUG] Decription of Pod $pod created by the Job installer:"
   kubectl describe pod $pod -n ${NAMESPACE}

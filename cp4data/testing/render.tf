@@ -47,10 +47,10 @@ resource "local_file" "installer_job" {
 
 locals {
   namespace                        = "cloudpak4data"
-  docker_username                  = "ekey"
+  docker_username                  = "cp"
   docker_registry_password         = "password"
   storage_class_name               = "ibmc-file-custom-gold-gid"
-  docker_registry                  = join("/", ["cp.icr.io", "cp", "cpd"])
+  docker_registry                  = "cp.icr.io/cp/cpd"
   install_watson_knowledge_catalog = false
   install_watson_studio            = false
   install_watson_machine_learning  = false

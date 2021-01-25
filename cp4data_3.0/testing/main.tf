@@ -25,7 +25,6 @@ locals {
 module "cp4data" {
   source = "./.."
   enable = true
-  force  = true
 
   // ROKS cluster parameters:
   openshift_version   = var.openshift_version
@@ -37,19 +36,17 @@ module "cp4data" {
   entitled_registry_key        = local.entitled_registry_key
   entitled_registry_user_email = var.entitled_registry_user_email
 
-  // CPD Modules
-  install_watson_knowledge_catalog = local.install_watson_knowledge_catalog
-  install_watson_studio            = local.install_watson_studio
-  install_watson_machine_learning  = local.install_watson_machine_learning
-  install_watson_open_scale        = local.install_watson_open_scale
-  install_data_virtualization      = local.install_data_virtualization
-  install_streams                  = local.install_streams
-  install_analytics_dashboard      = local.install_analytics_dashboard
-  install_spark                    = local.install_spark
-  install_db2_warehouse            = local.install_db2_warehouse
-  install_db2_data_gate            = local.install_db2_data_gate
-  install_rstudio                  = local.install_rstudio
-  install_db2_data_management      = local.install_db2_data_management
+  // Parameters to install CPD modules
+  docker_id                                      = local.docker_id
+  docker_access_token                            = local.docker_access_token
+  install_guardium_external_stap                 = local.install_guardium_external_stap
+  install_watson_assistant                       = local.install_watson_assistant
+  install_watson_assistant_for_voice_interaction = local.install_watson_assistant_for_voice_interaction
+  install_watson_discovery                       = local.install_watson_discovery
+  install_watson_knowledge_studio                = local.install_watson_knowledge_studio
+  install_watson_language_translator             = local.install_watson_language_translator
+  install_watson_speech_text                     = local.install_watson_speech_text
+  install_edge_analytics                         = local.install_edge_analytics
 }
 
 // Output variables:
@@ -57,15 +54,15 @@ module "cp4data" {
 output "namespace" {
   value = module.cp4data.namespace
 }
-output "endpoint" {
-  value = module.cp4data.endpoint
-}
-output "user" {
-  value = module.cp4data.user
-}
-output "password" {
-  value = module.cp4data.password
-}
+// output "endpoint" {
+//   value = module.cp4data.endpoint
+// }
+// output "user" {
+//   value = module.cp4data.user
+// }
+// output "password" {
+//   value = module.cp4data.password
+// }
 
 // Kubeconfig downloaded by this module
 output "config_file_path" {
