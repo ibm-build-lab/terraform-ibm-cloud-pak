@@ -66,6 +66,7 @@ resource "null_resource" "install_cp4data" {
       INSTALLER_SENSITIVE_DATA = local.installer_sensitive_data
       INSTALLER_JOB_CONTENT    = local.installer_job_content
       SCC_ZENUID_CONTENT       = local.security_context_constraints_content
+      // DEBUG                    = true
     }
   }
 }
@@ -82,18 +83,6 @@ data "external" "get_endpoints" {
   query = {
     kubeconfig = var.cluster_config_path
     namespace  = local.namespace
-  }
-}
-
-resource "null_resource" "get_endpoints_validations" {
-  count = var.enable ? 1 : 0
-
-  provisioner "local-exec" {
-    command = "[[ -n $ERR_MSG ]] && echo '[ERROR] fail to get the CPD endpoint from the logs. $ERR_MSG'"
-  }
-
-  environment = {
-    ERR_MSG = length(data.external.get_endpoints) > 0 ? data.external.get_endpoints.0.result.endpoint : ""
   }
 }
 
