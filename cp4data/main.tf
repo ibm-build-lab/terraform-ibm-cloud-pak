@@ -85,6 +85,18 @@ data "external" "get_endpoints" {
   }
 }
 
+resource "null_resource" "get_endpoints_validations" {
+  count = var.enable ? 1 : 0
+
+  provisioner "local-exec" {
+    command = "[[ -n $ERR_MSG ]] && echo '[ERROR] fail to get the CPD endpoint from the logs. $ERR_MSG'"
+  }
+
+  environment = {
+    ERR_MSG = length(data.external.get_endpoints) > 0 ? data.external.get_endpoints.0.result.endpoint : ""
+  }
+}
+
 // TODO: It may be considered in a future version to pass the cluster ID and the
 // resource group to get the cluster configuration and store it in memory and in
 // a directory, either specified by the user or in the module local directory
