@@ -34,12 +34,12 @@ if [[ -z $pod ]]; then
   results "" "failed to get the output data, the job installer pod was not found"
 fi
 
-result_txt=$(kubectl logs -n ${NAMESPACE} $pod | tail -12)
+result_txt=$(kubectl logs -n ${NAMESPACE} $pod | sed 's/[[:cntrl:]]\[[0-9;]*m//g' | tail -20)
 
 if ! echo $result_txt | grep -q 'Installation of assembly lite is successfully completed'; then
-  results "" "failed to get the output data, the entrypoint was not foundin the logs"
+  results "" "failed to get the output data, the entrypoint was not found in the logs"
 fi
 
-address=$(echo $result_txt | grep -A1 'Access Cloud Pak for Data console using the address' | tail -1)
+address=$(echo $result_txt | sed 's|.*Access Cloud Pak for Data console using the address: \(.*\) .*|\1|')
 
-results "$address"
+results "$address" ""
