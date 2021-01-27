@@ -134,6 +134,18 @@ kubectl wait \
   --namespace=${NAMESPACE} \
   job/${JOB_NAME}
 
+# The following code is taken from get_enpoints.sh, to print what it's getting
+result_txt=$(kubectl logs -n ${NAMESPACE} $pod | sed 's/[[:cntrl:]]\[[0-9;]*m//g' | tail -20)
+if ! echo $result_txt | grep -q 'Installation of assembly lite is successfully completed'; then
+  echo "[ERROR] a successful installation was not found from the logs"
+fi
+
+address=$(echo $result_txt | sed 's|.*Access Cloud Pak for Data console using the address: \(.*\) .*|\1|')
+if [[ -z $address ]]; then
+  echo "[ERROR] failed to get the endpoint address from the logs"
+fi
+echo "[INFO] CPD Endpoint: https://$address"
+
 [[ "$DEBUG" == "false" ]] && exit
 
 echo "[DEBUG] Job installer '${JOB_NAME}' description."
