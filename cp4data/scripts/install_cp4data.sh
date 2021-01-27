@@ -140,6 +140,9 @@ if ! echo $result_txt | grep -q 'Installation of assembly lite is successfully c
   echo "[ERROR] a successful installation was not found from the logs"
 fi
 
+echo "[DEBUG] Latest lines from logs:"
+echo "[DEBUG] $result_txt"
+
 address=$(echo $result_txt | sed 's|.*Access Cloud Pak for Data console using the address: \(.*\) .*|\1|')
 if [[ -z $address ]]; then
   echo "[ERROR] failed to get the endpoint address from the logs"
