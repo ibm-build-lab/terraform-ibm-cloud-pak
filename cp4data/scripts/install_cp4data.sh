@@ -146,14 +146,14 @@ kubectl wait \
   --namespace=${NAMESPACE} \
   job/${JOB_NAME}
 
+[[ "$DEBUG" != "false" ]] && echo "[DEBUG] $result_txt"
+
 # The following code is taken from get_enpoints.sh, to print what it's getting
 result_txt=$(kubectl logs -n ${NAMESPACE} $pod | sed 's/[[:cntrl:]]\[[0-9;]*m//g' | tail -20)
-if ! echo $result_txt | grep -q 'Installation of assembly lite is successfully completed'; then
-  echo "[ERROR] a successful installation was not found from the logs"
+if echo $result_txt | grep -q 'Installation not successful'; then
+  echo "[ERROR] installation not successful"
+  exit 1
 fi
-
-echo "[DEBUG] Latest lines from logs:"
-echo "[DEBUG] $result_txt"
 
 address=$(echo $result_txt | sed 's|.*Access Cloud Pak for Data console using the address: \(.*\) .*|\1|')
 if [[ -z $address ]]; then
