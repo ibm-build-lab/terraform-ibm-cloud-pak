@@ -1,0 +1,10 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: cp4i
+  namespace: openshift-operators 
+spec:
+  channel: alpha
+  name: ibm-cp-integration.v.1.1
+  source: ibm-operator-catalog
+  sourceNamespace: openshift-marketplace 
