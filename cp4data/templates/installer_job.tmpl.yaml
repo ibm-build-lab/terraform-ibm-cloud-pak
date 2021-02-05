@@ -65,7 +65,7 @@ spec:
         - name: DEPLOY_DMC
           value: "${ install_db2_data_management }"
         name: installer
-        image: ${ docker_registry }/cp4d-installer:3.5.0-amd64
+        image: ${ docker_registry }/cp4d-installer:3.5.2-amd64
         imagePullPolicy: Always
         resources:
           limits:

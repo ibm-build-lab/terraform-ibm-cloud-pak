@@ -31,6 +31,17 @@ DOCKER_REGISTRY=${DOCKER_REGISTRY:-cp.icr.io/cp/cpd}
 # - If using Portworx, use 'portworx-shared-gp3'
 # - If using OpenShift Container Storage, use 'ocs-storagecluster-cephfs'
 
+# This script is based on the CP4D install script located in the CP4D Public Catalog.
+# To download the script:
+#   1. Go to: https://github.com/IBM/cloud-pak/tree/master/repo/case/ibm-cp-datacore
+#   2. Locate and go to the version to use, or (recomemnded) the latest version
+#   3. Download and unzip the TGZ file
+#      Optionally, you may also download it from this URL replacing the version number
+#      https://github.com/IBM/cloud-pak/blob/master/repo/case/ibm-cp-datacore-1.3.1.tgz
+#   4. Go to the file: ./inventory/ibmcloudEnablement/files/install/install.sh
+#      Part of the initial code is also located in ./inventory/ibmcloudEnablement/files/preInstall/pre-install.sh
+
+
 JOB_NAME="cloud-installer"
 WAITING_TIME=5
 
@@ -107,6 +118,7 @@ create_secret() {
   [[ "${link}" != "no-link" ]] && oc secrets -n ${namespace} link cpdinstall icp4d-anyuid-docker-pull --for=pull
 }
 
+oc delete secret icp4d-anyuid-docker-pull -n kube-system
 create_secret icp4d-anyuid-docker-pull ${NAMESPACE}
 create_secret icp4d-anyuid-docker-pull kube-system
 create_secret sa-${NAMESPACE} ${NAMESPACE} no-link
