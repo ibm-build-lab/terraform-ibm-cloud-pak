@@ -1,13 +1,27 @@
 locals {
-  storage_class_file = {
-    "ibmc-file-custom-gold-gid" = join("/", [path.module, "files", "sc_ibmc_file_custom_gold_gid.yaml"])
-    "portworx-shared-gp3"       = ""
-  }
-  storage_class_content = file(local.storage_class_file[var.storage_class_name])
 
-  security_context_constraints_content = templatefile("${path.module}/templates/security_context_constraints.tmpl.yaml", {
-    namespace = local.namespace,
-  })
+  ibm_operator_catalog_file = {
+    "ibm-operator-catalog" = join("/", [path.module, "files", "ibm-operator-catalog.yaml"])
+    "portworx-shared-gp3"  = ""
+  }
+  ibm_operator_catalog_content = file(local.ibm_operator_catalog_file[var.ibm_operator_catalog_name]) 
+
+  opencloud_operator_catalog_file = {
+    "opencloud-operator-catalog" = join("/", [path.module, "files", "opencloud-operator-catalog.yaml"])
+    "portworx-shared-gp3"  = ""
+  }
+  opencloud_operator_catalog_content = file(local.ibm_operator_catalog_file[var.ibm_operator_catalog_name]) 
+
+  subscription_file = {
+    "ibm-operator-catalog" = join("/", [path.module, "files", "subscription.yaml"])
+    "portworx-shared-gp3"  = ""
+  }
+  subscription_content = file(local.ibm_operator_catalog_file[var.ibm_operator_catalog_name]) 
+
+
+#  security_context_constraints_content = templatefile("${path.module}/templates/security_context_constraints.tmpl.yaml", {
+#    namespace = local.namespace,
+#  })
 
   installer_sensitive_data = templatefile("${path.module}/templates/installer_sensitive_data.tmpl.yaml", {
     namespace                        = local.namespace,
@@ -15,57 +29,49 @@ locals {
     docker_registry_password_encoded = base64encode(local.entitled_registry_key),
   })
 
-  installer_job_content = templatefile("${path.module}/templates/installer_job.tmpl.yaml", {
-    namespace          = local.namespace,
-    storage_class_name = var.storage_class_name,
-    docker_registry    = local.docker_registry,
+#   installer_job_content = templatefile("${path.module}/templates/installer_job.tmpl.yaml", {
+#     namespace          = local.namespace,
+#     storage_class_name = var.storage_class_name,
+#     docker_registry    = local.docker_registry,
+#   })
+# }
 
-    // Modules to deploy
-    install_watson_knowledge_catalog = var.install_watson_knowledge_catalog, // WKC
-    install_watson_studio            = var.install_watson_studio,            // WSL
-    install_watson_machine_learning  = var.install_watson_machine_learning,  // WML
-    install_watson_open_scale        = var.install_watson_open_scale,        // AIOPENSCALE
-    install_data_virtualization      = var.install_data_virtualization,      // DV
-    install_streams                  = var.install_streams,                  // STREAMS
-    install_analytics_dashboard      = var.install_analytics_dashboard,      // CDE
-    install_spark                    = var.install_spark,                    // SPARK
-    install_db2_warehouse            = var.install_db2_warehouse,            // DB2WH
-    install_db2_data_gate            = var.install_db2_data_gate,            // DATAGATE
-    install_rstudio                  = var.install_rstudio,                  // RSTUDIO
-    install_db2_data_management      = var.install_db2_data_management,      // DMC
-  })
-}
-
-resource "null_resource" "install_cp4data" {
+resource "null_resource" "install_cp4i" {
   count = var.enable ? 1 : 0
 
   triggers = {
     force_to_run                              = var.force ? timestamp() : 0
     namespace_sha1                            = sha1(local.namespace)
     docker_params_sha1                        = sha1(join("", [var.entitled_registry_user_email, local.entitled_registry_key]))
-    storage_class_content_sha1                = sha1(local.storage_class_content)
-    security_context_constraints_content_sha1 = sha1(local.security_context_constraints_content)
+    ibm_operator_catalog_content_sha1         = sha1(local.storage_class_content)
+    opencloud_operator_catalog_content_sha1   = sha1(local.storage_class_content)
+    subscription_content_sha1                 = sha1(local.storage_class_content)
+    #security_context_constraints_content_sha1 = sha1(local.security_context_constraints_content)
     installer_sensitive_data_sha1             = sha1(local.installer_sensitive_data)
     installer_job_content_sha1                = sha1(local.installer_job_content)
   }
 
   provisioner "local-exec" {
-    command     = "./install_cp4data.sh"
+    command     = "./install_cp4i.sh"
     working_dir = "${path.module}/scripts"
 
     environment = {
-      FORCE                    = var.force
-      KUBECONFIG               = var.cluster_config_path
-      NAMESPACE                = local.namespace
-      STORAGE_CLASS_NAME       = var.storage_class_name
-      DOCKER_REGISTRY_PASS     = local.entitled_registry_key
-      DOCKER_USER_EMAIL        = var.entitled_registry_user_email
-      DOCKER_USERNAME          = local.docker_username
-      DOCKER_REGISTRY          = local.docker_registry
-      STORAGE_CLASS_CONTENT    = local.storage_class_content
-      INSTALLER_SENSITIVE_DATA = local.installer_sensitive_data
-      INSTALLER_JOB_CONTENT    = local.installer_job_content
-      SCC_ZENUID_CONTENT       = local.security_context_constraints_content
+      FORCE                         = var.force
+      KUBECONFIG                    = var.cluster_config_path
+      NAMESPACE                     = local.namespace
+      IBM_OPERATOR_CATALOG          = var.ibm_operator_catalog_name
+      OPENCLOUD_OPERATOR_CATALOG    = var.opencloud_operator_catalog_name
+      SUBSCRIPTION                  = var.subscription_name
+      DOCKER_REGISTRY_PASS          = local.entitled_registry_key
+      DOCKER_USER_EMAIL             = var.entitled_registry_user_email
+      DOCKER_USERNAME               = local.docker_username
+      DOCKER_REGISTRY               = local.docker_registry
+      IBM_OPERATOR_CATALOG_CONTENT  = var.ibm_operator_catalog_content
+      OPENCLOUD_OPERATOR_CATALOG_CONTENT = var.opencloud_operator_catalog_content
+      SUBSCRIPTION_CONTENT          = var.subscription_content
+      INSTALLER_SENSITIVE_DATA      = local.installer_sensitive_data
+      INSTALLER_JOB_CONTENT         = local.installer_job_content
+      SCC_ZENUID_CONTENT            = local.security_context_constraints_content
       // DEBUG                    = true
     }
   }
@@ -75,7 +81,7 @@ data "external" "get_endpoints" {
   count = var.enable ? 1 : 0
 
   depends_on = [
-    null_resource.install_cp4data,
+    null_resource.install_cp4i,
   ]
 
   program = ["/bin/bash", "${path.module}/scripts/get_endpoints.sh"]
