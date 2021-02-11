@@ -15,13 +15,13 @@
 # - kubectl
 
 # Optional input parameters with default values:
-NAMESPACE=${NAMESPACE-cp4i}
+NAMESPACE=${default}
 FORCE=${FORCE:-false} # Delete the job installer and execute it again
 DEBUG=${DEBUG:-false}
 DOCKER_USERNAME=${DOCKER_USERNAME:-cp}
 # The default docker username is cp, however the original scrip uses: ekey
 # DOCKER_USERNAME=${DOCKER_USERNAME:-ekey}
-DOCKER_REGISTRY=${DOCKER_REGISTRY:-cp.icr.io/cp/cpd}
+DOCKER_REGISTRY=${DOCKER_REGISTRY:-cp.icr.io}  # adjust this if needed
 # For non-production, use:
 # DOCKER_REGISTRY="cp.stg.icr.io/cp/cpd"
 
@@ -100,13 +100,13 @@ echo "Creating Catalog Option ${SUBSCRIPTION_OPERATOR_CATALOG}"
 echo "${SUBSCRIPTION_OPERATOR_CATALOG}" | oc apply -f -
 
 # The following code is taken from get_enpoints.sh, to print what it's getting
-result_txt=$(kubectl logs -n ${NAMESPACE} $pod | sed 's/[[:cntrl:]]\[[0-9;]*m//g' | tail -20)
-if ! echo $result_txt | grep -q 'Installation of assembly lite is successfully completed'; then
-  echo "[ERROR] a successful installation was not found from the logs"
-fi
+# result_txt=$(kubectl logs -n ${NAMESPACE} $pod | sed 's/[[:cntrl:]]\[[0-9;]*m//g' | tail -20)
+# if ! echo $result_txt | grep -q 'Installation of assembly lite is successfully completed'; then
+#   echo "[ERROR] a successful installation was not found from the logs"
+# fi
 
-echo "[DEBUG] Latest lines from logs:"
-echo "[DEBUG] $result_txt"
+# echo "[DEBUG] Latest lines from logs:"
+# echo "[DEBUG] $result_txt"
 
 # address=$(echo $result_txt | sed 's|.*Access Cloud Pak for Data console using the address: \(.*\) .*|\1|')
 # if [[ -z $address ]]; then
