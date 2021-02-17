@@ -39,10 +39,10 @@ while [[ -z $(kubectl get route -n openshift-ingress router-default -o jsonpath=
   sleep $WAITING_TIME
 done
 
-echo "Creating Catalog Option ${IBM_OPERATOR_CATALOG}"
+echo "Deploying Catalog Option ${IBM_OPERATOR_CATALOG}"
 echo "${IBM_OPERATOR_CATALOG}" | oc apply -f -
 
-echo "Creating Catalog Option ${OPENCLOUD_OPERATOR_CATALOG}"
+echo "Deploying Catalog Option ${OPENCLOUD_OPERATOR_CATALOG}"
 echo "${OPENCLOUD_OPERATOR_CATALOG}" | oc apply -f -
 
 # echo "Creating namespace ${NAMESPACE}"
@@ -96,8 +96,11 @@ create_secret ibm-entitlement-key openshift-operators
 # create_secret icp4d-anyuid-docker-pull kube-system
 # create_secret sa-${NAMESPACE} ${NAMESPACE} no-link
 
-echo "Creating Catalog Option ${SUBSCRIPTION_OPERATOR_CATALOG}"
-echo "${SUBSCRIPTION_OPERATOR_CATALOG}" | oc apply -f -
+echo "Deploying Subscription ${SUBSCRIPTION}"
+echo "${SUBSCRIPTION}" | oc apply -f -
+
+echo "Deploying Platform Navigator ${PLATFORM_NAVIGATOR}"
+echo "${PLATFORM_NAVIGATOR}" | oc apply -f -
 
 # The following code is taken from get_enpoints.sh, to print what it's getting
 # result_txt=$(kubectl logs -n ${NAMESPACE} $pod | sed 's/[[:cntrl:]]\[[0-9;]*m//g' | tail -20)

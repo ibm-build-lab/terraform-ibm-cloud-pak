@@ -1,0 +1,11 @@
+apiVersion: integration.ibm.com/v1beta1
+kind: PlatformNavigator
+metadata:
+    name: cp4i-navigator
+    namespace: cp4i
+spec:
+    license:
+        accept: false
+    mqDashboard: true
+    replicas: 3
+    version: 2020.3.1

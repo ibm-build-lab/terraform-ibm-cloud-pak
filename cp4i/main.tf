@@ -4,6 +4,7 @@ locals {
   ibm_operator_catalog = file(join("/", [path.module, "files", "ibm-operator-catalog.yaml"])) 
   opencloud_operator_catalog = file(join("/", [path.module, "files", "opencloud-operator-catalog.yaml"])) 
   subscription = file(join("/", [path.module, "files", "subscription.yaml"])) 
+  platform_navigator = file(join("/", [path.module, "files", "navigator.yaml"]))
 }
 
 #  security_context_constraints_content = templatefile("${path.module}/templates/security_context_constraints.tmpl.yaml", {
@@ -21,6 +22,7 @@ resource "null_resource" "install_cp4i" {
     ibm_operator_catalog_sha1                 = sha1(local.ibm_operator_catalog)
     opencloud_operator_catalog_sha1           = sha1(local.opencloud_operator_catalog)
     subscription_sha1                         = sha1(local.subscription)
+    platform_navigator_sha1                   = sha1(local.platform_navigator)
     #security_context_constraints_content_sha1 = sha1(local.security_context_constraints_content)
     installer_sensitive_data_sha1             = sha1(local.installer_sensitive_data)
     installer_job_content_sha1                = sha1(local.installer_job_content)
@@ -37,6 +39,7 @@ resource "null_resource" "install_cp4i" {
       IBM_OPERATOR_CATALOG          = local.ibm_operator_catalog
       OPENCLOUD_OPERATOR_CATALOG    = local.opencloud_operator_catalog
       SUBSCRIPTION                  = local.subscription
+      PLATFORM_NAVIGATOR            = local.platform_navigator
       DOCKER_REGISTRY_PASS          = local.entitled_registry_key
       DOCKER_USER_EMAIL             = var.entitled_registry_user_email
       DOCKER_USERNAME               = local.docker_username
