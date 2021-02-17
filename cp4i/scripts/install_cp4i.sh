@@ -46,7 +46,7 @@ echo "Deploying Catalog Option ${OPENCLOUD_OPERATOR_CATALOG}"
 echo "${OPENCLOUD_OPERATOR_CATALOG}" | oc apply -f -
 
 # echo "Creating namespace ${NAMESPACE}"
-# kubectl create namespace ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
+kubectl create namespace cp4i --dry-run=client -o yaml | kubectl apply -f -
 
 # echo "Creating ServiceAccount cpdinstall"
 # kubectl create sa cpdinstall -n kube-system --dry-run=client -o yaml | kubectl apply -f -
