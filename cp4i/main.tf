@@ -44,9 +44,9 @@ resource "null_resource" "install_cp4i" {
       DOCKER_USER_EMAIL             = var.entitled_registry_user_email
       DOCKER_USERNAME               = local.docker_username
       DOCKER_REGISTRY               = local.docker_registry
-      INSTALLER_SENSITIVE_DATA      = local.installer_sensitive_data
-      INSTALLER_JOB_CONTENT         = local.installer_job_content
-      SCC_ZENUID_CONTENT            = local.security_context_constraints_content
+      #INSTALLER_SENSITIVE_DATA      = local.installer_sensitive_data
+      #INSTALLER_JOB_CONTENT         = local.installer_job_content
+      #SCC_ZENUID_CONTENT            = local.security_context_constraints_content
       // DEBUG                    = true
     }
   }
