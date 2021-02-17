@@ -101,7 +101,7 @@ sleep 40
 echo "Deploying Subscription ${SUBSCRIPTION}"
 echo "${SUBSCRIPTION}" | oc apply -f -
 
-sleep 40
+sleep 120
 
 echo "Deploying Platform Navigator ${PLATFORM_NAVIGATOR}"
 echo "${PLATFORM_NAVIGATOR}" | oc apply -f -
