@@ -24,8 +24,8 @@ resource "null_resource" "install_cp4i" {
     subscription_sha1                         = sha1(local.subscription)
     platform_navigator_sha1                   = sha1(local.platform_navigator)
     #security_context_constraints_content_sha1 = sha1(local.security_context_constraints_content)
-    installer_sensitive_data_sha1             = sha1(local.installer_sensitive_data)
-    installer_job_content_sha1                = sha1(local.installer_job_content)
+    #installer_sensitive_data_sha1             = sha1(local.installer_sensitive_data)
+    #installer_job_content_sha1                = sha1(local.installer_job_content)
   }
 
   provisioner "local-exec" {
