@@ -96,8 +96,12 @@ create_secret ibm-entitlement-key openshift-operators
 # create_secret icp4d-anyuid-docker-pull kube-system
 # create_secret sa-${NAMESPACE} ${NAMESPACE} no-link
 
+sleep 40
+
 echo "Deploying Subscription ${SUBSCRIPTION}"
 echo "${SUBSCRIPTION}" | oc apply -f -
+
+sleep 40
 
 echo "Deploying Platform Navigator ${PLATFORM_NAVIGATOR}"
 echo "${PLATFORM_NAVIGATOR}" | oc apply -f -
