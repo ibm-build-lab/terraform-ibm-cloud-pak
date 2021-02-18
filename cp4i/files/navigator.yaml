@@ -5,7 +5,7 @@ metadata:
     namespace: cp4i
 spec:
     license:
-        accept: false
+        accept: true
     mqDashboard: true
     replicas: 3
     version: 2020.3.1
