@@ -92,7 +92,7 @@ create_secret() {
 
 create_secret ibm-entitlement-key default
 create_secret ibm-entitlement-key openshift-operators
-
+create_secret ibm-entitlement-key cp4i
 # create_secret icp4d-anyuid-docker-pull kube-system
 # create_secret sa-${NAMESPACE} ${NAMESPACE} no-link
 
