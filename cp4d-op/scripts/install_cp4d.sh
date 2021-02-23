@@ -101,12 +101,12 @@ sleep 40
 echo "Deploying Subscription ${SUBSCRIPTION}"
 echo "${SUBSCRIPTION}" | oc apply -f -
 
-echo "Waiting for the job to complete or timeout in 2hrs"
-kubectl wait \
-  --for=condition=Complete \
-  --timeout=2h \
-  --namespace=${NAMESPACE} \
-  operator/${JOB_NAME}
+# echo "Waiting for the job to complete or timeout in 2hrs"
+# kubectl wait \
+#   --for=condition=Complete \
+#   --timeout=2h \
+#   --namespace=${NAMESPACE} \
+#   operator/${JOB_NAME}
 
 # The following code is taken from get_enpoints.sh, to print what it's getting
 result_txt=$(kubectl logs -n ${NAMESPACE} $pod | sed 's/[[:cntrl:]]\[[0-9;]*m//g' | tail -20)
