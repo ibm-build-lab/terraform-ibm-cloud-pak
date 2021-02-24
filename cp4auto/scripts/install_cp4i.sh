@@ -39,6 +39,9 @@ while [[ -z $(kubectl get route -n openshift-ingress router-default -o jsonpath=
   sleep $WAITING_TIME
 done
 
+echo "Deploying Storage ${PVC_CLAIM}"
+echo "${PVC_CLAIM}" | oc apply -f -
+
 echo "Deploying Catalog Option ${IBM_OPERATOR_CATALOG}"
 echo "${IBM_OPERATOR_CATALOG}" | oc apply -f -
 
@@ -46,7 +49,7 @@ echo "Deploying Catalog Option ${OPENCLOUD_OPERATOR_CATALOG}"
 echo "${OPENCLOUD_OPERATOR_CATALOG}" | oc apply -f -
 
 # echo "Creating namespace ${NAMESPACE}"
-kubectl create namespace cp4i --dry-run=client -o yaml | kubectl apply -f -
+# kubectl create namespace cp4i --dry-run=client -o yaml | kubectl apply -f -
 
 # echo "Creating ServiceAccount cpdinstall"
 # kubectl create sa cpdinstall -n kube-system --dry-run=client -o yaml | kubectl apply -f -
@@ -90,21 +93,22 @@ create_secret() {
   # [[ "${link}" != "no-link" ]] && oc secrets -n ${namespace} link cpdinstall icp4d-anyuid-docker-pull --for=pull
 }
 
-create_secret ibm-entitlement-key default
-create_secret ibm-entitlement-key openshift-operators
-create_secret ibm-entitlement-key cp4i
+create_secret admin.registrykey openshift-operators
+# This second secret may be not be needed.  I was having difficulties without it.
+create_secret ibm_entitlement_key openshift-operators
+
 # create_secret icp4d-anyuid-docker-pull kube-system
 # create_secret sa-${NAMESPACE} ${NAMESPACE} no-link
 
 sleep 40
 
-echo "Deploying Subscription ${SUBSCRIPTION}"
-echo "${SUBSCRIPTION}" | oc apply -f -
+echo "Deploying Common Services Subscription ${SERVICES_SUBSCRIPTION}"
+echo "${SERVICES_SUBSCRIPTION}" | oc apply -f -
 
-sleep 120
+sleep 180
 
-echo "Deploying Platform Navigator ${PLATFORM_NAVIGATOR}"
-echo "${PLATFORM_NAVIGATOR}" | oc apply -f -
+echo "Deploying Cloud Pak for Automation Subscription ${CP4A_SUBSCRIPTION}"
+echo "${CP4A_SUBSCRIPTION}" | oc apply -f -
 
 # The following code is taken from get_enpoints.sh, to print what it's getting
 # result_txt=$(kubectl logs -n ${NAMESPACE} $pod | sed 's/[[:cntrl:]]\[[0-9;]*m//g' | tail -20)
