@@ -1,15 +1,10 @@
 locals {
-
-
   ibm_operator_catalog = file(join("/", [path.module, "files", "ibm-operator-catalog.yaml"])) 
   opencloud_operator_catalog = file(join("/", [path.module, "files", "opencloud-operator-catalog.yaml"])) 
   subscription = file(join("/", [path.module, "files", "subscription.yaml"])) 
+  operator_group = file(join("/", [path.module, "files", "operator-group.yaml"])) 
+  cpd_service = file(join("/", [path.module, "files", "cpdservice.yaml"])) 
 }
-
-#  security_context_constraints_content = templatefile("${path.module}/templates/security_context_constraints.tmpl.yaml", {
-#    namespace = local.namespace,
-#  })
-
 
 resource "null_resource" "install_cp4d" {
   count = var.enable ? 1 : 0
@@ -21,9 +16,9 @@ resource "null_resource" "install_cp4d" {
     ibm_operator_catalog_sha1                 = sha1(local.ibm_operator_catalog)
     opencloud_operator_catalog_sha1           = sha1(local.opencloud_operator_catalog)
     subscription_sha1                         = sha1(local.subscription)
-    #security_context_constraints_content_sha1 = sha1(local.security_context_constraints_content)
-    #installer_sensitive_data_sha1             = sha1(local.installer_sensitive_data)
-    #installer_job_content_sha1                = sha1(local.installer_job_content)
+    operator_group_sha1                       = sha1(local.operator_group)
+    cpd_service_sha1                          = sha1(local.cpd_service)
+    
   }
 
   provisioner "local-exec" {
@@ -41,9 +36,9 @@ resource "null_resource" "install_cp4d" {
       DOCKER_USER_EMAIL             = var.entitled_registry_user_email
       DOCKER_USERNAME               = local.docker_username
       DOCKER_REGISTRY               = local.docker_registry
-      #INSTALLER_SENSITIVE_DATA      = local.installer_sensitive_data
-      #INSTALLER_JOB_CONTENT         = local.installer_job_content
-      #SCC_ZENUID_CONTENT            = local.security_context_constraints_content
+      OPERATOR_GROUP                = local.operator_group
+      CPD_SERVICE                   = local.cpd_service
+     
       // DEBUG                    = true
     }
   }

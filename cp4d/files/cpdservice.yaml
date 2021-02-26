@@ -2,7 +2,7 @@ apiVersion: metaoperator.cpd.ibm.com/v1
 kind: CPDService
 metadata:
   name: lite-cpdservice
-  namespace: cpd-meta-ops
+  namespace: cp4d
 spec:
   serviceName: lite
   version: latest

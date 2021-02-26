@@ -47,32 +47,7 @@ echo "${OPENCLOUD_OPERATOR_CATALOG}" | oc apply -f -
 
 # echo "Creating namespace ${NAMESPACE}"
 kubectl create namespace cp4d --dry-run=client -o yaml | kubectl apply -f -
-
-# echo "Creating ServiceAccount cpdinstall"
-# kubectl create sa cpdinstall -n kube-system --dry-run=client -o yaml | kubectl apply -f -
-# kubectl create sa cpdinstall -n ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
-
-# echo "${SCC_ZENUID_CONTENT}" | kubectl apply -f -
-# oc adm policy add-scc-to-user ${NAMESPACE}-zenuid system:serviceaccount:${NAMESPACE}:cpdinstall
-# oc adm policy add-scc-to-user anyuid system:serviceaccount:${NAMESPACE}:icpd-anyuid-sa
-# oc adm policy add-cluster-role-to-user cluster-admin system:serviceaccount:${NAMESPACE}:cpdinstall
-# oc adm policy add-cluster-role-to-user cluster-admin system:serviceaccount:kube-system:cpdinstall
-
-# if ! oc get route -n openshift-image-registry | awk '{print $1}'| grep -q 'image-registry'; then
-#   echo "Creating image registry route"
-#   oc create route reencrypt --service=image-registry -n openshift-image-registry
-# else
-#   policy=`oc get route -n openshift-image-registry | awk '$1 == "image-registry" {print $5}'`
-#   if [[ $policy != "reencrypt" ]]; then
-#     echo "Recreating image registry route"
-#     oc delete route image-registry -n openshift-image-registry
-#     oc create route reencrypt --service=image-registry -n openshift-image-registry
-#   fi
-# fi
-
-# echo "Ensure the image registry is the default route"
-# kubectl patch configs.imageregistry.operator.openshift.io/cluster --type merge -p '{"spec":{"defaultRoute":true}}'
-# oc annotate route image-registry --overwrite haproxy.router.openshift.io/balance=source -n openshift-image-registry
+kubectl create namespace cpd-meta-ops --dry-run=client -o yaml | kubectl apply -f -
 
 create_secret() {
   secret_name=$1
@@ -86,17 +61,16 @@ create_secret() {
     --docker-password=${DOCKER_REGISTRY_PASS} \
     --docker-email=${DOCKER_USER_EMAIL} \
     --namespace=${namespace}
-
-  # [[ "${link}" != "no-link" ]] && oc secrets -n ${namespace} link cpdinstall icp4d-anyuid-docker-pull --for=pull
 }
 
 # create_secret ibm-entitlement-key default
-create_secret ibm-entitlement-key openshift-operators
+create_secret ibm-entitlement-key cpd-meta-ops
 create_secret ibm-entitlement-key cp4d
-# create_secret icp4d-anyuid-docker-pull kube-system
-# create_secret sa-${NAMESPACE} ${NAMESPACE} no-link
 
 sleep 40
+
+echo "Creating Operator Group"
+echo "${OPERATOR_GROUP}" | oc apply -f -
 
 echo "Deploying Subscription ${SUBSCRIPTION}"
 echo "${SUBSCRIPTION}" | oc apply -f -
@@ -108,20 +82,56 @@ echo "${SUBSCRIPTION}" | oc apply -f -
 #   --namespace=${NAMESPACE} \
 #   operator/${JOB_NAME}
 
-# The following code is taken from get_enpoints.sh, to print what it's getting
-result_txt=$(kubectl logs -n ${NAMESPACE} $pod | sed 's/[[:cntrl:]]\[[0-9;]*m//g' | tail -20)
-if ! echo $result_txt | grep -q 'Installation of assembly lite is successfully completed'; then
-  echo "[ERROR] a successful installation was not found from the logs"
+echo "Deploying CPD Service"
+echo "${CPD_SERVICE}" | oc apply -f -
+
+
+POD=$(kubectl get pods -n cpd-meta-ops | grep ibm-cp-data-operator | awk '{print $1}')
+if [[ ${POD} != "" ]]; then
+echo "Waiting for ${POD} is running"
+  while [[ -z "$POD" ]]; do
+      echo "Waiting for pod to start."
+      sleep 2
+  done
 fi
+    
+echo "Installation Started..."
+# Each retry is 10 seconds   
+for ((retry=0;retry<=9999;retry++)); do
+
+  # Check for Success
+  # The following code is taken from get_enpoints.sh, to print what it's getting
+  result_txt=$(kubectl logs -n cpd-meta-ops $POD | sed 's/[[:cntrl:]]\[[0-9;]*m//g' | tail -20)
+  if echo $result_txt | grep -q 'Install/Upgrade for assembly lite completed successfully'; then
+    echo "[INFO] installation was successful"
+    break
+  elif echo $result_txt | grep -q 'CPD binary has failed'; then
+    echo "[ERROR] installation not successful"
+    exit 1
+  fi
+
+  # Check for Timeout
+  # 30 min timeout
+  if [[ ${retry} -eq 180 ]]; then
+    echo "Timeout occurred for CP4D install"
+    echo "Please use command 'oc get pod ${POD}' to check details"
+    oc describe pod ${POD} -n cpd-meta-ops
+    oc logs ${POD} -n cpd-meta-ops
+    exit 1
+  fi
+
+  sleep 10
+done
+
 
 # echo "[DEBUG] Latest lines from logs:"
 # echo "[DEBUG] $result_txt"
 
-address=$(echo $result_txt | sed 's|.*Access Cloud Pak for Data console using the address: \(.*\) .*|\1|')
+address=$(echo $result_txt | sed -n 's#.*\(https*://[^"]*\).*#\1#p')
 if [[ -z $address ]]; then
   echo "[ERROR] failed to get the endpoint address from the logs"
 fi
-echo "[INFO] CPD Endpoint: https://$address"
+echo "[INFO] CPD Endpoint: $address"
 
 # [[ "$DEBUG" == "false" ]] && exit
 

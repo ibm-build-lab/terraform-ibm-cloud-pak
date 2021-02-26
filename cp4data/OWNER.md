@@ -1,3 +1,0 @@
-@johandry
-@timo
-@shivam
