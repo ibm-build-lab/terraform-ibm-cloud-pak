@@ -38,7 +38,21 @@ resource "null_resource" "install_cp4d" {
       DOCKER_REGISTRY               = local.docker_registry
       OPERATOR_GROUP                = local.operator_group
       CPD_SERVICE                   = local.cpd_service
-     
+
+      // Modules to deploy
+      install_watson_knowledge_catalog = var.install_watson_knowledge_catalog, // WKC
+      install_watson_studio            = var.install_watson_studio,            // WSL
+      install_watson_machine_learning  = var.install_watson_machine_learning,  // WML
+      install_watson_open_scale        = var.install_watson_open_scale,        // AIOPENSCALE
+      install_data_virtualization      = var.install_data_virtualization,      // DV
+      install_streams                  = var.install_streams,                  // STREAMS
+      install_analytics_dashboard      = var.install_analytics_dashboard,      // CDE
+      install_spark                    = var.install_spark,                    // SPARK
+      install_db2_warehouse            = var.install_db2_warehouse,            // DB2WH
+      install_db2_data_gate            = var.install_db2_data_gate,            // DATAGATE
+      install_rstudio                  = var.install_rstudio,                  // RSTUDIO
+      install_db2_data_management      = var.install_db2_data_management,      // DMC
+
       // DEBUG                    = true
     }
   }
