@@ -18,7 +18,6 @@ resource "null_resource" "install_cp4d" {
     subscription_sha1                         = sha1(local.subscription)
     operator_group_sha1                       = sha1(local.operator_group)
     cpd_service_sha1                          = sha1(local.cpd_service)
-    
   }
 
   provisioner "local-exec" {
@@ -58,20 +57,20 @@ resource "null_resource" "install_cp4d" {
   }
 }
 
-data "external" "get_endpoints" {
-  count = var.enable ? 1 : 0
+# data "external" "get_endpoints" {
+#   count = var.enable ? 1 : 0
 
-  depends_on = [
-    null_resource.install_cp4d,
-  ]
+#   depends_on = [
+#     null_resource.install_cp4d,
+#   ]
 
-  program = ["/bin/bash", "${path.module}/scripts/get_endpoints.sh"]
+#   program = ["/bin/bash", "${path.module}/scripts/get_endpoints.sh"]
 
-  query = {
-    kubeconfig = var.cluster_config_path
-    namespace  = local.namespace
-  }
-}
+#   query = {
+#     kubeconfig = var.cluster_config_path
+#     namespace  = local.namespace
+#   }
+# }
 
 // TODO: It may be considered in a future version to pass the cluster ID and the
 // resource group to get the cluster configuration and store it in memory and in
