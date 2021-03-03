@@ -88,10 +88,12 @@ echo "${CPD_SERVICE}" | oc apply -f -
 
 POD=$(kubectl get pods -n cpd-meta-ops | grep ibm-cp-data-operator | awk '{print $1}')
 if [[ ${POD} != "" ]]; then
-echo "Waiting for ${POD} is running"
+  echo "${POD} is running"
+else
+  echo "Installer pod is not created yet"
   while [[ -z "$POD" ]]; do
-      echo "Waiting for pod to start."
-      sleep 2
+    echo "Waiting ${POD} to start.."
+    sleep 2
   done
 fi
     
