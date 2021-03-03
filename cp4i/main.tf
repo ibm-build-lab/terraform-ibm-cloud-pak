@@ -1,17 +1,13 @@
 locals {
 
-
+  # These are the the yamls that will be pulled from the ./files  these will be used to start hte operator
   ibm_operator_catalog = file(join("/", [path.module, "files", "ibm-operator-catalog.yaml"])) 
   opencloud_operator_catalog = file(join("/", [path.module, "files", "opencloud-operator-catalog.yaml"])) 
   subscription = file(join("/", [path.module, "files", "subscription.yaml"])) 
   platform_navigator = file(join("/", [path.module, "files", "navigator.yaml"]))
 }
 
-#  security_context_constraints_content = templatefile("${path.module}/templates/security_context_constraints.tmpl.yaml", {
-#    namespace = local.namespace,
-#  })
-
-
+# This section checks to see if the values have been updated through out the script running and is required for any dynamic value
 resource "null_resource" "install_cp4i" {
   count = var.enable ? 1 : 0
 
@@ -23,9 +19,6 @@ resource "null_resource" "install_cp4i" {
     opencloud_operator_catalog_sha1           = sha1(local.opencloud_operator_catalog)
     subscription_sha1                         = sha1(local.subscription)
     platform_navigator_sha1                   = sha1(local.platform_navigator)
-    #security_context_constraints_content_sha1 = sha1(local.security_context_constraints_content)
-    #installer_sensitive_data_sha1             = sha1(local.installer_sensitive_data)
-    #installer_job_content_sha1                = sha1(local.installer_job_content)
   }
 
   provisioner "local-exec" {
@@ -44,41 +37,6 @@ resource "null_resource" "install_cp4i" {
       DOCKER_USER_EMAIL             = var.entitled_registry_user_email
       DOCKER_USERNAME               = local.docker_username
       DOCKER_REGISTRY               = local.docker_registry
-      #INSTALLER_SENSITIVE_DATA      = local.installer_sensitive_data
-      #INSTALLER_JOB_CONTENT         = local.installer_job_content
-      #SCC_ZENUID_CONTENT            = local.security_context_constraints_content
-      // DEBUG                    = true
     }
   }
 }
-
-# data "external" "get_endpoints" {
-#   count = var.enable ? 1 : 0
-
-#   depends_on = [
-#     null_resource.install_cp4i,
-#   ]
-
-#   program = ["/bin/bash", "${path.module}/scripts/get_endpoints.sh"]
-
-#   query = {
-#     kubeconfig = var.cluster_config_path
-#     namespace  = local.namespace
-#   }
-# }
-
-// TODO: It may be considered in a future version to pass the cluster ID and the
-// resource group to get the cluster configuration and store it in memory and in
-// a directory, either specified by the user or in the module local directory
-
-// variable "resource_group" {
-//   default     = "default"
-//   description = "List all available resource groups with: ibmcloud resource groups"
-// }
-// data "ibm_resource_group" "group" {
-//   name = var.resource_group
-// }
-// data "ibm_container_cluster_config" "cluster_config" {
-//   cluster_name_id   = var.cluster_id
-//   resource_group_id = data.ibm_resource_group.group.id
-// }

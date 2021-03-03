@@ -19,8 +19,6 @@ NAMESPACE=${default}
 FORCE=${FORCE:-false} # Delete the job installer and execute it again
 DEBUG=${DEBUG:-false}
 DOCKER_USERNAME=${DOCKER_USERNAME:-cp}
-# The default docker username is cp, however the original scrip uses: ekey
-# DOCKER_USERNAME=${DOCKER_USERNAME:-ekey}
 DOCKER_REGISTRY=${DOCKER_REGISTRY:-cp.icr.io}  # adjust this if needed
 # For non-production, use:
 # DOCKER_REGISTRY="cp.stg.icr.io/cp/cpd"

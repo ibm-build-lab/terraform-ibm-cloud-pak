@@ -1,15 +1,15 @@
-# Terraform Module to install Cloud Pak for Data
+# Terraform Module to install Cloud Pak for Automation
 
-This Terraform Module install **Cloud Pak for Data** on an existing Openshift (ROKS) cluster on IBM Cloud.
+This Terraform Module install **Cloud Pak for Automation** on an existing Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4data`
+**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4auto`
 
-- [Terraform Module to install Cloud Pak for Data](#terraform-module-to-install-cloud-pak-for-data)
+- [Terraform Module to install Cloud Pak for Automation](#terraform-module-to-install-cloud-pak-for-Automation)
   - [Use](#use)
     - [Building a ROKS cluster](#building-a-roks-cluster)
     - [Using an existing ROKS cluster](#using-an-existing-roks-cluster)
     - [Enable or Disable the Module](#enable-or-disable-the-module)
-    - [Using the CP4DATA Module](#using-the-cp4data-module)
+    - [Using the CP4Auto Module](#using-the-cp4auto-module)
   - [Input Variables](#input-variables)
   - [Output Variables](#output-variables)
 
@@ -85,14 +85,14 @@ The output parameters of the cluster configuration data resource `ibm_container_
 
 In Terraform the block parameter `count` is used to define how many instances of the resource are needed, including zero, meaning the resource won't be created. The `count` parameter on `module` blocks is only available since Terraform version 0.13.
 
-Using Terraform 0.12 the workaround is to use the boolean input parameter `enable` with default value `true`. If the `enable` parameter is set to `false` the Cloud Pak for DATA is not installed. Use the `enable` parameter only if using Terraform 0.12 or lower, this parameter may be deprecated when Terraform 0.12 is not longer supported.
+Using Terraform 0.12 the workaround is to use the boolean input parameter `enable` with default value `true`. If the `enable` parameter is set to `false` the Cloud Pak for Automation is not installed. Use the `enable` parameter only if using Terraform 0.12 or lower, this parameter may be deprecated when Terraform 0.12 is not longer supported.
 
-### Using the CP4DATA Module
+### Using the CP4Auto Module
 
-Use the `module` block assigning the `source` parameter to the location of this module, either local (i.e. `../cp4data`) or remote (`git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4data`). Then pass the input parameters required to install the required Cloud Pak for Data version and their modules.
+Use the `module` block assigning the `source` parameter to the location of this module, either local (i.e. `../cp4auto`) or remote (`git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4auto`). Then pass the input parameters required to install the required Cloud Pak for Automation version and their modules.
 
 ```hcl
-module "cp4data" {
+module "cp4auto" {
   source          = "./.."
   enable          = true
 
@@ -156,27 +156,3 @@ terraform destroy
 | `openshift_version`                | Openshift version installed in the cluster                                                                                                                                                                                 | `4.5`                       | No       |
 | `entitled_registry_key`            | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
 | `entitled_registry_user_email`     | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key                                                                                                                 |                             | Yes      |
-| `storage_class_name`               | Storage Class name to use                                                                                                                                                                                                  | `ibmc-file-custom-gold-gid` | No       |
-| `install_watson_knowledge_catalog` | Install Watson Knowledge Catalog module. By default it's not installed.                                                                                                                                                    | `false`                     | No       |
-| `install_watson_studio`            | Install Watson Studio module. By default it's not installed.                                                                                                                                                               | `false`                     | No       |
-| `install_watson_machine_learning`  | Install Watson Machine Learning module. By default it's not installed.                                                                                                                                                     | `false`                     | No       |
-| `install_watson_open_scale`        | Install Watson Open Scale module. By default it's not installed.                                                                                                                                                           | `false`                     | No       |
-| `install_data_virtualization`      | Install Data Virtualization module. By default it's not installed.                                                                                                                                                         | `false`                     | No       |
-| `install_streams`                  | Install Streams module. By default it's not installed.                                                                                                                                                                     | `false`                     | No       |
-| `install_analytics_dashboard`      | Install Analytics Dashboard module. By default it's not installed.                                                                                                                                                         | `false`                     | No       |
-| `install_spark`                    | Install Analytics Engine powered by Apache Spark module. By default it's not installed.                                                                                                                                    | `false`                     | No       |
-| `install_db2_warehouse`            | Install DB2 Warehouse module. By default it's not installed.                                                                                                                                                               | `false`                     | No       |
-| `install_db2_data_gate`            | Install DB2 Data_Gate module. By default it's not installed.                                                                                                                                                               | `false`                     | No       |
-| `install_rstudio`                  | Install RStudio module. By default it's not installed.                                                                                                                                                                     | `false`                     | No       |
-| `install_db2_data_management`      | Install DB2 Data Management module. By default it's not installed.                                                                                                                                                         | `false`                     | No       |
-
-## Output Variables
-
-Once the Terraform code finish use the following output variables to access CP4DATA Dashboard:
-
-| Name        | Description                                                      |
-| ----------- | ---------------------------------------------------------------- |
-| `namespace` | Kubernetes namespace where all the CP4DATA objects are installed |
-| `endpoint`  | URL to access Cloud Pak for Data                                 |
-| `username`  | Username to access Cloud Pak for Data                            |
-| `password`  | PAssword to access Cloud Pak for Data                            |
