@@ -12,26 +12,15 @@ variable "cluster_config_path" {
   description = "Path to the Kubernetes configuration file to access your cluster"
 }
 
-// variable "cluster_config" {
-//   type = object({
-//     host               = string
-//     client_certificate = string
-//     client_key         = string
-//     token              = string
-//     config_file_path   = string
-//   })
-//   description = "Kubernetes configuration parameters such as host, certificates or token to access your cluster"
-// }
-
 variable "openshift_version" {
   default     = "4.5"
   description = "Openshift version installed in the cluster"
 }
 
-// variable "cluster_endpoint" {
-//   default     = "not-required"
-//   description = "URL to access the OpenShift cluster"
-// }
+# variable "cluster_endpoint" {
+#   default     = "not-required"
+#   description = "URL to access the OpenShift cluster"
+# }
 
 variable "entitled_registry_key" {
   description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
@@ -39,11 +28,6 @@ variable "entitled_registry_key" {
 
 variable "entitled_registry_user_email" {
   description = "Docker email address"
-}
-
-variable "storage_class_name" {
-  default     = "ibmc-file-custom-gold-gid"
-  description = "Storage Class name to use. Supported Storage Classes: ibmc-file-custom-gold-gid, portworx-shared-gp3"
 }
 
 // Modules available to install on CP4D
@@ -110,10 +94,10 @@ variable "install_db2_data_management" {
 }
 
 locals {
-  namespace                = "cloudpak4data"
+  namespace                = "default"
   entitled_registry        = "cp.icr.io"
   entitled_registry_user   = "cp"
-  docker_registry          = "cp.icr.io/cp/cpd" // Staging: "cp.stg.icr.io/cp/cpd"
+  docker_registry          = "cp.icr.io" // Staging: "cp.stg.icr.io/cp/cpd"
   docker_username          = "cp"               // "ekey"
   entitled_registry_key    = chomp(var.entitled_registry_key)
   openshift_version_regex  = regex("(\\d+).(\\d+)(.\\d+)*(_openshift)*", var.openshift_version)

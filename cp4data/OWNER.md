@@ -1,3 +1,1 @@
-@johandry
-@timo
-@shivam
+@johnnie
