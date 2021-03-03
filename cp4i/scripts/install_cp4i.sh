@@ -16,20 +16,9 @@
 
 # Optional input parameters with default values:
 NAMESPACE=${default}
-FORCE=${FORCE:-false} # Delete the job installer and execute it again
 DEBUG=${DEBUG:-false}
 DOCKER_USERNAME=${DOCKER_USERNAME:-cp}
-# The default docker username is cp, however the original scrip uses: ekey
-# DOCKER_USERNAME=${DOCKER_USERNAME:-ekey}
 DOCKER_REGISTRY=${DOCKER_REGISTRY:-cp.icr.io}  # adjust this if needed
-# For non-production, use:
-# DOCKER_REGISTRY="cp.stg.icr.io/cp/cpd"
-
-# By default the persistent volume, the data, and your physical file storage device are deleted when CP4D is deprovisioned or the cluster destroyed.
-# TODO: Other values for STORAGE_CLASS_NAME could be:
-# - To retain/persist the storage after destroy the cluster, use 'ibmc-file-retain-gold-gid'
-# - If using Portworx, use 'portworx-shared-gp3'
-# - If using OpenShift Container Storage, use 'ocs-storagecluster-cephfs'
 
 JOB_NAME="cloud-installer"
 WAITING_TIME=5
@@ -46,33 +35,8 @@ echo "Deploying Catalog Option ${OPENCLOUD_OPERATOR_CATALOG}"
 echo "${OPENCLOUD_OPERATOR_CATALOG}" | oc apply -f -
 
 # echo "Creating namespace ${NAMESPACE}"
+echo "creating namespace cp4i"
 kubectl create namespace cp4i --dry-run=client -o yaml | kubectl apply -f -
-
-# echo "Creating ServiceAccount cpdinstall"
-# kubectl create sa cpdinstall -n kube-system --dry-run=client -o yaml | kubectl apply -f -
-# kubectl create sa cpdinstall -n ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
-
-# echo "${SCC_ZENUID_CONTENT}" | kubectl apply -f -
-# oc adm policy add-scc-to-user ${NAMESPACE}-zenuid system:serviceaccount:${NAMESPACE}:cpdinstall
-# oc adm policy add-scc-to-user anyuid system:serviceaccount:${NAMESPACE}:icpd-anyuid-sa
-# oc adm policy add-cluster-role-to-user cluster-admin system:serviceaccount:${NAMESPACE}:cpdinstall
-# oc adm policy add-cluster-role-to-user cluster-admin system:serviceaccount:kube-system:cpdinstall
-
-# if ! oc get route -n openshift-image-registry | awk '{print $1}'| grep -q 'image-registry'; then
-#   echo "Creating image registry route"
-#   oc create route reencrypt --service=image-registry -n openshift-image-registry
-# else
-#   policy=`oc get route -n openshift-image-registry | awk '$1 == "image-registry" {print $5}'`
-#   if [[ $policy != "reencrypt" ]]; then
-#     echo "Recreating image registry route"
-#     oc delete route image-registry -n openshift-image-registry
-#     oc create route reencrypt --service=image-registry -n openshift-image-registry
-#   fi
-# fi
-
-# echo "Ensure the image registry is the default route"
-# kubectl patch configs.imageregistry.operator.openshift.io/cluster --type merge -p '{"spec":{"defaultRoute":true}}'
-# oc annotate route image-registry --overwrite haproxy.router.openshift.io/balance=source -n openshift-image-registry
 
 create_secret() {
   secret_name=$1
@@ -93,8 +57,6 @@ create_secret() {
 create_secret ibm-entitlement-key default
 create_secret ibm-entitlement-key openshift-operators
 create_secret ibm-entitlement-key cp4i
-# create_secret icp4d-anyuid-docker-pull kube-system
-# create_secret sa-${NAMESPACE} ${NAMESPACE} no-link
 
 sleep 40
 

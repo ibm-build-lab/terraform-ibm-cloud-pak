@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# This currently doesnt do anything
 JOB_NAME="cloud-installer"
 
 # Get the KUBECONFIG & NAMESPACE variable from STDIN

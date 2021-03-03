@@ -17,11 +17,6 @@ variable "openshift_version" {
   description = "Openshift version installed in the cluster"
 }
 
-// variable "cluster_endpoint" {
-//   default     = "not-required"
-//   description = "URL to access the OpenShift cluster"
-// }
-
 variable "entitled_registry_key" {
   description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
 }
