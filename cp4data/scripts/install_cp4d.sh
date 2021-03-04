@@ -86,16 +86,19 @@ echo "Deploying CPD Service"
 echo "${CPD_SERVICE}" | oc apply -f -
 
 
-POD=$(kubectl get pods -n cpd-meta-ops | grep ibm-cp-data-operator | awk '{print $1}')
-if [[ ${POD} != "" ]]; then
-  echo "${POD} is running"
-else
-  echo "Installer pod is not created yet"
-  while [[ -z "$POD" ]]; do
-    echo "Waiting ${POD} to start.."
-    sleep 2
-  done
-fi
+POD=""
+SECONDS=0
+timeout=900
+while [[ -z "$POD" ]]; do
+  if [ $SECONDS -ge $timeout ]; then
+    echo "Timed out after ${timeout} seconds"
+    exit 1
+  fi
+  POD=$(kubectl get pods -n cpd-meta-ops | grep ibm-cp-data-operator-dfd | awk '{print $1}')
+  echo "Waiting ${POD} to start.."
+  sleep 2
+done
+echo "${POD} started"
     
 echo "Installation Started..."
 # Each retry is 10 seconds   
