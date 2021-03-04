@@ -102,6 +102,7 @@ echo "${CPD_SERVICE}" | oc apply -f -
 sleep 60
 
 echo "CPD Service Installation Started..."
+failureCount=0
 # Each retry is 10 seconds   
 for ((retry=0;retry<=9999;retry++)); do
 
@@ -112,9 +113,16 @@ for ((retry=0;retry<=9999;retry++)); do
     echo "[INFO] installation was successful"
     break
   elif echo $result_txt | grep -q 'CPD binary has failed'; then
-    echo "[ERROR] installation not successful"
-    # TODO reapply CPD service
-    exit 1
+    if [ $failureCount -ge 3 ]; then
+
+      exit 1
+    fi
+    failureCount=$((failureCount+1))
+    echo "[ERROR] installation not successful, restarting CPD service"
+    oc delete cpdservice lite-cpdservice -n cp4d 
+    echo "Redeploying CPD Service"
+    echo "${CPD_SERVICE}" | oc apply -f -
+    sleep 60
   fi
 
   # Check for Timeout
