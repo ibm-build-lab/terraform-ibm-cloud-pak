@@ -76,7 +76,7 @@ echo "Deploying Subscription ${SUBSCRIPTION}"
 echo "${SUBSCRIPTION}" | oc apply -f -
 
 # waiting for operator to install
-sleep 60
+sleep 180
 
 POD=""
 SECONDS=0
@@ -113,6 +113,7 @@ for ((retry=0;retry<=9999;retry++)); do
     break
   elif echo $result_txt | grep -q 'CPD binary has failed'; then
     echo "[ERROR] installation not successful"
+    # TODO reapply CPD service
     exit 1
   fi
 
