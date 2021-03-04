@@ -94,7 +94,7 @@ while [[ -z "$POD" ]]; do
     echo "Timed out after ${timeout} seconds"
     exit 1
   fi
-  POD=$(kubectl get pods -n cpd-meta-ops | grep ibm-cp-data-operator-dfd | awk '{print $1}')
+  POD=$(kubectl get pods -n cpd-meta-ops | grep ibm-cp-data-operator | awk '{print $1}')
   echo "Waiting ${POD} to start.."
   sleep 2
 done
