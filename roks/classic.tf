@@ -1,8 +1,3 @@
-data "external" "vlans" {
-  count   = var.enable && ! var.on_vpc && (length(var.private_vlan_number) + length(var.private_vlan_number) == 0) ? 1 : 0
-  program = ["sh", "-c", "${path.module}/files/vlan.sh ${var.datacenter} -q -ne -o json"]
-}
-
 locals {
   private_vlan_number = var.private_vlan_number != "" ? var.private_vlan_number : length(data.external.vlans) > 0 ? data.external.vlans.0.result.private : ""
   public_vlan_number  = var.public_vlan_number != "" ? var.public_vlan_number : length(data.external.vlans) > 0 ? data.external.vlans.0.result.public : ""
