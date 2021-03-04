@@ -75,16 +75,8 @@ echo "${OPERATOR_GROUP}" | oc apply -f -
 echo "Deploying Subscription ${SUBSCRIPTION}"
 echo "${SUBSCRIPTION}" | oc apply -f -
 
-# echo "Waiting for the job to complete or timeout in 2hrs"
-# kubectl wait \
-#   --for=condition=Complete \
-#   --timeout=2h \
-#   --namespace=${NAMESPACE} \
-#   operator/${JOB_NAME}
-
-echo "Deploying CPD Service"
-echo "${CPD_SERVICE}" | oc apply -f -
-
+# waiting for operator to install
+sleep 60
 
 POD=""
 SECONDS=0
@@ -98,9 +90,18 @@ while [[ -z "$POD" ]]; do
   echo "Waiting ${POD} to start.."
   sleep 2
 done
-echo "${POD} started"
-    
-echo "Installation Started..."
+echo "${POD} started."
+
+# Waiting for operator to setup.
+sleep 30
+
+echo "Deploying CPD Service"
+echo "${CPD_SERVICE}" | oc apply -f -
+
+# Waiting for cpd service pod to begin.
+sleep 60
+
+echo "CPD Service Installation Started..."
 # Each retry is 10 seconds   
 for ((retry=0;retry<=9999;retry++)); do
 
