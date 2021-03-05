@@ -76,7 +76,7 @@ echo "Deploying Subscription ${SUBSCRIPTION}"
 echo "${SUBSCRIPTION}" | oc apply -f -
 
 # waiting for operator to install
-sleep 180
+sleep 300
 
 POD=""
 SECONDS=0
