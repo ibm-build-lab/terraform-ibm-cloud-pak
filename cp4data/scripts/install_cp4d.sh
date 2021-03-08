@@ -95,11 +95,6 @@ echo "${POD} started."
 # Waiting for operator to setup.
 sleep 30
 
-if install_watson_knowledge_catalog; then
-  #replace variable in template with -install_watson_knowledge_catalog
-fi
-
-
 echo "Deploying CPD Service"
 echo "${CPD_SERVICE_CONTENT}" | oc apply -f -
 
