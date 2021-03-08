@@ -10,7 +10,7 @@ spec:
   overrideConfig: ""
   license:
     accept: true
-  %{ if empty_list ~}
+  %{ if empty_module_list ~}
   optionalModules: []
   %{~ else ~}
   optionalModules:
