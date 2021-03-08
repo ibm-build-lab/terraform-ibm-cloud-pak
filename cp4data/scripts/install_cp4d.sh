@@ -95,8 +95,13 @@ echo "${POD} started."
 # Waiting for operator to setup.
 sleep 30
 
+if install_watson_knowledge_catalog; then
+  #replace variable in template with -install_watson_knowledge_catalog
+fi
+
+
 echo "Deploying CPD Service"
-echo "${CPD_SERVICE}" | oc apply -f -
+echo "${CPD_SERVICE_CONTENT}" | oc apply -f -
 
 # Waiting for cpd service pod to begin.
 sleep 60
@@ -121,7 +126,7 @@ for ((retry=0;retry<=9999;retry++)); do
     echo "[ERROR] installation not successful, restarting CPD service"
     oc delete cpdservice lite-cpdservice -n cp4d 
     echo "Redeploying CPD Service"
-    echo "${CPD_SERVICE}" | oc apply -f -
+    echo "${CPD_SERVICE_CONTENT}" | oc apply -f -
     sleep 60
   fi
 
@@ -147,6 +152,7 @@ if [[ -z $address ]]; then
   echo "[ERROR] failed to get the endpoint address from the logs"
 fi
 echo "[INFO] CPD Endpoint: $address"
+
 
 # [[ "$DEBUG" == "false" ]] && exit
 

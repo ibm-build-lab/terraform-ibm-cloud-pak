@@ -3,7 +3,23 @@ locals {
   opencloud_operator_catalog = file(join("/", [path.module, "files", "opencloud-operator-catalog.yaml"])) 
   subscription = file(join("/", [path.module, "files", "subscription.yaml"])) 
   operator_group = file(join("/", [path.module, "files", "operator-group.yaml"])) 
-  cpd_service = file(join("/", [path.module, "files", "cpdservice.yaml"])) 
+
+  cpd_service_content = templatefile("${path.module}/templates/cpdservice.yaml", {
+    empty_module_list                = var.empty_module_list // Used to determine default array in template
+    // Modules to deploy
+    install_watson_knowledge_catalog = var.install_watson_knowledge_catalog, // WKC
+    install_watson_studio            = var.install_watson_studio,            // WSL
+    install_watson_machine_learning  = var.install_watson_machine_learning,  // WML
+    install_watson_open_scale        = var.install_watson_open_scale,        // AIOPENSCALE
+    install_data_virtualization      = var.install_data_virtualization,      // DV
+    install_streams                  = var.install_streams,                  // STREAMS
+    install_analytics_dashboard      = var.install_analytics_dashboard,      // CDE
+    install_spark                    = var.install_spark,                    // SPARK
+    install_db2_warehouse            = var.install_db2_warehouse,            // DB2WH
+    install_db2_data_gate            = var.install_db2_data_gate,            // DATAGATE
+    install_rstudio                  = var.install_rstudio,                  // RSTUDIO
+    install_db2_data_management      = var.install_db2_data_management,      // DMC
+  })
 }
 
 resource "null_resource" "install_cp4d" {
@@ -17,7 +33,7 @@ resource "null_resource" "install_cp4d" {
     opencloud_operator_catalog_sha1           = sha1(local.opencloud_operator_catalog)
     subscription_sha1                         = sha1(local.subscription)
     operator_group_sha1                       = sha1(local.operator_group)
-    cpd_service_sha1                          = sha1(local.cpd_service)
+    cpd_service_content_sha1                          = sha1(local.cpd_service_content)
   }
 
   provisioner "local-exec" {
@@ -36,22 +52,7 @@ resource "null_resource" "install_cp4d" {
       DOCKER_USERNAME               = local.docker_username
       DOCKER_REGISTRY               = local.docker_registry
       OPERATOR_GROUP                = local.operator_group
-      CPD_SERVICE                   = local.cpd_service
-
-      // Modules to deploy
-      install_watson_knowledge_catalog = var.install_watson_knowledge_catalog, // WKC
-      install_watson_studio            = var.install_watson_studio,            // WSL
-      install_watson_machine_learning  = var.install_watson_machine_learning,  // WML
-      install_watson_open_scale        = var.install_watson_open_scale,        // AIOPENSCALE
-      install_data_virtualization      = var.install_data_virtualization,      // DV
-      install_streams                  = var.install_streams,                  // STREAMS
-      install_analytics_dashboard      = var.install_analytics_dashboard,      // CDE
-      install_spark                    = var.install_spark,                    // SPARK
-      install_db2_warehouse            = var.install_db2_warehouse,            // DB2WH
-      install_db2_data_gate            = var.install_db2_data_gate,            // DATAGATE
-      install_rstudio                  = var.install_rstudio,                  // RSTUDIO
-      install_db2_data_management      = var.install_db2_data_management,      // DMC
-
+      CPD_SERVICE_CONTENT           = local.cpd_service_content
       // DEBUG                    = true
     }
   }

@@ -32,6 +32,11 @@ variable "entitled_registry_user_email" {
 
 // Modules available to install on CP4D
 
+variable "empty_module_list" {
+  default     = true
+  type        = bool
+  description = "Determine if any modules need to be installed for CP4D"
+}
 variable "install_watson_knowledge_catalog" {
   default     = false
   type        = bool
