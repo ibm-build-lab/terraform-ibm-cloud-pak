@@ -161,7 +161,7 @@ install_cpd_service(){
 }
 
 echo "Deploying CPD control plane"
-control_plane_log = $(install_cpd_service $LITE_SERVICE lite lite-cpdservice)
+control_plane_log=$(install_cpd_service ${LITE_SERVICE} lite lite-cpdservice)
 
 sleep 60
 
