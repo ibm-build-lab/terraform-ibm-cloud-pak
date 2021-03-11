@@ -12,9 +12,9 @@ locals {
   spark_service                     = file(join("/", [path.module, "files", "spark-service.yaml"]))
   rstudio_service                   = file(join("/", [path.module, "files", "rstudio-service.yaml"]))
   dv_service                        = file(join("/", [path.module, "files", "dv-service.yaml"]))
-  db2_warehouse_service             = file(join("/", [path.module, "files", "db2-warehouse_service.yaml"]))
-  db2_data_mngmt_service            = file(join("/", [path.module, "files", "db2-data_mngmt_service.yaml"]))
-  db2_data_gate_service             = file(join("/", [path.module, "files", "db2-data_gate_service.yaml"]))
+  db2_warehouse_service             = file(join("/", [path.module, "files", "db2-warehouse-service.yaml"]))
+  db2_data_mngmt_service            = file(join("/", [path.module, "files", "db2-data-mngmt-service.yaml"]))
+  db2_data_gate_service             = file(join("/", [path.module, "files", "db2-data-gate-service.yaml"]))
   cde_service                       = file(join("/", [path.module, "files", "cde-service.yaml"]))
 }
 
