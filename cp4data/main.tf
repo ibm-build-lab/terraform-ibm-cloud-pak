@@ -1,25 +1,21 @@
 locals {
-  ibm_operator_catalog = file(join("/", [path.module, "files", "ibm-operator-catalog.yaml"])) 
-  opencloud_operator_catalog = file(join("/", [path.module, "files", "opencloud-operator-catalog.yaml"])) 
-  subscription = file(join("/", [path.module, "files", "subscription.yaml"])) 
-  operator_group = file(join("/", [path.module, "files", "operator-group.yaml"])) 
-
-  cpd_service_content = templatefile("${path.module}/templates/cpdservice.yaml", {
-    empty_module_list                = var.empty_module_list // Used to determine default array in template
-    // Modules to deploy
-    install_watson_knowledge_catalog = var.install_watson_knowledge_catalog, // WKC
-    install_watson_studio            = var.install_watson_studio,            // WSL
-    install_watson_machine_learning  = var.install_watson_machine_learning,  // WML
-    install_watson_open_scale        = var.install_watson_open_scale,        // AIOPENSCALE
-    install_data_virtualization      = var.install_data_virtualization,      // DV
-    install_streams                  = var.install_streams,                  // STREAMS
-    install_analytics_dashboard      = var.install_analytics_dashboard,      // CDE
-    install_spark                    = var.install_spark,                    // SPARK
-    install_db2_warehouse            = var.install_db2_warehouse,            // DB2WH
-    install_db2_data_gate            = var.install_db2_data_gate,            // DATAGATE
-    install_rstudio                  = var.install_rstudio,                  // RSTUDIO
-    install_db2_data_management      = var.install_db2_data_management,      // DMC
-  })
+  ibm_operator_catalog              = file(join("/", [path.module, "files", "ibm-operator-catalog.yaml"])) 
+  opencloud_operator_catalog        = file(join("/", [path.module, "files", "opencloud-operator-catalog.yaml"])) 
+  subscription                      = file(join("/", [path.module, "files", "subscription.yaml"])) 
+  operator_group                    = file(join("/", [path.module, "files", "operator-group.yaml"])) 
+  lite_service                      = file(join("/", [path.module, "files", "lite-service.yaml"])) 
+  wkc_service                       = file(join("/", [path.module, "files", "wkc-service.yaml"]))
+  wml_service                       = file(join("/", [path.module, "files", "wml-service.yaml"]))
+  wos_service                       = file(join("/", [path.module, "files", "wos-service.yaml"]))
+  wsl_service                       = file(join("/", [path.module, "files", "wsl-service.yaml"]))
+  streams_service                   = file(join("/", [path.module, "files", "streams-service.yaml"]))
+  spark_service                     = file(join("/", [path.module, "files", "spark-service.yaml"]))
+  rstudio_service                   = file(join("/", [path.module, "files", "rstudio-service.yaml"]))
+  dv_service                        = file(join("/", [path.module, "files", "dv-service.yaml"]))
+  db2_warehouse_service             = file(join("/", [path.module, "files", "db2-warehouse_service.yaml"]))
+  db2_data_mngmt_service            = file(join("/", [path.module, "files", "db2-data_mngmt_service.yaml"]))
+  db2_data_gate_service             = file(join("/", [path.module, "files", "db2-data_gate_service.yaml"]))
+  cde_service                       = file(join("/", [path.module, "files", "cde-service.yaml"]))
 }
 
 resource "null_resource" "install_cp4d" {
@@ -33,7 +29,19 @@ resource "null_resource" "install_cp4d" {
     opencloud_operator_catalog_sha1           = sha1(local.opencloud_operator_catalog)
     subscription_sha1                         = sha1(local.subscription)
     operator_group_sha1                       = sha1(local.operator_group)
-    cpd_service_content_sha1                          = sha1(local.cpd_service_content)
+    lite_service_sha1                         = sha1(local.lite_service)
+    wkc_service_sha1                          = sha1(local.wkc_service)
+    wml_service_sha1                          = sha1(local.wml_service)
+    wos_service_sha1                          = sha1(local.wos_service)
+    wsl_service_sha1                          = sha1(local.wsl_service)
+    streams_service_sha1                      = sha1(local.streams_service)
+    spark_service_sha1                        = sha1(local.spark_service)
+    rstudio_service_sha1                      = sha1(local.rstudio_service)
+    dv_service_sha1                           = sha1(local.dv_service)
+    db2_warehouse_service_sha1                = sha1(local.db2_warehouse_service)
+    db2_data_mngmt_service_sha1               = sha1(local.db2_data_mngmt_service)
+    db2_data_gate_service_sha1                = sha1(local.db2_data_gate_service)
+    cde_service_sha1                          = sha1(local.cde_service)
   }
 
   provisioner "local-exec" {
@@ -52,8 +60,37 @@ resource "null_resource" "install_cp4d" {
       DOCKER_USERNAME               = local.docker_username
       DOCKER_REGISTRY               = local.docker_registry
       OPERATOR_GROUP                = local.operator_group
-      CPD_SERVICE_CONTENT           = local.cpd_service_content
+      
+      # CPD Service Modules
+      LITE_SERVICE                  = local.lite_service
+      WKC_SERVICE                   = local.wkc_service           
+      WML_SERVICE                   = local.wml_service           
+      WOS_SERVICE                   = local.wos_service           
+      WSL_SERVICE                   = local.wsl_service            
+      STREAMS_SERVICE               = local.streams_service       
+      SPARK_SERVICE                 = local.spark_service         
+      RSTUDIO_SERVICE               = local.rstudio_service       
+      DV_SERVICE                    = local.dv_service             // data virtualization
+      DB2_WAREHOUSE_SERVICE         = local.db2_warehouse_service       
+      DB2_DATA_MNGMT_SERVICE        = local.db2_data_mngmt_service
+      DB2_DATA_GATE_SERVICE         = local.db2_data_gate_service 
+      CDE_SERVICE                   = local.cde_service            // Cognos Dashboard Embedded
       // DEBUG                    = true
+
+      // Modules to deploy T/F
+      EMPTY_MODULE_LIST                = var.empty_module_list // Used to determine default array in template
+      INSTALL_WATSON_KNOWLEDGE_CATALOG = var.install_watson_knowledge_catalog, // WKC
+      INSTALL_WATSON_STUDIO            = var.install_watson_studio,            // WSL
+      INSTALL_WATSON_MACHINE_LEARNING  = var.install_watson_machine_learning,  // WML
+      INSTALL_WATSON_OPEN_SCALE        = var.install_watson_open_scale,        // AIOPENSCALE
+      INSTALL_DATA_VIRTUALIZATION      = var.install_data_virtualization,      // DV
+      INSTALL_STREAMS                  = var.install_streams,                  // STREAMS
+      INSTALL_ANALYTICS_DASHBOARD      = var.install_analytics_dashboard,      // CDE
+      INSTALL_SPARK                    = var.install_spark,                    // SPARK
+      INSTALL_DB2_WAREHOUSE            = var.install_db2_warehouse,            // DB2WH
+      INSTALL_DB2_DATA_GATE            = var.install_db2_data_gate,            // DATAGATE
+      INSTALL_RSTUDIO                  = var.install_rstudio,                  // RSTUDIO
+      INSTALL_DB2_DATA_MANAGEMENT      = var.install_db2_data_management,      // DMC
     }
   }
 }
