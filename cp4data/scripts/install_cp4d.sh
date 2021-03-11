@@ -110,7 +110,7 @@ fi
 
 oc annotate route image-registry --overwrite haproxy.router.openshift.io/balance=source -n openshift-image-registry
 
-install_cpd_service(){
+install_cpd_service() {
   module_file=$1
   module_name=$2
   service_name=$3
@@ -118,6 +118,7 @@ install_cpd_service(){
   local failureCount=0
   local result_txt
 
+  echo "[DEBUG] Applying..."
   echo "${module_file}" | oc apply -f -
   # Waiting for cpd service pod to begin.
   sleep 60
@@ -161,6 +162,7 @@ install_cpd_service(){
 }
 
 echo "Deploying CPD control plane"
+echo "[DEBUG] ${LITE_SERVICE}"
 control_plane_log=$(install_cpd_service ${LITE_SERVICE} lite lite-cpdservice)
 
 sleep 60
@@ -169,6 +171,7 @@ if [ $EMPTY_MODULE_LIST ]; then
   address=$(echo $control_plane_log | sed -n 's#.*\(https*://[^"]*\).*#\1#p')
   if [[ -z $address ]]; then
     echo "[ERROR] failed to get the endpoint address from the logs"
+    exit 1
   fi
   echo "[INFO] CPD Endpoint: $address"
 else 
