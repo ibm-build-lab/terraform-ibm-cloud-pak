@@ -119,6 +119,8 @@ install_cpd_service() {
   local result_txt
 
   echo "[DEBUG] Applying..."
+  echo "[DEBUG] ${module_file}"
+
   echo "${module_file}" | oc apply -f -
   # Waiting for cpd service pod to begin.
   sleep 60
@@ -164,6 +166,7 @@ install_cpd_service() {
 echo "Deploying CPD control plane"
 echo "[DEBUG] ${LITE_SERVICE}"
 control_plane_log=$(install_cpd_service ${LITE_SERVICE} lite lite-cpdservice)
+echo $control_plane_log
 
 sleep 60
 
