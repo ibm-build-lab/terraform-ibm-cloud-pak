@@ -116,7 +116,6 @@ install_cpd_service() {
   service_name=$3
 
   local failureCount=0
-  local result_txt
 
   echo "[DEBUG] Applying..."
   echo "[DEBUG] ${module_file}"
@@ -164,14 +163,12 @@ install_cpd_service() {
 }
 
 echo "Deploying CPD control plane"
-echo "[DEBUG] ${LITE_SERVICE}"
-control_plane_log=$(install_cpd_service ${LITE_SERVICE} lite lite-cpdservice)
-echo $control_plane_log
+install_cpd_service ${LITE_SERVICE} lite lite-cpdservice
 
 sleep 60
 
 if [ $EMPTY_MODULE_LIST ]; then
-  address=$(echo $control_plane_log | sed -n 's#.*\(https*://[^"]*\).*#\1#p')
+  address=$(echo $result_text | sed -n 's#.*\(https*://[^"]*\).*#\1#p')
   if [[ -z $address ]]; then
     echo "[ERROR] failed to get the endpoint address from the logs"
     exit 1
