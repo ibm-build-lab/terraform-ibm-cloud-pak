@@ -168,7 +168,8 @@ install_cpd_service() {
 
 echo "Deploying CPD control plane"
 # "${FOO_SERVICE}" must be quoted because of the white spaces in the file
-control_plane_log=$(install_cpd_service "${LITE_SERVICE}" lite lite-cpdservice)
+install_cpd_service "${LITE_SERVICE}" lite lite-cpdservice
+control_plane_log=$(kubectl logs -n cpd-meta-ops $POD | sed 's/[[:cntrl:]]\[[0-9;]*m//g' | tail -20)
 
 if [ "$EMPTY_MODULE_LIST" = true ]; then
   # Grabs the address of the lite-service control plane for the user
