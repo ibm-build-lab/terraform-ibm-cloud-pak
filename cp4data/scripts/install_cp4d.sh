@@ -111,47 +111,51 @@ fi
 oc annotate route image-registry --overwrite haproxy.router.openshift.io/balance=source -n openshift-image-registry
 
 install_cpd_service() {
-  module_file=$1
-  module_name=$2
-  service_name=$3
+  local module_service_contents=$1
+  local service_name=$2
+  local metadata_name=$3
 
   local failureCount=0
 
   echo "[DEBUG] Applying..."
-  echo "[DEBUG] ${module_file}"
+  echo "[DEBUG] ${module_service_contents}"
 
-  echo "${module_file}" | oc apply -f -
+  echo "${module_service_contents}" | oc apply -f -
   # Waiting for cpd service pod to begin.
   sleep 60
 
-  echo "CPD ${module_name} Service Installation Started..."
+  echo "CPD ${service_name} Service Installation Started..."
 
   # Each retry is 10 seconds   
   for ((retry=0;retry<=9999;retry++)); do
 
-    # Check for Success
     # The following code is taken from get_enpoints.sh, to print what it's getting
+    # result_txt parses the success and failure of the service install. This can later be
+    # used to obtain the address of the control plane if it's the lite-service.
     result_txt=$(kubectl logs -n cpd-meta-ops $POD | sed 's/[[:cntrl:]]\[[0-9;]*m//g' | tail -20)
-    if echo $result_txt | grep -q "Install/Upgrade for assembly ${module_name} completed successfully"; then
+    
+    # Check for Success
+    if echo $result_txt | grep -q "Install/Upgrade for assembly ${service_name} completed successfully"; then
       echo "[INFO] installation was successful"
       break
+    # Check for Failure
     elif echo $result_txt | grep -q 'CPD binary has failed'; then
       if [ $failureCount -ge 3 ]; then
-        echo "Failed ${faulureCount} times. Quitting, install."
+        echo "[ERROR] failed ${failureCount} times. Quitting, install."
         exit 1
       fi
       failureCount=$((failureCount+1))
-      echo "[ERROR] installation not successful, restarting ${module_name} service"
-      oc delete cpdservice ${service_name} -n cp4d 
-      echo "Redeploying CPD Service"
-      echo "${module_file}" | oc apply -f -
+      echo "[ERROR] installation not successful, restarting ${service_name} service"
+      oc delete cpdservice ${metadata_name} -n cp4d 
+      echo "[INFO] Redeploying CPD Service"
+      echo "${module_service_contents}" | oc apply -f -
       sleep 60
     fi
 
     # Check for Timeout
     # 60 min timeout
     if [[ ${retry} -eq 360 ]]; then
-      echo "Timeout occurred for CP4D ${module_name} install"
+      echo "Timeout occurred for CP4D ${service_name} install"
       echo "Please use command 'oc get pod ${POD}' to check details"
       oc describe pod ${POD} -n cpd-meta-ops
       oc logs ${POD} -n cpd-meta-ops
@@ -163,11 +167,13 @@ install_cpd_service() {
 }
 
 echo "Deploying CPD control plane"
-install_cpd_service ${LITE_SERVICE} lite lite-cpdservice
+# "${FOO_SERVICE}" must be quoted because of the white spaces in the file
+install_cpd_service "${LITE_SERVICE}" lite lite-cpdservice
 
 sleep 60
 
 if [ $EMPTY_MODULE_LIST ]; then
+  # Grabs the address of the lite-service control plane for the user
   address=$(echo $result_text | sed -n 's#.*\(https*://[^"]*\).*#\1#p')
   if [[ -z $address ]]; then
     echo "[ERROR] failed to get the endpoint address from the logs"
@@ -175,56 +181,58 @@ if [ $EMPTY_MODULE_LIST ]; then
   fi
   echo "[INFO] CPD Endpoint: $address"
 else 
-  # module_file=$1  
-  # module_name=$2
-  # service_name=$3 
+  # install_cpd_service needs the following variables passed:
+  # local module_service_contents=$1
+  # local service_name=$2
+  # local metadata_name=$3
+
   if [ $INSTALL_WATSON_KNOWLEDGE_CATALOG ]; then
     echo "Deploying Watson Knowledge Catalog Module"
-    install_cpd_service $WKC_SERVICE wkc wkc-cpdservice
+    install_cpd_service "${WKC_SERVICE}" wkc wkc-cpdservice
   fi
   if [ $INSTALL_WATSON_STUDIO ]; then
     echo "Deploying Watson Studio Module"
-    install_cpd_service $WSL_SERVICE wsl wsl-cpdservice
+    install_cpd_service "${WSL_SERVICE}" wsl wsl-cpdservice
   fi
   if [ $INSTALL_WATSON_MACHINE_LEARNING ]; then
     echo "Deploying Watson Machine Learning Module"
-    install_cpd_service $WML_SERVICE wml wml-cpdservice
+    install_cpd_service "${WML_SERVICE}" wml wml-cpdservice
   fi
   if [ $INSTALL_WATSON_OPEN_SCALE ]; then
     echo "Deploying Watson Open Scale Module"
-    install_cpd_service $WOS_SERVICE wos wos-cpdservice
+    install_cpd_service "${WOS_SERVICE}" wos wos-cpdservice
   fi
   if [ $INSTALL_DATA_VIRTUALIZATION ]; then
     echo "Deploying Data Virtualization Module"
-    install_cpd_service $DV_SERVICE dv dv-cpdservice
+    install_cpd_service "${DV_SERVICE}" dv dv-cpdservice
   fi
   if [ $INSTALL_STREAMS ]; then
     echo "Deploying Streams Module"
-    install_cpd_service $STEAMS streams streams-cpdservice
+    install_cpd_service "${STEAMS}" streams streams-cpdservice
   fi
   if [ $INSTALL_ANALYTICS_DASHBOARD ]; then
     echo "Deploying Cognos Dashboard Embedded Module"
-    install_cpd_service $CDE_SERVICE cde cde-cpdservice
+    install_cpd_service "${CDE_SERVICE}" cde cde-cpdservice
   fi
   if [ $INSTALL_SPARK ]; then
     echo "Deploying Spark Module"
-    install_cpd_service $SPARK spark spark-cpdservice
+    install_cpd_service "${SPARK}" spark spark-cpdservice
   fi
   if [ $INSTALL_DB2_WAREHOUSE ]; then
     echo "Deploying DB2 Warehouse Module"
-    install_cpd_service $DB2_WAREHOUSE_SERVICE db2wh db2wh-cpdservice
+    install_cpd_service "${DB2_WAREHOUSE_SERVICE}" db2wh db2wh-cpdservice
   fi
   if [ $INSTALL_DB2_DATA_GATE ]; then
     echo "Deploying DB2 Data Gate Module"
-    install_cpd_service $DB2_DATA_GATE_SERVICE datagate datagate-cpdservice
+    install_cpd_service "${DB2_DATA_GATE_SERVICE}" datagate datagate-cpdservice
   fi
   if [ $INSTALL_RSTUDIO ]; then
     echo "Deploying RStudio Module"
-    install_cpd_service $RSTUDIO_SERVICE rstudio rstudio-cpdservice
+    install_cpd_service "${RSTUDIO_SERVICE}" rstudio rstudio-cpdservice
   fi
   if [ $INSTALL_DB2_DATA_MANAGEMENT ]; then
     echo "Deploying DB2 Data Management Module"
-    install_cpd_service $DB2_DATA_MNGMT_SERVICE dmc dmc-cpdservice
+    install_cpd_service "${DB2_DATA_MNGMT_SERVICE}" dmc dmc-cpdservice
   fi           
 fi
 
