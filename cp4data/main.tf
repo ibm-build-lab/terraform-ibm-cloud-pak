@@ -78,7 +78,7 @@ resource "null_resource" "install_cp4d" {
       // DEBUG                    = true
 
       // Modules to deploy T/F
-      EMPTY_MODULE_LIST                = var.empty_module_list // Used to determine default array in template
+      EMPTY_MODULE_LIST                = var.empty_module_list                 // Used to determine default array in template
       INSTALL_WATSON_KNOWLEDGE_CATALOG = var.install_watson_knowledge_catalog, // WKC
       INSTALL_WATSON_STUDIO            = var.install_watson_studio,            // WSL
       INSTALL_WATSON_MACHINE_LEARNING  = var.install_watson_machine_learning,  // WML

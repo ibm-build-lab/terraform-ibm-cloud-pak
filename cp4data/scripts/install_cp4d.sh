@@ -116,9 +116,9 @@ install_cpd_service() {
   local metadata_name=$3
 
   local failureCount=0
-
-  echo "[DEBUG] Applying..."
-  echo "[DEBUG] ${module_service_contents}"
+  local result_text
+  # echo "[DEBUG] Applying..."
+  # echo "[DEBUG] ${module_service_contents}"
 
   echo "${module_service_contents}" | oc apply -f -
   # Waiting for cpd service pod to begin.
@@ -168,13 +168,11 @@ install_cpd_service() {
 
 echo "Deploying CPD control plane"
 # "${FOO_SERVICE}" must be quoted because of the white spaces in the file
-install_cpd_service "${LITE_SERVICE}" lite lite-cpdservice
+control_plane_log=$(install_cpd_service "${LITE_SERVICE}" lite lite-cpdservice)
 
-sleep 60
-
-if [ $EMPTY_MODULE_LIST ]; then
+if [ "$EMPTY_MODULE_LIST" = true ]; then
   # Grabs the address of the lite-service control plane for the user
-  address=$(echo $result_text | sed -n 's#.*\(https*://[^"]*\).*#\1#p')
+  address=$(echo $control_plane_log | sed -n 's#.*\(https*://[^"]*\).*#\1#p')
   if [[ -z $address ]]; then
     echo "[ERROR] failed to get the endpoint address from the logs"
     exit 1
@@ -186,54 +184,61 @@ else
   # local service_name=$2
   # local metadata_name=$3
 
-  if [ $INSTALL_WATSON_KNOWLEDGE_CATALOG ]; then
+  if [ "$INSTALL_WATSON_KNOWLEDGE_CATALOG" = true ]; then
     echo "Deploying Watson Knowledge Catalog Module"
     install_cpd_service "${WKC_SERVICE}" wkc wkc-cpdservice
   fi
-  if [ $INSTALL_WATSON_STUDIO ]; then
+  if [ "$INSTALL_WATSON_STUDIO" = true ]; then
     echo "Deploying Watson Studio Module"
     install_cpd_service "${WSL_SERVICE}" wsl wsl-cpdservice
   fi
-  if [ $INSTALL_WATSON_MACHINE_LEARNING ]; then
+  if [ "$INSTALL_WATSON_MACHINE_LEARNING" = true ]; then
     echo "Deploying Watson Machine Learning Module"
     install_cpd_service "${WML_SERVICE}" wml wml-cpdservice
   fi
-  if [ $INSTALL_WATSON_OPEN_SCALE ]; then
+  if [ "$INSTALL_WATSON_OPEN_SCALE" = true ]; then
     echo "Deploying Watson Open Scale Module"
     install_cpd_service "${WOS_SERVICE}" wos wos-cpdservice
   fi
-  if [ $INSTALL_DATA_VIRTUALIZATION ]; then
+  if [ "$INSTALL_DATA_VIRTUALIZATION" = true ]; then
     echo "Deploying Data Virtualization Module"
     install_cpd_service "${DV_SERVICE}" dv dv-cpdservice
   fi
-  if [ $INSTALL_STREAMS ]; then
+  if [ "$INSTALL_STREAMS" = true ]; then
     echo "Deploying Streams Module"
     install_cpd_service "${STEAMS}" streams streams-cpdservice
   fi
-  if [ $INSTALL_ANALYTICS_DASHBOARD ]; then
+  if [ "$INSTALL_ANALYTICS_DASHBOARD" = true ]; then
     echo "Deploying Cognos Dashboard Embedded Module"
     install_cpd_service "${CDE_SERVICE}" cde cde-cpdservice
   fi
-  if [ $INSTALL_SPARK ]; then
+  if [ "$INSTALL_SPARK" = true ]; then
     echo "Deploying Spark Module"
     install_cpd_service "${SPARK}" spark spark-cpdservice
   fi
-  if [ $INSTALL_DB2_WAREHOUSE ]; then
+  if [ "$INSTALL_DB2_WAREHOUSE" = true ]; then
     echo "Deploying DB2 Warehouse Module"
     install_cpd_service "${DB2_WAREHOUSE_SERVICE}" db2wh db2wh-cpdservice
   fi
-  if [ $INSTALL_DB2_DATA_GATE ]; then
+  if [ "$INSTALL_DB2_DATA_GATE" = true ]; then
     echo "Deploying DB2 Data Gate Module"
     install_cpd_service "${DB2_DATA_GATE_SERVICE}" datagate datagate-cpdservice
   fi
-  if [ $INSTALL_RSTUDIO ]; then
+  if [ "$INSTALL_RSTUDIO" = true ]; then
     echo "Deploying RStudio Module"
     install_cpd_service "${RSTUDIO_SERVICE}" rstudio rstudio-cpdservice
   fi
-  if [ $INSTALL_DB2_DATA_MANAGEMENT ]; then
+  if [ "$INSTALL_DB2_DATA_MANAGEMENT" = true ]; then
     echo "Deploying DB2 Data Management Module"
     install_cpd_service "${DB2_DATA_MNGMT_SERVICE}" dmc dmc-cpdservice
-  fi           
+  fi
+  # Grabs the address of the lite-service control plane for the user
+  address=$(echo $control_plane_log | sed -n 's#.*\(https*://[^"]*\).*#\1#p')
+  if [[ -z $address ]]; then
+    echo "[ERROR] failed to get the endpoint address from the logs"
+    exit 1
+  fi
+  echo "[INFO] CPD Endpoint: $address"
 fi
 
 # [[ "$DEBUG" == "false" ]] && exit
