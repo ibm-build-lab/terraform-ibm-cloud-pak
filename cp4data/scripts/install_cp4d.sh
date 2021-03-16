@@ -114,6 +114,7 @@ install_cpd_service() {
   local module_service_contents=$1
   local service_name=$2
   local metadata_name=$3
+  local module_timeout="${4:-360}" #Default: 1 hour - each retry is 10 seconds (3600sec/60sec)
 
   local failureCount=0
   local result_text
@@ -153,10 +154,9 @@ install_cpd_service() {
     fi
 
     # Check for Timeout
-    # 60 min timeout
-    if [[ ${retry} -eq 360 ]]; then
-      echo "Timeout occurred for CP4D ${service_name} install"
-      echo "Please use command 'oc get pod ${POD}' to check details"
+    if [[ ${retry} -eq ${module_timeout} ]]; then
+      echo "[ERROR] Timeout occurred for CP4D ${service_name} install"
+      echo "[INFO] Please use command 'oc get pod ${POD}' to check details"
       oc describe pod ${POD} -n cpd-meta-ops
       oc logs ${POD} -n cpd-meta-ops
       exit 1
@@ -184,10 +184,19 @@ else
   # local module_service_contents=$1
   # local service_name=$2
   # local metadata_name=$3
+  # local module_timeout=$4 #Default: 1 hour - each retry is 10 seconds (3600sec/60sec)
 
   if [ "$INSTALL_WATSON_KNOWLEDGE_CATALOG" = true ]; then
     echo "Deploying Watson Knowledge Catalog Module"
-    install_cpd_service "${WKC_SERVICE}" wkc wkc-cpdservice
+
+    # Needed to allow 0071-wkc-prereqs x86_64 to install within the wkc-service install.
+    echo "Tuning Kernel for wkc"
+    echo "${WKC_TUNED_KERNAL}" | oc apply -f -
+
+    echo "Running no_root_squash for db2 wkc pre-req"
+    echo "${WKC_NOROOTSQUASH}" | oc apply -f -
+
+    install_cpd_service "${WKC_SERVICE}" wkc wkc-cpdservice 720 # 2 hours
   fi
   if [ "$INSTALL_WATSON_STUDIO" = true ]; then
     echo "Deploying Watson Studio Module"

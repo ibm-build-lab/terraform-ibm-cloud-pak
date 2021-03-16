@@ -4,7 +4,9 @@ locals {
   subscription                      = file(join("/", [path.module, "files", "subscription.yaml"])) 
   operator_group                    = file(join("/", [path.module, "files", "operator-group.yaml"])) 
   lite_service                      = file(join("/", [path.module, "files", "lite-service.yaml"])) 
-  wkc_service                       = file(join("/", [path.module, "files", "wkc-service.yaml"]))
+  wkc_service                       = file(join("/", [path.module, "files/wkc", "wkc-service.yaml"]))
+  wkc_norootsquash                  = file(join("/", [path.module, "files/wkc", "wkc-norootsquash.yaml"]))
+  wkc_tuned_kernal                  = file(join("/", [path.module, "files/wkc", "wkc-tuned-kernel.yaml"]))
   wml_service                       = file(join("/", [path.module, "files", "wml-service.yaml"]))
   wos_service                       = file(join("/", [path.module, "files", "wos-service.yaml"]))
   wsl_service                       = file(join("/", [path.module, "files", "wsl-service.yaml"]))
@@ -31,6 +33,8 @@ resource "null_resource" "install_cp4d" {
     operator_group_sha1                       = sha1(local.operator_group)
     lite_service_sha1                         = sha1(local.lite_service)
     wkc_service_sha1                          = sha1(local.wkc_service)
+    wkc_norootsquash_sha1                     = sha1(local.wkc_norootsquash)
+    wkc_tuned_kernal_sha1                     = sha1(local.wkc_tuned_kernal)
     wml_service_sha1                          = sha1(local.wml_service)
     wos_service_sha1                          = sha1(local.wos_service)
     wsl_service_sha1                          = sha1(local.wsl_service)
@@ -63,7 +67,9 @@ resource "null_resource" "install_cp4d" {
       
       # CPD Service Modules
       LITE_SERVICE                  = local.lite_service
-      WKC_SERVICE                   = local.wkc_service           
+      WKC_SERVICE                   = local.wkc_service
+      WKC_NOROOTSQUASH              = local.wkc_norootsquash           
+      WKC_TUNED_KERNAL              = local.wkc_tuned_kernal                      
       WML_SERVICE                   = local.wml_service           
       WOS_SERVICE                   = local.wos_service           
       WSL_SERVICE                   = local.wsl_service            
