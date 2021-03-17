@@ -200,7 +200,7 @@ else
   fi
   if [ "$INSTALL_WATSON_STUDIO" = true ]; then
     echo "Deploying Watson Studio Module"
-    install_cpd_service "${WSL_SERVICE}" wsl wsl-cpdservice
+    install_cpd_service "${WSL_SERVICE}" wsl watson-studio-cpdservice
   fi
   if [ "$INSTALL_WATSON_MACHINE_LEARNING" = true ]; then
     echo "Deploying Watson Machine Learning Module"
@@ -228,7 +228,7 @@ else
   fi
   if [ "$INSTALL_DB2_WAREHOUSE" = true ]; then
     echo "Deploying DB2 Warehouse Module"
-    install_cpd_service "${DB2_WAREHOUSE_SERVICE}" db2wh db2wh-cpdservice
+    install_cpd_service "${DB2_WAREHOUSE_SERVICE}" db2wh db2-warehouse-cpdservice
   fi
   if [ "$INSTALL_DB2_DATA_GATE" = true ]; then
     echo "Deploying DB2 Data Gate Module"
