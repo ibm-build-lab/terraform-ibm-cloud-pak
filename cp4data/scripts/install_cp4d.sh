@@ -197,7 +197,7 @@ else
     echo "Running no_root_squash for db2 wkc pre-req"
     echo "${WKC_NOROOTSQUASH}" | oc apply -f -
 
-    install_cpd_service "${WKC_SERVICE}" wkc wkc-cpdservice 720 # 2 hours
+    install_cpd_service "${WKC_SERVICE}" wkc wkc-cpdservice 1440 # 4 hours
   fi
   if [ "$INSTALL_WATSON_STUDIO" = true ]; then
     echo "Deploying Watson Studio Module"
