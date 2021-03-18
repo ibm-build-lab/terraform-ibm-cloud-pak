@@ -66,6 +66,7 @@ create_secret() {
 # create_secret ibm-entitlement-key default
 create_secret ibm-entitlement-key cpd-meta-ops
 create_secret ibm-entitlement-key cp4d
+create_secret ibm-entitlement-key kube-system
 
 sleep 40
 
@@ -200,47 +201,47 @@ else
   fi
   if [ "$INSTALL_WATSON_STUDIO" = true ]; then
     echo "Deploying Watson Studio Module"
-    install_cpd_service "${WSL_SERVICE}" wsl watson-studio-cpdservice
+    install_cpd_service "${WSL_SERVICE}" wsl watson-studio-cpdservice 720 # 2 hours
   fi
   if [ "$INSTALL_WATSON_MACHINE_LEARNING" = true ]; then
     echo "Deploying Watson Machine Learning Module"
-    install_cpd_service "${WML_SERVICE}" wml wml-cpdservice
+    install_cpd_service "${WML_SERVICE}" wml wml-cpdservice 720 # 2 hours
   fi
   if [ "$INSTALL_WATSON_OPEN_SCALE" = true ]; then
     echo "Deploying Watson Open Scale Module"
-    install_cpd_service "${WOS_SERVICE}" wos wos-cpdservice
+    install_cpd_service "${WOS_SERVICE}" wos wos-cpdservice 720 # 2 hours
   fi
   if [ "$INSTALL_DATA_VIRTUALIZATION" = true ]; then
     echo "Deploying Data Virtualization Module"
-    install_cpd_service "${DV_SERVICE}" dv dv-cpdservice
+    install_cpd_service "${DV_SERVICE}" dv dv-cpdservice 720 # 2 hours
   fi
   if [ "$INSTALL_STREAMS" = true ]; then
     echo "Deploying Streams Module"
-    install_cpd_service "${STEAMS}" streams streams-cpdservice
+    install_cpd_service "${STEAMS}" streams streams-cpdservice 720 # 2 hours
   fi
   if [ "$INSTALL_ANALYTICS_DASHBOARD" = true ]; then
     echo "Deploying Cognos Dashboard Embedded Module"
-    install_cpd_service "${CDE_SERVICE}" cde cde-cpdservice
+    install_cpd_service "${CDE_SERVICE}" cde cde-cpdservice 720 # 2 hours
   fi
   if [ "$INSTALL_SPARK" = true ]; then
     echo "Deploying Spark Module"
-    install_cpd_service "${SPARK}" spark spark-cpdservice
+    install_cpd_service "${SPARK}" spark spark-cpdservice 720 # 2 hours
   fi
   if [ "$INSTALL_DB2_WAREHOUSE" = true ]; then
     echo "Deploying DB2 Warehouse Module"
-    install_cpd_service "${DB2_WAREHOUSE_SERVICE}" db2wh db2-warehouse-cpdservice
+    install_cpd_service "${DB2_WAREHOUSE_SERVICE}" db2wh db2-warehouse-cpdservice 720 # 2 hours
   fi
   if [ "$INSTALL_DB2_DATA_GATE" = true ]; then
     echo "Deploying DB2 Data Gate Module"
-    install_cpd_service "${DB2_DATA_GATE_SERVICE}" datagate datagate-cpdservice
+    install_cpd_service "${DB2_DATA_GATE_SERVICE}" datagate datagate-cpdservice 720 # 2 hours
   fi
   if [ "$INSTALL_RSTUDIO" = true ]; then
     echo "Deploying RStudio Module"
-    install_cpd_service "${RSTUDIO_SERVICE}" rstudio rstudio-cpdservice
+    install_cpd_service "${RSTUDIO_SERVICE}" rstudio rstudio-cpdservice 720 # 2 hours
   fi
   if [ "$INSTALL_DB2_DATA_MANAGEMENT" = true ]; then
     echo "Deploying DB2 Data Management Module"
-    install_cpd_service "${DB2_DATA_MNGMT_SERVICE}" dmc dmc-cpdservice
+    install_cpd_service "${DB2_DATA_MNGMT_SERVICE}" dmc dmc-cpdservice 720 # 2 hours
   fi
   # Grabs the address of the lite-service control plane for the user
   address=$(echo $control_plane_log | sed -n 's#.*\(https*://[^"]*\).*#\1#p')

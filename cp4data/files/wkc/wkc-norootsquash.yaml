@@ -37,7 +37,7 @@ spec:
           - mountPath: /host/sys
             name: host-sys
       imagePullSecrets:
-      - name: cpregistrysecret
+      - name: ibm-entitlement-key
       tolerations:
       - operator: Exists
       volumes:
