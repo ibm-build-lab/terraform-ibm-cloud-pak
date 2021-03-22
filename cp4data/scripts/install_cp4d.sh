@@ -204,12 +204,15 @@ else
     install_cpd_service "${WSL_SERVICE}" wsl watson-studio-cpdservice 720 # 2 hours
   fi
   if [ "$INSTALL_WATSON_MACHINE_LEARNING" = true ]; then
+    echo "Tuning Kernel for wml"
+    echo "${WKC_TUNED_KERNAL}" | oc apply -f -
+    
     echo "Deploying Watson Machine Learning Module"
     install_cpd_service "${WML_SERVICE}" wml wml-cpdservice 720 # 2 hours
   fi
   if [ "$INSTALL_WATSON_OPEN_SCALE" = true ]; then
     echo "Deploying Watson Open Scale Module"
-    install_cpd_service "${WOS_SERVICE}" wos wos-cpdservice 720 # 2 hours
+    install_cpd_service "${WOS_SERVICE}" wos wos-cpdservice 1080 # 3 hours
   fi
   if [ "$INSTALL_DATA_VIRTUALIZATION" = true ]; then
     echo "Deploying Data Virtualization Module"
