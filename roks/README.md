@@ -43,7 +43,7 @@ module "cluster" {
   source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks"
 
   // General variables:
-  on_vpc         = false
+  on_vpc         = "classic"
   project_name   = "roks"
   owner          = "johandry"
   environment    = "test"
@@ -67,7 +67,7 @@ module "cluster" {
   source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks"
 
   // General variables:
-  on_vpc         = true
+  on_vpc         = "vpc"
   project_name   = "roks"
   owner          = "johandry"
   environment    = "test"
