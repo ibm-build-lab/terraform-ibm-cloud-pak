@@ -117,13 +117,14 @@ module "cp4mcm" {
 }
 ```
 
-To build an OpenShift cluster on IBM VPC and install CP4APP on it, the code may be like this:
+To build an OpenShift cluster on IBM VPC and install Cloud Pak for Applications on it, the code may be like this:
 
 ```hcl
 module "cluster" {
   source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks"
 
-  on_vpc         = true
+  // "vpc" or "classic"
+  on_vpc         = "vpc"
   project_name   = "cp4app"
   owner          = var.owner
   environment    = "demo"
