@@ -4,7 +4,7 @@ This repository contains a collection of Terraform modules to be used to install
 
 - [IBM Terraform Modules to handle Cloud Paks](#ibm-terraform-modules-to-handle-cloud-paks)
   - [Modules](#modules)
-  - [Use](#use)
+  - [Usage](#usage)
     - [Building a ROKS cluster](#building-a-roks-cluster)
     - [Using an existing ROKS cluster](#using-an-existing-roks-cluster)
     - [Enable and Disable Cloud Pak Modules](#enable-and-disable-cloud-pak-modules)
@@ -25,7 +25,7 @@ These modules are used by Terraform scripts in [this](https://github.com/ibm-hcb
 | cp4i  | Installs the Cloud Pak for Integration on an existing OpenShift cluster                          | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4ai`  |
 | cp4data | Installs the Cloud Pak for Data on an existing OpenShift cluster                                 | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4data` |
 
-## Use
+## Usage
 
 To use a module, define the `ibm` provisioner block with the `region` and - optionally - the `generation` (**1 for Classic** and **2 for VPC Gen 2**).
 
