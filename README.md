@@ -36,22 +36,12 @@ provider "ibm" {
 }
 ```
 
-Acquire IBM Cloud credentials. Go [here](./CREDENTIALS.md) for details.
+## Set up access to IBM Cloud 
+Go [here](./CREDENTIALS.md) for details.
 
-You can define the IBM Cloud credentials in the IBM provider block but it is recommended to pass them in as environment variables. Export the environment variables for the credentials like so:
+You can define the IBM Cloud credentials in the IBM provider block but it is recommended to pass them in as environment variables. 
 
-```bash
-# Credentials required only for IBM Cloud Classic
-export IAAS_CLASSIC_USERNAME="< Your IBM Cloud Username/Email here >"
-export IAAS_CLASSIC_API_KEY="< Your IBM Cloud Classic API Key here >"
-
-# Credentials required for IBM Cloud VPC and Classic
-export IC_API_KEY="< IBM Cloud API Key >"
-```
-
-**NOTE**: These credentials are not required if running this Terraform code within an **IBM Cloud Schematics** workspace. They are set automatically set from your account.
-
-**NOTE**: Before using any of the Cloud Pak Terraform modules (**cp4app, cp4auto, cp4data, cp4i, cp4mcm**) an OpenShift cluster is required. This can be an existing cluster or can provisioned using the RedHat OpenShift Service (**roks**) Terraform module.
+**NOTE**: These credentials are not required if running this Terraform code within an **IBM Cloud Schematics** workspace. They are automatically set from your account.
 
 ### Building a ROKS cluster
 
@@ -90,6 +80,7 @@ The variable `cluster_name_id` can have either the cluster name or ID. The resou
 The output parameters of the cluster configuration data resource `ibm_container_cluster_config` are used as input parameters for any Cloud Pak module.
 
 ### Enable and Disable Cloud Pak Modules
+**NOTE**: Before using any of the Cloud Pak Terraform modules (**cp4app, cp4auto, cp4data, cp4i, cp4mcm**) an OpenShift cluster is required. This can be an existing cluster or can provisioned using the RedHat OpenShift Service (**roks**) Terraform module.
 
 In Terraform the block parameter `count` is used to define how many instances of the resource are needed, including zero, meaning the resource won't be created. The `count` parameter on `module` blocks is only available since Terraform version 0.13.
 
