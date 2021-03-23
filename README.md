@@ -8,7 +8,6 @@ This repository contains a collection of Terraform modules to be used to install
     - [Invoking a Cloud Pak module to install on an existing ROKS cluster](#invoking-a-cloud-pak-module-to-install-on-an-existing-roks-cluster)
     - [Invoking a Cloud Pak module to install on a new ROKS cluster](#invoking-a-cloud-pak-module-to-install-on-a-new-roks-cluster)
     - [Enable and Disable Cloud Pak Modules](#enable-and-disable-cloud-pak-modules)
-    - [Examples](#examples)
   - [Testing](#testing)
   - [Owners](#owners)
 
