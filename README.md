@@ -1,6 +1,6 @@
 # IBM Terraform Modules to handle Cloud Paks
 
-This repository contain a collection of Terraform modules to be used to handle Cloud Paks.
+This repository contains a collection of Terraform modules to be used to install Cloud Paks.
 
 - [IBM Terraform Modules to handle Cloud Paks](#ibm-terraform-modules-to-handle-cloud-paks)
   - [Modules](#modules)
