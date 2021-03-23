@@ -36,7 +36,7 @@ provider "ibm" {
 }
 ```
 
-Acquire IBM Cloud credentials. Go [here](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform#configure-access-to-ibm-cloud) for details.
+Acquire IBM Cloud credentials. Go [here](./CREDENTIALS.md) for details.
 
 You can define the IBM Cloud credentials in the IBM provider block but it is recommended to pass them in as environment variables. Export the environment variables for the credentials like so:
 
