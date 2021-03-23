@@ -45,7 +45,7 @@ You can define the IBM Cloud credentials in the IBM provider block but it is rec
 
 ### Building a ROKS cluster
 
-To build the cluster in your code, use the `module` resource and set the `source` to the location of the **roks** module (GitHub link in the table above). Then pass the input parameters with the cluster specification. Examples provided in the [Enable and Disable Cloud Pak Modules](#enable-and-disable-cloud-pak-modules) section below.
+To build the cluster in your code, use the `module` resource and set the `source` to the location of the **roks** module (GitHub link in the table above). Then pass the input parameters with the cluster specification. Full examples provided in the [Examples](#examples) section below.
 
 ```hcl
 module "cluster" {
