@@ -45,7 +45,7 @@ You can define the IBM Cloud credentials in the IBM provider block but it is rec
 
 ### Building a ROKS cluster
 
-To build the cluster in your code, use the `module` resource and set the `source` to the location of the **roks** module (GitHub link in the table above). Then pass the input parameters with the cluster specification. Go [here](https://github.com/ibm-hcbt/cloud-pak-sandboxes/blob/master/terraform/cp4i/main.tf) for an example on how to do this.
+To build the cluster in your code, use the `module` resource and set the `source` to the location of the **roks** module (GitHub link in the table above). Then pass the input parameters with the cluster specification. Examples provided in the [Enable and Disable Cloud Pak Modules](#enable-and-disable-cloud-pak-modules) section below.
 
 ```hcl
 module "cluster" {
@@ -80,7 +80,7 @@ The variable `cluster_name_id` can have either the cluster name or ID. The resou
 The output parameters of the cluster configuration data resource `ibm_container_cluster_config` are used as input parameters for any Cloud Pak module.
 
 ### Enable and Disable Cloud Pak Modules
-**NOTE**: Before using any of the Cloud Pak Terraform modules (**cp4app, cp4auto, cp4data, cp4i, cp4mcm**) an OpenShift cluster is required. This can be an existing cluster or can provisioned using the RedHat OpenShift Service (**roks**) Terraform module.
+**NOTE**: To utilize any of the Cloud Pak Terraform modules an OpenShift cluster is required. This can be an existing cluster or can provisioned using the RedHat OpenShift Service (**roks**) Terraform module.
 
 In Terraform the block parameter `count` is used to define how many instances of the resource are needed, including zero, meaning the resource won't be created. The `count` parameter on `module` blocks is only available since Terraform version 0.13.
 
