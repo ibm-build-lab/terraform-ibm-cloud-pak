@@ -12,18 +12,22 @@ This repository contain a collection of Terraform modules to be used to handle C
   - [Testing](#testing)
   - [Owners](#owners)
 
+These modules are used by Terraform scripts in [this](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform) directory.
+
 ## Modules
 
 | Name    | Description                                                                                      | Source                                                                  |
 | ------- | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
-| ROKS    | Provision an OpenShift cluster. An OpenShift cluster is required to install any Cloud Pak module | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks`    |
-| CP4MCM  | Installs the MultiCloud Management Cloud Pak on an existing OpenShift cluster                    | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4mcm`  |
-| CP4APP  | Installs the Applications Cloud Pak on an existing OpenShift cluster                             | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4app`  |
-| CP4DATA | Installs the Cloud Pak for Data on an existing OpenShift cluster                                 | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4data` |
+| roks    | Provision an IBM OpenShift managed cluster. An OpenShift cluster is required to install any Cloud Pak module | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks`    |
+| cp4mcm  | Installs the Cloud Pak for MultiCloud Management on an existing OpenShift cluster                | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4mcm`  |
+| cp4auto  | Installs the Cloud Pak for Automation  on an existing OpenShift cluster                          | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4auto`  |
+| cp4app  | Installs the Cloud Pak for Applications  on an existing OpenShift cluster                        | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4app`  |
+| cp4i  | Installs the Cloud Pak for Integration on an existing OpenShift cluster                          | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4ai`  |
+| cp4data | Installs the Cloud Pak for Data on an existing OpenShift cluster                                 | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4data` |
 
 ## Use
 
-To use a module it's required to define the `ibm` provisioner block with the `region` and - optionally - the `generation`, which is **1 for Classic** and **2 for VPC Gen 2**.
+To use a module, define the `ibm` provisioner block with the `region` and - optionally - the `generation` (**1 for Classic** and **2 for VPC Gen 2**).
 
 ```hcl
 provider "ibm" {
@@ -32,7 +36,9 @@ provider "ibm" {
 }
 ```
 
-You can define the IBM Cloud credentials parameters in the IBM provider block but it's recommended to pass them in environment variables. Export the environment variables for the credentials like so:
+Acquire IBM Cloud credentials. Go [here](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform#configure-access-to-ibm-cloud) for details.
+
+You can define the IBM Cloud credentials in the IBM provider block but it is recommended to pass them in as environment variables. Export the environment variables for the credentials like so:
 
 ```bash
 # Credentials required only for IBM Cloud Classic
@@ -43,13 +49,13 @@ export IAAS_CLASSIC_API_KEY="< Your IBM Cloud Classic API Key here >"
 export IC_API_KEY="< IBM Cloud API Key >"
 ```
 
-_Running this Terraform code from IBM Cloud Schematics don't require to set these parameters, they are set automatically from your account by IBM Cloud Schematics._
+**NOTE**: These credentials are not required if running this Terraform code within an **IBM Cloud Schematics** workspace. They are set automatically set from your account.
 
-Before using any of the Cloud Pak modules it's required to have an OpenShift cluster, this could be an existing cluster or you can provision it in your code.
+**NOTE**: Before using any of the Cloud Pak Terraform modules (**cp4app, cp4auto, cp4data, cp4i, cp4mcm**) an OpenShift cluster is required. This can be an existing cluster or can provisioned using the RedHat OpenShift Service (**roks**) Terraform module.
 
 ### Building a ROKS cluster
 
-To build the cluster in your code, use the ROKS module, using the `module` resource pointing the `source` to the location of this module (GitHub link in the table above). Then pass the input parameters with the cluster specification.
+To build the cluster in your code, use the `module` resource and set the `source` to the location of the **roks** module (GitHub link in the table above). Then pass the input parameters with the cluster specification. Go [here](https://github.com/ibm-hcbt/cloud-pak-sandboxes/blob/master/terraform/cp4i/main.tf) for an example on how to do this.
 
 ```hcl
 module "cluster" {
@@ -79,7 +85,7 @@ data "ibm_container_cluster_config" "cluster_config" {
 }
 ```
 
-The variable `cluster_name_id` can have either the cluster name or ID. The resource group where the cluster is running is also required, use the data resource `ibm_resource_group` to get the ID from the resource group name.
+The variable `cluster_name_id` can have either the cluster name or ID. The resource group where the cluster is running is also required. Use the data resource `ibm_resource_group` to get the ID from the resource group name.
 
 The output parameters of the cluster configuration data resource `ibm_container_cluster_config` are used as input parameters for any Cloud Pak module.
 
@@ -152,9 +158,9 @@ If you are getting errors because the cluster configuration is incorrect or unav
 
 ## Testing
 
-Each module has the `testing` directory to test the module manually to test your changes before committing them and to be used on the CI/CD pipeline. You can also use the testing code as documentation to know how to use the module.
+Each module has a `testing` directory to test changes to the module manually before committing them. You can also use the testing code as documentation to know how to use the module.
 
-In a nutshell, to run any module test, just go to the `testing` directory, set/export some environment variables such as the IBM Cloud credentials, the entitled registry parameters, etc.., then run `make`, like this:
+To run any module test, just go to the `testing` directory, set/export required environment variables such as the IBM Cloud credentials, the entitled registry parameters, etc.., then run `make`, like this:
 
 ```bash
 cd testing
@@ -174,4 +180,4 @@ terraform fmt -recursive
 
 ## Owners
 
-Each module has the file `OWNER.md` with the collaborators working actively on this module. Although this project and modules are open source, and everyone can and is encourage to contribute, the module owners are responsible of the merging process. Please, contact them for any questions.
+Each module has the file `OWNER.md` with the collaborators working actively on this module. Although this project and modules are open source, and everyone can and is encourage to contribute, the module owners are responsible for the merging process. Please, contact them for any questions.
