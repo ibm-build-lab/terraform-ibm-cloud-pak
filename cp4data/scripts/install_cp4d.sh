@@ -216,11 +216,18 @@ else
   fi
   if [ "$INSTALL_DATA_VIRTUALIZATION" = true ]; then
     echo "Deploying Data Virtualization Module"
+
+    echo "Tuning Kernel for dv"
+    echo "${WKC_TUNED_KERNAL}" | oc apply -f -
+
+    echo "Running no_root_squash dv pre-req"
+    echo "${WKC_NOROOTSQUASH}" | oc apply -f -
+
     install_cpd_service "${DV_SERVICE}" dv dv-cpdservice 720 # 2 hours
   fi
   if [ "$INSTALL_STREAMS" = true ]; then
     echo "Deploying Streams Module"
-    install_cpd_service "${STEAMS}" streams streams-cpdservice 720 # 2 hours
+    install_cpd_service "${STREAMS}" streams streams-cpdservice 720 # 2 hours
   fi
   if [ "$INSTALL_ANALYTICS_DASHBOARD" = true ]; then
     echo "Deploying Cognos Dashboard Embedded Module"
