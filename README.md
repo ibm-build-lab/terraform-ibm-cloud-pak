@@ -35,7 +35,7 @@ Go [here](./CREDENTIALS.md) for details.
 
 ## Usage 
 
-To use a module, define the `ibm` provisioner block with the `region` and - optionally - the `generation` (**1 for Classic** and **2 for VPC Gen 2**).
+To use these modules, define the `ibm` provisioner block with the `region` and - optionally - the `generation` (**1 for Classic** and **2 for VPC Gen 2**).
 
 ```hcl
 provider "ibm" {
