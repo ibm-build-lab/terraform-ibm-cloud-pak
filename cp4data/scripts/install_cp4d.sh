@@ -227,7 +227,7 @@ else
   fi
   if [ "$INSTALL_STREAMS" = true ]; then
     echo "Deploying Streams Module"
-    install_cpd_service "${STREAMS}" streams streams-cpdservice 720 # 2 hours
+    install_cpd_service "${STREAMS_SERVICE}" streams streams-cpdservice 720 # 2 hours
   fi
   if [ "$INSTALL_ANALYTICS_DASHBOARD" = true ]; then
     echo "Deploying Cognos Dashboard Embedded Module"
@@ -235,7 +235,7 @@ else
   fi
   if [ "$INSTALL_SPARK" = true ]; then
     echo "Deploying Spark Module"
-    install_cpd_service "${SPARK}" spark spark-cpdservice 720 # 2 hours
+    install_cpd_service "${SPARK_SERVICE}" spark spark-cpdservice 720 # 2 hours
   fi
   if [ "$INSTALL_DB2_WAREHOUSE" = true ]; then
     echo "Deploying DB2 Warehouse Module"
