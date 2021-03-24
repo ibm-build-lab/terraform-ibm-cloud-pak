@@ -25,9 +25,11 @@ These modules are used by Terraform scripts in [this](https://github.com/ibm-hcb
 | [cp4i](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/cp4i)  | Installs the Cloud Pak for Integration on an existing OpenShift cluster                          | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4i`  |
 
 ## Set up access to IBM Cloud 
-If running these modules from your local terminal, you need to set the credentials to access IBM Cloud. Go [here](./CREDENTIALS.md) for details.
+If running these modules from your local terminal, you need to set the credentials to access IBM Cloud. 
 
 You can define the IBM Cloud credentials in the IBM provider block but it is recommended to pass them in as environment variables. 
+
+Go [here](./CREDENTIALS.md) for details.
 
 **NOTE**: These credentials are not required if running this Terraform code within an **IBM Cloud Schematics** workspace. They are automatically set from your account.
 
