@@ -151,7 +151,7 @@ To run any module test:
   make clean
   ```
 
-For more information about testing, such as what environment variables to export, read the <module>/testing/README.md on each subdirectory. For more information about development and contributions to the code read the [CONTRIBUTE](./CONTRIBUTE.md) document.
+For more information about testing, such as what environment variables to export, read the \<module\>/testing/README.md on each subdirectory. For more information about development and contributions to the code read the [CONTRIBUTE](./CONTRIBUTE.md) document.
 
 And ... don't forget to keep the Terraform code format clean and readable.
 
