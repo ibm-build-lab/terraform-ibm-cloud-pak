@@ -57,4 +57,4 @@ source credentials.sh
 
 Additionally, you can append the above `export` commands in your shell profile or config file (i.e. `~/.bashrc` or `~/.zshrc`) and they will be executed on every new terminal.
 
-**IMPORTANT**: If you use a different filename than `credentials.sh` make sure to not commit the file to GitHub. The filename `credentials.sh` is in the `.gitignore` file so it is safe to use it..
+**IMPORTANT**: Be sure to NOT commit the file containing credentials into GitHub. 
