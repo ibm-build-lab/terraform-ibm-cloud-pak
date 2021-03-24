@@ -135,17 +135,21 @@ In Terraform the block parameter `count` is used to define how many instances of
 If you are using Terraform 0.12 the workaround is the input parameter `enable`. Each module has the `enable` boolean input parameter with default value `true`. If the `enable` parameter is set to `false` the Cloud Pak is not installed. Use the `enable` parameter only if using Terraform 0.12 or lower, this parameter may be deprecated when Terraform 0.12 is not longer supported.
 
 ## Testing
-Each module has a `testing` directory to test changes to the module manually before committing them. You can also use the testing code as documentation to know how to use the module.
+Each module has a `testing` directory to allow manual testing of changes before committing them. The testing code also provides an example on how to use the module.
 
-To run any module test, just go to the `testing` directory, set/export required environment variables such as the IBM Cloud credentials, the entitled registry parameters, etc.., then run `make`, like this:
+To run any module test:
 
-```bash
-cd testing
-# export environment variables
-make
-make test-kubernetes
-make clean
-```
+- go to the `testing` directory
+- set/export required environment variables such as the IBM Cloud credentials, the entitled registry parameters, etc.., 
+- run `make`, like this:
+
+  ```bash
+  cd testing
+  # export environment variables
+  make
+  make test-kubernetes
+  make clean
+  ```
 
 For more information about testing, such as what environment variables to export, read the <module>/testing/README.md on each subdirectory. For more information about development and contributions to the code read the [CONTRIBUTE](./CONTRIBUTE.md) document.
 
