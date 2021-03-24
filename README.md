@@ -93,7 +93,7 @@ module "cp4mcm" {
 ```
 The variable `cluster_name_id` can have either the cluster name or ID. The resource group where the cluster is running is also required. Use the data resource `ibm_resource_group` to get the ID from the resource group name.
 
-The output parameters of the cluster configuration data resource `ibm_container_cluster_config` are used as input parameters for any Cloud Pak module.
+The output parameters of the ROKS module can be used as input parameters to the Cloud Pak module. However, there may be some dependency issues depending of the resources in your code. If you experience some of these issues it is recommended to use the data resource `ibm_container_cluster_config` to get the cluster configuration and pass its output to the Cloud Pak module. 
 
 ### Invoking a Cloud Pak module to install on a new ROKS cluster
 
@@ -127,9 +127,7 @@ module "cp4data" {
 }
 ```
 
-If you are getting errors because the cluster configuration is incorrect or unavailable, the solution may be to use the data resource `ibm_container_cluster_config` to get the provisioned cluster configuration. Similar to the example for CP4MCM below.
-
-The output parameters of the ROKS module can be used as input parameters to the Cloud Pak module however, there may be some dependency issues depending of the resources in your code. If you experience some of these issues it is recommended to use the data resource `ibm_container_cluster_config` to get the cluster configuration and pass its output to the Cloud Pak module. 
+If you are getting errors because the cluster configuration is incorrect or unavailable, the solution may be to use the data resource `ibm_container_cluster_config` to get the provisioned cluster configuration. Similar to the example for CP4MCM above.
 
 ### Enable and Disable Cloud Pak Modules
 In Terraform the block parameter `count` is used to define how many instances of the resource are needed, including zero, meaning the resource won't be created. The `count` parameter on `module` blocks is only available since Terraform version 0.13.
