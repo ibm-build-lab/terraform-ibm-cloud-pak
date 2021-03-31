@@ -85,18 +85,18 @@ resource "null_resource" "install_cp4d" {
 
       // Modules to deploy T/F
       EMPTY_MODULE_LIST                = var.empty_module_list                 // Used to determine default array in template
-      INSTALL_WATSON_KNOWLEDGE_CATALOG = var.install_watson_knowledge_catalog, // WKC
-      INSTALL_WATSON_STUDIO            = var.install_watson_studio,            // WSL
-      INSTALL_WATSON_MACHINE_LEARNING  = var.install_watson_machine_learning,  // WML
-      INSTALL_WATSON_OPEN_SCALE        = var.install_watson_open_scale,        // AIOPENSCALE
-      INSTALL_DATA_VIRTUALIZATION      = var.install_data_virtualization,      // DV
-      INSTALL_STREAMS                  = var.install_streams,                  // STREAMS
-      INSTALL_ANALYTICS_DASHBOARD      = var.install_analytics_dashboard,      // CDE
-      INSTALL_SPARK                    = var.install_spark,                    // SPARK
-      INSTALL_DB2_WAREHOUSE            = var.install_db2_warehouse,            // DB2WH
-      INSTALL_DB2_DATA_GATE            = var.install_db2_data_gate,            // DATAGATE
-      INSTALL_RSTUDIO                  = var.install_rstudio,                  // RSTUDIO
-      INSTALL_DB2_DATA_MANAGEMENT      = var.install_db2_data_management,      // DMC
+      INSTALL_WATSON_KNOWLEDGE_CATALOG = var.install_watson_knowledge_catalog  // WKC
+      INSTALL_WATSON_STUDIO            = var.install_watson_studio             // WSL
+      INSTALL_WATSON_MACHINE_LEARNING  = var.install_watson_machine_learning   // WML
+      INSTALL_WATSON_OPEN_SCALE        = var.install_watson_open_scale         // AIOPENSCALE
+      INSTALL_DATA_VIRTUALIZATION      = var.install_data_virtualization       // DV
+      INSTALL_STREAMS                  = var.install_streams                   // STREAMS
+      INSTALL_ANALYTICS_DASHBOARD      = var.install_analytics_dashboard       // CDE
+      INSTALL_SPARK                    = var.install_spark                     // SPARK
+      INSTALL_DB2_WAREHOUSE            = var.install_db2_warehouse             // DB2WH
+      INSTALL_DB2_DATA_GATE            = var.install_db2_data_gate             // DATAGATE
+      INSTALL_RSTUDIO                  = var.install_rstudio                   // RSTUDIO
+      INSTALL_DB2_DATA_MANAGEMENT      = var.install_db2_data_management       // DMC
     }
   }
 }

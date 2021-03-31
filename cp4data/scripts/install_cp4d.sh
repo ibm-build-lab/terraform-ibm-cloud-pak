@@ -235,7 +235,7 @@ else
   fi
   if [ "$INSTALL_SPARK" = true ]; then
     echo "Deploying Spark Module"
-    install_cpd_service "${SPARK_SERVICE}" spark spark-cpdservice 720 # 2 hours
+    install_cpd_service "${SPARK_SERVICE}" spark spark-cpdservice 1080 # 3 hours
   fi
   if [ "$INSTALL_DB2_WAREHOUSE" = true ]; then
     echo "Deploying DB2 Warehouse Module"
@@ -243,6 +243,13 @@ else
   fi
   if [ "$INSTALL_DB2_DATA_GATE" = true ]; then
     echo "Deploying DB2 Data Gate Module"
+
+    echo "Tuning Kernel for db2 data gate"
+    echo "${WKC_TUNED_KERNAL}" | oc apply -f -
+
+    echo "Running no_root_squash db2 data gate pre-req"
+    echo "${WKC_NOROOTSQUASH}" | oc apply -f -
+
     install_cpd_service "${DB2_DATA_GATE_SERVICE}" datagate datagate-cpdservice 720 # 2 hours
   fi
   if [ "$INSTALL_RSTUDIO" = true ]; then
@@ -251,6 +258,13 @@ else
   fi
   if [ "$INSTALL_DB2_DATA_MANAGEMENT" = true ]; then
     echo "Deploying DB2 Data Management Module"
+
+    echo "Tuning Kernel for db2 data management"
+    echo "${WKC_TUNED_KERNAL}" | oc apply -f -
+
+    echo "Running no_root_squash db2 data management pre-req"
+    echo "${WKC_NOROOTSQUASH}" | oc apply -f -
+
     install_cpd_service "${DB2_DATA_MNGMT_SERVICE}" dmc dmc-cpdservice 720 # 2 hours
   fi
   # Grabs the address of the lite-service control plane for the user
