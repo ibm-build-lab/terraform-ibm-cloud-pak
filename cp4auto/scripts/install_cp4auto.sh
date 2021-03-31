@@ -37,6 +37,9 @@ while [[ -z $(kubectl get route -n openshift-ingress router-default -o jsonpath=
   sleep $WAITING_TIME
 done
 
+# echo "Creating namespace ${NAMESPACE}"
+kubectl create namespace cp4a-project --dry-run=client -o yaml | kubectl apply -f -
+
 echo "Deploying Storage ${PVC_CLAIM}"
 echo "${PVC_CLAIM}" | oc apply -f -
 
@@ -92,13 +95,14 @@ create_secret() {
 }
 
 create_secret admin.registrykey openshift-operators
+create_secret admin.registrykey cp4a-project
 # This second secret may be not be needed.  I was having difficulties without it.
 create_secret ibm_entitlement_key openshift-operators
 
 # create_secret icp4d-anyuid-docker-pull kube-system
 # create_secret sa-${NAMESPACE} ${NAMESPACE} no-link
 
-sleep 40
+sleep 120
 
 echo "Deploying Common Services Subscription ${SERVICES_SUBSCRIPTION}"
 echo "${SERVICES_SUBSCRIPTION}" | oc apply -f -

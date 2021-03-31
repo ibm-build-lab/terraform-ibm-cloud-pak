@@ -2,7 +2,7 @@ locals {
 
   ibm_operator_catalog = file(join("/", [path.module, "files", "ibm-operator-catalog.yaml"])) 
   opencloud_operator_catalog = file(join("/", [path.module, "files", "opencloud-operator-catalog.yaml"])) 
-  pvc_claim = file(join("/", [path.module], "files", "pvc.yaml"))
+  pvc_claim = file(join("/", [path.module, "files", "pvc.yaml"]))
   services_subscription = file(join("/", [path.module, "files", "common-services-subscription.yaml"])) 
   cp4a_subscription = file(join("/", [path.module, "files", "cp4a-subscription.yaml"]))
 
