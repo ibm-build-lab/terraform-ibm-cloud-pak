@@ -94,8 +94,9 @@ create_secret() {
   # [[ "${link}" != "no-link" ]] && oc secrets -n ${namespace} link cpdinstall icp4d-anyuid-docker-pull --for=pull
 }
 
-create_secret admin-registrykey openshift-operators
+create_secret admin.registrykey openshift-operators
 create_secret admin-registrykey cp4a-project
+create_secret admin-registrykey default
 # This second secret may be not be needed.  I was having difficulties without it.
 create_secret ibm-entitlement-key openshift-operators
 
