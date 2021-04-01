@@ -4,18 +4,27 @@ This Terraform Module install **Cloud Pak for Automation** on an existing Opensh
 
 **Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4auto`
 
-- [Terraform Module to install Cloud Pak for Automation](#terraform-module-to-install-cloud-pak-for-Automation)
-  - [Use](#use)
-    - [Building a ROKS cluster](#building-a-roks-cluster)
+- [Terraform Module to install Cloud Pak for Automation](#terraform-module-to-install-cloud-pak-for-automation)
+  - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
+  - [Usage](#usage)
+    - [Building a new ROKS cluster](#building-a-new-roks-cluster)
     - [Using an existing ROKS cluster](#using-an-existing-roks-cluster)
-    - [Enable or Disable the Module](#enable-or-disable-the-module)
     - [Using the CP4Auto Module](#using-the-cp4auto-module)
+    - [Enable or Disable the Module](#enable-or-disable-the-module)
+    - [Executing the TF Scripts](#executing-the-tf-scripts)
+    - [Accessing the Cloud Pak Console](#accessing-the-cloud-pak-console)
+    - [Clean up](#clean-up)
   - [Input Variables](#input-variables)
-  - [Output Variables](#output-variables)
 
-## Use
+## Set up access to IBM Cloud
 
-In your Terraform code define the `ibm` provisioner block with the `region` and the `generation`, which is **1 for Classic** and **2 for VPC Gen 2**. Optionally you can define the IBM Cloud credentials parameters or (recommended) pass them in environment variables.
+If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
+
+Go [here](../CREDENTIALS.md) for details.
+
+## Usage
+
+In your Terraform code define the `ibm` provisioner block with the `region` and the `generation`, which is **1** for **Classic** and **2** for **VPC Gen 2**. Optionally you can define the IBM Cloud credentials parameters or (recommended) pass them in environment variables.
 
 ```hcl
 provider "ibm" {
@@ -24,39 +33,29 @@ provider "ibm" {
 }
 ```
 
-Export the environment variables for the credentials like so:
+NOTE: an OpenShift cluster is required to install the cloud pak. This can be an existing cluster or can be provisioned in the TF code.  See both examples below.
 
-```bash
-# Credentials required only for IBM Cloud Classic
-export IAAS_CLASSIC_USERNAME="< Your IBM Cloud Username/Email here >"
-export IAAS_CLASSIC_API_KEY="< Your IBM Cloud Classic API Key here >"
+### Building a new ROKS cluster
 
-# Credentials required for IBM Cloud VPC and Classic
-export IC_API_KEY="< IBM Cloud API Key >"
-```
+To build the cluster in your TF script, use the [roks](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/roks) module, set `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks` and include the input parameters with the cluster specification required to install `cp4auto`.
 
-_Running this Terraform code from IBM Cloud Schematics don't require to set these parameters, they are set automatically from your account by IBM Cloud Schematics._
-
-Before using the Cloud Pak for Data module it's required to have an OpenShift cluster, this could be an existing cluster or you can provision it in your code using the ROKS module.
-
-### Building a ROKS cluster
-
-To build the cluster in your code, use the ROKS module, pointing it with `source` to the location of this module (`git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks`). Then pass the input parameters with the cluster specification required to run the cp4data module.
+The recommended parameters for a cluster on IBM Cloud Classic and OpenShift 4.5 or latest, is to have `4` workers machines of type `b3c.16x64`, however read the Cloud Pak for Automation documentation to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
 
 ```hcl
 module "cluster" {
   source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks"
 
+  on_vpc         = false
+  project_name   = "cp4auto"
+  owner          = var.owner
+  environment    = "demo"
+
   roks_version         = "4.5"
   flavors              = ["b3c.16x64"]
   workers_count        = [4]
   force_delete_storage = true
-
-  ...
 }
 ```
-
-The recommended parameters for a cluster on IBM Cloud Classic and OpenShift 4.5 or latest, is to have `4` workers machines of type `b3c.16x64`, however read the Cloud Pak for Data documentation to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
 
 ### Using an existing ROKS cluster
 
@@ -77,19 +76,15 @@ data "ibm_container_cluster_config" "cluster_config" {
 }
 ```
 
-The variable `cluster_name_id` can have either the cluster name or ID. The resource group where the cluster is running is also required, for this one use the data resource `ibm_resource_group`.
+Create the `./kube/config` directory if it doesn't exist.
 
-The output parameters of the cluster configuration data resource `ibm_container_cluster_config` are used as input parameters for the DATA Cloud Pak module.
+The variable `cluster_name_id` can contain either the cluster name or ID. The resource group where the cluster is running is also required, for this one use the data resource `ibm_resource_group`.
 
-### Enable or Disable the Module
-
-In Terraform the block parameter `count` is used to define how many instances of the resource are needed, including zero, meaning the resource won't be created. The `count` parameter on `module` blocks is only available since Terraform version 0.13.
-
-Using Terraform 0.12 the workaround is to use the boolean input parameter `enable` with default value `true`. If the `enable` parameter is set to `false` the Cloud Pak for Automation is not installed. Use the `enable` parameter only if using Terraform 0.12 or lower, this parameter may be deprecated when Terraform 0.12 is not longer supported.
+The output parameters of the cluster configuration data resource `ibm_container_cluster_config` are used as input parameters for the `cp4auto` module.
 
 ### Using the CP4Auto Module
 
-Use the `module` block assigning the `source` parameter to the location of this module, either local (i.e. `../cp4auto`) or remote (`git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4auto`). Then pass the input parameters required to install the required Cloud Pak for Automation version and their modules.
+Use the `module` block assigning the `source` parameter to the location of this module, either local (i.e. `../cp4auto`) or remote (`git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4auto`). Then pass the input parameters (documented [here](#input-variables)) required to install the required Cloud Pak for Automation version and their modules.
 
 ```hcl
 module "cp4auto" {
@@ -120,6 +115,14 @@ module "cp4auto" {
 }
 ```
 
+### Enable or Disable the Module
+
+To enable/disable the module, a boolean input parameter `enable` with default value `true` is used. If the `enable` parameter is set to `false` the Cloud Pak is not installed. This parameter may be deprecated when Terraform 0.12 is not longer supported.
+
+In Terraform 0.13, the block parameter `count` can be used to define how many instances of the resource are needed. If set to zero the resource won't be created (module won't be installed).
+
+### Executing the TF Scripts
+
 After setting all the input parameters execute the following commands to create the cluster
 
 ```bash
@@ -128,19 +131,28 @@ terraform plan
 terraform apply
 ```
 
-After around _20 to 30 minutes_ you can configure `kubectl` or `oc` to access the cluster executing:
+### Accessing the Cloud Pak Console
+
+After around _20 to 30 minutes_ you can access the cluster using `kubectl` or `oc`. To get the console URL, open a Cloud Shell and issue the following commands:
 
 ```bash
-export KUBECONFIG=$(terraform output config_file_path)
-
-kubectl cluster-info
-
-# Namespace
-kubectl get namespaces $(terraform output namespace)
-
-# All resources
-kubectl get all --namespace $(terraform output namespace)
+ibmcloud oc cluster config -c <cluster-name> --admin
+kubectl get route -n ibm-common-services cp-console -o jsonpath=‘{.spec.host}’ && echo
 ```
+
+To get default login id:
+
+```bash
+kubectl -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_username}\' | base64 -d && echo
+```
+
+To get default Password:
+
+```bash
+kubectl -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d && echo
+```
+
+### Clean up
 
 When you finish using the cluster, you can release the resources executing the following command, it should finish in about _8 minutes_:
 
@@ -152,7 +164,7 @@ terraform destroy
 
 | Name                               | Description                                                                                                                                                                                                                | Default                     | Required |
 | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | -------- |
-| `enable`                           | If set to `false` does not install Cloud-Pak for Data on the given cluster. By default it's enabled                                                                                                                        | `true`                      | No       |
+| `enable`                           | If set to `false` does not install the cloud pak on the given cluster. By default it's enabled                                                                                                                        | `true`                      | No       |
 | `openshift_version`                | Openshift version installed in the cluster                                                                                                                                                                                 | `4.5`                       | No       |
 | `entitled_registry_key`            | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
 | `entitled_registry_user_email`     | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key                                                                                                                 |                             | Yes      |
