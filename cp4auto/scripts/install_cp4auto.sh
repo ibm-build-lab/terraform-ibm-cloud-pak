@@ -97,7 +97,7 @@ create_secret() {
 create_secret admin-registrykey openshift-operators
 create_secret admin-registrykey cp4a-project
 # This second secret may be not be needed.  I was having difficulties without it.
-create_secret ibm_entitlement_key openshift-operators
+create_secret ibm-entitlement-key openshift-operators
 
 # create_secret icp4d-anyuid-docker-pull kube-system
 # create_secret sa-${NAMESPACE} ${NAMESPACE} no-link
