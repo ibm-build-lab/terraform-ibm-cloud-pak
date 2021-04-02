@@ -10,10 +10,9 @@ This Terraform Module install **Cloud Pak for Automation** on an existing Opensh
     - [Building a new ROKS cluster](#building-a-new-roks-cluster)
     - [Using an existing ROKS cluster](#using-an-existing-roks-cluster)
     - [Using the CP4Auto Module](#using-the-cp4auto-module)
-    - [Enable or Disable the Module](#enable-or-disable-the-module)
-    - [Executing the TF Scripts](#executing-the-tf-scripts)
-    - [Accessing the Cloud Pak Console](#accessing-the-cloud-pak-console)
-    - [Clean up](#clean-up)
+  - [Executing the TF Scripts](#executing-the-tf-scripts)
+  - [Accessing the Cloud Pak Console](#accessing-the-cloud-pak-console)
+  - [Clean up](#clean-up)
   - [Input Variables](#input-variables)
 
 ## Set up access to IBM Cloud
@@ -115,13 +114,11 @@ module "cp4auto" {
 }
 ```
 
-### Enable or Disable the Module
-
-To enable/disable the module, a boolean input parameter `enable` with default value `true` is used. If the `enable` parameter is set to `false` the Cloud Pak is not installed. This parameter may be deprecated when Terraform 0.12 is not longer supported.
+**NOTE** To enable/disable the module, a boolean input parameter `enable` with default value `true` is used. If the `enable` parameter is set to `false` the Cloud Pak is not installed. This parameter may be deprecated when Terraform 0.12 is not longer supported.
 
 In Terraform 0.13, the block parameter `count` can be used to define how many instances of the resource are needed. If set to zero the resource won't be created (module won't be installed).
 
-### Executing the TF Scripts
+## Executing the TF Scripts
 
 After setting all the input parameters execute the following commands to create the cluster
 
@@ -131,7 +128,7 @@ terraform plan
 terraform apply
 ```
 
-### Accessing the Cloud Pak Console
+## Accessing the Cloud Pak Console
 
 After around _20 to 30 minutes_ you can access the cluster using `kubectl` or `oc`. To get the console URL, open a Cloud Shell and issue the following commands:
 
@@ -152,7 +149,7 @@ To get default Password:
 kubectl -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d && echo
 ```
 
-### Clean up
+## Clean up
 
 When you finish using the cluster, you can release the resources executing the following command, it should finish in about _8 minutes_:
 

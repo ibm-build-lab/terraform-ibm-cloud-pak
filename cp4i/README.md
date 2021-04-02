@@ -10,10 +10,8 @@ This Terraform Module install **Cloud Pak for Integration** on an existing Opens
     - [Building a new ROKS cluster](#building-a-new-roks-cluster)
     - [Using an existing ROKS cluster](#using-an-existing-roks-cluster)
     - [Using the CP4I Module](#using-the-cp4i-module)
-    - [Enable or Disable the Module](#enable-or-disable-the-module)
-    - [Executing the TF Scripts](#executing-the-tf-scripts)
-    - [Accessing the Cloud Pak Console](#accessing-the-cloud-pak-console)
-    - [Clean up](#clean-up)
+  - [Executing the TF Scripts](#executing-the-tf-scripts)
+  - [Clean up](#clean-up)
   - [Input Variables](#input-variables)
 
 ## Set up access to IBM Cloud
@@ -101,13 +99,11 @@ module "cp4i" {
 }
 ```
 
-### Enable or Disable the Module
+**NOTE**: To enable/disable the module, a boolean input parameter `enable` with default value `true` is used. If the `enable` parameter is set to `false` the Cloud Pak is not installed. This parameter may be deprecated when Terraform 0.12 is not longer supported.
 
-In Terraform the block parameter `count` is used to define how many instances of the resource are needed, including zero, meaning the resource won't be created. The `count` parameter on `module` blocks is only available since Terraform version 0.13.
+In Terraform 0.13, the block parameter `count` can be used to define how many instances of the resource are needed. If set to zero the resource won't be created (module won't be installed).
 
-Using Terraform 0.12 the workaround is to use the boolean input parameter `enable` with default value `true`. If the `enable` parameter is set to `false` the Cloud Pak for Integration is not installed. Use the `enable` parameter only if using Terraform 0.12 or lower, this parameter may be deprecated when Terraform 0.12 is not longer supported.
-
-### Executing the TF Scripts
+## Executing the TF Scripts
 
 To execute the TF script (containing the modules to create/use ROKS and Cloud Pak):
 
@@ -117,28 +113,7 @@ terraform plan
 terraform apply
 ```
 
-### Accessing the Cloud Pak Console
-
-After around _20 to 30 minutes_ you can access the cluster using `kubectl` or `oc`. To get the console URL, open a Cloud Shell and issue the following commands:
-
-```bash
-ibmcloud oc cluster config -c <cluster-name> --admin
-kubectl get route -n ibm-common-services cp-console -o jsonpath=‘{.spec.host}’ && echo
-```
-
-To get default login id:
-
-```bash
-kubectl -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_username}\' | base64 -d && echo
-```
-
-To get default Password:
-
-```bash
-kubectl -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d && echo
-```
-
-### Clean up
+## Clean up
 
 ```bash
 terraform destroy

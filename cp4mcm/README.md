@@ -10,10 +10,9 @@ This Terraform Module installs the **Multi Cloud Management Cloud Pak** on an Op
     - [Building a new ROKS cluster](#building-a-new-roks-cluster)
     - [Using an existing ROKS cluster](#using-an-existing-roks-cluster)
     - [Installing the CP4MCM Module](#installing-the-cp4mcm-module)
-    - [Enable or Disable the Module](#enable-or-disable-the-module)
-    - [Testing](#testing)
-    - [Executing the TF Scripts](#executing-the-tf-scripts)
-    - [Clean up](#clean-up)
+  - [Testing](#testing)
+  - [Executing the TF Scripts](#executing-the-tf-scripts)
+  - [Clean up](#clean-up)
   - [Input Variables](#input-variables)
   - [Output Variables](#output-variables)
 
@@ -38,7 +37,7 @@ NOTE: an OpenShift cluster is required to install the cloud pak. This can be an 
 
 ### Building a new ROKS cluster
 
-To build the cluster in your TF script, use the [roks](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/roks) module, set `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks` and include the input parameters with the cluster specification required to install `cp4mcm`.
+To build the cluster in your TF script, use the [roks](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/roks) module. Set `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks` and include the input parameters with the cluster specification required to install `cp4mcm`.
 
 For Cloud Pak for MCM the recommended parameters are a `classic` 4.5+ OpenShift cluster with `5` workers of type `c3c.16x32`, however read the [Cloud Pak for Multi Cloud Management](https://www.ibm.com/support/knowledgecenter/en/SSFC4F_2.2.0/install/requirements.html) documentation to confirm these parameters.
 
@@ -83,6 +82,7 @@ Create the `./kube/config` directory if it doesn't exist.
 The variable `cluster_name_id` can contain either the cluster name or ID. The resource group where the cluster is running is also required, for this one use the `data` resource `ibm_resource_group`.
 
 The output parameters of the `ibm_container_cluster_config` resource are used as input parameters for the `cp4mcm` module.
+
 ### Installing the CP4MCM Module
 
 Create a `module` block and assign `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4mcm`. Then pass the input parameters (documented [here](#input-variables)) required to install Cloud Pak for Multi Cloud Management and modules.
@@ -107,13 +107,11 @@ module "cp4mcm" {
 }
 ```
 
-### Enable or Disable the Module
-
-To enable/disable the module, a boolean input parameter `enable` with default value `true` is used. If the `enable` parameter is set to `false` the Cloud Pak is not installed. This parameter may be deprecated when Terraform 0.12 is not longer supported.
+**NOTE**: To enable/disable the module, a boolean input parameter `enable` with default value `true` is used. If the `enable` parameter is set to `false` the Cloud Pak is not installed. This parameter may be deprecated when Terraform 0.12 is not longer supported.
 
 In Terraform 0.13, the block parameter `count` can be used to define how many instances of the resource are needed. If set to zero the resource won't be created (module won't be installed).
 
-### Testing
+## Testing
 
 To manually run a module test before committing the code:
 
@@ -122,9 +120,9 @@ To manually run a module test before committing the code:
 
 The testing code provides an example on how to use the module.
 
-### Executing the TF Scripts
+## Executing the TF Scripts
 
-To execute the TF script (containing the modules to create/use ROKS and Cloud Pak):
+Run the following commands to execute the TF script (containing the modules to create/use ROKS and Cloud Pak). Execution may take about 30 minutes:
 
 ```bash
 terraform init
@@ -132,11 +130,10 @@ terraform plan
 terraform apply -auto-approve
 ```
 
-After around _20 to 30 minutes_ you can access the cluster using `kubectl` or `oc`:
+After execution has completed, access the cluster using `kubectl` or `oc`:
 
 ```bash
-export KUBECONFIG=$(terraform output config_file_path)
-
+ibmcloud ks cluster config -cluster $(terraform output cluster_id)
 kubectl cluster-info
 
 # Namespace
@@ -155,7 +152,7 @@ terraform output password
 open "http://$(terraform output endpoint)"
 ```
 
-### Clean up
+## Clean up
 
 To clean up or remove CP4MCM and its dependencies from a cluster, execute the following commands:
 
