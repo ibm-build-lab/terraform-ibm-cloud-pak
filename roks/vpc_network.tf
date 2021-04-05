@@ -27,18 +27,19 @@ resource "ibm_is_subnet" "subnet" {
   resource_group           = data.ibm_resource_group.group.id
 }
 
-resource "ibm_is_security_group_rule" "security_group_rule_tcp_k8s" {
-  count     = var.enable && var.on_vpc ? local.max_size : 0
-  group     = var.on_vpc ? ibm_is_vpc.vpc[0].default_security_group : 0
-  direction = "inbound"
+// Not needed with OCP 4.5 and higher
+// resource "ibm_is_security_group_rule" "security_group_rule_tcp_k8s" {
+//   count     = var.enable && var.on_vpc ? local.max_size : 0
+//   group     = var.on_vpc ? ibm_is_vpc.vpc[0].default_security_group : 0
+//   direction = "inbound"
+//
+//   tcp {
+//     port_min = 30000
+//     port_max = 32767
+//   }
+// }
 
-  tcp {
-    port_min = 30000
-    port_max = 32767
-  }
-}
-
-// Enable to ssh to the nodes
+// Enable to ssh to interfaces in the VPC
 // resource "ibm_is_security_group_rule" "security_group_rule_ssh_k8s" {
 //   group     = ibm_is_vpc.vpc.default_security_group
 //   direction = "inbound"
@@ -48,7 +49,7 @@ resource "ibm_is_security_group_rule" "security_group_rule_tcp_k8s" {
 //   }
 // }
 
-// Enable to ping to the nodes
+// Enable to ping to interfaces in the VPC
 // resource "ibm_is_security_group_rule" "security_group_rule_icmp_k8s" {
 //   group     = ibm_is_vpc.vpc.default_security_group
 //   direction = "inbound"
