@@ -1,7 +1,7 @@
 resource "ibm_resource_instance" "cos" {
   count    = var.enable && var.on_vpc ? 1 : 0
   name     = "${var.project_name}-${var.environment}-cos"
-  resource_group_id = data.ibm_resource_group.cos_group.id
+  resource_group_id = data.ibm_resource_group.group.id
   service  = "cloud-object-storage"
   plan     = "standard"
   location = "global"
