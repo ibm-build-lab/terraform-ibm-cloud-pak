@@ -105,6 +105,5 @@ locals {
   max_size        = length(var.vpc_zone_names)
   cluster_name_id = var.on_vpc ? join("", ibm_container_vpc_cluster.cluster.*.id) : join("", ibm_container_cluster.cluster.*.id)
   roks_version    = format("%s_openshift", split("_", var.roks_version)[0])
-  region          = "us-east"
 }
 
