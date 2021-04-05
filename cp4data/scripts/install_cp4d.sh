@@ -63,7 +63,6 @@ create_secret() {
     --namespace=${namespace}
 }
 
-# create_secret ibm-entitlement-key default
 create_secret ibm-entitlement-key cpd-meta-ops
 create_secret ibm-entitlement-key cp4d
 create_secret ibm-entitlement-key kube-system
@@ -76,7 +75,7 @@ echo "${OPERATOR_GROUP}" | oc apply -f -
 echo "Deploying Subscription ${SUBSCRIPTION}"
 echo "${SUBSCRIPTION}" | oc apply -f -
 
-# waiting for operator to install
+# Waiting for operator to install
 sleep 300
 
 POD=""
@@ -172,6 +171,21 @@ echo "Deploying CPD control plane"
 install_cpd_service "${LITE_SERVICE}" lite lite-cpdservice
 control_plane_log=$(kubectl logs -n cpd-meta-ops $POD | sed 's/[[:cntrl:]]\[[0-9;]*m//g' | tail -20)
 
+# Obtains the credentials and endpoints for the installed CP4D control plane
+printEndpoint() {
+  console_url_address=$1
+  namespace=$2
+  echo "[INFO] CPD Endpoint: ${console_url_address}"
+
+  # NOTE: The credentials are statics and defined by the installer, in the future this
+  # may not be the case.
+  echo "[INFO] CPD Username:  admin"
+  echo "[INFO] CPD Password:  password"
+  echo "[INFO] CPD Namespace: ${namespace}"
+  echo "[INFO] Please update your username and password within the CPD console as soon as possible."
+}
+
+# Determines if there are any modules that it must install for CPD
 if [ "$EMPTY_MODULE_LIST" = true ]; then
   # Grabs the address of the lite-service control plane for the user
   address=$(echo $control_plane_log | sed -n 's#.*\(https*://[^"]*\).*#\1#p')
@@ -179,8 +193,9 @@ if [ "$EMPTY_MODULE_LIST" = true ]; then
     echo "[ERROR] failed to get the endpoint address from the logs"
     exit 1
   fi
-  echo "[INFO] CPD Endpoint: $address"
-else 
+
+  printEndpoint "${address}" "cp4d"
+else
   # install_cpd_service needs the following variables passed:
   # local module_service_contents=$1
   # local service_name=$2
@@ -192,10 +207,10 @@ else
 
     # Needed to allow 0071-wkc-prereqs x86_64 to install within the wkc-service install.
     echo "Tuning Kernel for wkc"
-    echo "${WKC_TUNED_KERNAL}" | oc apply -f -
+    echo "${TUNED_KERNAL}" | oc apply -f -
 
     echo "Running no_root_squash for db2 wkc pre-req"
-    echo "${WKC_NOROOTSQUASH}" | oc apply -f -
+    echo "${NOROOTSQUASH}" | oc apply -f -
 
     install_cpd_service "${WKC_SERVICE}" wkc wkc-cpdservice 1440 # 4 hours
   fi
@@ -205,7 +220,7 @@ else
   fi
   if [ "$INSTALL_WATSON_MACHINE_LEARNING" = true ]; then
     echo "Tuning Kernel for wml"
-    echo "${WKC_TUNED_KERNAL}" | oc apply -f -
+    echo "${TUNED_KERNAL}" | oc apply -f -
 
     echo "Deploying Watson Machine Learning Module"
     install_cpd_service "${WML_SERVICE}" wml wml-cpdservice 720 # 2 hours
@@ -218,10 +233,10 @@ else
     echo "Deploying Data Virtualization Module"
 
     echo "Tuning Kernel for dv"
-    echo "${WKC_TUNED_KERNAL}" | oc apply -f -
+    echo "${TUNED_KERNAL}" | oc apply -f -
 
     echo "Running no_root_squash dv pre-req"
-    echo "${WKC_NOROOTSQUASH}" | oc apply -f -
+    echo "${NOROOTSQUASH}" | oc apply -f -
 
     install_cpd_service "${DV_SERVICE}" dv dv-cpdservice 720 # 2 hours
   fi
@@ -245,10 +260,10 @@ else
     echo "Deploying DB2 Data Gate Module"
 
     echo "Tuning Kernel for db2 data gate"
-    echo "${WKC_TUNED_KERNAL}" | oc apply -f -
+    echo "${TUNED_KERNAL}" | oc apply -f -
 
     echo "Running no_root_squash db2 data gate pre-req"
-    echo "${WKC_NOROOTSQUASH}" | oc apply -f -
+    echo "${NOROOTSQUASH}" | oc apply -f -
 
     install_cpd_service "${DB2_DATA_GATE_SERVICE}" datagate datagate-cpdservice 720 # 2 hours
   fi
@@ -260,10 +275,10 @@ else
     echo "Deploying DB2 Data Management Module"
 
     echo "Tuning Kernel for db2 data management"
-    echo "${WKC_TUNED_KERNAL}" | oc apply -f -
+    echo "${TUNED_KERNAL}" | oc apply -f -
 
     echo "Running no_root_squash db2 data management pre-req"
-    echo "${WKC_NOROOTSQUASH}" | oc apply -f -
+    echo "${NOROOTSQUASH}" | oc apply -f -
 
     install_cpd_service "${DB2_DATA_MNGMT_SERVICE}" dmc dmc-cpdservice 720 # 2 hours
   fi
@@ -273,7 +288,8 @@ else
     echo "[ERROR] failed to get the endpoint address from the logs"
     exit 1
   fi
-  echo "[INFO] CPD Endpoint: $address"
+
+  printEndpoint "${address}" "cp4d"
 fi
 
 # [[ "$DEBUG" == "false" ]] && exit
