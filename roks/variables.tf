@@ -15,6 +15,7 @@ variable "on_vpc" {
 variable "project_name" {
   description = "The project name is used to name the cluster with the environment name"
 }
+
 variable "owner" {
   description = "Use your user name or team name. The owner is used to label the cluster and other resources"
 }

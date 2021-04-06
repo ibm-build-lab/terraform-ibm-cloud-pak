@@ -1,6 +1,6 @@
 variable "infra" {
-  default = "classic"
-  // default = "vpc"
+  // default = "classic"
+  default = "vpc"
   description = "infrastructure to install the cluster, the available options are: 'classic' and 'vpc'"
 }
 
@@ -37,8 +37,13 @@ variable "resource_group" {
   description = "List all available resource groups with: ibmcloud resource groups"
 }
 variable "roks_version" {
-  default     = "4.4"
+  default     = "4.5"
   description = "List available versions: ibmcloud ks versions"
+}
+variable "force_delete_storage" {
+  type        = bool
+  default     = false
+  description = "If set to true, force the removal of persistent storage associated with the cluster during cluster deletion. Default value is false"
 }
 
 // OpenShift cluster specific input parameters and default values:
@@ -49,7 +54,7 @@ variable "vpc_zone_names" {
 }
 variable "flavors" {
   type    = list(string)
-  default = ["b3c.4x16", "b3c.4x16"]
+  default = ["bx2.16x64", "bx2.16x64"]
 }
 variable "workers_count" {
   type    = list(number)
