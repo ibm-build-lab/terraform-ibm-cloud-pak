@@ -6,8 +6,7 @@ This Terraform Module creates an Openshift (ROKS) cluster on IBM Cloud Classic o
 
 - [Terraform Module to Create an OpenShift Cluster on IBM Cloud](#terraform-module-to-create-an-openshift-cluster-on-ibm-cloud)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
-  - [Usage](#usage)
-    - [Building a new ROKS cluster](#building-a-new-roks-cluster)
+  - [Building a new ROKS cluster](#building-a-new-roks-cluster)
   - [Input Variables](#input-variables)
   - [Executing the module](#executing-the-module)
   - [Output Parameters](#output-parameters)
