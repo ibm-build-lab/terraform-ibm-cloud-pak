@@ -35,7 +35,7 @@ provider "ibm" {
 
 ### Setting up the OpenShift cluster
 
-NOTE: an OpenShift cluster is required to install the cloud pak. This can be an existing cluster or can be provisioned in the TF code.  See both examples below.
+NOTE: an OpenShift cluster is required to install the cloud pak. This can be an existing cluster or can be provisioned in the Terraform script.
 
 To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/roks) for the code to add to your Terraform script. The recommended size for an OpenShift 4.5+ cluster on IBM Cloud Classic contains `5` workers of type `c3c.16x32`, however read the [Cloud Pak for Multi Cloud Management](https://www.ibm.com/docs/en/cloud-paks/cp-management) documentation to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
 
