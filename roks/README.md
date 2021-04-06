@@ -137,7 +137,7 @@ kubectl cluster-info
 
 ## Clean up
 
-When you finish using the cluster, you can release the resources executing the following command, it should finish in about _8 minutes_:
+When you finish using the cluster, you can release the resources by executing the following command, it should finish in about _8 minutes_:
 
 ```bash
 terraform destroy
