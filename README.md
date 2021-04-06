@@ -2,14 +2,16 @@
 
 This repository contains a collection of Terraform modules to be used to install Cloud Paks.
 
-- [IBM Terraform Modules to handle Cloud Paks](#ibm-terraform-modules-to-handle-cloud-paks)
+- [IBM Terraform Modules to install Cloud Paks](#ibm-terraform-modules-to-install-cloud-paks)
   - [Modules](#modules)
+  - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
   - [Usage](#usage)
     - [Invoking a Cloud Pak module to install on an existing ROKS cluster](#invoking-a-cloud-pak-module-to-install-on-an-existing-roks-cluster)
     - [Invoking a Cloud Pak module to install on a new ROKS cluster](#invoking-a-cloud-pak-module-to-install-on-a-new-roks-cluster)
     - [Enable and Disable Cloud Pak Modules](#enable-and-disable-cloud-pak-modules)
   - [Testing](#testing)
   - [Owners](#owners)
+  - [Contributing](#contributing)
 
 These modules are used by Terraform scripts in [this](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform) directory.
 
@@ -24,10 +26,11 @@ These modules are used by Terraform scripts in [this](https://github.com/ibm-hcb
 | [cp4data](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/cp4data) | Installs the Cloud Pak for Data on an existing OpenShift cluster                                 | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4data` |
 | [cp4i](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/cp4i)  | Installs the Cloud Pak for Integration on an existing OpenShift cluster                          | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4i`  |
 
-## Set up access to IBM Cloud 
-If running these modules from your local terminal, you need to set the credentials to access IBM Cloud. 
+## Set up access to IBM Cloud
 
-You can define the IBM Cloud credentials in the IBM provider block but it is recommended to pass them in as environment variables. 
+If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
+
+You can define the IBM Cloud credentials in the IBM provider block but it is recommended to pass them in as environment variables.
 
 Go [here](./CREDENTIALS.md) for details.
 
@@ -43,6 +46,8 @@ provider "ibm" {
   region     = "us-south"
 }
 ```
+
+**NOTE**: the Cloud Pak modules require an OpenShift cluster. This can be an existing cluster or can be provisioned in your code using the [roks](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/roks) module.
 
 ### Invoking a Cloud Pak module to install on an existing ROKS cluster
 
@@ -91,6 +96,7 @@ module "cp4mcm" {
   install_operations_module    = true
 }
 ```
+
 The variable `cluster_name_id` can have either the cluster name or ID. The resource group where the cluster is running is also required. Use the data resource `ibm_resource_group` to get the ID from the resource group name.
 
 The output parameters of the ROKS module can be used as input parameters to the Cloud Pak module. However, there may be some dependency issues depending of the resources in your code. If you experience some of these issues it is recommended to use the data resource `ibm_container_cluster_config` to get the cluster configuration and pass its output to the Cloud Pak module. 
@@ -130,35 +136,30 @@ module "cp4data" {
 If you are getting errors because the cluster configuration is incorrect or unavailable, the solution may be to use the data resource `ibm_container_cluster_config` to get the provisioned cluster configuration. Similar to the example for CP4MCM above.
 
 ### Enable and Disable Cloud Pak Modules
-In Terraform the block parameter `count` is used to define how many instances of the resource are needed, including zero, meaning the resource won't be created. The `count` parameter on `module` blocks is only available since Terraform version 0.13.
 
-If you are using Terraform 0.12 the workaround is the input parameter `enable`. Each module has the `enable` boolean input parameter with default value `true`. If the `enable` parameter is set to `false` the Cloud Pak is not installed. Use the `enable` parameter only if using Terraform 0.12 or lower, this parameter may be deprecated when Terraform 0.12 is not longer supported.
+To enable/disable the module, a boolean input parameter `enable` with default value `true` is used. If the `enable` parameter is set to `false` the Cloud Pak for MCM is not installed. This parameter may be deprecated when Terraform 0.12 is not longer supported.
+
+In Terraform 0.13, the block parameter `count` can be used to define how many instances of the resource are needed. If set to zero the resource won't be created (module won't be installed).
 
 ## Testing
-Each module has a `testing` directory to allow manual testing of changes before committing them. The testing code also provides an example on how to use the module.
 
-To run any module test:
+Some of the modules (CP4Apps and CP4MCM) provide a testing directory. To manually run a module test before committing the code:
 
-- go to the `testing` directory
-- set/export required environment variables such as the IBM Cloud credentials, the entitled registry parameters, etc.., 
-- run `make`, like this:
+- go to the `<module>/testing` subdirectory
+- following instructions in `<module>/testing/README.md`
 
-  ```bash
-  cd testing
-  # export environment variables
-  make
-  make test-kubernetes
-  make clean
-  ```
+The testing code provides an example on how to use the module.
 
-For more information about testing, such as what environment variables to export, read the \<module\>/testing/README.md in each subdirectory. For more information about development and contributions to the code read the [CONTRIBUTE](./CONTRIBUTE.md) document.
+## Owners
+
+Each module has the file `OWNER.md` with the collaborators working actively on this module. Although this project and modules are open source, and everyone can and is encourage to contribute, the module owners are responsible for the merging process. Please, contact them for any questions.
+
+## Contributing
+
+For more information about development and contributions to the code read the [CONTRIBUTE](./CONTRIBUTE.md) document.
 
 And ... don't forget to keep the Terraform code format clean and readable.
 
 ```bash
 terraform fmt -recursive
 ```
-
-## Owners
-
-Each module has the file `OWNER.md` with the collaborators working actively on this module. Although this project and modules are open source, and everyone can and is encourage to contribute, the module owners are responsible for the merging process. Please, contact them for any questions.
