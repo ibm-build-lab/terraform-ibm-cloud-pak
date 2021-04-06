@@ -35,7 +35,7 @@ Go [here](./CREDENTIALS.md) for details.
 
 ## Provisioning the Cloud Pak Modules
 
-Refer to \<module\>/README.md for specific details on how to invoke the module from a Terraform Script.
+Refer to `<module>/README.md` for specific details on how to invoke the module from a Terraform Script.
 
 ## Testing
 
