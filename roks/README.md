@@ -9,7 +9,10 @@ This Terraform Module creates an Openshift (ROKS) cluster on IBM Cloud Classic o
   - [Usage](#usage)
     - [Building a new ROKS cluster](#building-a-new-roks-cluster)
   - [Input Variables](#input-variables)
+  - [Executing the module](#executing-the-module)
   - [Output Parameters](#output-parameters)
+  - [Accessing the cluster](#accessing-the-cluster)
+  - [Clean up](#clean-up)
 
 ## Set up access to IBM Cloud
 
@@ -80,26 +83,7 @@ Add rule to provision the [roks](https://github.com/ibm-hcbt/terraform-ibm-cloud
   }
   ```
 
-After setting all the input parameters, execute the following commands to create the cluster (may take about 30 minutes):
 
-```bash
-terraform init
-terraform plan
-terraform apply
-```
-
-After execution has completed, access the cluster using `kubectl` or `oc`:
-
-```bash
-ibmcloud ks cluster config -cluster $(terraform output cluster_id)
-kubectl cluster-info
-```
-
-When you finish using the cluster, you can release the resources executing the following command, it should finish in about _8 minutes_:
-
-```bash
-terraform destroy
-```
 
 ## Input Variables
 
@@ -121,7 +105,16 @@ The Terraform script requires the following list of input parameters. Here are s
 | `workers_count`        | Array with the amount of workers on each workers group. On Classic it's only possible to have one workers group, so only the first number in the list is taken for the cluster size. Example: `[1, 3, 5]` or `[2]`   | `[2]`            | No       |
 | `force_delete_storage` | If set to `true`, force the removal of persistent storage associated with the cluster during cluster deletion. Default value is `false`.                                                             | `false`          | No       |
 
-If you use the cluster from other terraform code there may be no need to download the kubeconfig file. However, if you plan to use the cluster from the CLI (i.e. `kubectl`) or other application then it's recommended to download it to some directory.
+
+## Executing the module
+
+After setting all the input parameters, execute the following commands to create the cluster (may take about 30 minutes):
+
+```bash
+terraform init
+terraform plan
+terraform apply
+```
 
 ## Output Parameters
 
@@ -132,3 +125,22 @@ The module returns the following output parameters:
 | `endpoint` | The URL of the public service endpoint for your cluster |
 | `id`       | The unique identifier of the cluster.                   |
 | `name`     | The name of the cluster                                 |
+
+## Accessing the cluster
+
+If you use the cluster from other terraform code there may be no need to download the kubeconfig file. However, if you plan to use the cluster from the CLI (i.e. `kubectl`) or other application then it's recommended to download it to some directory.
+
+After execution has completed, access the cluster using `kubectl` or `oc`:
+
+```bash
+ibmcloud ks cluster config -cluster $(terraform output cluster_id)
+kubectl cluster-info
+```
+
+## Clean up
+
+When you finish using the cluster, you can release the resources executing the following command, it should finish in about _8 minutes_:
+
+```bash
+terraform destroy
+```

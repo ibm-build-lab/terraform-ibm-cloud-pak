@@ -1,6 +1,6 @@
 # Terraform Module to install Cloud Pak for Automation
 
-This Terraform Module install **Cloud Pak for Automation** on an existing Openshift (ROKS) cluster on IBM Cloud.
+This Terraform Module installs **Cloud Pak for Automation** on an existing Openshift (ROKS) cluster on IBM Cloud.
 
 **Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4auto`
 
@@ -10,10 +10,10 @@ This Terraform Module install **Cloud Pak for Automation** on an existing Opensh
     - [Building a new ROKS cluster](#building-a-new-roks-cluster)
     - [Using an existing ROKS cluster](#using-an-existing-roks-cluster)
     - [Using the CP4Auto Module](#using-the-cp4auto-module)
+  - [Input Variables](#input-variables)
   - [Executing the TF Scripts](#executing-the-tf-scripts)
   - [Accessing the Cloud Pak Console](#accessing-the-cloud-pak-console)
   - [Clean up](#clean-up)
-  - [Input Variables](#input-variables)
 
 ## Set up access to IBM Cloud
 
@@ -118,6 +118,15 @@ module "cp4auto" {
 
 In Terraform 0.13, the block parameter `count` can be used to define how many instances of the resource are needed. If set to zero the resource won't be created (module won't be installed).
 
+## Input Variables
+
+| Name                               | Description                                                                                                                                                                                                                | Default                     | Required |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | -------- |
+| `enable`                           | If set to `false` does not install the cloud pak on the given cluster. By default it's enabled                                                                                                                        | `true`                      | No       |
+| `openshift_version`                | Openshift version installed in the cluster                                                                                                                                                                                 | `4.5`                       | No       |
+| `entitled_registry_key`            | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
+| `entitled_registry_user_email`     | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key                                                                                                                 |                             | Yes      |
+
 ## Executing the TF Scripts
 
 After setting all the input parameters execute the following commands to create the cluster
@@ -157,11 +166,3 @@ When you finish using the cluster, you can release the resources executing the f
 terraform destroy
 ```
 
-## Input Variables
-
-| Name                               | Description                                                                                                                                                                                                                | Default                     | Required |
-| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | -------- |
-| `enable`                           | If set to `false` does not install the cloud pak on the given cluster. By default it's enabled                                                                                                                        | `true`                      | No       |
-| `openshift_version`                | Openshift version installed in the cluster                                                                                                                                                                                 | `4.5`                       | No       |
-| `entitled_registry_key`            | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
-| `entitled_registry_user_email`     | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key                                                                                                                 |                             | Yes      |
