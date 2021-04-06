@@ -1,6 +1,6 @@
 variable "infra" {
-  // default = "classic"
-  default = "vpc"
+  default = "classic"
+  // default = "vpc"
   description = "infrastructure to install the cluster, the available options are: 'classic' and 'vpc'"
 }
 
@@ -37,7 +37,7 @@ variable "resource_group" {
   description = "List all available resource groups with: ibmcloud resource groups"
 }
 variable "roks_version" {
-  default     = "4.5"
+  default     = "4.4"
   description = "List available versions: ibmcloud ks versions"
 }
 
