@@ -20,7 +20,7 @@ If running these modules from your local terminal, you need to set the credentia
 
 Go [here](../CREDENTIALS.md) for details.
 
-## Usage
+## Building a new ROKS cluster
 
 In your Terraform script define the `ibm` provisioner block with the `region` and the `generation` (**1** for **Classic** and **2** for **VPC Gen 2**). 
 
@@ -30,8 +30,6 @@ provider "ibm" {
   region     = "us-south"
 }
 ```
-
-### Building a new ROKS cluster
 
 Add a `module` block to provision the [roks](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/roks) module. Set `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks`. Then pass the input parameters depending on the infrastructure to deploy the cluster:
 
@@ -85,7 +83,7 @@ Add a `module` block to provision the [roks](https://github.com/ibm-hcbt/terrafo
 
 ## Input Variables
 
-The Terraform script requires the following list of input parameters. Here are some instructions to set their values for Terraform and how to get their values from IBM Cloud.
+The Terraform script requires the following list of input variables. Here are some instructions to set their values for Terraform and how to get their values from IBM Cloud.
 
 | Name | Description  | Default | Required |
 | - | - | - | - |
@@ -103,7 +101,6 @@ The Terraform script requires the following list of input parameters. Here are s
 | `workers_count`        | Array with the amount of workers on each workers group. On Classic it's only possible to have one workers group, so only the first number in the list is taken for the cluster size. Example: `[1, 3, 5]` or `[2]`   | `[2]`            | No       |
 | `force_delete_storage` | If set to `true`, force the removal of persistent storage associated with the cluster during cluster deletion. Default value is `false`.                                                             | `false`          | No       |
 
-
 ## Executing the module
 
 After setting all the input parameters, execute the following commands to create the cluster (may take about 30 minutes):
@@ -114,9 +111,9 @@ terraform plan
 terraform apply
 ```
 
-## Output Parameters
+## Output Variables
 
-The module returns the following output parameters:
+The module returns the following output variables:
 
 | Name       | Description                                             |
 | ---------- | ------------------------------------------------------- |
