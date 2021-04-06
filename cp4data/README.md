@@ -1,17 +1,16 @@
 # Terraform Module to install Cloud Pak for Data
 
-This Terraform Module installs **Cloud Pak for Data** on an existing Openshift (ROKS) cluster on IBM Cloud.
+This Terraform Module installs **Cloud Pak for Data** on an Openshift (ROKS) cluster on IBM Cloud.
 
 **Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4data`
 
 - [Terraform Module to install Cloud Pak for Data](#terraform-module-to-install-cloud-pak-for-data)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
-  - [Usage](#usage)
-    - [Building a new ROKS cluster](#building-a-new-roks-cluster)
-    - [Using an existing ROKS cluster](#using-an-existing-roks-cluster)
-    - [Installing the CP4DATA Module](#installing-the-cp4data-module)
+  - [Provisioning this module in a Terraform Script](#provisioning-this-module-in-a-terraform-script)
+    - [Setting up the OpenShift cluster](#setting-up-the-openshift-cluster)
+    - [Installing the CP4Data Module](#installing-the-cp4data-module)
   - [Input Variables](#input-variables)
-  - [Executing the modules](#executing-the-modules)
+  - [Executing the Terraform Script](#executing-the-terraform-script)
   - [Accessing the Cloud Pak Console](#accessing-the-cloud-pak-console)
   - [Clean up](#clean-up)
   
@@ -21,9 +20,9 @@ If running these modules from your local terminal, you need to set the credentia
 
 Go [here](../CREDENTIALS.md) for details.
 
-## Usage
+## Provisioning this module in a Terraform Script
 
-In your Terraform code define the `ibm` provisioner block with the `region` and the `generation`, which is **1 for Classic** and **2 for VPC Gen 2**. Optionally you can define the IBM Cloud credentials parameters or (recommended) pass them in environment variables.
+In your Terraform code define the `ibm` provisioner block with the `region` and the `generation`, which is **1 for Classic** and **2 for VPC Gen 2**.
 
 ```hcl
 provider "ibm" {
@@ -32,33 +31,13 @@ provider "ibm" {
 }
 ```
 
-NOTE: an OpenShift cluster is required to install the cloud pak. This can be an existing cluster or can be provisioned in the TF code.  See both examples below.
+### Setting up the OpenShift cluster
 
-### Building a new ROKS cluster
+NOTE: an OpenShift cluster is required to install the Cloud Pak. This can be an existing cluster or can be provisioned using our `roks` Terraform module.
 
-To build the cluster in your TF script, use the [roks](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/roks) module, set `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks` and include the input parameters with the cluster specification required install `cp4data`.
+To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/roks) for the code to add to your Terraform script. The recommended size for an OpenShift 4.5+ cluster on IBM Cloud Classic contains `4` workers of flavor `b3c.16x64`, however read the [Cloud Pak for Data documentation](https://www.ibm.com/docs/en/cloud-paks/cp-data) to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
 
-For Cloud Pak for Data the recommended parameters are a `classic` 4.5+ OpenShift cluster with `4` workers of type `b3c.16x64`, however read the Cloud Pak for Data documentation to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
-
-```hcl
-module "cluster" {
-  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks"
-
-  on_vpc         = false
-  project_name   = "cp4data"
-  owner          = var.owner
-  environment    = "demo"
-
-  roks_version         = "4.5"
-  flavors              = ["b3c.16x64"]
-  workers_count        = [4]
-  force_delete_storage = true
-}
-```
-
-### Using an existing ROKS cluster
-
-To use an existing OpenShift cluster, add a code similar the following to get the cluster configuration:
+Add the following code to get the OpenShift cluster (new or existing) configuration:
 
 ```hcl
 data "ibm_resource_group" "group" {
@@ -75,15 +54,21 @@ data "ibm_container_cluster_config" "cluster_config" {
 }
 ```
 
-Create the `./kube/config` directory if it doesn't exist.
+**NOTE**: Create the `./kube/config` directory if it doesn't exist.
 
-The variable `cluster_name_id` can contain either the cluster name or ID. The resource group where the cluster is running is also required, for this one use the `data` resource `ibm_resource_group`.
+Input:
 
-The output parameters of the `ibm_container_cluster_config` resource are used as input parameters for the `cp4data` module.
+- `cluster_name_id`: either the cluster name or ID.
 
-### Installing the CP4DATA Module
+- `ibm_resource_group`:  resource group where the cluster is running
 
-Create a `module` block and assign `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4data`. Then pass the input parameters (documented [here](#input-variables)) required to install the required Cloud Pak for Data.
+Output:
+
+`ibm_container_cluster_config` used as input for the `cp4data` module
+
+### Installing the CP4Data Module
+
+Use a `module` block assigning `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4data`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Data.
 
 ```hcl
 module "cp4data" {
@@ -98,7 +83,7 @@ module "cp4data" {
   entitled_registry_key        = var.entitled_registry_key
   entitled_registry_user_email = var.entitled_registry_user_email
 
-  // Parameters to install CPD modules
+  // Parameters to install submodules
   install_watson_knowledge_catalog = var.install_watson_knowledge_catalog
   install_watson_studio            = var.install_watson_studio
   install_watson_machine_learning  = var.install_watson_machine_learning
@@ -113,10 +98,6 @@ module "cp4data" {
   install_db2_data_management      = var.install_db2_data_management
 }
 ```
-
-**NOTE** To enable/disable the module, a boolean input parameter `enable` with default value `true` is used. If the `enable` parameter is set to `false` the Cloud Pak is not installed. This parameter may be deprecated when Terraform 0.12 is not longer supported.
-
-In Terraform 0.13, the block parameter `count` can be used to define how many instances of the resource are needed. If set to zero the resource won't be created (module won't be installed).
 
 ## Input Variables
 
@@ -140,9 +121,13 @@ In Terraform 0.13, the block parameter `count` can be used to define how many in
 | `install_rstudio`                  | Install RStudio module. By default it's not installed.                                                                                                                                                                     | `false`                     | No       |
 | `install_db2_data_management`      | Install DB2 Data Management module. By default it's not installed.                                                                                                                                                         | `false`                     | No       |
 
-## Executing the modules
+**NOTE** The boolean input variable `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
 
-After setting all the input parameters, execute the following commands
+For an example of how to put all this together, refer to our [Cloud Pak for Data Terraform script](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform/cp4data).
+
+## Executing the Terraform Script
+
+Execute the following commands to install the Cloud Pak:
 
 ```bash
 terraform init
@@ -152,7 +137,7 @@ terraform apply
 
 ## Accessing the Cloud Pak Console
 
-After around _20 to 30 minutes_ you can access the cluster using `kubectl` or `oc`. To get the console URL, open a Cloud Shell and issue the following commands:
+After execution has completed, access the cluster using `kubectl` or `oc`:
 
 ```bash
 ibmcloud oc cluster config -c <cluster-name> --admin
@@ -173,7 +158,7 @@ kubectl -n ibm-common-services get secret platform-auth-idp-credentials -o jsonp
 
 ## Clean up
 
-When you finish using the cluster, you can release the resources executing the following command, it should finish in about _8 minutes_:
+When you finish using the cluster, release the resources by executing the following command:
 
 ```bash
 terraform destroy

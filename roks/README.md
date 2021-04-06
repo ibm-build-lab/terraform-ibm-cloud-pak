@@ -83,8 +83,6 @@ Add rule to provision the [roks](https://github.com/ibm-hcbt/terraform-ibm-cloud
   }
   ```
 
-
-
 ## Input Variables
 
 The Terraform script requires the following list of input parameters. Here are some instructions to set their values for Terraform and how to get their values from IBM Cloud.
