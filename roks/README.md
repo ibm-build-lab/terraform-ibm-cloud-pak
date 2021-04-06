@@ -33,7 +33,7 @@ provider "ibm" {
 
 ### Building a new ROKS cluster
 
-Add rule to provision the [roks](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/roks) module. Set `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks`. Then pass the input parameters depending of the infrastructure to deploy the cluster:
+Add a `module` block to provision the [roks](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/roks) module. Set `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks`. Then pass the input parameters depending of the infrastructure to deploy the cluster:
 
 - **IBM Cloud Classic**
 
