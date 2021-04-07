@@ -39,7 +39,7 @@ Add a `module` block to provision the [roks](https://github.com/ibm-hcbt/terrafo
     source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks"
 
     // General variables:
-    on_vpc         = "classic"
+    on_vpc         = "false"
     project_name   = "roks"
     owner          = "johandry"
     environment    = "test"
@@ -63,7 +63,7 @@ Add a `module` block to provision the [roks](https://github.com/ibm-hcbt/terrafo
     source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks"
 
     // General variables:
-    on_vpc         = "vpc"
+    on_vpc         = "true"
     project_name   = "roks"
     owner          = "johandry"
     environment    = "test"
