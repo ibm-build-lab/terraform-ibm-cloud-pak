@@ -82,6 +82,7 @@ variable "force_delete_storage" {
 
 variable "datacenter" {
   description = "On IBM Cloud Classic, this is the datacenter where the cluster will be provisioned. List all available datacenters/zones with: ibmcloud ks zone ls --provider classic"
+  default     = ""
 }
 
 variable "private_vlan_number" {
