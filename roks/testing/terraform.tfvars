@@ -21,7 +21,7 @@ force_delete_storage	= true
 // Classic required variables:
 //infra        	= "classic"
 // To see classic datacenters, run "ibmcloud ks zone ls --provider classic"
-datacenter     = "dal12"
+//datacenter     = "dal12"
 // VLAN numbers on selected datacenter. Run command "ibmcloud ks vlan ls --zone <datacenter>". 
 // NOTE: If this is the first created cluster, the VLANS will not exists and will be created, so leave blank
 //private_vlan_number = ""
