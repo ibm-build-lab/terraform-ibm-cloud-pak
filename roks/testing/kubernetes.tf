@@ -6,7 +6,7 @@ data "ibm_container_cluster_config" "cluster_config" {
 
 
 provider "kubernetes" {
-  load_config_file   = false
+//  load_config_file   = false
   host               = data.ibm_container_cluster_config.cluster_config.host
   client_certificate = data.ibm_container_cluster_config.cluster_config.admin_certificate
   client_key         = data.ibm_container_cluster_config.cluster_config.admin_key
