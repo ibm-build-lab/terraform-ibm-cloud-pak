@@ -18,21 +18,19 @@ make clean
 
 Follow these instructions to execute custom tests to the Terraform module.
 
-## 1. Export the credentials for IBM Cloud Classic or VPC
+## Set up access to IBM Cloud
 
-Execute the following code replacing the values in angular brackets (`< >`) by the respective credentials/keys:
+If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
 
-```bash
-export IAAS_CLASSIC_USERNAME="< IBM Cloud Username/Email >"
-export IAAS_CLASSIC_API_KEY="< IBM Cloud Classic API Key >"
-export IC_API_KEY="< IBM Cloud API Key >"
-```
+You can define the IBM Cloud credentials in the IBM provider block but it is recommended to pass them in as environment variables.
 
-Optionally create the file `credentials.sh` with the code above and execute it with `source credentials.sh`. If you choose other filename for the credentials, make sure to include it in the `.gitignore` file or do NOT commit the file to Github.
+Go [here](../../CREDENTIALS.md) for details.
 
-## 2. Define custom tests parameters
+**NOTE**: These credentials are not required if running this Terraform code within an **IBM Cloud Schematics** workspace. They are automatically set from your account.
 
-A quick test (executing just `make`) will create a simple cluster on IMB Cloud Classic on the Dallas datacenter. If you'd like to change the region or test environment export the following environment variables:
+## 2. Define custom test parameters
+
+A quick test (executing just `make`) will create a simple cluster on IBM Cloud Classic on the Dallas datacenter. If you'd like to change the region or test environment export the following environment variables:
 
 - `TF_VAR_region` to define the region where to create the cluster, by default is `us-south`. To list all the available regions execute the command `ibmcloud regions`.
 - `TF_VAR_datacenter` if you are testing on IBM Cloud Classic, you may define the datacenter where to create the cluster, by default it's Dallas.
