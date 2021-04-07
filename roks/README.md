@@ -100,6 +100,15 @@ The Terraform script requires the following list of input variables. Here are so
 | `workers_count`        | Array with the amount of workers on each workers group. On Classic it's only possible to have one workers group, so only the first number in the list is taken for the cluster size. Example: `[1, 3, 5]` or `[2]`   | `[2]`            | No       |
 | `force_delete_storage` | If set to `true`, force the removal of persistent storage associated with the cluster during cluster deletion. Default value is `false`.                                                             | `false`          | No       |
 
+## Testing
+
+To manually run a module test before committing the code:
+
+- go to the `testing` subdirectory
+- follow instructions [here](testing/README.md)
+
+The testing code provides an example of how to use the module.
+
 ## Executing the module
 
 After setting all the input parameters, execute the following commands to create the cluster (may take about 30 minutes):
