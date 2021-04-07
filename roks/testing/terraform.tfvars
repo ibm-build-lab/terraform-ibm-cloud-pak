@@ -3,14 +3,14 @@
 
 // Create a cluster based on values below
 project_name 	= "vpc"
-owner        	= "ann"
-environment  	= "test"
+owner        	= "anonymous"
+environment  	= "dev"
 
 // Region, run "ibmcloud regions"
 region       	= "us-south"
 
 // Resource group, run "ibmcloud resource groups" to see options.
-resource_group 	= "cloud-pak-sandbox-ibm"
+resource_group 	= "cloud-pak-sandbox"
 
 // OpenShift version, run command "ibmcloud ks versions" to see options
 roks_version	= 4.6
