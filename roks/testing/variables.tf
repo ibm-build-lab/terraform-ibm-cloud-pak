@@ -4,6 +4,11 @@ variable "infra" {
   description = "infrastructure to install the cluster, the available options are: 'classic' and 'vpc'"
 }
 
+variable "on_vpc" {
+  default = true
+  description = "To determine infrastructure. Options are `true` = installs on VPC, `false`  installs on classic"
+}
+
 variable "region" {
   description = "List all available regions with: ibmcloud regions"
 }
@@ -58,7 +63,7 @@ variable "flavors" {
 }
 variable "workers_count" {
   type    = list(number)
-  default = [2, 3]
+  default = [2, 2]
 }
 
 variable "datacenter" {

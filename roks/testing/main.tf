@@ -2,7 +2,7 @@
 
 provider "ibm" {
   version    = "~> 1.13"
-  generation = var.infra == "classic" ? 1 : 2
+  generation = var.on_vpc ? 2 : 1
   region     = var.region
 }
 
@@ -15,7 +15,7 @@ locals {
 module "cluster" {
   source = "./.."
   enable = local.enable
-  on_vpc = var.infra == "vpc"
+  on_vpc = var.on_vpc
 
   // General
   project_name   = var.project_name

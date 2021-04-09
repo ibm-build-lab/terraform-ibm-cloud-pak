@@ -19,7 +19,7 @@ roks_version	= 4.6
 force_delete_storage	= true
 
 // Classic required variables:
-//infra        	= "classic"
+//on_vpc        	= true
 // To see classic datacenters, run "ibmcloud ks zone ls --provider classic"
 datacenter     = "dal12"
 // VLAN numbers on selected datacenter. Run command "ibmcloud ks vlan ls --zone <datacenter>". 
@@ -33,7 +33,7 @@ datacenter     = "dal12"
 
 
 // VPC required variables
-infra        	= "vpc"
+on_vpc        	= true
 // zone names, run "ibmcloud ks zone ls --provider vpc-gen2"
 vpc_zone_names     = ["us-south-1"]
 // flavor, run "ibmcloud ks flavors --zone us-south-1 --provider vpc-gen2
