@@ -28,7 +28,6 @@ check-entitlement:
 # Like this:
 # 		export TF_VAR_cluster_id=btvlh6bd0di5v70fhqn0
 # 		export TF_VAR_resource_group=cloud-pak-testing
-# 		export TF_VAR_entitled_registry_user_email="John.Smith@ibm.com"
 var-%:
 	@[[ -n $$TF_VAR_cluster_id ]]
 	@[[ -n $$TF_VAR_entitled_registry_user_email ]]
