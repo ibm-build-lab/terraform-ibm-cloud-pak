@@ -62,7 +62,7 @@ test-kubernetes:
 	kubectl cluster-info; \
 	kubectl get namespace $(terraform output namespace)
 
-test-mcm:
+test-app:
 	@kubectl get namespace $$(terraform output namespace) --kubeconfig=$$(terraform output config_file_path) > /dev/null
 	@[[ -n $$(terraform output endpoint) ]]
 
