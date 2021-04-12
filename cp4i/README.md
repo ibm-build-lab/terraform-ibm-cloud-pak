@@ -63,7 +63,7 @@ Input:
 
 Output:
 
-`ibm_container_cluster_config` used as input for the `cp4auto` module
+`ibm_container_cluster_config` used as input for the `cp4i` module
 
 ### Using the CP4I Module
 
