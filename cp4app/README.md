@@ -5,17 +5,26 @@ This Terraform Module install **Applications Cloud Pak** on an existing Openshif
 **Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4app`
 
 - [Terraform Module to install Cloud Pak for Applications](#terraform-module-to-install-cloud-pak-for-applications)
-  - [Use](#use)
-    - [Building a ROKS cluster](#building-a-roks-cluster)
-    - [Using an existing ROKS cluster](#using-an-existing-roks-cluster)
-    - [Enable or Disable the Module](#enable-or-disable-the-module)
-    - [Using the cp4app Module](#using-the-cp4app-module)
+  - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
+  - [Provisioning this module in a Terraform Script](#provisioning-this-module-in-a-terraform-script)
+    - [Setting up the OpenShift cluster](#setting-up-the-openshift-cluster)
+    - [Using the CP4App Module](#using-the-cp4app-module)
   - [Input Variables](#input-variables)
+  - [Testing](#testing)
+  - [Executing the Terraform Script](#executing-the-terraform-script)
   - [Output Variables](#output-variables)
+    - [Accessing the Cloud Pak Console](#accessing-the-cloud-pak-console)
+  - [Clean up](#clean-up)
 
-## Use
+## Set up access to IBM Cloud
 
-In your Terraform code define the `ibm` provisioner block with the `region` and the `generation`, which is **1 for Classic** and **2 for VPC Gen 2**. Optionally you can define the IBM Cloud credentials parameters or (recommended) pass them in environment variables.
+If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
+
+Go [here](../CREDENTIALS.md) for details.
+
+## Provisioning this module in a Terraform Script
+
+In your Terraform script define the `ibm` provisioner block with the `region` and the `generation`, which is **1** for **Classic** and **2** for **VPC Gen 2**.
 
 ```hcl
 provider "ibm" {
@@ -24,43 +33,13 @@ provider "ibm" {
 }
 ```
 
-Export the environment variables for the credentials like so:
+### Setting up the OpenShift cluster
 
-```bash
-# Credentials required only for IBM Cloud Classic
-export IAAS_CLASSIC_USERNAME="< Your IBM Cloud Username/Email here >"
-export IAAS_CLASSIC_API_KEY="< Your IBM Cloud Classic API Key here >"
+NOTE: an OpenShift cluster is required to install the Cloud Pak. This can be an existing cluster or can be provisioned using our `roks` Terraform module.
 
-# Credentials required for IBM Cloud VPC and Classic
-export IC_API_KEY="< IBM Cloud API Key >"
-```
+To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/roks) for the code to add to your Terraform script. The recommended size for an OpenShift 4.5+ cluster on IBM Cloud Classic contains `4` workers of flavor `c3c.16x32`, however read the Cloud Pak for Applications documentation to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
 
-_Running this Terraform code from IBM Cloud Schematics don't require to set these parameters, they are set automatically from your account by IBM Cloud Schematics._
-
-Before using the Cloud Pak for Applications module it's required to have an OpenShift cluster, this could be an existing cluster or you can provision it in your code using the ROKS module.
-
-### Building a ROKS cluster
-
-To build the cluster in your code, use the ROKS module, pointing it with `source` to the location of this module (`git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks`). Then pass the input parameters with the cluster specification required to run CP4App.
-
-```hcl
-module "cluster" {
-  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks"
-
-  roks_version         = "4.5"
-  flavors              = ["c3c.16x32"]
-  workers_count        = [5]
-  force_delete_storage = true
-
-  ...
-}
-```
-
-The recommended parameters for a cluster on IBM Cloud Classic and OpenShift 4.5 or latest, is to have `5` workers machines of type `c3c.16x32`, however read the Cloud Pak for Multi Cloud Management documentation to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
-
-### Using an existing ROKS cluster
-
-To use an existing OpenShift cluster, add a code similar the following to get the cluster configuration:
+Add the following code to get the OpenShift cluster (new or existing) configuration:
 
 ```hcl
 data "ibm_resource_group" "group" {
@@ -77,19 +56,21 @@ data "ibm_container_cluster_config" "cluster_config" {
 }
 ```
 
-The variable `cluster_name_id` can have either the cluster name or ID. The resource group where the cluster is running is also required, for this one use the data resource `ibm_resource_group`.
+**NOTE**: Create the `./kube/config` directory if it doesn't exist.
 
-The output parameters of the cluster configuration data resource `ibm_container_cluster_config` are used as input parameters for the Applications Cloud Pak module.
+Input:
 
-### Enable or Disable the Module
+- `cluster_name_id`: either the cluster name or ID.
 
-In Terraform the block parameter `count` is used to define how many instances of the resource are needed, including zero, meaning the resource won't be created. The `count` parameter on `module` blocks is only available since Terraform version 0.13.
+- `ibm_resource_group`:  resource group where the cluster is running
 
-Using Terraform 0.12 the workaround is to use the boolean input parameter `enable` with default value `true`. If the `enable` parameter is set to `false` the Cloud Pak for App is not installed. Use the `enable` parameter only if using Terraform 0.12 or lower, this parameter may be deprecated when Terraform 0.12 is not longer supported.
+Output:
 
-### Using the cp4app Module
+`ibm_container_cluster_config` used as input for the `cp4i` module
 
-Use the `module` block assigning the `source` parameter to the location of this module, either local (i.e. `../cp4app`) or remote (`git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4app`). Then pass the input parameters required to install Cloud Pak for Applications.
+### Using the CP4App Module
+
+Use the `module` block assigning the `source` parameter to the location of this module, either local (i.e. `../cp4app`) or remote (`git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4app`). Then set the [input variables](#input-variables) required to install the Cloud Pak for Applications.
 
 ```hcl
 module "cp4app" {
@@ -103,20 +84,56 @@ module "cp4app" {
 }
 ```
 
-After setting all the input parameters execute the following commands to create the cluster
+## Input Variables
+
+| Name                           | Description                                                  | Default   | Required |
+| ------------------------------ | ------------------------------------------------------------ | --------- | -------- |
+| `enable`                       | If set to `false` does not install Cloud-Pak for Applications on the given cluster. By default it's enabled | `true`    | No       |
+| `cluster_config_path`          | The path on your local machine where the cluster configuration file and certificates are downloaded to |           | Yes      |
+| `entitled_registry_key`        | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |           | Yes      |
+| `entitled_registry_user_email` | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key |           | Yes      |
+| `cp4app_installer_command`     | Command to execute by the icpa installer, the most common are: `install`, `uninstall`, `check`, `upgrade` | `install` | No       |
+
+**NOTE** The boolean input variable `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
+
+For an example of how to put all this together, refer to our [Cloud Pak for Appplications Terraform script](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform/cp4app).
+
+## Testing
+
+To manually run a module test before committing the code:
+
+- go to the `testing` subdirectory
+- follow instructions [here](testing/README.md)
+
+The testing code provides an example of how to use the module.
+
+## Executing the Terraform Script
+
+Run the following commands to execute the TF script (containing the modules to create/use ROKS and Cloud Pak). Execution may take about 30 minutes:
 
 ```bash
 terraform init
 terraform plan
-
-terraform apply -auto-approve
+terraform apply 
 ```
 
-After around _20 to 30 minutes_ you can configure `kubectl` or `oc` to access the cluster executing:
+## Output Variables
+
+Once the Terraform code finish use the following output variables to access Applications Cloud Pak Dashboards:
+
+| Name                    | Description                                                |
+| ----------------------- | ---------------------------------------------------------- |
+| `endpoint`              | URL of the cp4app dashboard                                |
+| `advisor_ui_endpoint`   | URL of the Advisor UI dashboard                            |
+| `navigator_ui_endpoint` | URL of the Navigator UI dashboard                          |
+| `installer_namespace`   | Kubernetes namespace where the icpa installer is installed |
+
+### Accessing the Cloud Pak Console
+
+After execution has completed, access the cluster using `kubectl` or `oc`:
 
 ```bash
-export KUBECONFIG=$(terraform output config_file_path)
-
+ibmcloud ks cluster config -cluster $(terraform output cluster_id)
 kubectl cluster-info
 
 # Namespace
@@ -129,12 +146,15 @@ kubectl get all --namespace $(terraform output namespace)
 Then, using the following URL endpoints you can open different dashboards in a browser.
 
 ```bash
+terraform output user
+terraform output password
+
 open $(terraform output endpoint)
-
 open $(terraform output advisor_ui_endpoint)
-
 open $(terraform output navigator_ui_endpoint)
 ```
+
+## Clean up
 
 To clean up or remove cp4app and its dependencies from a cluster, assign `uninstall` to the `cp4app_installer_command` variable and execute `terraform apply`.
 
@@ -143,24 +163,3 @@ When you finish using the cluster, you can release the resources executing the f
 ```bash
 terraform destroy -auto-approve
 ```
-
-## Input Variables
-
-| Name                           | Description                                                  | Default   | Required |
-| ------------------------------ | ------------------------------------------------------------ | --------- | -------- |
-| `enable`                       | If set to `false` does not install Cloud-Pak for Applications on the given cluster. By default it's enabled | `true`    | No       |
-| `cluster_config_path`          | The path on your local machine where the cluster configuration file and certificates are downloaded to |           | Yes      |
-| `entitled_registry_key`        | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |           | Yes      |
-| `entitled_registry_user_email` | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key |           | Yes      |
-| `cp4app_installer_command`     | Command to execute by the icpa installer, the most common are: `install`, `uninstall`, `check`, `upgrade` | `install` | No       |
-
-## Output Variables
-
-Once the Terraform code finish use the following output variables to access Applications Cloud Pak Dashboards:
-
-| Name                    | Description                                                |
-| ----------------------- | ---------------------------------------------------------- |
-| `endpoint`              | URL of the cp4app dashboard                                |
-| `advisor_ui_endpoint`   | URL of the Advisor UI dashboard                            |
-| `navigator_ui_endpoint` | URL of the Navigator UI dashboard                          |
-| `installer_namespace`   | Kubernetes namespace where the icpa installer is installed |

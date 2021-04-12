@@ -1,29 +1,35 @@
 # Test CP4App Terraform Module
 
-## 1. Set OpenShift environment variables
+## 1. Set up access to IBM Cloud
+
+If running this module from your local terminal, you need to set the credentials to access IBM Cloud.
+
+You can define the IBM Cloud credentials in the IBM provider block but it is recommended to pass them in as environment variables.
+
+Go [here](../../CREDENTIALS.md) for details.
+
+**NOTE**: These credentials are not required if running this Terraform code within an **IBM Cloud Schematics** workspace. They are automatically set from your account.
+
+## 2. Set OpenShift cluster environment variables
 
 This module test requires a running OpenShift cluster on IBM Cloud Classic with the basic MCM requirements. You need the cluster ID or name, and the resource group where it is running. These 2 parameters are passed to the testing code as environment variables. Execute this code:
 
 ```bash
-export TF_VAR_cluster_id=btvlh6bd0di5v70fhqn0
-export TF_VAR_resource_group=cloud-pak-testing
+export TF_VAR_cluster_id=<cluster_id>
+export TF_VAR_resource_group=<resource_group>
 ```
 
-## 2. Set Entitlement Key
+## 3. Set Cloud Pak entitlement key
 
-The second requirement is to have an Entitlement Key, to obtain it [here](https://myibm.ibm.com/products-services/containerlibrary) and store it in the file `entitlement.key` in the root of this repository. If you use that filename, the file won't be published to GitHub if you accidentally push to GitHub. The module also needs the username or email address of the owner of the entitlement key. Set this variable:
+The second requirement is to have an Entitlement Key, to obtain it [here](https://myibm.ibm.com/products-services/containerlibrary) and store it in the file `entitlement.key` in the root of this repository. If you use that filename, the file won't be published to GitHub if you accidentally push to GitHub. 
+
+The module also needs the username or email address of the owner of the entitlement key. Set this variable:
 
 ```bash
 export TF_VAR_entitled_registry_user_email="John.Smith@ibm.com"
 ```
 
-## 3. Set up access to IBM Cloud
-
-If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
-
-Go [here](../../CREDENTIALS.md) for details.
-
-## 4. Testing
+## 4. Test
 
 ### Using "make"
 
@@ -32,7 +38,7 @@ For a quick test use `make`, like so:
 ```bash
 make
 make test-kubernetes
-make test-mcm
+make test-app
 ```
 
 To test the Applications dashboards open in a browser the address from the different endpoint output parameters.
@@ -45,11 +51,7 @@ open $(terraform output advisor_ui_endpoint)
 open $(terraform output navigator_ui_endpoint)
 ```
 
-When the test is complete, you may destroy everything executing `make clean`
-
 ### Using Terraform
-
-Follow these instructions to test the Terraform Module manually
 
 Create the file `test.auto.tfvars` with the following input variables, these values are fake examples:
 
@@ -74,15 +76,8 @@ Execute the following Terraform commands:
 ```bash
 terraform init
 terraform plan
-
 terraform apply -auto-approve
 ```
-
-### Cleanup
-
-When the test is complete, execute: `terraform destroy`.
-
-There are some directories and file you may want to delete, these are: `rm -rf test.auto.tfvars terraform.tfstate* .terraform .kube`
 
 ## 5. Verify
 
@@ -96,3 +91,9 @@ kubectl cluster-info
 # Namespace
 kubectl get namespaces $(terraform output namespace)
 ```
+
+### Cleanup
+
+When the test is complete, execute: `terraform destroy` or `make clean`.
+
+There are some directories and files you may want to delete manually, these are: `rm -rf test.auto.tfvars terraform.tfstate* .terraform .kube`
