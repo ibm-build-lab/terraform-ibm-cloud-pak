@@ -68,7 +68,7 @@ Output:
 
 `ibm_container_cluster_config` used as input for the `cp4mcm` module.
 
-### Installing the CP4MCM Module
+### Provisioning the CP4MCM Module
 
 Use a `module` block assigning `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4mcm`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Multi Cloud Management and submodules.
 
