@@ -26,7 +26,7 @@ ID        Name   Number   Type      Router         Supports Virtual Workers
 2979230          2341     public    fcr01a.dal10   true
 ```
 
-If you have multiple VLAN numbers, choose one. Identify the private and public by the **Type** column and provide just the numbers in the **ID** column. Like so in the `terraform.tfvars` file:
+If you have multiple VLAN numbers, choose one. Identify the private and public by the **Type** column and provide just the numbers in the **ID** column:
 
 ```yaml
 private_vlan_number = "2979232"
