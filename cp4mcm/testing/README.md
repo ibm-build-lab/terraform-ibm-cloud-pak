@@ -23,31 +23,22 @@ export TF_VAR_resource_group=<resource_group>
 
 This module also requires an Entitlement Key. Obtain it [here](https://myibm.ibm.com/products-services/containerlibrary) and store it in the file `entitlement.key` in the root of this repository. If you use that filename, the file won't be published to GitHub if you accidentally push to GitHub. 
 
-The module also needs the username or email address of the owner of the entitlement key. Set this variable:
+## 4. Test
+
+### Using "make"
+
+The module needs the username or email address of the owner of the entitlement key. Set this variable:
 
 ```bash
 export TF_VAR_entitled_registry_user_email="John.Smith@ibm.com"
 ```
 
-## 4. Test
-
-### Using "make"
-
-For a quick test use `make`, like so:
+Test using `make`, like so:
 
 ```bash
 make
 make test-kubernetes
 make test-mcm
-```
-
-To test MCM open in a browser the address from the `endpoint` output parameter using the `user` and `password` output parameters as credentials.
-
-```bash
-terraform output user
-terraform output password
-
-open "https://$(terraform output endpoint)"
 ```
 
 ### Using Terraform client
@@ -111,7 +102,19 @@ kubectl -n openshift-ingress get route router-default
 
 # Installation
 kubectl -n $(terraform output namespace) get installations.orchestrator.management.ibm.com ibm-management
+```
+To test MCM console use the address from the `endpoint` output parameter with the `user` and `password` output parameters as credentials.
 
+```bash
+terraform output user
+terraform output password
+
+open "https://$(terraform output endpoint)"
+```
+
+or
+
+```bash
 # URL to MCM Console
 kubectl -n ibm-common-services get route cp-console  -o jsonpath='{.spec.host}'
 

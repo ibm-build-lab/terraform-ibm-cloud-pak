@@ -41,16 +41,6 @@ make test-kubernetes
 make test-app
 ```
 
-To test the Applications dashboards open in a browser the address from the different endpoint output parameters.
-
-```bash
-open $(terraform output endpoint)
-
-open $(terraform output advisor_ui_endpoint)
-
-open $(terraform output navigator_ui_endpoint)
-```
-
 ### Using Terraform
 
 Create the file `test.auto.tfvars` with the following input variables, these values are fake examples:
@@ -90,6 +80,16 @@ kubectl cluster-info
 
 # Namespace
 kubectl get namespaces $(terraform output namespace)
+```
+
+To test the Applications dashboards open in a browser the address from the different endpoint output parameters.
+
+```bash
+open $(terraform output endpoint)
+
+open $(terraform output advisor_ui_endpoint)
+
+open $(terraform output navigator_ui_endpoint)
 ```
 
 ### Cleanup
