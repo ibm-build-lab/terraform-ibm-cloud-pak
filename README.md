@@ -39,7 +39,7 @@ Refer to `<module>/README.md` for specific details on how to invoke the module f
 
 ## Testing
 
-Some of the modules (CP4Apps and CP4MCM) provide a testing directory. To manually run a module test before committing the code:
+Some of the modules provide a testing directory. To manually run a module test before committing the code:
 
 - go to the `<module>/testing` subdirectory
 - following instructions in `<module>/testing/README.md`
