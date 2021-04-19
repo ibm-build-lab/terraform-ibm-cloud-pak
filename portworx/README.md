@@ -8,12 +8,9 @@ This Terraform Module installs the **Portworx Service** on an Openshift (ROKS) c
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
   - [Provisioning this module in a Terraform Script](#provisioning-this-module-in-a-terraform-script)
     - [Setting up the OpenShift cluster](#setting-up-the-openshift-cluster)
-    - [Installing the CP4MCM Module](#installing-the-cp4mcm-module)
+    - [Installing Portworx Module](#provisioning-the-portworx-module)
   - [Input Variables](#input-variables)
-  - [Testing](#testing)
   - [Executing the Terraform Script](#executing-the-terraform-script)
-  - [Output Variables](#output-variables)
-  - [Accessing the Cloud Pak Console](#accessing-the-cloud-pak-console)
   - [Clean up](#clean-up)
 
 ## Set up access to IBM Cloud
@@ -53,14 +50,15 @@ module "portworx" {
   storage_capacity     = 200
   
   // Portworx parameters
-  resource_group_name  = "default"
-  dc_region            = "us-east"
-  cluster_name         = "cluster-name"
-  storage_region       = "us-east-1"
-  plan                 = "px-enterprise"   # "px-dr-enterprise", "px-enterprise"
-  px_tags              = ["cluster-name"]
-  kvdb                 = "internal"   # "external", "internal"
-  secret_type          = "k8s"   # "ibm-kp", "k8s"
+  resource_group_name   = "default"
+  dc_region             = "us-east"
+  cluster_name          = "cluster-name"
+  portworx_service_name = "px-service-name"
+  storage_region        = "us-east-1"
+  plan                  = "px-enterprise"   # "px-dr-enterprise", "px-enterprise"
+  px_tags               = ["cluster-name"]
+  kvdb                  = "internal"   # "external", "internal"
+  secret_type           = "k8s"   # "ibm-kp", "k8s"
 
 }
 ```
@@ -75,6 +73,7 @@ module "portworx" {
 | `resource_group_name`        | The resource group name where the cluster is housed|         | Yes      |
 | `dc_region` | The region that resources will be provisioned in. Ex: "us-east" "us-south" etc.                                                                                                                 |         | Yes      |
 | `cluster_name`      | The name of the cluster created |  | Yes       |
+| `portworx_service_name`      | The name of the portworx-service |  | Yes       |
 | `storage_region`    | The region the storage should be installed in. This should be under the same as `dc-region`. Ex: "us-east-1" "us-south-1" etc.  |  | yes       |
 | `plan` | This plan has two options for installing portworx: `"px-dr-enterprise", "px-enterprise"`. | `"px-enterprise"` | Yes       |
 | `px_tags`    | Portworx tags, make sure to add just the cluster name. Ex: `["cluster-name"]`  |  | Yes       |

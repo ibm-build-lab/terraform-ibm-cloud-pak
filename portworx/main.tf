@@ -15,9 +15,9 @@ data ibm_container_vpc_cluster this{
 # }
 
 locals {
-px_service_name      = "${var.base_name}-portworx"
-px_storage_cluster   = "${var.base_name}-px-storage-cluster"
-# etcd_custer_name = "${var.base_name}-etcd"
+px_service_name      = "${var.portworx_service_name}-portworx"
+px_storage_cluster   = "${var.portworx_service_name}-px-storage-cluster"
+# etcd_custer_name = "${var.portworx_service_name}-etcd"
 # etcd_endpoint = "etcd:https://${data.ibm_database.ds.connectionstrings[0].hosts[0].hostname}:${data.ibm_database.ds.connectionstrings[0].hosts[0].port}"
 }
 
@@ -49,7 +49,6 @@ resource "ibm_resource_instance" "portworx_instance" {
   tags              = var.px_tags
 
   parameters = {
-    apikey = var.ibmcloud_api_key
     clusters = data.ibm_container_vpc_cluster.this.id
     cluster_name = local.px_storage_cluster
     internal_kvdb = var.kvdb # "external", "internal"

@@ -4,11 +4,12 @@ variable "enable" {
     description = "If set to true installs Portworx on the given cluster"
 }
 
-variable "ibmcloud_api_key" {
-    description = "Get the api key from https://cloud.ibm.com/iam/apikeys"
+variable "install_storage" {
+    default     = true
+    description = "If set to false does not install storage and attach the volumes to the worker nodes. Enabled by default"
 }
 
-variable "base_name" {
+variable "portworx_service_name" {
     description = "The name of the portworx service"
 }
 
