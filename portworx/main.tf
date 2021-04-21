@@ -49,6 +49,7 @@ resource "ibm_resource_instance" "portworx_instance" {
   tags              = var.px_tags
 
   parameters = {
+    apikey = var.ibmcloud_api_key
     clusters = data.ibm_container_vpc_cluster.this.id
     cluster_name = local.px_storage_cluster
     internal_kvdb = var.kvdb # "external", "internal"
