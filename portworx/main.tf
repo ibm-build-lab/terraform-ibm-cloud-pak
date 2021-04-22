@@ -29,7 +29,7 @@ resource "null_resource" "create_storage" {
     working_dir = "${path.module}/scripts"
 
     environment = {
-      # IAM_TOKEN        = var.iam_token
+      IBMCLOUD_API_KEY = var.ibmcloud_api_key
       RESOURCE_GROUP   = var.resource_group_name
       VPC_REGION       = var.dc_region
       CLUSTER          = var.cluster_name

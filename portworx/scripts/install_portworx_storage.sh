@@ -11,14 +11,18 @@
 # IAM_TOKEN=${IAM_TOKEN}
 RESOURCE_GROUP=${RESOURCE_GROUP}
 VPC_REGION=${VPC_REGION}
+IBMCLOUD_API_KEY=${IBMCLOUD_API_KEY}
 CLUSTER=${CLUSTER}
 STORAGE_REGION=${STORAGE_REGION}
 STORAGE_CAPACITY=${STORAGE_CAPACITY:-200}
 
+ibmcloud api cloud.ibm.com
+ibmcloud login --apikey ${IBMCLOUD_API_KEY}
+ibmcloud target -r $VPC_REGION
+
 export IAM_TOKEN=$(ibmcloud iam oauth-tokens --output json | jq -r '.iam_token')
 # export RESOURCE_GROUP=$(ibmcloud target --output json | jq -r '.resource_group.guid')
 # export CLUSTER=""
-ibmcloud target -r $VPC_REGION
 
 # Creates a volume per worker updating the vol number
 echo "[INFO] Creating volumes for each worker node."
