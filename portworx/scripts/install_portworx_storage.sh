@@ -19,6 +19,7 @@ STORAGE_CAPACITY=${STORAGE_CAPACITY:-200}
 ibmcloud api cloud.ibm.com
 ibmcloud login --apikey ${IBMCLOUD_API_KEY}
 ibmcloud target -r $VPC_REGION
+ibmcloud target -g ${RESOURCE_GROUP}
 
 export IAM_TOKEN=$(ibmcloud iam oauth-tokens --output json | jq -r '.iam_token')
 # export RESOURCE_GROUP=$(ibmcloud target --output json | jq -r '.resource_group.guid')
