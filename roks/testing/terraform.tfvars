@@ -2,7 +2,8 @@
 // ----------------------------
 
 // Create a cluster based on values below
-project_name 	= "vpc"
+//project_name 	= "vpc"
+project_name 	= "classic"
 owner        	= "anonymous"
 environment  	= "dev"
 
@@ -28,14 +29,14 @@ private_vlan_number = ""
 public_vlan_number  = ""
 // flavor, run command "ibmcloud ks flavors --zone dal10 --provider classic"
 flavors 		= ["b3c.16x64"]
-// # or workers
+// # of workers
 workers_count	= [4]
 
 // VPC required variables
 //on_vpc        	= true
 // zone names, run "ibmcloud ks zone ls --provider vpc-gen2"
 //vpc_zone_names     = ["us-south-1"]
-// flavor, run "ibmcloud ks flavors --zone us-south-1 --provider vpc-gen2
-//flavors	= ["bx2.16x64"]
-//workers_count	= [4]
+// flavor, run "ibmcloud ks flavors --zone us-south-1 --provider vpc-gen2"
+//flavors	= ["bx2.16x64","cx2.16x32"]
+//workers_count	= [2,2]
 

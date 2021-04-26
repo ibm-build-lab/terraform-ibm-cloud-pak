@@ -1,9 +1,3 @@
-variable "infra" {
-  // default = "classic"
-  default = "vpc"
-  description = "infrastructure to install the cluster, the available options are: 'classic' and 'vpc'"
-}
-
 variable "on_vpc" {
   default = true
   description = "To determine infrastructure. Options are `true` = installs on VPC, `false`  installs on classic"
@@ -38,7 +32,7 @@ variable "environment" {
   description = "The environment name is used to name the cluster with the project name"
 }
 variable "resource_group" {
-  default     = "default"
+  default     = "Default"
   description = "List all available resource groups with: ibmcloud resource groups"
 }
 variable "roks_version" {
@@ -68,6 +62,7 @@ variable "workers_count" {
 
 variable "datacenter" {
   description = "List all available datacenters/zones with: ibmcloud ks zone ls --provider classic"
+  default = ""
 }
 
 // VLAN's numbers variables on the datacenter, they are here until the
