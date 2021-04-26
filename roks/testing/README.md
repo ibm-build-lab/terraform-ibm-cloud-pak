@@ -42,7 +42,7 @@ Using your local Terraform client, run the test by executing execute the followi
 ```bash
 terraform init
 terraform plan
-terraform apply
+terraform apply --auto-approve
 ```
 
 ## 4. Test the Kubernetes cluster
