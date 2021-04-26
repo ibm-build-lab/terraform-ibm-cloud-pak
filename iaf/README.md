@@ -1,8 +1,8 @@
-# Terraform Module to install Cloud Pak for Multi Cloud Management
+# Terraform Module to install IBM Automation Foundation
 
-This Terraform Module installs the **Multi Cloud Management Cloud Pak** on an Openshift (ROKS) cluster on IBM Cloud.
+This Terraform Module installs the **IBM Automation Foundation** on an Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4mcm`
+**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//iaf`
 
 - [Terraform Module to install Cloud Pak for Multi Cloud Management](#terraform-module-to-install-cloud-pak-for-multi-cloud-management)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
