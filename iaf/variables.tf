@@ -15,7 +15,7 @@ variable "cluster_config_path" {
 }
 
 variable "cluster_name_id" {
-  description = "Name or id of the Kubernetes cluster"
+  description = "Name or id of the cluster"
   default = ""
 }
 

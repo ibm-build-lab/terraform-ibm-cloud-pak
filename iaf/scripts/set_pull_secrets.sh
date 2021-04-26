@@ -18,7 +18,7 @@ worker_count=0
 for worker in $(ibmcloud ks workers --cluster ${IAF_CLUSTER} | grep kube | awk '{ print $1 }'); 
 do echo "reloading worker";
   echo "ibmcloud oc worker $action --cluster ${IAF_CLUSTER} -w $worker -f";
-  #ibmcloud oc worker $action --cluster ${IAF_CLUSTER} -w $worker -f; 
+  ibmcloud oc worker $action --cluster ${IAF_CLUSTER} -w $worker -f; 
   worker_count=$((worker_count + 1))
 done
 
