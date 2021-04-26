@@ -4,16 +4,14 @@ This Terraform Module installs the **IBM Automation Foundation** on an Openshift
 
 **Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//iaf`
 
-- [Terraform Module to install Cloud Pak for Multi Cloud Management](#terraform-module-to-install-cloud-pak-for-multi-cloud-management)
+- [Terraform Module to install IBM Automation Foundation](#terraform-module-to-install-ibm-automation-foundation)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
   - [Provisioning this module in a Terraform Script](#provisioning-this-module-in-a-terraform-script)
     - [Setting up the OpenShift cluster](#setting-up-the-openshift-cluster)
-    - [Installing the CP4MCM Module](#installing-the-cp4mcm-module)
+    - [Provisioning the IAF Module](#provisioning-the-iaf-module)
   - [Input Variables](#input-variables)
   - [Testing](#testing)
   - [Executing the Terraform Script](#executing-the-terraform-script)
-  - [Output Variables](#output-variables)
-  - [Accessing the Cloud Pak Console](#accessing-the-cloud-pak-console)
   - [Clean up](#clean-up)
 
 ## Set up access to IBM Cloud
@@ -66,29 +64,28 @@ Input:
 
 Output:
 
-`ibm_container_cluster_config` used as input for the `cp4mcm` module.
+`ibm_container_cluster_config` used as input for the `iaf` module.
 
-### Provisioning the CP4MCM Module
+### Provisioning the IAF Module
 
-Use a `module` block assigning `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4mcm`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Multi Cloud Management and submodules.
+Use a `module` block assigning `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//iaf`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Multi Cloud Management and submodules.
 
 ```hcl
-module "cp4mcm" {
-  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4mcm"
+module "iaf" {
+  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//iaf"
   enable = true
 
   // ROKS cluster parameters:
-  openshift_version   = local.roks_version
+  openshift_version   = var.openshift_version
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
+  on_vpc              = var.on_vpc
+  cluster_name_id     = var.cluster_id
 
-  entitled_registry_key        = file("${path.cwd}/entitlement.key")
+  // Entitled Registry parameters:
+  // 1. Get the entitlement key from: https://myibm.ibm.com/products-services/containerlibrary
+  // 2. Save the key to a file, update the file path in the entitled_registry_key parameter
+  entitled_registry_key        = file("${path.cwd}/../../entitlement.key")
   entitled_registry_user_email = var.entitled_registry_user_email
-
-  install_infr_mgt_module      = false
-  install_monitoring_module    = false
-  install_security_svcs_module = false
-  install_operations_module    = false
-  install_tech_prev_module     = false
 }
 ```
 
@@ -101,15 +98,12 @@ module "cp4mcm" {
 | `openshift_version`            | Openshift version installed in the cluster                                                                                                                                                                                 |         | Yes      |
 | `entitled_registry_key`        | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |         | Yes      |
 | `entitled_registry_user_email` | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key                                                                                                                 |         | Yes      |
-| `install_infr_mgt_module`      | Install the Infrastructure Management module                                                                                                                                                                               | `false` | No       |
-| `install_monitoring_module`    | Install the Monitoring module                                                                                                                                                                                              | `false` | No       |
-| `install_security_svcs_module` | Install the Security Services module                                                                                                                                                                                       | `false` | No       |
-| `install_operations_module`    | Install the Operations module                                                                                                                                                                                              | `false` | No       |
-| `install_tech_prev_module`     | Install the Tech Preview module                                                                                                                                                                                            | `false` | No       |
+| `on_vpc`                       | This will be installed on a VPC cluster  | `false` | No       |
+| `cluster_name_id`                       | Name or id of cluster to install on  |  | Yes       |
 
 **NOTE** The boolean input variable `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
 
-For an example of how to put all this together, refer to our [Cloud Pak for Multi Cloud Management Terraform script](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform/cp4mcm).
+For an example of how to put all this together, refer to our [IBM Automation Foundation Terraform script](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform/iaf).
 
 ## Testing
 
@@ -130,49 +124,15 @@ terraform plan
 terraform apply -auto-approve
 ```
 
-## Output Variables
-
-Once the Terraform execution completes, use the following output variables to access CP4MCM Dashboard:
-
-| Name        | Description                                                     |
-| ----------- | --------------------------------------------------------------- |
-| `endpoint`  | URL of the dashboard                                     |
-| `user`      | Username to log in to the dashboard                       |
-| `password`  | Password to log in to the dashboard                       |
-| `namespace` | Kubernetes namespace where all the componenents are installed |
-
-## Accessing the Cloud Pak Console
-
-After execution has completed, access the cluster using `kubectl` or `oc`:
-
-```bash
-ibmcloud ks cluster config -cluster $(terraform output cluster_id)
-kubectl cluster-info
-
-# Namespace
-kubectl get namespaces $(terraform output namespace)
-
-# All resources
-kubectl get all --namespace $(terraform output namespace)
-```
-
-Then, using the following credentials you can open the dashboard in a browser using the `endpoint` output parameter as URL.
-
-```bash
-terraform output user
-terraform output password
-
-open "http://$(terraform output endpoint)"
-```
-
 ## Clean up
 
-To clean up or remove CP4MCM and its dependencies from a cluster, execute the following commands:
+To clean up or remove IAF and its dependencies from a cluster, execute the following commands:
 
 ```bash
-kubectl delete -n openshift-operators subscription.operators.coreos.com ibm-management-orchestrator
-kubectl delete -n openshift-marketplace catalogsource.operators.coreos.com ibm-management-orchestrator opencloud-operators
-kubectl delete namespace cp4mcm
+kubectl delete -n openshift-operators subscription.operators.coreos.com ibm-automation
+kubectl delete -n openshift-operators operatorgroup.operators.coreos.com iaf-group
+kubectl delete -n openshift-marketplace catalogsource.operators.coreos.com opencloud-operators
+kubectl delete namespace iaf
 ```
 
 **Note**: The uninstall/cleanup up process is a work in progress at this time, we are identifying the objects that need to be deleted in order to have a successfully re-installation. This process will be included in the Terraform code.
