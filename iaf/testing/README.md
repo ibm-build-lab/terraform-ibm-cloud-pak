@@ -36,7 +36,7 @@ on_vpc                       = "false"
 config_dir                   = ".kube/config"
 cluster_id                   = "btvlh6bd0di5v70fhqn0"
 entitled_registry_user_email = "John.Smith@ibm.com"
-resource_group               = "iaf-test"
+resource_group               = "Default"
 ```
 
 These parameters are:
