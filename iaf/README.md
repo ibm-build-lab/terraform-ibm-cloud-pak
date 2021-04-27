@@ -68,7 +68,7 @@ Output:
 
 ### Provisioning the IAF Module
 
-Use a `module` block assigning `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//iaf`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Multi Cloud Management and submodules.
+Use a `module` block assigning `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//iaf`. Then set the [input variables](#input-variables) required to install Automation Foundation.
 
 ```hcl
 module "iaf" {
