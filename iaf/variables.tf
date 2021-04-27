@@ -14,11 +14,6 @@ variable "cluster_config_path" {
   description = "Path to the Kubernetes configuration file to access your cluster"
 }
 
-variable "cluster_name_id" {
-  default = ""
-  description = "Name or id of the cluster"
-}
-
 // variable "cluster_config" {
 //   type = object({
 //     host               = string
@@ -29,6 +24,11 @@ variable "cluster_name_id" {
 //   })
 //   description = "Kubernetes configuration parameters such as host, certificates or token to access your cluster"
 // }
+
+variable "cluster_name_id" {
+  default = ""
+  description = "Name or id of the cluster"
+}
 
 variable "openshift_version" {
   description = "Openshift version installed in the cluster"
