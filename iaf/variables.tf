@@ -11,12 +11,13 @@ variable "enable" {
 }
 
 variable "cluster_config_path" {
+  default     = "./.kube/config"
   description = "Path to the Kubernetes configuration file to access your cluster"
 }
 
 variable "cluster_name_id" {
-  description = "Name or id of the cluster"
   default = ""
+  description = "Name or id of the cluster"
 }
 
 // variable "cluster_config" {
