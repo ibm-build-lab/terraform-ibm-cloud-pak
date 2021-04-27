@@ -22,6 +22,7 @@ These modules are used by Terraform scripts in [this](https://github.com/ibm-hcb
 | [cp4auto](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/cp4auto)  | Installs the Cloud Pak for Automation  on an existing OpenShift cluster                          | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4auto`  |
 | [cp4data](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/cp4data) | Installs the Cloud Pak for Data on an existing OpenShift cluster                                 | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4data` |
 | [cp4i](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/cp4i)  | Installs the Cloud Pak for Integration on an existing OpenShift cluster                          | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4i`  |
+| [iaf](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/iaf)  | Installs the IBM Automation Foundation on an existing OpenShift cluster                          | `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//iaf`  |
 
 ## Set up access to IBM Cloud
 
