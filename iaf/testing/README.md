@@ -10,20 +10,11 @@ Go [here](../../CREDENTIALS.md) for details.
 
 **NOTE**: These credentials are not required if running this Terraform code within an **IBM Cloud Schematics** workspace. They are automatically set from your account.
 
-## 2. Set OpenShift cluster environment variables
+## 2. Set Cloud Pak Entitlement Key
 
-This module test requires a running OpenShift cluster on IBM Cloud Classic with the basic MCM requirements. You need the cluster ID or name, and the resource group where it is running. These 2 parameters are passed to the testing code as environment variables. Execute this code:
+This module also requires an Entitlement Key. Obtain it [here](https://myibm.ibm.com/products-services/containerlibrary) and store it in the file `entitlement.key` in the root of this repository. If you use that filename, the file won't be published to GitHub if you accidentally push to GitHub.
 
-```bash
-export TF_VAR_cluster_id=<cluster_id>
-export TF_VAR_resource_group=<resource_group>
-```
-
-## 3. Set Cloud Pak Entitlement Key
-
-This module also requires an Entitlement Key. Obtain it [here](https://myibm.ibm.com/products-services/containerlibrary) and store it in the file `entitlement.key` in the root of this repository. If you use that filename, the file won't be published to GitHub if you accidentally push to GitHub. 
-
-## 4. Test
+## 3. Test
 
 ### Using Terraform client
 
@@ -73,10 +64,7 @@ kubectl get namespaces $(terraform output namespace)
 kubectl -n openshift-marketplace get catalogsource | grep IBM
 
 # Subscription
-kubectl -n openshift-operators get subscription | grep ibm-automation
-
-# Ingress
-kubectl -n openshift-ingress get route router-default
+kubectl -n $(terraform output namespace) get subscription | grep ibm-automation
 
 ## 6. Cleanup
 
