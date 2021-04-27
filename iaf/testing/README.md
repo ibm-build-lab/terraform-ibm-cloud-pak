@@ -38,6 +38,8 @@ These parameters are:
 - `config_dir`: Directory to download the kubeconfig file. Default value is `./.kube/config`
 - `cluster_id`: Cluster ID of the OpenShift cluster where to install IAF
 
+NOTE: the directory used for `config_dir` needs to be created if it doesn't already exist.
+
 Execute the following Terraform commands:
 
 ```bash
