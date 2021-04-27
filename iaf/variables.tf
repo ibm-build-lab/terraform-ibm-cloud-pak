@@ -11,7 +11,6 @@ variable "enable" {
 }
 
 variable "cluster_config_path" {
-  default     = "./.kube/config"
   description = "Path to the Kubernetes configuration file to access your cluster"
 }
 
