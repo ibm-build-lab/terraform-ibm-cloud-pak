@@ -21,7 +21,7 @@ resource "null_resource" "install_iaf" {
   }
 
   provisioner "local-exec" {
-    command = "${path.module}/scripts/set_pull_secrets.sh"
+    command = "bash ${path.module}/scripts/set_pull_secrets.sh"
 
     environment = {
       KUBECONFIG                       = var.cluster_config_path
