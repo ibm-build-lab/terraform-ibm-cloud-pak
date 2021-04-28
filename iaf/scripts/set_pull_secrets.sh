@@ -2,10 +2,11 @@
 # Script to set pull secrets and reboot the nodes before IAF can be installed
 
 echo "Setting Pull Secret"
-API_KEY=$(echo -n "${IAF_ENTITLED_REGISTRY_USER}:${IAF_ENTITLED_REGISTRY_KEY}" | base64 | sed 's/ //g')
+#API_KEY=${IAF_API_KEY} | base64 | sed 's/ //g')
+API_KEY=${IAF_API_KEY} | base64)
 echo "** APIKEY=$API_KEY"
 oc extract secret/pull-secret -n openshift-config --confirm --to=. 
-jq --arg apikey ${API_KEY} --arg registry "${IAF_ENTITLED_REGISTRY}" '.auths += {($registry): {"auth":$apikey}}' .dockerconfigjson > .dockerconfigjson-new
+#jq --arg apikey ${API_KEY} --arg registry "${IAF_ENTITLED_REGISTRY}" '.auths += {($registry): {"auth":$apikey}}' .dockerconfigjson > .dockerconfigjson-new
 mv .dockerconfigjson-new .dockerconfigjson
 ls -al .dockerconfigjson
 oc set data secret/pull-secret -n openshift-config --from-file=.dockerconfigjson  
