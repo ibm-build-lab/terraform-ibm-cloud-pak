@@ -6,7 +6,7 @@ echo "** IAF_ENTITLED_REGISTRY_KEY=${IAF_ENTITLED_REGISTRY_KEY}"
 API_KEY=$(echo -n "${IAF_ENTITLED_REGISTRY_USER}:${IAF_ENTITLED_REGISTRY_KEY}" | base64 | sed 's/ //g')
 echo "** APIKEY=$API_KEY"
 oc extract secret/pull-secret -n openshift-config --confirm --to=. 
-echo 'jq --arg apikey ${API_KEY} --arg registry "${IAF_ENTITLED_REGISTRY}" '.auths += {($registry): {"auth":$apikey}}' .dockerconfigjson > .dockerconfigjson-new'
+echo jq --arg apikey ${API_KEY} --arg registry "${IAF_ENTITLED_REGISTRY}" '.auths += {($registry): {"auth":$apikey}}' .dockerconfigjson > .dockerconfigjson-new
 jq --arg apikey ${API_KEY} --arg registry "${IAF_ENTITLED_REGISTRY}" '.auths += {($registry): {"auth":$apikey}}' .dockerconfigjson > .dockerconfigjson-new
 mv .dockerconfigjson-new .dockerconfigjson
 ls -al .dockerconfigjson
