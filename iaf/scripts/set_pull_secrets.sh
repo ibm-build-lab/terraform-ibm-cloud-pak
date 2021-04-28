@@ -3,7 +3,7 @@
 
 echo "Setting Pull Secret"
 #API_KEY=$(${IAF_API_KEY} | base64 | sed 's/ //g'
-API_KEY=$(${IAF_API_KEY} | base64)
+API_KEY=$(echo -n ${IAF_API_KEY} | base64)
 echo "** APIKEY=$API_KEY"
 oc extract secret/pull-secret -n openshift-config --confirm --to=. 
 #jq --arg apikey ${API_KEY} --arg registry "${IAF_ENTITLED_REGISTRY}" '.auths += {($registry): {"auth":$apikey}}' .dockerconfigjson > .dockerconfigjson-new
