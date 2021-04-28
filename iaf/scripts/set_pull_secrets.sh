@@ -16,6 +16,7 @@ else
   action=reload
 fi
 
+ibmcloud config --check-version=false
 worker_count=0
 for worker in $(ibmcloud ks workers --cluster ${IAF_CLUSTER} | grep kube | awk '{ print $1 }'); 
 do echo "reloading worker";
