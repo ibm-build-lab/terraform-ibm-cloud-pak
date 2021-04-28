@@ -29,7 +29,6 @@ resource "null_resource" "install_iaf" {
       IAF_CLUSTER_ON_VPC               = var.on_vpc
       IAF_ENTITLED_REGISTRY_USER       = local.entitled_registry_user
       IAF_ENTITLED_REGISTRY_KEY        = local.entitled_registry_key
-      IAF_API_KEY                      = join(":",[local.entitled_registry_user,local.entitled_registry_key])
       IAF_ENTITLED_REGISTRY_USER_EMAIL = var.entitled_registry_user_email
       IAF_ENTITLED_REGISTRY            = local.entitled_registry
     }
