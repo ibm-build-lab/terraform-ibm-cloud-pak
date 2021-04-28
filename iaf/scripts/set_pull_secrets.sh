@@ -6,7 +6,6 @@ oc extract secret/pull-secret -n openshift-config --confirm --to=.
 API_KEY=$(echo -n "${IAF_ENTITLED_REGISTRY_USER}:${IAF_ENTITLED_REGISTRY_KEY}" | base64 | tr -d '[:space:]')
 jq --arg apikey ${API_KEY} --arg registry "${IAF_ENTITLED_REGISTRY}" '.auths += {($registry): {"auth":$apikey}}' .dockerconfigjson > .dockerconfigjson-new
 mv .dockerconfigjson-new .dockerconfigjson
-ls -al .dockerconfigjson
 oc set data secret/pull-secret -n openshift-config --from-file=.dockerconfigjson  
 rm .dockerconfigjson
 
