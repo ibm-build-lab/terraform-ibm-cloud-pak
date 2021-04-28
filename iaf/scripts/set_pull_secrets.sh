@@ -2,9 +2,8 @@
 # Script to set pull secrets and reboot the nodes before IAF can be installed
 
 echo "Setting Pull Secret"
-API_KEY=$(echo -n ${IAF_API_KEY} | base64 | tr -d '[:space:]')
-echo "** APIKEY=$API_KEY"
 oc extract secret/pull-secret -n openshift-config --confirm --to=. 
+API_KEY=$(echo -n "${IAF_ENTITLED_REGISTRY_USER}:${IAF_ENTITLED_REGISTRY_KEY}" | base64 | tr -d '[:space:]')
 jq --arg apikey ${API_KEY} --arg registry "${IAF_ENTITLED_REGISTRY}" '.auths += {($registry): {"auth":$apikey}}' .dockerconfigjson > .dockerconfigjson-new
 mv .dockerconfigjson-new .dockerconfigjson
 ls -al .dockerconfigjson
@@ -20,8 +19,8 @@ fi
 worker_count=0
 for worker in $(ibmcloud ks workers --cluster ${IAF_CLUSTER} | grep kube | awk '{ print $1 }'); 
 do echo "reloading worker";
-  echo "ibmcloud oc worker $action --cluster ${IAF_CLUSTER} -w $worker -f";
-  #ibmcloud oc worker $action --cluster ${IAF_CLUSTER} -w $worker -f; 
+  echo "ibmcloud ks worker $action --cluster ${IAF_CLUSTER} -w $worker -f";
+  ibmcloud ks worker $action --cluster ${IAF_CLUSTER} -w $worker -f; 
   worker_count=$((worker_count + 1))
 done
 
