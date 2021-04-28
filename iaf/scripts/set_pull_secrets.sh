@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Script to set pull secrets and reboot the nodes before IAF can be installed
 
 echo "Setting Pull Secret"
