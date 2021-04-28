@@ -65,9 +65,20 @@ kubectl -n openshift-marketplace get catalogsource | grep IBM
 
 # Subscription
 kubectl -n $(terraform output namespace) get subscription | grep ibm-automation
-
+```
 ## 6. Cleanup
 
 When the test is complete, execute: `terraform destroy`.
+
+In addition. execute the following commands:
+
+```bash
+kubectl delete -n openshift-marketplace catalogsource.operators.coreos.com opencloud-operators
+kubectl delete -n iaf subscription.operators.coreos.com ibm-automation
+kubectl delete -n openshift-operators operatorgroup.operators.coreos.com iaf-group
+kubectl delete namespace iaf
+```
+
+to uninstall IAF and its dependencies from the cluster.
 
 There are some directories and files you may want to manually delete, these are: `rm -rf test.auto.tfvars terraform.tfstate* .terraform .kube rendered_files`
