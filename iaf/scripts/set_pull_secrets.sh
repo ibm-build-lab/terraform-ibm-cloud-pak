@@ -23,12 +23,13 @@ ibmcloud ks workers --cluster ${IAF_CLUSTER} | grep kube- | awk '{ print $1 }'
 for worker in $(ibmcloud ks workers --cluster ${IAF_CLUSTER} | grep kube- | awk '{ print $1 }'); 
 do echo "reloading worker";
   echo $worker
+  echo "ibmcloud ks worker $action --cluster ${IAF_CLUSTER} -w $worker -f" 
   #ibmcloud ks worker $action --cluster ${IAF_CLUSTER} -w $worker -f; 
   worker_count=$((worker_count + 1))
 done
+echo "worker_count=$worker_count"
 
-echo "Completed setting pull secrets and restarting workers"
-echo "Waiting for workers to restart ..."
+echo "Waiting for workers to delete ..."
 oc get nodes | grep SchedulingDisabled
 result=$?
 counter=0
@@ -51,11 +52,13 @@ counter=0
 echo "Waiting for all $worker_count workers to restart"
 while [[ $result -lt $worker_count ]]
 do
+    echo "result=$result"
     if [[ $counter -gt 20 ]]; then
         echo "Workers did not reload within 60 minutes.  Please investigate"
         exit 1
     fi
     counter=$((counter + 1))
+    echo "Waiting for all $worker_count workers to restart"
     sleep 180s
     result=$(oc get nodes | grep " Ready" | awk '{ print $2 }' | wc -l)
 done
