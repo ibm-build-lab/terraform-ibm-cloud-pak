@@ -13,10 +13,6 @@ variable "install_storage" {
     description = "If set to false does not install storage and attach the volumes to the worker nodes. Enabled by default"
 }
 
-variable "dc_region" {
-    description = "The region Portworx will be installed in: us-south, us-east, eu-gb, eu-de, jp-tok, au-syd, etc.."
-}
-
 variable "cluster_id" {
     description = "The id of the cluster"
 

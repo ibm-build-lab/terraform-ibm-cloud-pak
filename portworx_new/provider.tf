@@ -1,4 +1,4 @@
 # Licensed Source of IBM Copyright IBM Corp. 2020, 2021
 provider "ibm" {
-  region = var.dc_region
+  region = var.region
 }
