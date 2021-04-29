@@ -9,6 +9,10 @@ variable "cluster_id" {
   description = "ROKS cluster id. Use the ROKS terraform module or other way to create it"
 }
 
+variable "ic_api_key" {
+  description = "IBM Cloud API Key"
+}
+
 variable "entitled_registry_user_email" {
   description = "Email address of the user owner of the Entitled Registry Key"
 }

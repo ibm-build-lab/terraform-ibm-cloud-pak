@@ -1,7 +1,6 @@
 // Requirements:
 
 provider "ibm" {
-  generation = var.on_vpc ? 2 : 1
   region     = "us-south"
 }
 
@@ -34,6 +33,7 @@ module "iaf" {
   openshift_version   = var.openshift_version
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
   cluster_name_id     = var.cluster_id
+  ic_api_key          = var.ic_api_key
   on_vpc              = var.on_vpc
 
   // Entitled Registry parameters:
