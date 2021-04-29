@@ -4,7 +4,7 @@ VPC_REGION=us-east
 
 export IAM_TOKEN=$(ibmcloud iam oauth-tokens --output json | jq -r '.iam_token')
 export RESOURCE_GROUP=$(ibmcloud target --output json | jq -r '.resource_group.guid')
-export CLUSTER=""
+export CLUSTER="emc-t-1-px-portworx-cluster"
 ibmcloud target -r $VPC_REGION
 
 echo "Removing attachment from worker-node"
