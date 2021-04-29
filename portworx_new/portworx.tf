@@ -7,14 +7,14 @@ data ibm_resource_group group {
   name = var.resource_group_name
 }
 data ibm_container_vpc_cluster this{
-  name = var.cluster_name
+  name = var.cluster_id
   resource_group_id = data.ibm_resource_group.group.id
 }
 data "ibm_container_vpc_cluster_worker" "this" {
   count = var.worker_nodes
 
   cluster_name_id   = var.cluster_id
-  resource_group_id = var.resource_group_id
+  resource_group_id = data.ibm_resource_group.group.id
   worker_id         = data.ibm_container_vpc_cluster.this.workers[count.index]
 }
 data "ibm_is_subnet" "this" {
@@ -33,7 +33,7 @@ resource "ibm_is_volume" "this" {
   iops = var.storage_profile == "custom" ? var.storage_iops : null
   name = "${var.unique_id}-pwx-${split("-", data.ibm_container_vpc_cluster.this.workers[count.index])[4]}"
   profile = var.storage_profile
-  resource_group = var.resource_group_id
+  resource_group = data.ibm_resource_group.group.id
   zone = data.ibm_is_subnet.this[count.index].zone
 }
 
@@ -56,7 +56,7 @@ resource "null_resource" "volume_attachment" {
     environment = {
       TOKEN             = data.ibm_iam_auth_token.this.iam_access_token
       REGION            = var.region
-      RESOURCE_GROUP_ID = var.resource_group_id
+      RESOURCE_GROUP_ID = data.ibm_resource_group.group.id
       CLUSTER_ID        = var.cluster_id
       WORKER_ID         = data.ibm_container_vpc_cluster_worker.this[count.index].id
       VOLUME_ID         = ibm_is_volume.this[count.index].id
@@ -73,7 +73,7 @@ resource "null_resource" "volume_attachment" {
     environment = {
       TOKEN             = data.ibm_iam_auth_token.this.iam_access_token
       REGION            = var.region
-      RESOURCE_GROUP_ID = var.resource_group_id
+      RESOURCE_GROUP_ID = data.ibm_resource_group.group.id
       CLUSTER_ID        = var.cluster_id
       WORKER_ID         = data.ibm_container_vpc_cluster_worker.this[count.index].id
       VOLUME_ID         = ibm_is_volume.this[count.index].id
@@ -95,7 +95,7 @@ resource "ibm_database" "etcd" {
   members_memory_allocation_mb = 24576
   name = "${var.unique_id}-pwx-etcd"
   plan = "standard"
-  resource_group_id = var.resource_group_id
+  resource_group_id = data.ibm_resource_group.group.id
   service = "databases-for-etcd"
   service_endpoints = "private"
   version = "3.3"
@@ -141,7 +141,7 @@ resource "ibm_resource_instance" "portworx" {
   service           = "portworx"
   plan              = "px-enterprise"
   location          = var.region
-  resource_group_id = var.resource_group_id
+  resource_group_id = data.ibm_resource_group.group.id
 
   tags = [
     "clusterid:${var.cluster_id}",
