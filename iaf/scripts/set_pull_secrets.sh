@@ -1,6 +1,8 @@
 #!/bin/sh
 # Script to set pull secrets and reboot the nodes before IAF can be installed
 
+ibmcloud login -apikey ${IC_API_KEY}
+
 echo "Setting Pull Secret"
 oc extract secret/pull-secret -n openshift-config --confirm --to=. 
 API_KEY=$(echo -n "${IAF_ENTITLED_REGISTRY_USER}:${IAF_ENTITLED_REGISTRY_KEY}" | base64 | tr -d '[:space:]')
