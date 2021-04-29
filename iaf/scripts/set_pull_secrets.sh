@@ -19,15 +19,12 @@ fi
 
 ibmcloud config --check-version=false
 worker_count=0
-ibmcloud ks workers --cluster ${IAF_CLUSTER} | grep kube- | awk '{ print $1 }'
 for worker in $(ibmcloud ks workers --cluster ${IAF_CLUSTER} | grep kube- | awk '{ print $1 }'); 
 do echo "reloading worker";
   echo $worker
-  echo "ibmcloud ks worker $action --cluster ${IAF_CLUSTER} -w $worker -f" 
-  #ibmcloud ks worker $action --cluster ${IAF_CLUSTER} -w $worker -f; 
+  ibmcloud ks worker $action --cluster ${IAF_CLUSTER} -w $worker -f; 
   worker_count=$((worker_count + 1))
 done
-echo "worker_count=$worker_count"
 
 echo "Waiting for workers to delete ..."
 oc get nodes | grep SchedulingDisabled
