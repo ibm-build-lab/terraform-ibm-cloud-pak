@@ -1,8 +1,7 @@
 #!/bin/sh
 # Script to set pull secrets and reboot the nodes before IAF can be installed
 
-ibmcloud login -apikey ${IC_API_KEY}
-ibmcloud config --check-version=false
+
 
 echo "Setting Pull Secret"
 oc extract secret/pull-secret -n openshift-config --confirm --to=. 
@@ -12,13 +11,14 @@ mv .dockerconfigjson-new .dockerconfigjson
 oc set data secret/pull-secret -n openshift-config --from-file=.dockerconfigjson  
 rm .dockerconfigjson
 
+ibmcloud login -apikey ${IC_API_KEY}
+ibmcloud config --check-version=false
 if [[ $IAF_CLUSTER_ON_VPC == "true" ]]; then
   action=replace
 else
   action=reload
 fi
 
-ibmcloud config --check-version=false
 worker_count=0
 ibmcloud ks workers --cluster ${IAF_CLUSTER} | grep kube- | awk '{ print $1 }'
 for worker in $(ibmcloud ks workers --cluster ${IAF_CLUSTER} | grep kube- | awk '{ print $1 }'); 
@@ -27,6 +27,7 @@ do echo "reloading worker";
   ibmcloud ks worker $action --cluster ${IAF_CLUSTER} -w $worker -f; 
   worker_count=$((worker_count + 1))
 done
+echo "There are $worker_count worker nodes"
 
 echo "Waiting for workers to delete ..."
 oc get nodes | grep SchedulingDisabled
