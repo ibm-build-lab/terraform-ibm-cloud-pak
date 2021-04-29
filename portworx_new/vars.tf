@@ -5,7 +5,6 @@ variable "enable" {
 
 variable "ibmcloud_api_key" {
   description = "Get the ibmcloud api key from https://cloud.ibm.com/iam/apikeys"
-  sensitive = true
 }
 
 variable "install_storage" {
@@ -22,11 +21,6 @@ variable "create_external_etcd" {
     type = bool
     default = false
     description = "Do you want to create an external_etcd? `True` or `False`"
-}
-
-variable "ibmcloud_api_key" {
-    description = "Get the ibmcloud api key from https://cloud.ibm.com/iam/apikeys"
-
 }
 
 variable "region" {
