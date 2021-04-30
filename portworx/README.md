@@ -25,7 +25,6 @@ In your Terraform code define the `ibm` provisioner block with the `region` and 
 
 ```hcl
 provider "ibm" {
-  generation = 2
   region     = "us-south"
 }
 ```
@@ -44,41 +43,55 @@ Use a `module` block assigning `source` to `git::https://github.com/ibm-hcbt/ter
 module "portworx" {
   source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//portworx"
   enable = true
+  ibmcloud_api_key = "api-key"
+
+  // Cluster parameters
+  kube_config_path = ".kube/config"
+  worker_nodes     = 2  // Number of workers
 
   // Storage parameters
   install_storage      = true
-  storage_capacity     = 200
-  
+  storage_capacity     = 200  // In GBs
+  storage_iops         = 10   // Must be a number, it will not be used unless a storage_profile is set to a custom profile
+  storage_profile      = "10iops-tier"
+
   // Portworx parameters
   resource_group_name   = "default"
-  dc_region             = "us-east"
-  cluster_name          = "cluster-name"
-  portworx_service_name = "px-service-name"
-  storage_region        = "us-east-1"
-  plan                  = "px-enterprise"   # "px-dr-enterprise", "px-enterprise"
-  px_tags               = ["cluster-name"]
-  kvdb                  = "internal"   # "external", "internal"
-  secret_type           = "k8s"   # "ibm-kp", "k8s"
+  region                = "us-east"
+  cluster_id            = "cluster-id"
+  unique_id             = "px-service-name"
 
+  // These credentials have been hard-coded because the 'Databases for etcd' service instance is not configured to have a publicly accessible endpoint by default.
+  // You may override these for additional security.
+  create_external_etcd  = false
+  etcd_username         = "portworxuser"
+  etcd_password         = "portworxpassword"
+  etcd_secret_name      = "px-etcd-certs" # don't change this
 }
 ```
+
 
 ## Input Variables
 
 | Name                           | Description                                                                                                                                                                                                                | Default | Required |
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | -------- |
-| `enable`                       | If set to `false` does not install Portworx on the given cluster. Enabled by default                                                                                                      | `true`  | Yes       |
-| `install_storage`          |  If set to `false` does not install storage and attach the volumes to the worker nodes. Enabled by default                         |  `true` | Yes      |
-| `storage_capacity`         |  Sets the capacity of the volume in GBs. |   `200`    | Yes      |
-| `resource_group_name`        | The resource group name where the cluster is housed|         | Yes      |
-| `dc_region` | The region that resources will be provisioned in. Ex: "us-east" "us-south" etc.                                                                                                                 |         | Yes      |
-| `cluster_name`      | The name of the cluster created |  | Yes       |
-| `portworx_service_name`      | The name of the portworx-service |  | Yes       |
-| `storage_region`    | The region the storage should be installed in. This should be under the same as `dc-region`. Ex: "us-east-1" "us-south-1" etc.  |  | yes       |
-| `plan` | This plan has two options for installing portworx: `"px-dr-enterprise", "px-enterprise"`. | `"px-enterprise"` | Yes       |
-| `px_tags`    | Portworx tags, make sure to add just the cluster name. Ex: `["cluster-name"]`  |  | Yes       |
-| `kvdb`     | KVDB allows `internal` or `external`  | `internal` | yes       |
-| `secret_type`     | The secret_type refers to where the secret hould be located. Available options are `k8s` or `ibm-kp`. | `k8s` | yes       |
+| `enable`                       | If set to `false` does not install Portworx on the given cluster. Enabled by default | `true`  | Yes       |
+| `ibmcloud_api_key`             | This requires an ibmcloud api key found here: `https://cloud.ibm.com/iam/apikeys`    |         | Yes       |
+| `kube_config_path`             | This is the path to the kube config                                          |  `.kube/config` | Yes       |
+| `worker_nodes`                 | Number of worker nodes in the cluster                                        |                 | Yes       |
+| `install_storage`              | If set to `false` does not install storage and attach the volumes to the worker nodes. Enabled by default  |  `true` | Yes      |
+| `storage_capacity`             | Sets the capacity of the volume in GBs. |   `200`    | Yes      |
+| `storage_iops`                 | Sets the number of iops for a custom class. *Note* This is used only if a user provides a custom `storage_profile` |   `10`    | Yes      |
+| `storage_profile`              | The is the storage profile used for creating storage. If this is set to a custom profile, you must update the `storage_iops` |   `10iops-tier`    | Yes      |
+| `resource_group_name`          | The resource group name where the cluster is housed                                  |         | Yes      |
+| `region`                       | The region that resources will be provisioned in. Ex: `"us-east"` `"us-south"` etc.  |         | Yes      |
+| `cluster_id`                   | The name of the cluster created |  | Yes       |
+| `unique_id`                    | The id of the portworx-service  |  | Yes       |
+| `create_external_etcd`         | Set this value to `true` or `false` to create an external etcd | `false` | Yes |
+| `etcd_username`                | Username needed for etcd                         | `portworxuser`     | yes |
+| `etcd_password`                | Password needed for etcd                         | `portworxpassword` | Yes |
+| `etcd_secret_name`             | Etcd secret name, do not change it from default  | `px-etcd-certs`    | Yes |
+
 
 **NOTE** The boolean input variable `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
 
@@ -97,15 +110,9 @@ terraform apply -auto-approve
 
 ## Clean up
 
-To clean up or remove Portworx and Storage from a cluster, execute the following commands:
+To remove Portworx and Storage from a cluster, execute the following command:
 
-**Note**: You must login to the cluster in your terminal to successfully run the commands.
 ```bash
-curl -fsL https://install.portworx.com/px-wipe | bash 
-helm delete –purge portworx
-
-./scripts/remove_storage.sh -c $CLUSTER_NAME
-
 terraform destroy
 ```
 
