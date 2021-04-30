@@ -46,14 +46,14 @@ module "portworx" {
   ibmcloud_api_key = "api-key"
 
   // Cluster parameters
-  kube_config_path = ".kube/config"
-  worker_nodes     = 2  // Number of workers
+  kube_config_path      = ".kube/config"
+  worker_nodes          = 2  // Number of workers
 
   // Storage parameters
-  install_storage      = true
-  storage_capacity     = 200  // In GBs
-  storage_iops         = 10   // Must be a number, it will not be used unless a storage_profile is set to a custom profile
-  storage_profile      = "10iops-tier"
+  install_storage       = true
+  storage_capacity      = 200  // In GBs
+  storage_iops          = 10   // Must be a number, it will not be used unless a storage_profile is set to a custom profile
+  storage_profile       = "10iops-tier"
 
   // Portworx parameters
   resource_group_name   = "default"
