@@ -37,32 +37,12 @@ If there aren't any VLANs in that datacenter, leave as empty strings and they wi
 
 ## 3. Test
 
-### Using *make*
-
-Execute the test on **IBM Cloud Classic**, like so:
-
-```bash
-make
-make test-kubernetes
-make clean
-```
-
-Or, to test on **IBM Cloud VPC**, execute:
-
-```bash
-make test-vpc
-make test-kubernetes
-make clean
-```
-
-### Using local Terraform client
-
-The other manual way to run the test is to execute the following Terraform commands:
+Using your local Terraform client, run the test by executing execute the following commands:
 
 ```bash
 terraform init
 terraform plan
-terraform apply
+terraform apply --auto-approve
 ```
 
 ## 4. Test the Kubernetes cluster
@@ -80,4 +60,4 @@ Or any other `kubectl` or `oc` command.
 
 ## 5. Destroy
 
-When tests is successfully complete, execute: `terraform destroy` or `make clean` and delete all the created files.
+When tests is successfully complete, execute: `terraform destroy` and delete all the created files.

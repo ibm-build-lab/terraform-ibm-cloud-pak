@@ -1,7 +1,7 @@
 // Requirements
 
 provider "ibm" {
-  version    = "~> 1.13"
+//  version    = "~> 1.13"
   generation = var.on_vpc ? 2 : 1
   region     = var.region
 }
