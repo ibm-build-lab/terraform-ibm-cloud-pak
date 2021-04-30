@@ -11,8 +11,8 @@ mv .dockerconfigjson-new .dockerconfigjson
 oc set data secret/pull-secret -n openshift-config --from-file=.dockerconfigjson  
 rm .dockerconfigjson
 
-ibmcloud login -apikey ${IC_API_KEY}
 ibmcloud config --check-version=false
+ibmcloud login -apikey ${IC_API_KEY}
 
 worker_count=0
 ibmcloud ks workers --cluster ${IAF_CLUSTER}
