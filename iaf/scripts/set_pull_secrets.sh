@@ -13,19 +13,16 @@ rm .dockerconfigjson
 
 ibmcloud login -apikey ${IC_API_KEY}
 ibmcloud config --check-version=false
-if [[ $IAF_CLUSTER_ON_VPC == "true" ]]; then
-  action=replace
-else
-  action=reload
-fi
 
 worker_count=0
 ibmcloud ks workers --cluster ${IAF_CLUSTER}
+
+echo "Rebooting workers"
+[[ $IAF_CLUSTER_ON_VPC == "true" ]] && action=replace || action=reload
 for worker in $(ibmcloud ks workers --cluster ${IAF_CLUSTER} | grep kube- | awk '{ print $1 }'); 
 do echo "reloading worker";
-  echo $worker
   ibmcloud ks worker $action --cluster ${IAF_CLUSTER} -w $worker -f; 
-  worker_count=$((worker_count + 1))
+  ((worker_count++))
 done
 
 echo "Waiting for workers to delete ..."
