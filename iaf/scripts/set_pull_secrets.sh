@@ -11,13 +11,13 @@ mv .dockerconfigjson-new .dockerconfigjson
 oc set data secret/pull-secret -n openshift-config --from-file=.dockerconfigjson  
 rm .dockerconfigjson
 
-ibmcloud login -apikey ${IC_API_KEY}
 ibmcloud config --check-version=false
+ibmcloud login -apikey ${IC_API_KEY}
 
 worker_count=0
 ibmcloud ks workers --cluster ${IAF_CLUSTER}
 
-echo "Rebooting workers"
+echo "Rebooting workers, could take up to 60 minutes"
 [[ $IAF_CLUSTER_ON_VPC == "true" ]] && action=replace || action=reload
 for worker in $(ibmcloud ks workers --cluster ${IAF_CLUSTER} | grep kube- | awk '{ print $1 }'); 
 do echo "reloading worker";
@@ -48,7 +48,6 @@ counter=0
 echo "Waiting for all $worker_count workers to restart"
 while [[ $result -lt $worker_count ]]
 do
-    echo "result=$result"
     if [[ $counter -gt 20 ]]; then
         echo "Workers did not reload within 60 minutes.  Please investigate"
         exit 1
