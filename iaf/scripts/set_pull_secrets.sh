@@ -1,8 +1,6 @@
 #!/bin/sh
 # Script to set pull secrets and reboot the nodes before IAF can be installed
 
-
-
 echo "Setting Pull Secret"
 oc extract secret/pull-secret -n openshift-config --confirm --to=. 
 API_KEY=$(echo -n "${IAF_ENTITLED_REGISTRY_USER}:${IAF_ENTITLED_REGISTRY_KEY}" | base64 | tr -d '[:space:]')
@@ -18,6 +16,7 @@ worker_count=0
 ibmcloud ks workers --cluster ${IAF_CLUSTER}
 
 echo "Rebooting workers, could take up to 60 minutes"
+# $IAF_CLUSTER_ON_VPC ? action=replace : action=reload
 [[ $IAF_CLUSTER_ON_VPC == "true" ]] && action=replace || action=reload
 for worker in $(ibmcloud ks workers --cluster ${IAF_CLUSTER} | grep kube- | awk '{ print $1 }'); 
 do echo "reloading worker";
