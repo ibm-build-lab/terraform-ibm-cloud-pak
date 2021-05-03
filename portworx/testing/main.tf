@@ -5,13 +5,13 @@ provider "ibm" {
 }
 
 data "ibm_resource_group" "group" {
-  name = var.resource_group
+  name = var.resource_group_name
 }
 
 resource "null_resource" "mkdir_kubeconfig_dir" {
   triggers = { always_run = timestamp() }
   provisioner "local-exec" {
-    command = "mkdir -p ${var.config_dir}"
+    command = "mkdir -p ${var.kube_config_path}"
   }
 }
 
@@ -19,7 +19,7 @@ data "ibm_container_cluster_config" "cluster_config" {
   depends_on = [null_resource.mkdir_kubeconfig_dir]
   cluster_name_id   = var.cluster_id
   resource_group_id = data.ibm_resource_group.group.id
-  config_dir        = var.config_dir
+  config_dir        = var.kube_config_path
 }
 
 // Module:

@@ -1,4 +1,4 @@
-# Test IAF Terraform Module
+# Test Portworx Terraform Module
 
 ## 1. Set up access to IBM Cloud
 
@@ -48,10 +48,19 @@ etcd_secret_name        = "px-etcd-certs" # don't change this
 
 These parameters are:
 
-- `entitled_registry_user_email`: username or email address of the user owner of the entitlement key. There is no default value, so this variable is required.
-- `resource_group`: Resource group where the cluster is running. Default value is `Default`
+- `ibmcloud_api_key`: IBM Cloud Key needed to provision resources.
 - `config_dir`: Directory to download the kubeconfig file. Default value is `./.kube/config`
+- `worker_nodes`: Number of worker nodes in the cluster
+- `install_storage`: Do you want to install storage or do you have your own? Default value is `true`
+- `storage_capacity`: Number in GBs for a block storage. Default value is `200`
+- `storage_iops`: Number of iops for a drive. Default to `10` however it will not be used unless `storage_profile` is a custom profile
+- `resource_group_name`: Resource group where the cluster is running. Default value is `Default`
+- `region`: Region that the resources are in
 - `cluster_id`: Cluster ID of the OpenShift cluster where to install IAF
+- `unique_id`: Unique name for the Portworx Service
+- `create_external_etcd`: Do you want to create an external etcd? Default value is `false`
+- `etcd_username`: Username of etcd. Only used if `create_external_etcd` is set to `true`
+- `etcd_password`: Password of etcd. Only used if `create_external_etcd` is set to `true`
 
 Execute the following Terraform commands:
 
