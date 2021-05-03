@@ -10,49 +10,22 @@ Go [here](../../CREDENTIALS.md) for details.
 
 **NOTE**: These credentials are not required if running this Terraform code within an **IBM Cloud Schematics** workspace. They are automatically set from your account.
 
-## 2. Set OpenShift cluster environment variables
-
-This module test requires a running OpenShift cluster on IBM Cloud Classic with the basic MCM requirements. You need the cluster ID or name, and the resource group where it is running. These 2 parameters are passed to the testing code as environment variables. Execute this code:
-
-```bash
-export TF_VAR_cluster_id=<cluster_id>
-export TF_VAR_resource_group=<resource_group>
-```
-
-## 3. Set Cloud Pak Entitlement Key
+## 2. Set Cloud Pak Entitlement Key
 
 This module also requires an Entitlement Key. Obtain it [here](https://myibm.ibm.com/products-services/containerlibrary) and store it in the file `entitlement.key` in the root of this repository. If you use that filename, the file won't be published to GitHub if you accidentally push to GitHub. 
 
-## 4. Test
+## 4. Test Using Terraform client
 
-### Using "make"
-
-The module needs the username or email address of the owner of the entitlement key. Set this variable:
-
-```bash
-export TF_VAR_entitled_registry_user_email="John.Smith@ibm.com"
-```
-
-Test using `make`, like so:
-
-```bash
-make
-make test-kubernetes
-make test-mcm
-```
-
-### Using Terraform client
-
-Follow these instructions to test the Terraform Module manually
+Follow these instructions to test the Terraform Module manually using local Terraform client
 
 Create the file `test.auto.tfvars` with the following input variables, these values are fake examples:
 
 ```hcl
 infra                        = "classic"
 config_dir                   = ".kube/config"
-cluster_id                   = "btvlh6bd0di5v70fhqn0"
+cluster_id                   = "<cluster_id>"
 entitled_registry_user_email = "John.Smith@ibm.com"
-resource_group               = "cp4mcm-test"
+resource_group               = "<resource_group>"
 ```
 
 These parameters are:
