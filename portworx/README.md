@@ -21,7 +21,7 @@ Go [here](../CREDENTIALS.md) for details.
 
 ## Provisioning this module in a Terraform Script
 
-In your Terraform code define the `ibm` provisioner block with the `region` and the `generation`, which is **1 for Classic** and **2 for VPC Gen 2**.
+In your Terraform code define the `ibm` provisioner block with the `region`.
 
 ```hcl
 provider "ibm" {
@@ -43,7 +43,7 @@ Use a `module` block assigning `source` to `git::https://github.com/ibm-hcbt/ter
 module "portworx" {
   source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//portworx"
   enable = true
-  ibmcloud_api_key = "api-key"
+  ibmcloud_api_key = "<api-key>"
 
   // Cluster parameters
   kube_config_path      = ".kube/config"
@@ -58,8 +58,8 @@ module "portworx" {
   // Portworx parameters
   resource_group_name   = "default"
   region                = "us-east"
-  cluster_id            = "cluster-id"
-  unique_id             = "px-service-name"
+  cluster_id            = "<cluster-id>"
+  unique_id             = "roks-px-tf"
 
   // These credentials have been hard-coded because the 'Databases for etcd' service instance is not configured to have a publicly accessible endpoint by default.
   // You may override these for additional security.
@@ -111,6 +111,11 @@ terraform apply -auto-approve
 ## Clean up
 
 To remove Portworx and Storage from a cluster, execute the following command:
+
+Run in the cluster:
+
+    curl -fsL https://install.portworx.com/px-wipe | bash
+
 
 ```bash
 terraform destroy
