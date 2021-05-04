@@ -36,7 +36,7 @@ variable "roks_version" {
 }
 
 variable "entitlement" {
-  default     = "cloud-pak"
+  default     = "cloud_pak"
   description = "OCP entitlement"
 }
 
