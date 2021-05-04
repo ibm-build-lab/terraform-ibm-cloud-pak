@@ -8,8 +8,9 @@ This Terraform Module creates an Openshift (ROKS) cluster on IBM Cloud Classic o
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
   - [Building a new ROKS cluster](#building-a-new-roks-cluster)
   - [Input Variables](#input-variables)
+  - [Testing](#testing)
   - [Executing the module](#executing-the-module)
-  - [Output Parameters](#output-parameters)
+  - [Output Variables](#output-variables)
   - [Accessing the cluster](#accessing-the-cluster)
   - [Clean up](#clean-up)
 
@@ -41,8 +42,10 @@ Add a `module` block to provision the [roks](https://github.com/ibm-hcbt/terrafo
     // General variables:
     on_vpc         = "false"
     project_name   = "roks"
-    owner          = "johandry"
+    owner          = "anonymous"
     environment    = "test"
+    // entitlement used for OCP license
+    entitlement    = "cloud-pak" 
 
     // Openshift parameters:
     resource_group       = "default"
@@ -65,8 +68,10 @@ Add a `module` block to provision the [roks](https://github.com/ibm-hcbt/terrafo
     // General variables:
     on_vpc         = "true"
     project_name   = "roks"
-    owner          = "johandry"
+    owner          = "anonymous"
     environment    = "test"
+    // OCP license will need to be added for entitlement
+    entitlement    = "" 
 
     // Openshift parameters:
     resource_group       = "default"
@@ -74,9 +79,14 @@ Add a `module` block to provision the [roks](https://github.com/ibm-hcbt/terrafo
     force_delete_storage = true
 
     // IBM Cloud VPC variables:
+    // Single zone
     vpc_zone_names = ["us-south-1"]
     flavors        = ["mx2.4x32"]
     workers_count  = [2]
+    // Multizone
+    //vpc_zone_names = ["us-south-1", "us-south-2", "us-south-3"]
+    //flavors        = ["mx2.4x32","mx2.4x32","mx2.4x32"]
+    //workers_count  = [2,2,2]
   }
   ```
 
@@ -90,6 +100,7 @@ The Terraform script requires the following list of input variables. Here are so
 | `project_name`         | Used to name the cluster with the environment name, like this: `{project_name}-{environment}-cluster`<br />It's also used to label the cluster and other resources  |  | Yes      |
 | `owner`                | User name or team name. Used to label the cluster and other resources   |  | Yes      |
 | `environment`          | Used to name the cluster with the project name, like this: `{project_name}-{environment}-cluster` | `dev`            | No       |
+| `entitlement`          | Source of OCP entitlement | `cloud-pak`            | No       |
 | `resource_group`       | Resource Group used to host the cluster. List all available resource groups with: `ibmcloud resource groups`                                                                           | `default`        | No       |
 | `roks_version`         | OpenShift version to install. List all available versions: `ibmcloud ks versions`. There is no need to include the suffix `_OpenShift`. The module will append it to install the specified version of OpenShift.  | `4.6`            | No       |
 | `datacenter`           | **IBM Cloud Classic** only (`on_vpc` = `false`). This is the Datacenter or Zone in the Region to provision the cluster. List all available zones with: `ibmcloud ks zone ls --provider classic`    | `dal10`          | No       |

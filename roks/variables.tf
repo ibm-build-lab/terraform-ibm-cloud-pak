@@ -35,6 +35,11 @@ variable "roks_version" {
   description = "List available versions: ibmcloud ks versions"
 }
 
+variable "entitlement" {
+  default     = "cloud_pak"
+  description = "OCP entitlement"
+}
+
 // Kubernetes Config & Config File(s)
 
 // variable "download_config" {

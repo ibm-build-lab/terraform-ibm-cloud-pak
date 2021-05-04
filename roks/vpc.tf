@@ -17,7 +17,7 @@ resource "ibm_container_vpc_cluster" "cluster" {
   resource_group_id    = data.ibm_resource_group.group.id
   cos_instance_crn     = ibm_resource_instance.cos[0].id
   wait_till            = "OneWorkerNodeReady"
-  entitlement          = "cloud_pak"
+  entitlement          = var.entitlement
   force_delete_storage = var.force_delete_storage
 
   zones {

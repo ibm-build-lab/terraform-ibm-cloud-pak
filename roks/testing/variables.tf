@@ -3,6 +3,10 @@ variable "on_vpc" {
   description = "To determine infrastructure. Options are `true` = installs on VPC, `false`  installs on classic"
 }
 
+variable "entitlement" {
+  description = "OCP entitlement"
+}
+
 variable "region" {
   description = "List all available regions with: ibmcloud regions"
 }
