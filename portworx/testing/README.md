@@ -20,7 +20,7 @@ Create the file `test.auto.tfvars` with the following input variables, these val
 
 ```hcl
 enable                  = true
-ibmcloud_api_key        = "api-key"
+ibmcloud_api_key        = "<api-key>"
 
 // Cluster parameters
 kube_config_path        = ".kube/config"
@@ -35,8 +35,8 @@ storage_profile         = "10iops-tier"
 // Portworx parameters
 resource_group_name     = "default"
 region                  = "us-east"
-cluster_id              = "cluster-id"
-unique_id               = "px-service-name"
+cluster_id              = "<cluster-id>"
+unique_id               = "roks-px-tf"
 
 // These credentials have been hard-coded because the 'Databases for etcd' service instance is not configured to have a publicly accessible endpoint by default.
 // You may override these for additional security.
