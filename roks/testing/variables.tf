@@ -4,6 +4,7 @@ variable "on_vpc" {
 }
 
 variable "entitlement" {
+  default = "cloud_pak"
   description = "OCP entitlement"
 }
 
