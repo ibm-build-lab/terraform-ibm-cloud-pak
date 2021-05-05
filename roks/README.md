@@ -44,8 +44,8 @@ Add a `module` block to provision the [roks](https://github.com/ibm-hcbt/terrafo
     project_name   = "roks"
     owner          = "anonymous"
     environment    = "test"
-    // entitlement used for OCP license
-    entitlement    = "cloud-pak" 
+    // Cloud Pak entitlement used for OCP license
+    entitlement    = "cloud_pak" 
 
     // Openshift parameters:
     resource_group       = "default"
