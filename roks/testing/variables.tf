@@ -4,6 +4,7 @@ variable "on_vpc" {
 }
 
 variable "entitlement" {
+  default     = ""
   description = "OCP entitlement"
 }
 
