@@ -70,13 +70,13 @@ variable "entitlement" {
 variable "flavors" {
   type        = list(string)
   default     = ["mx2.4x32"]
-  description = "Array with the flavors or machine types of each the workers group. Classic only takes the first flavor of the list. List all flavors for each zone with: 'ibmcloud ks flavors --zone us-south-1 --provider vpc-gen2'. Example: [\"mx2.4x32\", \"mx2.8x64\", \"cx2.4x8\"]"
+  description = "Array with the flavors or machine types of each the workers group. Classic only takes the first flavor of the list. List all flavors for each zone with: `ibmcloud ks flavors --zone us-south-1 --provider vpc-gen2`. Example: [\"mx2.4x32\", \"mx2.8x64\", \"cx2.4x8\"]"
 }
 
 variable "workers_count" {
   type        = list(number)
   default     = [2]
-  description = "Array with the amount of workers on each workers group. Classic only takes the first number of the list. Example: [1, 3, 5]"
+  description = "Array with the amount of workers on each workers group. Classic only takes the first number of the list. Example: `[1, 3, 5]`"
 }
 
 variable "force_delete_storage" {
@@ -103,7 +103,7 @@ variable "public_vlan_number" {
 variable "vpc_zone_names" {
   type        = list(string)
   default     = []
-  description = "On IBM Cloud VPC Gen 2, this is an array with the subzones in the region to create the workers groups. List all the zones with: 'ibmcloud ks zone ls --provider vpc-gen2'. Example [\"us-south-1\", \"us-south-2\", \"us-south-3\"]"
+  description = "VPC only. Array with the subzones in the region to create the workers groups. List all the zones with: `ibmcloud ks zone ls --provider vpc-gen2`. Example [\"us-south-1\", \"us-south-2\", \"us-south-3\"]"
 }
 
 // ROKS Module : Local Variables
