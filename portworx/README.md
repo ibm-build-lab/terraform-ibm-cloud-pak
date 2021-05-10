@@ -125,7 +125,9 @@ Run in the cluster:
 terraform destroy
 ```
 
+## Resources
 
+This module is based on [cp4d-deployment](https://github.com/IBM/cp4d-deployment/tree/master/managed-openshift/ibmcloud/portworx) but updated to be used standalone.
 
 
 
