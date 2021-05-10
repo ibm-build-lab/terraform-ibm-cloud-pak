@@ -27,6 +27,10 @@ In your Terraform code define the `ibm` provisioner block with the `region`.
 provider "ibm" {
   region     = "us-south"
 }
+
+provider "kubernetes" {
+  config_path = "~/.kube/config"
+}
 ```
 
 ### Setting up the OpenShift cluster
