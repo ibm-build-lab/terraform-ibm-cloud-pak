@@ -1,7 +1,6 @@
 // Requirements:
 
 provider "ibm" {
-  generation = var.infra == "classic" ? 1 : 2
   region     = "us-south"
 }
 

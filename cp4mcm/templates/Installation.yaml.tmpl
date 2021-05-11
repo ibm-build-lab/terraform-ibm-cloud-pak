@@ -1,10 +1,7 @@
 apiVersion: orchestrator.management.ibm.com/v1alpha1
 kind: Installation
 metadata:
-  annotations:
-  finalizers:
-  - ibm-management-orchestrator.management.ibm.com/finalizer
-  name: ibm-management
+  name: cp4mcm-install
   namespace: ${ namespace }
 spec:
   storageClass: ibmc-block-retain-gold
