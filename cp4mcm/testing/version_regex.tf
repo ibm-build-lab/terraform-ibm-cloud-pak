@@ -1,10 +1,5 @@
 variable "openshift_version" {
-  default = "4.4_openshift"
-  // "4.4.17_openshift"
-  // "3.11_openshift"
-  // "1.17.11"
-  // "3.11.248_openshift"
-  // "4.3_openshift"
+  default = "4.6_openshift"
   description = "Openshift version installed in the cluster"
 }
 
