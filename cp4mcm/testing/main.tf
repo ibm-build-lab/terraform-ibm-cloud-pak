@@ -32,6 +32,7 @@ module "cp4mcm" {
   entitled_registry_key        = file("${path.cwd}/../../entitlement.key")
   entitled_registry_user_email = var.entitled_registry_user_email
 
+  on_vpc                       = local.on_vpc
   install_infr_mgt_module      = local.install_infr_mgt_module
   install_monitoring_module    = local.install_monitoring_module
   install_security_svcs_module = local.install_security_svcs_module

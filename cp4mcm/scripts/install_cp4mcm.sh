@@ -28,10 +28,10 @@ result=$?
 counter=0
 while [[ "${result}" -ne 0 ]]
 do
-#    if [[ $counter -gt 10 ]]; then
-#        echo "The CommonService CustomResource was not created within five minutes; please attempt to install the product again."
-#        exit 1
-#    fi
+    if [[ $counter -gt 20 ]]; then
+        echo "The CommonService CustomResource was not created within five minutes; please attempt to install the product again."
+        exit 1
+    fi
     counter=$((counter + 1))
     echo "The CommonService CustomResource has not been created yet; delaying modification"
     sleep ${MCM_WAIT_SEC};
@@ -59,8 +59,23 @@ ${MCM_INSTALLATION_CONTENT}
 EOF
 
 echo "Waiting for MCM credentials to be ready"
-while ! kubectl get secret platform-auth-idp-credentials --namespace ibm-common-services; do
-  sleep ${MCM_WAIT_SEC};
+#while ! kubectl get secret platform-auth-idp-credentials --namespace ibm-common-services; do
+#  sleep ${MCM_WAIT_SEC};
+#done
+kubectl get secret platform-auth-idp-credentials --namespace ibm-common-services
+result=$?
+counter=0
+while [[ "${result}" -ne 0 ]]
+do
+    if [[ $counter -gt 60 ]]; then
+        echo "MCM Installation did not create successfully within 30 minutes; please attempt to install the product again."
+        exit 1
+    fi
+    counter=$((counter + 1))
+    echo "Waiting for MCM credentials to be ready. Time: ${counter}*${MCM_WAIT_SEC} seconds"
+    sleep ${MCM_WAIT_SEC};
+    kubectl get secret platform-auth-idp-credentials --namespace ibm-common-services > /dev/null 2>&1
+    result=$?
 done
 
 echo "Waiting for MCM endpoint to be ready"
