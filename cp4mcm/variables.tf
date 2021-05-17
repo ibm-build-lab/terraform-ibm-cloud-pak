@@ -22,6 +22,10 @@ variable "openshift_version" {
   description = "Openshift version installed in the cluster"
 }
 
+variable "on_vpc" {
+  description = "Cluster type. VPC: on_vpc=true, Classic: on_vpc=false"
+}
+
 variable "entitled_registry_key" {
   description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
 }
