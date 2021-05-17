@@ -43,9 +43,9 @@ spec:
               existingClaimName: ""
               existingDynamicVolume: false
               size: 30Gi
-            %{ if on_vpc }
+            %{ if on_vpc ~}
               storageClass: ibmc-vpc-block-10iops-tier
-            %{ else }
+            %{~ else ~}
               storageClass: ibmc-block-gold
             %{ endif }
               useDynamicProvisioning: true
@@ -76,14 +76,14 @@ spec:
             persistence:
               storageClassOption:
                 cassandrabak: none
-            %{ if on_vpc }
+            %{ if on_vpc ~}
                 cassandradata: ibmc-vpc-block-10iops-tier
                 couchdbdata: ibmc-vpc-block-10iops-tier
                 datalayerjobs: ibmc-vpc-block-10iops-tier
                 elasticdata: ibmc-vpc-block-10iops-tier
                 kafkadata: ibmc-vpc-block-10iops-tier
                 zookeeperdata: ibmc-vpc-block-10iops-tier
-            %{ else }
+            %{~ else ~}
                 cassandradata: ibmc-block-gold
                 couchdbdata: ibmc-block-gold
                 datalayerjobs: ibmc-block-gold
