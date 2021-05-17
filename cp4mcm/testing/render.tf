@@ -7,7 +7,7 @@ locals {
   })
   installation_content = templatefile("../templates/Installation.yaml.tmpl", {
     namespace                    = "cp4mcm",
-    on_vpc                       = local.on_vpc,
+    on_vpc                       = var.on_vpc,
     install_infr_mgt_module      = local.install_infr_mgt_module,
     install_monitoring_module    = local.install_monitoring_module,
     install_security_svcs_module = local.install_security_svcs_module,
@@ -48,7 +48,6 @@ resource "local_file" "CommonService" {
 }
 
 locals {
-  on_vpc                       = true
   install_infr_mgt_module      = false
   install_monitoring_module    = false
   install_security_svcs_module = false

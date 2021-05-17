@@ -8,7 +8,7 @@ spec:
   storageClass: ibmc-vpc-block-retain-10iops-tier
 %{~ else ~}
   storageClass: ibmc-block-retain-gold
-%{~ endif ~}
+%{ endif }
   imagePullSecret: ibm-management-pull-secret
   license:
     accept: true
