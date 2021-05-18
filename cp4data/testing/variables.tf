@@ -15,7 +15,8 @@ variable "on_vpc" {
 }
 
 variable "portworx_is_ready" {
-  default     = false
+  type = any
+  default = null
 }
 
 variable "force" {
@@ -41,7 +42,10 @@ variable "openshift_version" {
 }
 
 // Prereq
-variable "worker_node_flavor" {}
+variable "worker_node_flavor" {
+  type        = string
+  description = "Flavor used to determine worker node hardware"
+}
 
 # variable "cluster_endpoint" {
 #   default     = "not-required"

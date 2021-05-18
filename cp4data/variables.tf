@@ -3,7 +3,11 @@ variable "enable" {
   description = "If set to true installs Cloud-Pak for Data on the given cluster"
 }
 
-variable "on_vpc" {}
+variable "on_vpc" {
+  default     = false
+  type        = bool
+  description = "If set to true, lets the module know cluster is using VPC Gen2"
+}
 
 variable "force" {
   default     = false
@@ -33,12 +37,20 @@ variable "entitled_registry_user_email" {
 }
 
 variable "accept_cpd_license" {
+  type        = bool
+  description = "Do you accept the cpd license agreements? This includes any modules chosen as well. `true` or `false`"
 }
 
-variable "cpd_project_name" {}
-
+variable "cpd_project_name" {
+  type        = string
+  default     = "default"
+  description = "Name of the project namespace"
+}
 // Prereq
-variable "worker_node_flavor" {}
+variable "worker_node_flavor" {
+  type        = string
+  description = "Flavor used to determine worker node hardware"
+}
 
 variable "portworx_is_ready" {
   type = any

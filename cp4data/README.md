@@ -13,6 +13,7 @@ This Terraform Module installs **Cloud Pak for Data** on an Openshift (ROKS) clu
   - [Executing the Terraform Script](#executing-the-terraform-script)
   - [Accessing the Cloud Pak Console](#accessing-the-cloud-pak-console)
   - [Clean up](#clean-up)
+  - [Troubleshooting](#troubleshooting)
   
 ## Set up access to IBM Cloud
 
@@ -26,7 +27,6 @@ In your Terraform code define the `ibm` provisioner block with the `region` and 
 
 ```hcl
 provider "ibm" {
-  generation = 1
   region     = "us-south"
 }
 ```
@@ -73,15 +73,27 @@ Use a `module` block assigning `source` to `git::https://github.com/ibm-hcbt/ter
 ```hcl
 module "cp4data" {
   source          = "./.."
-  enable          = true
+  enable          = var.enable
+  force           = var.force
 
   // ROKS cluster parameters:
-  openshift_version   = var.roks_version
+  openshift_version   = var.openshift_version
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
+  on_vpc              = var.on_vpc
+  portworx_is_ready   = var.portworx_is_ready // only need if on_vpc = true
+  
+  // Prereqs
+  worker_node_flavor = var.worker_node_flavor
 
   // Entitled Registry parameters:
   entitled_registry_key        = var.entitled_registry_key
   entitled_registry_user_email = var.entitled_registry_user_email
+
+  // CP4D License Acceptance
+  accept_cpd_license = var.accept_cpd_license
+
+  // CP4D Info
+  cpd_project_name = var.cpd_project_name
 
   // Parameters to install submodules
   install_watson_knowledge_catalog = var.install_watson_knowledge_catalog
@@ -94,20 +106,27 @@ module "cp4data" {
   install_spark                    = var.install_spark
   install_db2_warehouse            = var.install_db2_warehouse
   install_db2_data_gate            = var.install_db2_data_gate
+  install_big_sql                  = var.install_big_sql
   install_rstudio                  = var.install_rstudio
   install_db2_data_management      = var.install_db2_data_management
 }
 ```
+
+
+
+- 
 
 ## Input Variables
 
 | Name                               | Description                                                                                                                                                                                                                | Default                     | Required |
 | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | -------- |
 | `enable`                           | If set to `false` does not install the cloud pak on the given cluster. By default it's enabled                                                                                                                        | `true`                      | No       |
-| `openshift_version`                | Openshift version installed in the cluster                                                                                                                                                                                 | `4.5`                       | No       |
+| `on_vpc`                           | If set to `false`, it will set the install do classic ROKS. By default it's disabled                                                                                                                        | `false`                      | No       |
+| `openshift_version`                | Openshift version installed in the cluster                                                                                                                                                                                 | `4.6`                       | No       |
 | `entitled_registry_key`            | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
 | `entitled_registry_user_email`     | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key                                                                                                                 |                             | Yes      |
-| `storage_class_name`               | Storage Class name to use                                                                                                                                                                                                  | `ibmc-file-custom-gold-gid` | No       |
+| `worker_node_flavor`          | Flavor used to determine worker node hardware for the cluster |  | yes       |
+| `accept_cpd_license`          | If set to `true`, you accept all cpd license agreements including additional modules installed. By default, it's `false` | `false` | yes       |
 | `install_watson_knowledge_catalog` | Install Watson Knowledge Catalog module. By default it's not installed.                                                                                                                                                    | `false`                     | No       |
 | `install_watson_studio`            | Install Watson Studio module. By default it's not installed.                                                                                                                                                               | `false`                     | No       |
 | `install_watson_machine_learning`  | Install Watson Machine Learning module. By default it's not installed.                                                                                                                                                     | `false`                     | No       |
@@ -118,6 +137,7 @@ module "cp4data" {
 | `install_spark`                    | Install Analytics Engine powered by Apache Spark module. By default it's not installed.                                                                                                                                    | `false`                     | No       |
 | `install_db2_warehouse`            | Install DB2 Warehouse module. By default it's not installed.                                                                                                                                                               | `false`                     | No       |
 | `install_db2_data_gate`            | Install DB2 Data_Gate module. By default it's not installed.                                                                                                                                                               | `false`                     | No       |
+| `install_big_sql`                  | Install Big SQL module. By default it's not installed.                                                                                                                                                                     | `false`                     | No       |
 | `install_rstudio`                  | Install RStudio module. By default it's not installed.                                                                                                                                                                     | `false`                     | No       |
 | `install_db2_data_management`      | Install DB2 Data Management module. By default it's not installed.                                                                                                                                                         | `false`                     | No       |
 
@@ -164,3 +184,12 @@ When you finish using the cluster, release the resources by executing the follow
 terraform destroy
 ```
 
+## Troubleshooting
+
+- Once `module.cpd_install.null_resource.install_cpd` completes. You can check the logs to find out more information about the installation of Cloud Pak for Data.
+
+```bash
+cpd-meta-operator: oc -n cpd-meta-ops logs -f deploy/ibm-cp-data-operator
+
+cpd-install-operator: oc -n cpd-tenant logs -f deploy/cpd-install-operator
+```
