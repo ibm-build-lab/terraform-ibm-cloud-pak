@@ -39,7 +39,7 @@ Add a `module` block to provision the [roks](https://github.com/ibm-hcbt/terrafo
     source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks"
 
     // General variables:
-    on_vpc         = "false"
+    on_vpc         = false
     project_name   = "roks"
     owner          = "anonymous"
     environment    = "test"
