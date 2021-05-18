@@ -9,11 +9,6 @@ variable "on_vpc" {
   description = "If set to true, lets the module know cluster is using VPC Gen2"
 }
 
-variable "force" {
-  default     = false
-  description = "Force the execution. Useful to execute the job again"
-}
-
 variable "cluster_config_path" {
   description = "Path to the Kubernetes configuration file to access your cluster"
 }

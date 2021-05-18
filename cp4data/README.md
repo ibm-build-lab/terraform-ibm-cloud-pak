@@ -74,7 +74,6 @@ Use a `module` block assigning `source` to `git::https://github.com/ibm-hcbt/ter
 module "cp4data" {
   source          = "./.."
   enable          = var.enable
-  force           = var.force
 
   // ROKS cluster parameters:
   openshift_version   = var.openshift_version

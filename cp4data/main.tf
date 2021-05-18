@@ -44,7 +44,6 @@ resource "null_resource" "install_cp4d_operator" {
   count = var.enable ? 1 : 0
 
   triggers = {
-    force_to_run                              = var.force ? timestamp() : 0
     namespace_sha1                            = sha1(local.namespace)
     docker_params_sha1                        = sha1(join("", [var.entitled_registry_user_email, local.entitled_registry_key]))
     ibm_operator_catalog_sha1                 = sha1(local.ibm_operator_catalog)
@@ -58,7 +57,6 @@ resource "null_resource" "install_cp4d_operator" {
     working_dir = "${path.module}/scripts"
 
     environment = {
-      FORCE                         = var.force
       KUBECONFIG                    = var.cluster_config_path
       NAMESPACE                     = var.cpd_project_name
       IBM_OPERATOR_CATALOG          = local.ibm_operator_catalog

@@ -19,12 +19,6 @@ variable "portworx_is_ready" {
   default = null
 }
 
-variable "force" {
-  default     = false
-  type        = bool
-  description = "Force the execution. Useful to execute the job again"
-}
-
 variable "accept_cpd_license" {
   type        = bool
   description = "Do you accept the cpd license agreements? This includes any modules chosen as well. `true` or `false`"
