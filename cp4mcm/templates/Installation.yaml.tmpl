@@ -6,9 +6,9 @@ metadata:
 spec:
 %{ if on_vpc ~}
   storageClass: ibmc-vpc-block-retain-10iops-tier
-%{~ else ~}
+%{ else ~}
   storageClass: ibmc-block-retain-gold
-%{ endif }
+%{ endif ~}
   imagePullSecret: ibm-management-pull-secret
   license:
     accept: true
@@ -43,11 +43,11 @@ spec:
               existingClaimName: ""
               existingDynamicVolume: false
               size: 30Gi
-            %{ if on_vpc ~}
+%{ if on_vpc ~}
               storageClass: ibmc-vpc-block-10iops-tier
-            %{~ else ~}
+%{ else ~}
               storageClass: ibmc-block-gold
-            %{ endif }
+%{ endif ~}
               useDynamicProvisioning: true
           camTerraformPV:
             name: cam-terraform-pv
@@ -76,21 +76,21 @@ spec:
             persistence:
               storageClassOption:
                 cassandrabak: none
-            %{ if on_vpc ~}
+%{ if on_vpc ~}
                 cassandradata: ibmc-vpc-block-10iops-tier
                 couchdbdata: ibmc-vpc-block-10iops-tier
                 datalayerjobs: ibmc-vpc-block-10iops-tier
                 elasticdata: ibmc-vpc-block-10iops-tier
                 kafkadata: ibmc-vpc-block-10iops-tier
                 zookeeperdata: ibmc-vpc-block-10iops-tier
-            %{~ else ~}
+%{ else ~}
                 cassandradata: ibmc-block-gold
                 couchdbdata: ibmc-block-gold
                 datalayerjobs: ibmc-block-gold
                 elasticdata: ibmc-block-gold
                 kafkadata: ibmc-block-gold
                 zookeeperdata: ibmc-block-gold
-            %{ endif }
+%{ endif ~}
               storageSize:
                 cassandrabak: 500Gi
                 cassandradata: 500Gi
