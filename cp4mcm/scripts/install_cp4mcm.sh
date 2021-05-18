@@ -72,7 +72,7 @@ do
         exit 1
     fi
     counter=$((counter + 1))
-    echo "Waiting for MCM credentials to be ready. Time: ${counter*$MCM_WAIT_SEC} seconds"
+    echo "Waiting for MCM credentials to be ready."
     sleep ${MCM_WAIT_SEC};
     kubectl get secret platform-auth-idp-credentials --namespace ibm-common-services > /dev/null 2>&1
     result=$?
