@@ -22,7 +22,11 @@ data "ibm_is_subnet" "this" {
   identifier = data.ibm_container_vpc_cluster_worker.this[count.index].network_interfaces[0].subnet_id
 }
 
-data "ibm_iam_auth_token" "this" {}
+data "ibm_iam_auth_token" "this" {
+  depends_on = [
+      data.ibm_container_vpc_cluster.this
+  ]
+}
 
 # Create a block storage volume per worker.
 resource "ibm_is_volume" "this" {
