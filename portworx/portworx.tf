@@ -162,6 +162,9 @@ resource "ibm_resource_instance" "portworx" {
   }
 
   provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.kube_config_path
+    }
     interpreter = ["/bin/bash", "-c"]
     command     = file("${path.module}/scripts/portworx_wait_until_ready.sh")
   }
