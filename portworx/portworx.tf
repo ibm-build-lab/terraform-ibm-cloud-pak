@@ -24,7 +24,7 @@ data "ibm_is_subnet" "this" {
 
 data "ibm_iam_auth_token" "this" {
   depends_on = [
-      data.ibm_container_vpc_cluster.this
+      var.cluster_id
   ]
 }
 
