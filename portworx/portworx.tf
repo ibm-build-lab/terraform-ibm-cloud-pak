@@ -22,11 +22,7 @@ data "ibm_is_subnet" "this" {
   identifier = data.ibm_container_vpc_cluster_worker.this[count.index].network_interfaces[0].subnet_id
 }
 
-data "ibm_iam_auth_token" "this" {
-  depends_on = [
-      var.cluster_id
-  ]
-}
+data "ibm_iam_auth_token" "this" {}
 
 # Create a block storage volume per worker.
 resource "ibm_is_volume" "this" {
@@ -166,6 +162,9 @@ resource "ibm_resource_instance" "portworx" {
   }
 
   provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.kube_config_path
+    }
     interpreter = ["/bin/bash", "-c"]
     command     = file("${path.module}/scripts/portworx_wait_until_ready.sh")
   }
