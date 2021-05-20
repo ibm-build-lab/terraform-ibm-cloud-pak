@@ -137,7 +137,7 @@ resource "ibm_resource_instance" "portworx" {
     kubernetes_secret.etcd,
   ]
 
-  count = var.enable
+  count = var.enable ? 1 : 0
 
   name              = "${var.unique_id}-pwx-service"
   service           = "portworx"
