@@ -6,5 +6,5 @@ output "portworx_is_ready" {
     null_resource.delete_db2_sc,
     null_resource.px_sc
   ]
-  value = ibm_resource_instance.portworx.id
+  value = length(ibm_resource_instance.portworx) > 0 ? ibm_resource_instance.portworx.id : null
 }
