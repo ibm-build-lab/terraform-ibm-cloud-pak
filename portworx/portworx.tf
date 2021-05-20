@@ -88,7 +88,7 @@ resource "null_resource" "volume_attachment" {
 # Create 'Databases for Etcd' service instance
 #############################################
 resource "ibm_database" "etcd" {
-  count = var.create_external_etcd ? 1 : 0
+  count = var.enable && var.create_external_etcd ? 1 : 0
   location = var.region
   members_cpu_allocation_count = 9
   members_disk_allocation_mb = 393216
@@ -113,7 +113,7 @@ locals {
 }
 
 resource "kubernetes_secret" "etcd" {
-  count = var.create_external_etcd ? 1 : 0
+  count = var.enable && var.create_external_etcd ? 1 : 0
   
   metadata {
     name = var.etcd_secret_name
@@ -136,6 +136,8 @@ resource "ibm_resource_instance" "portworx" {
     null_resource.volume_attachment,
     kubernetes_secret.etcd,
   ]
+
+  count = var.enable
 
   name              = "${var.unique_id}-pwx-service"
   service           = "portworx"
