@@ -18,8 +18,8 @@ data "ibm_container_vpc_cluster_worker" "this" {
   worker_id         = data.ibm_container_vpc_cluster.this.workers[count.index]
 }
 
-# Currently bugged. On a run, it will error with expired or bad token. A subsequent rerun fixes this, but this script
-# should run first time with no problems.
+# ibm_is_subnet is currently bugged. On a run, it can error with an expired or bad token. A subsequent rerun fixes this, 
+# but this script should run the first time without any problems.
 # data "ibm_is_subnet" "this" {
 #   count = var.worker_nodes
 #   identifier = data.ibm_container_vpc_cluster_worker.this[count.index].network_interfaces[0].subnet_id
