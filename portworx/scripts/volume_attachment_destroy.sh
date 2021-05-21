@@ -25,5 +25,5 @@ else
       exit 1
     fi
     echo 'Sleeping for 30s...'
-    sleep 30s
+    sleep 30
 fi

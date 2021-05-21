@@ -7,6 +7,10 @@ resource "null_resource" "delete_db2_sc" {
   depends_on = [ibm_resource_instance.portworx]
   
   provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.kube_config_path
+    }
+
     interpreter = ["/bin/bash", "-c"]
     command = "oc delete sc portworx-db2-sc"
   }
@@ -17,6 +21,10 @@ resource "null_resource" "px_sc" {
   depends_on = [ibm_resource_instance.portworx, null_resource.delete_db2_sc]
   
   provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.kube_config_path
+    }
+    
     interpreter = ["/bin/bash", "-c"]
     command = file("${path.module}/scripts/px-sc.sh")
   }
