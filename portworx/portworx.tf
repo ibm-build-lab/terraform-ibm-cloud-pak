@@ -25,10 +25,17 @@ data "ibm_container_vpc_cluster_worker" "this" {
 #   identifier = data.ibm_container_vpc_cluster_worker.this[count.index].network_interfaces[0].subnet_id
 # }
 
+data "ibm_iam_auth_token" "this" {
+  depends_on = [
+    data.ibm_container_vpc_cluster_worker.this
+  ]
+}
+
 data "external" "get_zone_from_subnet" {
   count = var.enable ? var.worker_nodes : 0
   depends_on = [
-    data.ibm_container_vpc_cluster_worker.this
+    ibm_container_vpc_cluster_worker.this,
+    ibm_iam_auth_token.this
   ]
 
   program = ["/bin/bash", "${path.module}/scripts/get_zone_from_subnet.sh"]
@@ -40,7 +47,7 @@ data "external" "get_zone_from_subnet" {
   }
 }
 
-data "ibm_iam_auth_token" "this" {}
+
 
 # Create a block storage volume per worker.
 resource "ibm_is_volume" "this" {
