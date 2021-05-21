@@ -36,6 +36,8 @@ resource "null_resource" "install_cp4mcm" {
   }
 
   provisioner "local-exec" {
+    depends_on = [var.roks_is_ready]
+    
     command = "${path.module}/scripts/install_cp4mcm.sh"
 
     environment = {
