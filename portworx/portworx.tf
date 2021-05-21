@@ -34,8 +34,8 @@ data "ibm_iam_auth_token" "this" {
 data "external" "get_zone_from_subnet" {
   count = var.enable ? var.worker_nodes : 0
   depends_on = [
-    ibm_container_vpc_cluster_worker.this,
-    ibm_iam_auth_token.this
+    data.ibm_container_vpc_cluster_worker.this,
+    data.ibm_iam_auth_token.this
   ]
 
   program = ["/bin/bash", "${path.module}/scripts/get_zone_from_subnet.sh"]
