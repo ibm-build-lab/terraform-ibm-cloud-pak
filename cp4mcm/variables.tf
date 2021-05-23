@@ -26,6 +26,11 @@ variable "on_vpc" {
   description = "Cluster type. VPC: on_vpc=true, Classic: on_vpc=false"
 }
 
+variable "roks_is_ready" {
+  type = any
+  default = null
+}
+
 variable "entitled_registry_key" {
   description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
 }
@@ -61,7 +66,6 @@ variable "install_tech_prev_module" {
 
 locals {
   mcm_namespace            = "cp4mcm"
-  roks_is_ready            = false
   entitled_registry        = "cp.icr.io"
   entitled_registry_user   = "cp"
   entitled_registry_key    = chomp(var.entitled_registry_key)
