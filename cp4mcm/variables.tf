@@ -61,6 +61,7 @@ variable "install_tech_prev_module" {
 
 locals {
   mcm_namespace            = "cp4mcm"
+  roks_is_ready            = false
   entitled_registry        = "cp.icr.io"
   entitled_registry_user   = "cp"
   entitled_registry_key    = chomp(var.entitled_registry_key)
