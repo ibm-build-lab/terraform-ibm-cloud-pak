@@ -35,9 +35,7 @@ resource "null_resource" "install_cp4mcm" {
     installation_sha1       = sha1(local.installation_content)
   }
 
-  provisioner "local-exec" {
-    depends_on = [var.roks_is_ready]
-    
+  provisioner "local-exec" {    
     command = "${path.module}/scripts/install_cp4mcm.sh"
 
     environment = {
@@ -56,6 +54,8 @@ resource "null_resource" "install_cp4mcm" {
       MCM_WAIT_SEC                     = 30
     }
   }
+  
+  depends_on = [var.roks_is_ready]
 }
 
 data "external" "get_endpoints" {
