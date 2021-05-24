@@ -55,8 +55,10 @@ resource "null_resource" "install_cp4mcm" {
     }
   }
   
-  depends_on = [var.roks_is_ready]
+  // depends_on = [var.roks_is_ready]
+  depends_on = [var.portworx_is_ready]
 }
+
 
 data "external" "get_endpoints" {
   count = var.enable ? 1 : 0

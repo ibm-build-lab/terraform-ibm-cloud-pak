@@ -26,7 +26,17 @@ variable "on_vpc" {
   description = "Cluster type. VPC: on_vpc=true, Classic: on_vpc=false"
 }
 
-variable "roks_is_ready" {
+//variable "roks_is_ready" {
+//  type = any
+//  default = null
+//}
+
+variable "install_portworx" {
+  type = bool
+  default = false
+}
+
+variable "portworx_is_ready" {
   type = any
   default = null
 }

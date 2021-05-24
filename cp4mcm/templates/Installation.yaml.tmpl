@@ -33,7 +33,11 @@ spec:
               existingClaimName: ""
               existingDynamicVolume: false
               size: 10Gi
+%{ if portworx_installed ~}
+              storageClassName: portworx-shared-gp3
+%{ else ~}
               storageClassName: ibmc-file-gold
+%{ endif ~}
               useDynamicProvisioning: true
           camMongoPV:
             name: cam-mongo-pv
@@ -57,7 +61,11 @@ spec:
               existingClaimName: ""
               existingDynamicVolume: false
               size: 15Gi
+%{ if portworx_installed ~}
+              storageClassName: portworx-shared-gp3
+%{ else ~}
               storageClassName: ibmc-file-gold-gid
+%{ endif ~}
               useDynamicProvisioning: true
           roks: true
           roksRegion: us-south
