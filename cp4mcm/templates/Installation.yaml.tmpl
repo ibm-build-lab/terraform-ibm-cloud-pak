@@ -33,7 +33,7 @@ spec:
               existingClaimName: ""
               existingDynamicVolume: false
               size: 10Gi
-%{ if portworx_installed ~}
+%{ if install_portworx ~}
               storageClassName: portworx-shared-gp3
 %{ else ~}
               storageClassName: ibmc-file-gold
@@ -61,7 +61,7 @@ spec:
               existingClaimName: ""
               existingDynamicVolume: false
               size: 15Gi
-%{ if portworx_installed ~}
+%{ if install_portworx ~}
               storageClassName: portworx-shared-gp3
 %{ else ~}
               storageClassName: ibmc-file-gold-gid
