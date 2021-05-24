@@ -38,7 +38,7 @@ variable "entitled_registry_key" {
   description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
 }
 
-variable "ic_api_key" {
+variable "ibmcloud_api_key" {
   description = "IBMCloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
 }
 
