@@ -31,15 +31,15 @@ variable "on_vpc" {
 //  default = null
 //}
 
-variable "install_portworx" {
-  type = bool
-  default = false
-}
+//variable "install_portworx" {
+//  type = bool
+//  default = false
+//}
 
-variable "portworx_is_ready" {
-  type = any
-  default = null
-}
+//variable "portworx_is_ready" {
+//  type = any
+//  default = null
+//}
 
 variable "entitled_registry_key" {
   description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
