@@ -8,7 +8,7 @@ locals {
   installation_content = templatefile("${path.module}/templates/Installation.yaml.tmpl", {
     namespace                    = local.mcm_namespace,
     on_vpc                       = var.on_vpc,
- //   install_portworx             = var.install_portworx,
+    install_portworx             = var.install_portworx,
     install_infr_mgt_module      = var.install_infr_mgt_module,
     install_monitoring_module    = var.install_monitoring_module,
     install_security_svcs_module = var.install_security_svcs_module,
@@ -56,8 +56,7 @@ resource "null_resource" "install_cp4mcm" {
     }
   }
   
-  // depends_on = [var.roks_is_ready]
-  // depends_on = [var.portworx_is_ready]
+  depends_on = [var.portworx_is_ready]
 }
 
 
