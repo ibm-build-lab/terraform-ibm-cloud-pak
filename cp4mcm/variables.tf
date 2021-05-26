@@ -26,10 +26,9 @@ variable "on_vpc" {
   description = "Cluster type. VPC: on_vpc=true, Classic: on_vpc=false"
 }
 
-//variable "roks_is_ready" {
-//  type = any
-//  default = null
-//}
+variable "ibmcloud_api_key" {
+  description = "IBMCloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
+}
 
 variable "entitled_registry_key" {
   description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
