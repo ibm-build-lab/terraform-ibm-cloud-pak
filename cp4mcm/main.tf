@@ -40,6 +40,7 @@ resource "null_resource" "install_cp4mcm" {
 
     environment = {
       KUBECONFIG                       = var.cluster_config_path
+      MCM_CLUSTER                      = var.cluster_name_id
       MCM_NAMESPACE                    = local.mcm_namespace
       MCM_ENTITLED_REGISTRY_USER       = local.entitled_registry_user
       MCM_ENTITLED_REGISTRY_KEY        = local.entitled_registry_key
@@ -54,8 +55,6 @@ resource "null_resource" "install_cp4mcm" {
       MCM_WAIT_SEC                     = 30
     }
   }
-  
-  // depends_on = [var.roks_is_ready]
 }
 
 
