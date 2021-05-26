@@ -47,11 +47,12 @@ variable "entitled_registry_user_email" {
 }
 
 locals {
+  cluster_is_ready         = null
   iaf_namespace            = "iaf"
   entitled_registry        = "cp.icr.io"
   entitled_registry_user   = "cp"
   entitled_registry_key    = chomp(var.entitled_registry_key)
-  ibmcloud_api_key               = chomp(var.ibmcloud_api_key)
+  ibmcloud_api_key         = chomp(var.ibmcloud_api_key)
   openshift_version_regex  = regex("(\\d+).(\\d+)(.\\d+)*(_openshift)*", var.openshift_version)
   openshift_version_number = local.openshift_version_regex[3] == "_openshift" ? tonumber("${local.openshift_version_regex[0]}.${local.openshift_version_regex[1]}") : 0
 }
