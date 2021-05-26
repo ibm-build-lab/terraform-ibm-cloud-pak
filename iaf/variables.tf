@@ -47,7 +47,6 @@ variable "entitled_registry_user_email" {
 }
 
 locals {
-  cluster_is_ready         = null
   iaf_namespace            = "iaf"
   entitled_registry        = "cp.icr.io"
   entitled_registry_user   = "cp"
