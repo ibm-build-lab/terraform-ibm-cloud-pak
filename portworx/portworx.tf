@@ -50,7 +50,7 @@ data "ibm_is_subnet" "this" {
 # Create a block storage volume per worker.
 resource "ibm_is_volume" "this" {
   depends_on = [
-    data.ibm_is_subnet
+    data.ibm_is_subnet.this
   ]
 
   count = var.enable && var.install_storage ? var.worker_nodes : 0 
