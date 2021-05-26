@@ -7,6 +7,11 @@ variable "cluster_config_path" {
   description = "Path to the Kubernetes configuration file to access your cluster"
 }
 
+variable "cluster_name_id" {
+  default = ""
+  description = "Name or id of the cluster"
+}
+
 // variable "cluster_config" {
 //   type = object({
 //     host               = string
