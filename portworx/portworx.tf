@@ -18,52 +18,49 @@ data "ibm_container_vpc_cluster_worker" "this" {
   worker_id         = data.ibm_container_vpc_cluster.this.workers[count.index]
 }
 
-# ibm_is_subnet is currently bugged. On a run, it can error with an expired or bad token. A subsequent rerun fixes this, 
-# but this script should run the first time without any problems.
-# data "ibm_is_subnet" "this" {
-#   count = var.worker_nodes
-#   identifier = data.ibm_container_vpc_cluster_worker.this[count.index].network_interfaces[0].subnet_id
-# }
-
 data "ibm_iam_auth_token" "this" {
   depends_on = [
     data.ibm_container_vpc_cluster_worker.this
   ]
 }
 
-data "external" "get_zone_from_subnet" {
-  count = var.enable ? var.worker_nodes : 0
-  depends_on = [
-    data.ibm_container_vpc_cluster_worker.this,
-    data.ibm_iam_auth_token.this
-  ]
-
-  program = ["/bin/bash", "${path.module}/scripts/get_zone_from_subnet.sh"]
-
-  query = {
-    region     = var.region
-    identifier = data.ibm_container_vpc_cluster_worker.this[count.index].network_interfaces[0].subnet_id
-    token      = data.ibm_iam_auth_token.this.iam_access_token
-  }
+# ibm_is_subnet is currently bugged. On a run, it can error with an expired or bad token. A subsequent rerun fixes this, 
+# but this script should run the first time without any problems.
+data "ibm_is_subnet" "this" {
+  count = var.worker_nodes
+  identifier = data.ibm_container_vpc_cluster_worker.this[count.index].network_interfaces[0].subnet_id
 }
 
+# data "external" "get_zone_from_subnet" {
+#   count = var.enable ? var.worker_nodes : 0
+#   depends_on = [
+#     data.ibm_container_vpc_cluster_worker.this,
+#     data.ibm_iam_auth_token.this
+#   ]
 
+#   program = ["/bin/bash", "${path.module}/scripts/get_zone_from_subnet.sh"]
+
+#   query = {
+#     region     = var.region
+#     identifier = data.ibm_container_vpc_cluster_worker.this[count.index].network_interfaces[0].subnet_id
+#     token      = data.ibm_iam_auth_token.this.iam_access_token
+#   }
+# }
 
 # Create a block storage volume per worker.
 resource "ibm_is_volume" "this" {
   depends_on = [
-    data.external.get_zone_from_subnet
+    data.ibm_is_subnet
   ]
 
   count = var.enable && var.install_storage ? var.worker_nodes : 0 
   
-
   capacity = var.storage_capacity
   iops = var.storage_profile == "custom" ? var.storage_iops : null
   name = "${var.unique_id}-pwx-${split("-", data.ibm_container_vpc_cluster.this.workers[count.index])[4]}"
   profile = var.storage_profile
   resource_group = data.ibm_resource_group.group.id
-  zone = data.external.get_zone_from_subnet[count.index].result.zone_name
+  zone = data.ibm_is_subnet.this[count.index].zone
 }
 
 # locals {
