@@ -84,6 +84,7 @@ resource "null_resource" "volume_attachment" {
 
   provisioner "local-exec" {
     environment = {
+      IBMCLOUD_API_KEY  = var.ibmcloud_api_key
       TOKEN             = data.ibm_iam_auth_token.this.iam_access_token
       REGION            = var.region
       RESOURCE_GROUP_ID = data.ibm_resource_group.group.id
@@ -101,6 +102,7 @@ resource "null_resource" "volume_attachment" {
   provisioner "local-exec" {
     when = destroy
     environment = {
+      IBMCLOUD_API_KEY  = var.ibmcloud_api_key
       TOKEN             = data.ibm_iam_auth_token.this.iam_access_token
       REGION            = var.region
       RESOURCE_GROUP_ID = data.ibm_resource_group.group.id
