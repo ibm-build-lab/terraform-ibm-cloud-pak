@@ -6,6 +6,7 @@ metadata:
 spec:
     license:
         accept: true
+        license: L-RJON-BXUPZ2
     mqDashboard: true
     replicas: 3
     version: 2021.1.1
