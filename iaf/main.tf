@@ -46,6 +46,7 @@ resource "null_resource" "install_iaf" {
       IAF_INSTALLATION_CONTENT         = local.automationbase_content
     }
   }
+  depends_on = [local.cluster_is_ready]
 }
 
 // TODO: It may be considered in a future version to pass the cluster ID and the
