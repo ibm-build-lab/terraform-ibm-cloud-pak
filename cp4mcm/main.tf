@@ -40,6 +40,7 @@ resource "null_resource" "install_cp4mcm" {
 
     environment = {
       KUBECONFIG                       = var.cluster_config_path
+      IC_API_KEY                       = local.ibmcloud_api_key
       MCM_CLUSTER                      = var.cluster_name_id
       MCM_NAMESPACE                    = local.mcm_namespace
       MCM_ENTITLED_REGISTRY_USER       = local.entitled_registry_user
