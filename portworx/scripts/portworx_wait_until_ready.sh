@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 echo 'This script waits until Portworx is ready'
 echo 'Sleeping 2m...'

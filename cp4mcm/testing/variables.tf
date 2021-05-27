@@ -1,10 +1,10 @@
-variable "infra" {
-  default = "classic"
-  // default     = "vpc"
-}
 
 variable "cluster_id" {
   description = "ROKS cluster id. Use the ROKS terraform module or other way to create it"
+}
+
+variable "on_vpc" {
+  description = "Is cluster a VPC cluster"
 }
 
 variable "entitled_registry_user_email" {
@@ -12,7 +12,7 @@ variable "entitled_registry_user_email" {
 }
 
 variable "resource_group" {
-  default     = "default"
+  default     = "Default"
   description = "resource group where the cluster is running"
 }
 

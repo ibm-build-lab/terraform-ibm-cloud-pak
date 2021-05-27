@@ -2,7 +2,6 @@
 
 provider "ibm" {
 //  version    = "~> 1.13"
-  generation = var.on_vpc ? 2 : 1
   region     = var.region
 }
 
@@ -23,6 +22,8 @@ module "cluster" {
   environment    = var.environment
   resource_group = var.resource_group
   roks_version   = var.roks_version
+  entitlement    = var.entitlement
+  force_delete_storage = var.force_delete_storage
 
   // Parameters for Kubernetes Config
   // download_config = length(var.config_dir) > 0

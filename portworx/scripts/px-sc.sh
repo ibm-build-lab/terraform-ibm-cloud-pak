@@ -406,7 +406,7 @@ EOF
 
 
 
-# Watson Assitant - This was previously named portworx-assitant
+# Watson Assistant - This was previously named portworx-assistant
 cat <<EOF | oc create -f -
 apiVersion: storage.k8s.io/v1
 kind: StorageClass

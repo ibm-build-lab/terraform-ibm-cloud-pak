@@ -33,8 +33,10 @@ module "iaf" {
   openshift_version   = var.openshift_version
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
   cluster_name_id     = var.cluster_id
-  ic_api_key          = var.ic_api_key
   on_vpc              = var.on_vpc
+
+  // IBM Cloud API Key
+  ic_api_key          = var.ic_api_key
 
   // Entitled Registry parameters:
   // 1. Get the entitlement key from: https://myibm.ibm.com/products-services/containerlibrary

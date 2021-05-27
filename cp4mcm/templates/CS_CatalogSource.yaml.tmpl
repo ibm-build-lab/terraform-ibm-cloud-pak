@@ -8,8 +8,6 @@ spec:
   publisher: IBM
   sourceType: grpc
   image: docker.io/ibmcom/ibm-common-service-catalog:latest
-%{ if openshift_version_number >= 4.4 ~}
   updateStrategy:
     registryPoll:
       interval: 45m
-%{~ endif ~}

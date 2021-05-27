@@ -1,13 +1,14 @@
 apiVersion: orchestrator.management.ibm.com/v1alpha1
 kind: Installation
 metadata:
-  annotations:
-  finalizers:
-  - ibm-management-orchestrator.management.ibm.com/finalizer
-  name: ibm-management
+  name: cp4mcm-install
   namespace: ${ namespace }
 spec:
+%{ if on_vpc ~}
+  storageClass: ibmc-vpc-block-retain-10iops-tier
+%{ else ~}
   storageClass: ibmc-block-retain-gold
+%{ endif ~}
   imagePullSecret: ibm-management-pull-secret
   license:
     accept: true
@@ -42,7 +43,11 @@ spec:
               existingClaimName: ""
               existingDynamicVolume: false
               size: 30Gi
-              storageClassName: ibmc-block-gold
+%{ if on_vpc ~}
+              storageClass: ibmc-vpc-block-10iops-tier
+%{ else ~}
+              storageClass: ibmc-block-gold
+%{ endif ~}
               useDynamicProvisioning: true
           camTerraformPV:
             name: cam-terraform-pv
@@ -71,12 +76,21 @@ spec:
             persistence:
               storageClassOption:
                 cassandrabak: none
+%{ if on_vpc ~}
+                cassandradata: ibmc-vpc-block-10iops-tier
+                couchdbdata: ibmc-vpc-block-10iops-tier
+                datalayerjobs: ibmc-vpc-block-10iops-tier
+                elasticdata: ibmc-vpc-block-10iops-tier
+                kafkadata: ibmc-vpc-block-10iops-tier
+                zookeeperdata: ibmc-vpc-block-10iops-tier
+%{ else ~}
                 cassandradata: ibmc-block-gold
                 couchdbdata: ibmc-block-gold
                 datalayerjobs: ibmc-block-gold
                 elasticdata: ibmc-block-gold
                 kafkadata: ibmc-block-gold
                 zookeeperdata: ibmc-block-gold
+%{ endif ~}
               storageSize:
                 cassandrabak: 500Gi
                 cassandradata: 500Gi

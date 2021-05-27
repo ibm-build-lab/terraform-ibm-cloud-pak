@@ -1,5 +1,9 @@
 #!/bin/bash
 
+ibmcloud api cloud.ibm.com
+ibmcloud login -q --apikey ${IBMCLOUD_API_KEY}
+export TOKEN=$(ibmcloud iam oauth-tokens --output json | jq -r '.iam_token')
+
 echo "Detaching volume $VOLUME_ID from worker $WORKER_ID"
 
 # Grab volume attachment id
@@ -25,5 +29,5 @@ else
       exit 1
     fi
     echo 'Sleeping for 30s...'
-    sleep 30s
+    sleep 30
 fi

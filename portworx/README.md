@@ -27,6 +27,10 @@ In your Terraform code define the `ibm` provisioner block with the `region`.
 provider "ibm" {
   region     = "us-south"
 }
+
+provider "kubernetes" {
+  config_path = "~/.kube/config"
+}
 ```
 
 ### Setting up the OpenShift cluster
@@ -121,7 +125,9 @@ Run in the cluster:
 terraform destroy
 ```
 
+## Resources
 
+This module is based on [cp4d-deployment](https://github.com/IBM/cp4d-deployment/tree/master/managed-openshift/ibmcloud/portworx) but updated to be used standalone.
 
 
 

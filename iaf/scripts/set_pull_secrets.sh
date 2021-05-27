@@ -1,6 +1,10 @@
 #!/bin/sh
 # Script to set pull secrets and reboot the nodes before IAF can be installed
 
+ibmcloud config --check-version=false
+ibmcloud login -apikey ${IC_API_KEY}
+ibmcloud ks cluster config -c ${IAF_CLUSTER} --admin
+
 echo "Setting Pull Secret"
 oc extract secret/pull-secret -n openshift-config --confirm --to=. 
 API_KEY=$(echo -n "${IAF_ENTITLED_REGISTRY_USER}:${IAF_ENTITLED_REGISTRY_KEY}" | base64 | tr -d '[:space:]')
@@ -8,9 +12,6 @@ jq --arg apikey ${API_KEY} --arg registry "${IAF_ENTITLED_REGISTRY}" '.auths += 
 mv .dockerconfigjson-new .dockerconfigjson
 oc set data secret/pull-secret -n openshift-config --from-file=.dockerconfigjson  
 rm .dockerconfigjson
-
-ibmcloud config --check-version=false
-ibmcloud login -apikey ${IC_API_KEY}
 
 worker_count=0
 ibmcloud ks workers --cluster ${IAF_CLUSTER}

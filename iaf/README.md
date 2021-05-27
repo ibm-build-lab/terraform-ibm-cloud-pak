@@ -22,11 +22,10 @@ Go [here](../CREDENTIALS.md) for details.
 
 ## Provisioning this module in a Terraform Script
 
-In your Terraform code define the `ibm` provisioner block with the `region` and the `generation`, which is **1 for Classic** and **2 for VPC Gen 2**.
+In your Terraform code define the `ibm` provisioner block with the `region`.
 
 ```hcl
 provider "ibm" {
-  generation = 1
   region     = "us-south"
 }
 ```

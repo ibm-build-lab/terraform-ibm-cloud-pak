@@ -7,6 +7,7 @@ locals {
   })
   installation_content = templatefile("${path.module}/templates/Installation.yaml.tmpl", {
     namespace                    = local.mcm_namespace,
+    on_vpc                       = var.on_vpc,
     install_infr_mgt_module      = var.install_infr_mgt_module,
     install_monitoring_module    = var.install_monitoring_module,
     install_security_svcs_module = var.install_security_svcs_module,
@@ -34,11 +35,13 @@ resource "null_resource" "install_cp4mcm" {
     installation_sha1       = sha1(local.installation_content)
   }
 
-  provisioner "local-exec" {
+  provisioner "local-exec" {    
     command = "${path.module}/scripts/install_cp4mcm.sh"
 
     environment = {
       KUBECONFIG                       = var.cluster_config_path
+      IC_API_KEY                       = local.ibmcloud_api_key
+      MCM_CLUSTER                      = var.cluster_name_id
       MCM_NAMESPACE                    = local.mcm_namespace
       MCM_ENTITLED_REGISTRY_USER       = local.entitled_registry_user
       MCM_ENTITLED_REGISTRY_KEY        = local.entitled_registry_key
@@ -54,6 +57,7 @@ resource "null_resource" "install_cp4mcm" {
     }
   }
 }
+
 
 data "external" "get_endpoints" {
   count = var.enable ? 1 : 0
