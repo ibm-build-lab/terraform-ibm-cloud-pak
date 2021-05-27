@@ -11,6 +11,9 @@ resource "null_resource" "setkernelparams" {
   depends_on = [var.portworx_is_ready]
   
   provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.cluster_config_path
+    }
     working_dir = "${path.module}/files/"
     interpreter = ["/bin/bash", "-c"]
     command = "oc apply -n kube-system -f ${local.setkernelparams_file}"
@@ -25,9 +28,12 @@ resource "null_resource" "set_norootsquash" {
     depends_on = [var.portworx_is_ready]
 
     provisioner "local-exec" {
-    working_dir = "${path.module}/files/"
-    interpreter = ["/bin/bash", "-c"]
-    command = "oc apply -n kube-system -f ${local.set_norootsquash_file}"
+      environment = {
+        KUBECONFIG = var.cluster_config_path
+      }
+      working_dir = "${path.module}/files/"
+      interpreter = ["/bin/bash", "-c"]
+      command = "oc apply -n kube-system -f ${local.set_norootsquash_file}"
   }
 }
 
@@ -38,6 +44,9 @@ resource "null_resource" "create_registry_route" {
   depends_on = [var.portworx_is_ready]
 
   provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.cluster_config_path
+    }
     interpreter = ["/bin/bash", "-c"]
     command = "oc create route reencrypt --service=image-registry -n openshift-image-registry"
   }
@@ -46,6 +55,9 @@ resource "null_resource" "annotate_registry_route" {
   depends_on = [null_resource.create_registry_route]
 
   provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.cluster_config_path
+    }
     interpreter = ["/bin/bash", "-c"]
     command = "oc annotate route image-registry --overwrite haproxy.router.openshift.io/balance=source -n openshift-image-registry"
   }

@@ -81,6 +81,9 @@ resource "null_resource" "install_lite" {
   count = var.accept_cpd_license ? 1 : 0
   
   provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.cluster_config_path
+    }
     working_dir = "${path.module}/scripts/"
     interpreter = ["/bin/bash", "-c"]
     command = "./install_cpdservice_generic.sh ${var.cpd_project_name} lite ${local.storageclass["lite"]} ${local.override["lite"]}"
@@ -95,6 +98,9 @@ resource "null_resource" "install_lite" {
 resource "null_resource" "reencrypt_route" {
   
   provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.cluster_config_path
+    }
     working_dir = "${path.module}/scripts/"
     interpreter = ["/bin/bash", "-c"]
     command = "./reencrypt_route.sh ${var.cpd_project_name}"
@@ -124,6 +130,9 @@ resource "null_resource" "install_spark" {
   count = var.accept_cpd_license && var.install_spark ? 1 : 0
   
   provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.cluster_config_path
+    }
     working_dir = "${path.module}/scripts/"
     interpreter = ["/bin/bash", "-c"]
     command = "./install_cpdservice_generic.sh ${var.cpd_project_name} spark ${local.storageclass["spark"]} ${local.override["spark"]}"
@@ -138,6 +147,9 @@ resource "null_resource" "install_dv" {
   count = var.accept_cpd_license && var.install_data_virtualization ? 1 : 0
   
   provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.cluster_config_path
+    }
     working_dir = "${path.module}/scripts/"
     interpreter = ["/bin/bash", "-c"]
     command = "./install_cpdservice_generic.sh ${var.cpd_project_name} dv ${local.storageclass["dv"]} ${local.override["dv"]}"
@@ -153,6 +165,9 @@ resource "null_resource" "install_wkc" {
   count = var.accept_cpd_license && var.install_watson_knowledge_catalog ? 1 : 0
   
   provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.cluster_config_path
+    }
     working_dir = "${path.module}/scripts/"
     interpreter = ["/bin/bash", "-c"]
     command = "./install_cpdservice_generic.sh ${var.cpd_project_name} wkc ${local.storageclass["wkc"]} ${local.override["wkc"]}"
@@ -169,6 +184,9 @@ resource "null_resource" "install_wsl" {
   count = var.accept_cpd_license && var.install_watson_studio ? 1 : 0
   
   provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.cluster_config_path
+    }
     working_dir = "${path.module}/scripts/"
     interpreter = ["/bin/bash", "-c"]
     command = "./install_cpdservice_generic.sh ${var.cpd_project_name} wsl ${local.storageclass["wsl"]} ${local.override["wsl"]}"
@@ -186,6 +204,9 @@ resource "null_resource" "install_wml" {
   count = var.accept_cpd_license && var.install_watson_machine_learning ? 1 : 0
   
   provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.cluster_config_path
+    }
     working_dir = "${path.module}/scripts/"
     interpreter = ["/bin/bash", "-c"]
     command = "./install_cpdservice_generic.sh ${var.cpd_project_name} wml ${local.storageclass["wml"]} ${local.override["wml"]}"
@@ -204,6 +225,9 @@ resource "null_resource" "install_aiopenscale" {
   count = var.accept_cpd_license && var.install_watson_open_scale ? 1 : 0
   
   provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.cluster_config_path
+    }
     working_dir = "${path.module}/scripts/"
     interpreter = ["/bin/bash", "-c"]
     command = "./install_cpdservice_generic.sh ${var.cpd_project_name} aiopenscale ${local.storageclass["aiopenscale"]} ${local.override["aiopenscale"]}"
@@ -223,6 +247,9 @@ resource "null_resource" "install_cde" {
   count = var.accept_cpd_license && var.install_analytics_dashboard ? 1 : 0
   
   provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.cluster_config_path
+    }
     working_dir = "${path.module}/scripts/"
     interpreter = ["/bin/bash", "-c"]
     command = "./install_cpdservice_generic.sh ${var.cpd_project_name} cde ${local.storageclass["cde"]} ${local.override["cde"]}"
@@ -244,6 +271,9 @@ resource "null_resource" "install_streams" {
 
   
   provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.cluster_config_path
+    }
     working_dir = "${path.module}/scripts/"
     interpreter = ["/bin/bash", "-c"]
     command = "./install_cpdservice_generic.sh ${var.cpd_project_name} streams ${local.storageclass["streams"]} ${local.override["streams"]}"
@@ -265,6 +295,9 @@ resource "null_resource" "install_dmc" {
   count = var.accept_cpd_license && var.install_db2_data_management ? 1 : 0
   
   provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.cluster_config_path
+    }
     working_dir = "${path.module}/scripts/"
     interpreter = ["/bin/bash", "-c"]
     command = "./install_cpdservice_generic.sh ${var.cpd_project_name} dmc ${local.storageclass["dmc"]} ${local.override["dmc"]}"
@@ -287,6 +320,9 @@ resource "null_resource" "install_db2wh" {
   count = var.accept_cpd_license && var.install_db2_warehouse ? 1 : 0
   
   provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.cluster_config_path
+    }
     working_dir = "${path.module}/scripts/"
     interpreter = ["/bin/bash", "-c"]
     command = "./install_cpdservice_generic.sh ${var.cpd_project_name} db2wh ${local.storageclass["db2wh"]} ${local.override["db2wh"]}"
@@ -311,6 +347,9 @@ resource "null_resource" "install_datagate" {
   count = var.accept_cpd_license && var.install_db2_data_gate ? 1 : 0
 
   provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.cluster_config_path
+    }
     working_dir = "${path.module}/scripts/"
     interpreter = ["/bin/bash", "-c"]
     command = "./install_cpdservice_generic.sh ${var.cpd_project_name} datagate ${local.storageclass["datagate"]} ${local.override["datagate"]}"
@@ -336,6 +375,9 @@ resource "null_resource" "install_big_sql" {
   count = var.accept_cpd_license && var.install_big_sql ? 1 : 0
   
   provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.cluster_config_path
+    }
     working_dir = "${path.module}/scripts/"
     interpreter = ["/bin/bash", "-c"]
     command = "./install_cpdservice_generic.sh ${var.cpd_project_name} big-sql ${local.storageclass["big-sql"]} ${local.override["big-sql"]}"
@@ -361,6 +403,9 @@ resource "null_resource" "install_rstudio" {
   count = var.accept_cpd_license && var.install_rstudio ? 1 : 0
   
   provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.cluster_config_path
+    }
     working_dir = "${path.module}/scripts/"
     interpreter = ["/bin/bash", "-c"]
     command = "./install_cpdservice_generic.sh ${var.cpd_project_name} rstudio ${local.storageclass["rstudio"]} ${local.override["rstudio"]}"
@@ -385,6 +430,9 @@ resource "null_resource" "install_rstudio" {
 
 resource "null_resource" "get_endpoint" {
   provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.cluster_config_path
+    }
     working_dir = "${path.module}/scripts/"
     interpreter = ["/bin/bash", "-c"]
     command = "./get_endpoints.sh"
