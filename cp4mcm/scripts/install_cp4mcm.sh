@@ -1,7 +1,7 @@
 #!/bin/sh
 
-ibmcloud config --check-version=false
-ibmcloud login -apikey ${IC_API_KEY}
+#ibmcloud config --check-version=false
+#ibmcloud login -apikey ${IC_API_KEY}
 #ibmcloud ks cluster config -c ${MCM_CLUSTER} --admin
 
 echo "Creating namespace ${MCM_NAMESPACE}"
