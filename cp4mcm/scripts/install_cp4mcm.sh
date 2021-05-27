@@ -1,5 +1,6 @@
 #!/bin/sh
 
+echo ${KUBECONFIG}
 ibmcloud config --check-version=false
 ibmcloud login -apikey ${IC_API_KEY}
 ibmcloud ks cluster config -c ${MCM_CLUSTER} --admin

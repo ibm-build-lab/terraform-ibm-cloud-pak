@@ -9,7 +9,7 @@ variable "cluster_id" {
   description = "ROKS cluster id. Use the ROKS terraform module or other way to create it"
 }
 
-variable "ic_api_key" {
+variable "ibmcloud_api_key" {
   description = "IBM Cloud API Key"
 }
 
