@@ -36,7 +36,7 @@ module "iaf" {
   on_vpc              = var.on_vpc
 
   // IBM Cloud API Key
-  ic_api_key          = var.ic_api_key
+  ibmcloud_api_key          = var.ibmcloud_api_key
 
   // Entitled Registry parameters:
   // 1. Get the entitlement key from: https://myibm.ibm.com/products-services/containerlibrary
