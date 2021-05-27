@@ -4,7 +4,7 @@ locals {
   subscription                      = file(join("/", [path.module, "files", "subscription.yaml"])) 
   operator_group                    = file(join("/", [path.module, "files", "operator-group.yaml"])) 
 
-  on_vpc_ready = var.on_vpc ? var.portworx_is_ready : null
+  on_vpc_ready = var.on_vpc ? var.portworx_is_ready : 1
 
   storageclass = {
     "lite"               = var.on_vpc ? "portworx-shared-gp3" : "ibmc-file-gold-gid",
