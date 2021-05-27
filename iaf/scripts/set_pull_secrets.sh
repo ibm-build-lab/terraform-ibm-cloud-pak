@@ -3,7 +3,7 @@
 
 ibmcloud config --check-version=false
 ibmcloud login -apikey ${IC_API_KEY}
-ibmcloud ks cluster config -c ${IAF_CLUSTER} --admin
+# ibmcloud ks cluster config -c ${IAF_CLUSTER} --admin
 
 echo "Setting Pull Secret"
 oc extract secret/pull-secret -n openshift-config --confirm --to=. 
