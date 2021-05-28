@@ -16,7 +16,7 @@ data "ibm_container_vpc_cluster_worker" "this" {
 
   cluster_name_id   = var.cluster_id
   resource_group_id = data.ibm_resource_group.group.id
-  worker_id         = data.ibm_container_vpc_cluster.this.*.workers[count.index]
+  worker_id         = length(data.ibm_container_vpc_cluster.this) > 0 ? data.ibm_container_vpc_cluster.this[0].workers[count.index] : 0
 }
 
 data "ibm_iam_auth_token" "this" {
@@ -58,7 +58,7 @@ resource "ibm_is_volume" "this" {
   
   capacity = var.storage_capacity
   iops = var.storage_profile == "custom" ? var.storage_iops : null
-  name = "${var.unique_id}-pwx-${split("-", data.ibm_container_vpc_cluster.this.*.workers[count.index])[4]}"
+  name = length(data.ibm_container_vpc_cluster.this) > 0 ? "${var.unique_id}-pwx-${split("-", data.ibm_container_vpc_cluster.this[0].workers[count.index])[4]}" : "${var.unique_id}-pwx"
   profile = var.storage_profile
   resource_group = data.ibm_resource_group.group.id
   zone = data.ibm_is_subnet.this[count.index].zone
