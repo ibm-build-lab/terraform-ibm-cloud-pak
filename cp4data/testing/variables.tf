@@ -1,5 +1,10 @@
+variable "region" {}
+variable "resource_group_name" {}
+variable "cluster_id" {}
+
 variable "enable" {
   default     = true
+  type        = bool
   description = "If set to true installs Cloud-Pak for Data on the given cluster"
 }
 
@@ -9,13 +14,31 @@ variable "on_vpc" {
   description = "If set to true, lets the module know cluster is using VPC Gen2"
 }
 
-variable "cluster_config_path" {
+variable "portworx_is_ready" {
+  type = any
+  default = null
+}
+
+variable "accept_cpd_license" {
+  type        = bool
+  description = "Do you accept the cpd license agreements? This includes any modules chosen as well. `true` or `false`"
+}
+
+variable "kube_config_path" {
+  type        = string
   description = "Path to the Kubernetes configuration file to access your cluster"
 }
 
 variable "openshift_version" {
   default     = "4.6"
+  type        = string
   description = "Openshift version installed in the cluster"
+}
+
+// Prereq
+variable "worker_node_flavor" {
+  type        = string
+  description = "Flavor used to determine worker node hardware"
 }
 
 # variable "cluster_endpoint" {
@@ -24,16 +47,13 @@ variable "openshift_version" {
 # }
 
 variable "entitled_registry_key" {
+  type        = string
   description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
 }
 
 variable "entitled_registry_user_email" {
+  type        = string
   description = "Docker email address"
-}
-
-variable "accept_cpd_license" {
-  type        = bool
-  description = "Do you accept the cpd license agreements? This includes any modules chosen as well. `true` or `false`"
 }
 
 variable "cpd_project_name" {
@@ -41,23 +61,9 @@ variable "cpd_project_name" {
   default     = "default"
   description = "Name of the project namespace"
 }
-// Prereq
-variable "worker_node_flavor" {
-  type        = string
-  description = "Flavor used to determine worker node hardware"
-}
 
-variable "portworx_is_ready" {
-  type = any
-  default = null
-}
 // Modules available to install on CP4D
 
-variable "empty_module_list" {
-  default     = true
-  type        = bool
-  description = "Determine if any modules need to be installed for CP4D"
-}
 variable "install_watson_knowledge_catalog" {
   default     = false
   type        = bool
@@ -123,15 +129,4 @@ variable "install_big_sql" {
   default     = false
   type        = bool 
   description = "Install Big SQL module. Only for Cloud Pak for Data v3.5"
-}
-
-locals {
-  namespace                = "default"
-  entitled_registry        = "cp.icr.io"
-  entitled_registry_user   = "cp"
-  docker_registry          = "cp.icr.io" // Staging: "cp.stg.icr.io/cp/cpd"
-  docker_username          = "cp"               // "ekey"
-  entitled_registry_key    = chomp(var.entitled_registry_key)
-  openshift_version_regex  = regex("(\\d+).(\\d+)(.\\d+)*(_openshift)*", var.openshift_version)
-  openshift_version_number = local.openshift_version_regex[3] == "_openshift" ? tonumber("${local.openshift_version_regex[0]}.${local.openshift_version_regex[1]}") : 0
 }
