@@ -4,7 +4,7 @@ output "endpoint" {
 
 // Used for cp4d output
 output "ingress_hostname" {
-  value = var.enable && length(data.ibm_container_vpc_cluster.this) > 0 ? data.ibm_container_vpc_cluster.this.0.ingress_hostname : data.ibm_container_cluster.cluster.0.ingress_hostname
+  value = var.enable && length(ibm_container_vpc_cluster.this) > 0 ? ibm_container_vpc_cluster.this.0.ingress_hostname : ibm_container_cluster.cluster.0.ingress_hostname
 }
 
 output "id" {
