@@ -111,20 +111,20 @@ resource "null_resource" "reencrypt_route" {
   ]
 }
 
-data "external" "get_endpoints" {
-  count = var.enable && var.accept_cpd_license ? 1 : 0
+# data "external" "get_endpoints" {
+#   count = var.enable && var.accept_cpd_license ? 1 : 0
 
-  depends_on = [
-    null_resource.install_cp4d_operator
-  ]
+#   depends_on = [
+#     null_resource.install_cp4d_operator
+#   ]
 
-  program = ["/bin/bash", "${path.module}/scripts/get_endpoints.sh"]
+#   program = ["/bin/bash", "${path.module}/scripts/get_endpoints.sh"]
 
-  query = {
-    kubeconfig = var.cluster_config_path
-    namespace  = var.cpd_project_name
-  }
-}
+#   query = {
+#     kubeconfig = var.cluster_config_path
+#     namespace  = var.cpd_project_name
+#   }
+# }
 
 resource "null_resource" "install_spark" {
   count = var.accept_cpd_license && var.install_spark ? 1 : 0
