@@ -96,21 +96,21 @@ resource "null_resource" "volume_attachment" {
 
   # this breaks beyond terraform 0.12 because destroy provisioners are not allowed to reference other resources
   # check with ibm terraform providers team for a volume_attachment resource
-  provisioner "local-exec" {
-    when = destroy
-    environment = {
-      IBMCLOUD_API_KEY  = var.ibmcloud_api_key
-      TOKEN             = data.ibm_iam_auth_token.this.iam_access_token
-      REGION            = var.region
-      RESOURCE_GROUP_ID = data.ibm_resource_group.group.id
-      CLUSTER_ID        = var.cluster_id
-      WORKER_ID         = length(data.ibm_container_vpc_cluster_worker.this) > 0 ? data.ibm_container_vpc_cluster_worker.this[count.index].id : 0
-      VOLUME_ID         = length(ibm_is_volume.this) > 0 ? ibm_is_volume.this[count.index].id : 0
-    }
+  # provisioner "local-exec" {
+  #   when = destroy
+  #   environment = {
+  #     IBMCLOUD_API_KEY  = var.ibmcloud_api_key
+  #     TOKEN             = data.ibm_iam_auth_token.this.iam_access_token
+  #     REGION            = var.region
+  #     RESOURCE_GROUP_ID = data.ibm_resource_group.group.id
+  #     CLUSTER_ID        = var.cluster_id
+  #     WORKER_ID         = length(data.ibm_container_vpc_cluster_worker.this) > 0 ? data.ibm_container_vpc_cluster_worker.this[count.index].id : 0
+  #     VOLUME_ID         = length(ibm_is_volume.this) > 0 ? ibm_is_volume.this[count.index].id : 0
+  #   }
   
-    interpreter = ["/bin/bash", "-c"]
-    command     = file("${path.module}/scripts/volume_attachment_destroy.sh")
-  }
+  #   interpreter = ["/bin/bash", "-c"]
+  #   command     = file("${path.module}/scripts/volume_attachment_destroy.sh")
+  # }
 }
 
 #############################################
