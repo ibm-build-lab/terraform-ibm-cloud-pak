@@ -40,3 +40,18 @@ resource "null_resource" "install_cp4i" {
     }
   }
 }
+
+data "external" "get_endpoints" {
+  count = var.enable ? 1 : 0
+
+  depends_on = [
+    null_resource.install_cp4i
+  ]
+
+  program = ["/bin/bash", "${path.module}/scripts/get_endpoints.sh"]
+
+  query = {
+    kubeconfig = var.cluster_config_path
+    NAMESPACE = "cp4i"
+  }
+}
