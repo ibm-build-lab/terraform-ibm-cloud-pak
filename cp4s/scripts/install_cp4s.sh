@@ -54,9 +54,6 @@ create_secret() {
 create_secret ibm-entitlement-key default
 create_secret ibm-entitlement-key ${NAMESPACE}
 
-
-
-
 wget https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-linux-amd64.tar.gz
 tar -xzf cloudctl-linux-amd64.tar.gz 
 
