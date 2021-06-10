@@ -15,7 +15,7 @@
 # - kubectl
 
 # Optional input parameters with default values:
-NAMESPACE=${default}
+NAMESPACE=${NAMESPACE:-cp4i}
 DEBUG=${DEBUG:-false}
 DOCKER_USERNAME=${DOCKER_USERNAME:-cp}
 DOCKER_REGISTRY=${DOCKER_REGISTRY:-cp.icr.io}  # adjust this if needed
@@ -35,8 +35,8 @@ echo "Deploying Catalog Option ${OPENCLOUD_OPERATOR_CATALOG}"
 echo "${OPENCLOUD_OPERATOR_CATALOG}" | oc apply -f -
 
 # echo "Creating namespace ${NAMESPACE}"
-echo "creating namespace cp4i"
-kubectl create namespace cp4i --dry-run=client -o yaml | kubectl apply -f -
+echo "creating namespace ${NAMESPACE}"
+kubectl create namespace ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
 
 create_secret() {
   secret_name=$1
@@ -56,7 +56,7 @@ create_secret() {
 
 create_secret ibm-entitlement-key default
 create_secret ibm-entitlement-key openshift-operators
-create_secret ibm-entitlement-key cp4i
+create_secret ibm-entitlement-key $NAMESPACE
 
 sleep 40
 
@@ -66,8 +66,39 @@ echo "${SUBSCRIPTION}" | oc apply -f -
 sleep 120
 
 echo "Deploying Platform Navigator ${PLATFORM_NAVIGATOR}"
-echo "${PLATFORM_NAVIGATOR}" | oc apply -f -
+echo "${PLATFORM_NAVIGATOR}" | oc -n ${NAMESPACE} apply -f -
 
+SLEEP_TIME="60"
+RUN_LIMIT=200
+i=0
+
+while true; do
+  if ! STATUS_LONG=$(oc -n ${NAMESPACE} get platformnavigator cp4i-navigator --output=json | jq -c -r '.status'); then
+    echo 'Error getting status'
+    exit 1
+  fi
+
+  echo $STATUS_LONG
+  STATUS=$(echo $STATUS_LONG | jq -c -r '.conditions[0].type')
+
+  if [ "$STATUS" == "Ready" ]; then
+    break
+  fi
+  
+  if [ "$STATUS" == "Failed" ]; then
+    echo '=== Installation has failed ==='
+    exit 1
+  fi
+  
+  echo "Sleeping $SLEEP_TIME seconds..."
+  sleep $SLEEP_TIME
+  
+  (( i++ ))
+  if [ "$i" -eq "$RUN_LIMIT" ]; then
+    echo 'Timed out'
+    exit 1
+  fi
+done
 # The following code is taken from get_enpoints.sh, to print what it's getting
 # result_txt=$(kubectl logs -n ${NAMESPACE} $pod | sed 's/[[:cntrl:]]\[[0-9;]*m//g' | tail -20)
 # if ! echo $result_txt | grep -q 'Installation of assembly lite is successfully completed'; then
