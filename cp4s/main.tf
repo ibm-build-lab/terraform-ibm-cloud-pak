@@ -34,6 +34,8 @@ resource "null_resource" "install_cp4i" {
       DOCKER_USER_EMAIL             = var.entitled_registry_user_email
       DOCKER_USERNAME               = local.docker_username
       DOCKER_REGISTRY               = local.docker_registry
+      LDAP_USER_ID                  = local.ldap_user_id
+      LDAP_STATUS                   = local.ldap_status
     }
   }
 }

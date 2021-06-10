@@ -31,12 +31,9 @@ done
 echo "Deploying Catalog Option ${IBM_OPERATOR_CATALOG}"
 echo "${IBM_OPERATOR_CATALOG}" | oc apply -f -
 
-echo "Deploying Catalog Option ${OPENCLOUD_OPERATOR_CATALOG}"
-echo "${OPENCLOUD_OPERATOR_CATALOG}" | oc apply -f -
-
 # echo "Creating namespace ${NAMESPACE}"
 echo "creating namespace cp4i"
-kubectl create namespace cp4i --dry-run=client -o yaml | kubectl apply -f -
+kubectl create namespace ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
 
 create_secret() {
   secret_name=$1
@@ -55,7 +52,13 @@ create_secret() {
 }
 
 create_secret ibm-entitlement-key default
-create_secret ibm-entitlement-key $NAMESPACE
+create_secret ibm-entitlement-key ${NAMESPACE}
+
+
+
+
+wget https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-linux-amd64.tar.gz
+tar -xzf cloudctl-linux-amd64.tar.gz 
 
 sleep 40
 
@@ -65,11 +68,12 @@ echo "${SUBSCRIPTION}" | oc apply -f -
 sleep 120
 
 HELM3=$(which helm3)
+oc get users
 
-cloudctl case save -t 1 --case https://github.com/IBM/cloud-pak/raw/master/repo/case/ibm-cp-security-1.0.17.tgz --outputdir ./cp4s_cli_install/ && tar -xf ./cp4s_cli_install/ibm-cp-security-1.0.17.tgz
-
-
-cloudctl case launch -t 1 --case ibm-cp-security --namespace $NAMESPACE  --inventory installProduct --action install --args "--license accept --helm3 $HELM3 --inputDir ./cp4s_cli_install/"
+./cloudctl-linux-amd64.tar.gz case save -t 1 --case https://github.com/IBM/cloud-pak/raw/master/repo/case/ibm-cp-security-1.0.17.tgz --outputdir ./cp4s_cli_install/ && tar -xf ./cp4s_cli_install/ibm-cp-security-1.0.17.tgz
+CONF=$(sed -e "s/LDAP_USER_ID/${LDAP_USER_ID}/g" -e "s/ENTITLEMENT_KEY/${DOCKER_REGISTRY_PASS}/g"  ../templates/values.conf)
+echo $CONF > ./cp4sasdfafdsafsdffa/values.conf
+./cloudctl-linux-amd64.tar.gz case launch -t 1 --case ibm-cp-security --namespace ${NAMESPACE}  --inventory installProduct --action install --args "--license accept --helm3 $HELM3 --inputDir ./cp4s_cli_install/"
 
 # The following code is taken from get_enpoints.sh, to print what it's getting
 # result_txt=$(kubectl logs -n ${NAMESPACE} $pod | sed 's/[[:cntrl:]]\[[0-9;]*m//g' | tail -20)
