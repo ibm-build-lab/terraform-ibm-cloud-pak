@@ -34,7 +34,7 @@ variable "ldap_status" {
   description = "true if client has an ldap, false if client does not have an ldap"
 }
 
-varialbe "ldap_user_id" {
+variable "ldap_user_id" {
   description = "value of ldap admin uid"
 }
 
