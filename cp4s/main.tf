@@ -5,7 +5,7 @@ locals {
 }
 
 # This section checks to see if the values have been updated through out the script running and is required for any dynamic value
-resource "null_resource" "install_cp4i" {
+resource "null_resource" "install_cp4s" {
   count = var.enable ? 1 : 0
 
   triggers = {
@@ -19,7 +19,7 @@ resource "null_resource" "install_cp4i" {
   }
 
   provisioner "local-exec" {
-    command     = "./install_cp4i.sh"
+    command     = "./install_cp4s.sh"
     working_dir = "${path.module}/scripts"
 
     environment = {
