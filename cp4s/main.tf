@@ -13,9 +13,6 @@ resource "null_resource" "install_cp4s" {
     namespace_sha1                            = sha1(local.namespace)
     docker_params_sha1                        = sha1(join("", [var.entitled_registry_user_email, local.entitled_registry_key]))
     ibm_operator_catalog_sha1                 = sha1(local.ibm_operator_catalog)
-    opencloud_operator_catalog_sha1           = sha1(local.opencloud_operator_catalog)
-    subscription_sha1                         = sha1(local.subscription)
-    platform_navigator_sha1                   = sha1(local.platform_navigator)
   }
 
   provisioner "local-exec" {
@@ -27,9 +24,6 @@ resource "null_resource" "install_cp4s" {
       KUBECONFIG                    = var.cluster_config_path
       NAMESPACE                     = local.namespace
       IBM_OPERATOR_CATALOG          = local.ibm_operator_catalog
-      OPENCLOUD_OPERATOR_CATALOG    = local.opencloud_operator_catalog
-      SUBSCRIPTION                  = local.subscription
-      PLATFORM_NAVIGATOR            = local.platform_navigator
       DOCKER_REGISTRY_PASS          = local.entitled_registry_key
       DOCKER_USER_EMAIL             = var.entitled_registry_user_email
       DOCKER_USERNAME               = local.docker_username
