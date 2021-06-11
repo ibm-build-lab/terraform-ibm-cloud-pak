@@ -13,7 +13,7 @@ variable "cluster_config_path" {
 }
 
 variable "openshift_version" {
-  default     = "4.5"
+  default     = "4.6"
   description = "Openshift version installed in the cluster"
 }
 
@@ -30,6 +30,13 @@ variable "entitled_registry_user_email" {
   description = "Docker email address"
 }
 
+variable "ldap_status" {
+  description = "true if client has an ldap, false if client does not have an ldap"
+}
+
+varialbe "ldap_user_id" {
+  description = "value of ldap admin uid"
+}
 
 locals {
   namespace                = "default"
