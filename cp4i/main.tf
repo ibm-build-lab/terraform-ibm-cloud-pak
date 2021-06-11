@@ -13,7 +13,7 @@ resource "null_resource" "install_cp4i" {
 
   triggers = {
     force_to_run                              = var.force ? timestamp() : 0
-    namespace_sha1                            = sha1(local.namespace)
+    namespace_sha1                            = sha1(var.namespace)
     docker_params_sha1                        = sha1(join("", [var.entitled_registry_user_email, local.entitled_registry_key]))
     ibm_operator_catalog_sha1                 = sha1(local.ibm_operator_catalog)
     opencloud_operator_catalog_sha1           = sha1(local.opencloud_operator_catalog)
@@ -28,7 +28,7 @@ resource "null_resource" "install_cp4i" {
     environment = {
       FORCE                         = var.force
       KUBECONFIG                    = var.cluster_config_path
-      NAMESPACE                     = local.namespace
+      NAMESPACE                     = var.namespace
       IBM_OPERATOR_CATALOG          = local.ibm_operator_catalog
       OPENCLOUD_OPERATOR_CATALOG    = local.opencloud_operator_catalog
       SUBSCRIPTION                  = local.subscription
@@ -38,5 +38,20 @@ resource "null_resource" "install_cp4i" {
       DOCKER_USERNAME               = local.docker_username
       DOCKER_REGISTRY               = local.docker_registry
     }
+  }
+}
+
+data "external" "get_endpoints" {
+  count = var.enable ? 1 : 0
+
+  depends_on = [
+    null_resource.install_cp4i
+  ]
+
+  program = ["/bin/bash", "${path.module}/scripts/get_endpoints.sh"]
+
+  query = {
+    kubeconfig = var.cluster_config_path
+    namespace  = var.namespace
   }
 }

@@ -30,9 +30,13 @@ variable "entitled_registry_user_email" {
   description = "Docker email address"
 }
 
+variable "namespace" {
+  default = "default"
+  description = "Namespace for Cloud Pak for Integration"
+}
+
 
 locals {
-  namespace                = "default"
   entitled_registry        = "cp.icr.io"
   entitled_registry_user   = "cp"
   docker_registry          = "cp.icr.io" // Staging: "cp.stg.icr.io/cp/cpd"
