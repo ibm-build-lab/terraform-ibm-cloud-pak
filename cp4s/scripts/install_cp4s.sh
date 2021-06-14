@@ -69,7 +69,7 @@ oc get users
 
 ./cloudctl-linux-amd64.tar.gz case save -t 1 --case https://github.com/IBM/cloud-pak/raw/master/repo/case/ibm-cp-security-1.0.17.tgz --outputdir ./cp4s_cli_install/ && tar -xf ./cp4s_cli_install/ibm-cp-security-1.0.17.tgz
 CONF=$(sed -e "s/LDAP_USER_ID/${LDAP_USER_ID}/g" -e "s/ENTITLEMENT_KEY/${DOCKER_REGISTRY_PASS}/g"  ../templates/values.conf)
-echo $CONF > ./cp4sasdfafdsafsdffa/values.conf
+echo $CONF > ./ibm-cp-security/inventory/installProduct/files/values.conf
 ./cloudctl-linux-amd64.tar.gz case launch -t 1 --case ibm-cp-security --namespace ${NAMESPACE}  --inventory installProduct --action install --args "--license accept --helm3 $HELM3 --inputDir ./cp4s_cli_install/"
 
 # The following code is taken from get_enpoints.sh, to print what it's getting
