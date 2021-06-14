@@ -67,6 +67,7 @@ sleep 120
 HELM3=$(which helm3)
 oc get users
 
+chmod +x ./cloudctl-linux-amd64.tar.gz
 ./cloudctl-linux-amd64.tar.gz case save -t 1 --case https://github.com/IBM/cloud-pak/raw/master/repo/case/ibm-cp-security-1.0.17.tgz --outputdir ./cp4s_cli_install/ && tar -xf ./cp4s_cli_install/ibm-cp-security-1.0.17.tgz
 CONF=$(sed -e "s/LDAP_USER_ID/${LDAP_USER_ID}/g" -e "s/ENTITLEMENT_KEY/${DOCKER_REGISTRY_PASS}/g"  ../templates/values.conf)
 echo $CONF > ./ibm-cp-security/inventory/installProduct/files/values.conf
