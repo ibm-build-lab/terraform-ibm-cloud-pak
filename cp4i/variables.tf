@@ -13,8 +13,14 @@ variable "cluster_config_path" {
 }
 
 variable "openshift_version" {
-  default     = "4.5"
+  default     = "4.6"
   description = "Openshift version installed in the cluster"
+}
+
+variable "on_vpc" {
+  default     = false
+  type        = bool
+  description = "If set to true, lets the module know cluster is using VPC Gen2"
 }
 
 // variable "cluster_endpoint" {
