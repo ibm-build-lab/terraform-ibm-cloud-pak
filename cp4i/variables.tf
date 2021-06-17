@@ -22,6 +22,11 @@ variable "openshift_version" {
 //   description = "URL to access the OpenShift cluster"
 // }
 
+variable "portworx_is_ready" {
+  type = any
+  default = null
+}
+
 variable "entitled_registry_key" {
   description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
 }

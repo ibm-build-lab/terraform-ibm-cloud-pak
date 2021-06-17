@@ -65,8 +65,14 @@ echo "${SUBSCRIPTION}" | oc apply -f -
 
 sleep 120
 
+if ${ON_VPC}; then
+  storage_class="ibmc-vpc-block-10iops-tier"
+else
+  storage_class="ibmc-file-gold-gid"
+fi
+PLATFORM_NAVIGATOR=`sed -e "s/STORAGECLASS/${storage_class}/g" ../templates/navigator.yaml`
 echo "Deploying Platform Navigator ${PLATFORM_NAVIGATOR}"
-echo "${PLATFORM_NAVIGATOR}" | oc -n ${NAMESPACE} apply -f -
+echo ${PLATFORM_NAVIGATOR} | oc -n ${NAMESPACE} apply -f -
 
 SLEEP_TIME="60"
 RUN_LIMIT=200
