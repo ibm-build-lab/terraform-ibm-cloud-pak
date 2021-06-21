@@ -63,16 +63,17 @@ sleep 40
 echo "Deploying Subscription ${SUBSCRIPTION}"
 echo "${SUBSCRIPTION}" | oc apply -f -
 
-sleep 120
+echo "Waiting 17minutes for operators to install..."
+sleep 1020
 
 if ${ON_VPC}; then
-  storage_class="ibmc-vpc-block-10iops-tier"
+  storage_class="portworx-rwx-gp3-sc"
 else
   storage_class="ibmc-file-gold-gid"
 fi
 PLATFORM_NAVIGATOR=`sed -e "s/STORAGECLASS/${storage_class}/g" ../templates/navigator.yaml`
 echo "Deploying Platform Navigator ${PLATFORM_NAVIGATOR}"
-echo ${PLATFORM_NAVIGATOR} | oc -n ${NAMESPACE} apply -f -
+sed -e "s/STORAGECLASS/${storage_class}/g" ../templates/navigator.yaml | oc -n ${NAMESPACE} apply -f -
 
 SLEEP_TIME="60"
 RUN_LIMIT=200

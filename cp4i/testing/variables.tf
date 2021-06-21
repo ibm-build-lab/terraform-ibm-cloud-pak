@@ -13,6 +13,17 @@ variable "kube_config_path" {
   description = "Path to the Kubernetes configuration file to access your cluster"
 }
 
+variable "on_vpc" {
+  default     = false
+  type        = bool
+  description = "If set to true, lets the module know cluster is using VPC Gen2"
+}
+
+variable "portworx_is_ready" {
+  type = any
+  default = null
+}
+
 variable "openshift_version" {
   default     = "4.6"
   type        = string

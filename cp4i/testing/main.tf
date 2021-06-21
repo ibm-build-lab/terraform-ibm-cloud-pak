@@ -30,7 +30,9 @@ module "cp4i" {
   // ROKS cluster parameters:
   openshift_version   = var.openshift_version
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
- 
+  on_vpc              = var.on_vpc
+  portworx_is_ready   = var.portworx_is_ready // only need if on_vpc = true
+
   // Entitled Registry parameters:
   entitled_registry_key        = var.entitled_registry_key
   entitled_registry_user_email = var.entitled_registry_user_email
