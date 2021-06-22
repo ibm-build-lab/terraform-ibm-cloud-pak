@@ -10,4 +10,4 @@ spec:
     replicas: 3
     version: 2021.1.1
     storage:
-        class: ibmc-file-gold-gid
+        class: STORAGECLASS
