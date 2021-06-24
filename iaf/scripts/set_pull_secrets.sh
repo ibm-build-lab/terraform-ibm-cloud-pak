@@ -2,7 +2,7 @@
 # Script to set pull secrets and reboot the nodes before IAF can be installed
 
 ibmcloud config --check-version=false
-ibmcloud login --apikey ${IC_API_KEY} --no-region -q
+ibmcloud login --apikey ${IC_API_KEY} -r ${REGION} -g ${RESOURCE_GROUP} -q
 ibmcloud ks cluster config -c ${IAF_CLUSTER} --admin
 
 echo "Setting Pull Secret"
