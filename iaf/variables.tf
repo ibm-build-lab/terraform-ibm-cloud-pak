@@ -31,12 +31,10 @@ variable "cluster_name_id" {
 }
 
 variable "region" {
-  default = ""
   description = "Region of the cluster"
 }
 
 variable "resource_group" {
-  default = ""
   description = "Resource group that the cluster is created in"
 }
 
