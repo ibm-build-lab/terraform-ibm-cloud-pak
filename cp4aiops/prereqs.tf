@@ -19,12 +19,12 @@ resource "null_resource" "openshift_serverless" {
     }
     working_dir = "${path.module}/files/"
     interpreter = ["/bin/bash", "-c"]
-    command = "oc apply -n kube-system -f ${local.setOpenshiftServerless_file}"
+    command = "oc apply -f ${local.setOpenshiftServerless_file} && sleep 120"
   }
 }
 
 resource "null_resource" "knative_serving" {
-  depends_on = [var.portworx_is_ready]
+  depends_on = [null_resource.openshift_serverless]
   
   provisioner "local-exec" {
     environment = {
@@ -32,12 +32,12 @@ resource "null_resource" "knative_serving" {
     }
     working_dir = "${path.module}/files/"
     interpreter = ["/bin/bash", "-c"]
-    command = "oc apply -n kube-system -f ${local.setKnativeServing_file}"
+    command = "oc apply -f ${local.setKnativeServing_file} && sleep 60"
   }
 }
 
 resource "null_resource" "knative_eventing" {
-  depends_on = [var.portworx_is_ready]
+  depends_on = [null_resource.knative_serving]
   
   provisioner "local-exec" {
     environment = {
@@ -45,12 +45,12 @@ resource "null_resource" "knative_eventing" {
     }
     working_dir = "${path.module}/files/"
     interpreter = ["/bin/bash", "-c"]
-    command = "oc apply -n kube-system -f ${local.setKnativeEventing_file}"
+    command = "oc apply -f ${local.setKnativeEventing_file} && sleep 60"
   }
 }
 
 resource "null_resource" "disable_knative_route" {
-  depends_on = [var.portworx_is_ready]
+  depends_on = [null_resource.knative_eventing]
 
   provisioner "local-exec" {
     environment = {
@@ -65,7 +65,7 @@ resource "null_resource" "disable_knative_route" {
 # Install Strimzi
 ###########################################
 resource "null_resource" "strimzi_subscription" {
-  depends_on = [var.portworx_is_ready]
+  depends_on = [null_resource.knative_eventing]
   
   provisioner "local-exec" {
     environment = {
@@ -73,7 +73,7 @@ resource "null_resource" "strimzi_subscription" {
     }
     working_dir = "${path.module}/files/"
     interpreter = ["/bin/bash", "-c"]
-    command = "oc apply -n kube-system -f ${local.setStrimzi_file}"
+    command = "oc apply -f ${local.setStrimzi_file} && sleep 120"
   }
 }
 
@@ -81,7 +81,7 @@ resource "null_resource" "strimzi_subscription" {
 # Create and configure storage
 ###########################################
 resource "null_resource" "install_portworx_sc" {
-  depends_on = [var.portworx_is_ready]
+  depends_on = [null_resource.strimzi_subscription]
 
   # Install portworx storage classes on cluster if it's VPC
   count = var.on_vpc ? 1 : 0
@@ -97,7 +97,7 @@ resource "null_resource" "install_portworx_sc" {
 }
 
 resource "null_resource" "install_db2_local" {
-  depends_on = [var.portworx_is_ready]
+  depends_on = [null_resource.strimzi_subscription]
 
   provisioner "local-exec" {
     command     = "./install_db2_local.sh"

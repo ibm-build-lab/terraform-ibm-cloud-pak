@@ -9,16 +9,11 @@ kind: Namespace
 metadata:
   name: local-storage
 ---
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: openshift-local-storage
----
-apiVersion: operators.coreos.com/v1alpha2
+apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
 metadata:
   name: local-operator-group
-  namespace: openshift-local-storage
+  namespace: local-storage
 spec:
   targetNamespaces:
     - local-storage
@@ -34,11 +29,10 @@ spec:
   name: local-storage-operator
   source: redhat-operators
   sourceNamespace: openshift-marketplace
-  startingCSV: local-storage-operator.4.6.0-202106021513
 EOF
 
 
-echo "Waiting 2 minutes for local-storage-operator to install"
+echo "Waiting 2 minutes for local-storage operator to install"
 sleep 120
 
 echo "Applying the Db2 LocalVolume to the cluster."

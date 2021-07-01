@@ -23,11 +23,6 @@ variable "on_vpc" {
   description = "If set to true, lets the module know cluster is using VPC Gen2"
 }
 
-// variable "cluster_endpoint" {
-//   default     = "not-required"
-//   description = "URL to access the OpenShift cluster"
-// }
-
 variable "portworx_is_ready" {
   type = any
   default = null

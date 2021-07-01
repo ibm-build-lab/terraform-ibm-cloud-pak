@@ -8,7 +8,7 @@ variable "enable" {
   description = "If set to true installs Cloud-Pak for Data on the given cluster"
 }
 
-variable "kube_config_path" {
+variable "cluster_config_path" {
   type        = string
   description = "Path to the Kubernetes configuration file to access your cluster"
 }

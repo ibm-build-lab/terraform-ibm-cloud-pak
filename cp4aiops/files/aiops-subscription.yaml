@@ -3,7 +3,7 @@ kind: Subscription
 metadata:
   name: ibm-aiops-orchestrator
   namespace: openshift-operators
- spec:
+spec:
   channel: v3.1
   installPlanApproval: Automatic
   name: ibm-aiops-orchestrator

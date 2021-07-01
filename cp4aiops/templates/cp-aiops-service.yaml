@@ -2,7 +2,7 @@ apiVersion: orchestrator.aiops.ibm.com/v1alpha1
 kind: Installation
 metadata:
   name: ibm-cp-watson-aiops
-  namespace: aiops2
+  namespace: NAMESPACE
 spec:
   automationFoundation: {}
   imagePullSecret: ibm-entitlement-key

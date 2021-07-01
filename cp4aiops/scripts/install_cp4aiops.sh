@@ -106,7 +106,8 @@ spec:
       interval: 45m
 EOF
 
-echo "Sleeping 3 minutes for catalog services"
+echo "Sleeping 1 minutes for catalog services"
+sleep 60
 
 echo "Applying CP4WAIOPS subscription"
 echo "${CP4WAIOPS}" | oc apply -f -
@@ -124,9 +125,9 @@ else
   storage_class="ibmc-file-gold-gid"
   storage_block_class="ibmc-file-gold-gid"
 fi
-AIOPS_SERVICE=`sed -e "s/STORAGE_CLASS/${storage_class}/g" -e "s/STORAGE_BLOCK_CLASS/${storage_block_class}/g" ../templates/cp-aiops-service.yaml`
+AIOPS_SERVICE=`sed -e "s/NAMESPACE/${NAMESPACE}/g" -e "s/STORAGE_CLASS/${storage_class}/g" -e "s/STORAGE_BLOCK_CLASS/${storage_block_class}/g" ../templates/cp-aiops-service.yaml`
 echo "Deploying Watson AIOPS Service ${AIOPS_SERVICE}"
-sed -e "s/STORAGE_CLASS/${storage_class}/g" -e "s/STORAGE_BLOCK_CLASS/${storage_block_class}/g" ../templates/cp-aiops-service.yaml | oc -n ${NAMESPACE} apply -f -
+sed -e "s/NAMESPACE/${NAMESPACE}/g" -e "s/STORAGE_CLASS/${storage_class}/g" -e "s/STORAGE_BLOCK_CLASS/${storage_block_class}/g" ../templates/cp-aiops-service.yaml | oc -n ${NAMESPACE} apply -f -
 
 
 SLEEP_TIME="60"
