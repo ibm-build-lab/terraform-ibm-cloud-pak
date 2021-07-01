@@ -1,0 +1,137 @@
+{
+  "name": "{{ WORKSPACE_NAME }}",
+  "type": [
+    "terraform_v0.12"
+  ],
+  "description": "IBM Cloud Schematics Workspace to deploy an OpenShift cluster sandbox for Cloud Pak for Integration on IBM Cloud Classic",
+  "tags": [
+    "owner:{{ OWNER }}",
+    "env:{{ ENV }}",
+    "project:{{ PROJECT }}"
+  ],
+  "resource_group": "cloud-pak-sandbox",
+  "template_repo": {
+    "url": "https://github.ibm.com/hcbt/terraform-ibm-cloud-pak/",
+    "branch": "{{ BRANCH }}"
+  },
+  "template_data": [
+    {
+      "folder": "examples/cp4i",
+      "type": "terraform_v0.12",
+      "variablestore": [
+        {
+          "name": "region",
+          "value": "us-south",
+          "type": "string"
+        },
+        {
+          "name": "project_name",
+          "value": "{{ PROJECT }}",
+          "type": "string"
+        },
+        {
+          "name": "owner",
+          "value": "{{ OWNER }}",
+          "type": "string"
+        },
+        {
+          "name": "environment",
+          "value": "{{ ENV }}",
+          "type": "string"
+        },
+        {
+          "name": "resource_group",
+          "value": "cloud-pak-sandbox",
+          "type": "string"
+        },
+        {
+          "name": "cluster_id",
+          "value": "{{ CLUSTER_ID }}",
+          "type": "string"
+        },
+        {
+          "name": "datacenter",
+          "value": "dal10",
+          "type": "string"
+        },
+        {
+          "name": "on_vpc",
+          "value": "false",
+          "type": "bool"
+        },
+        {
+          "name": "vpc_zone_names",
+          "value": "[\"us-south-1\"]",
+          "type": "list(string)"
+        },
+        {
+          "name": "flavors",
+          "value": "[\"b3c.16x64\"]",
+          "type": "list(string)"
+        },
+        {
+          "name": "install_portworx",
+          "value": "false",
+          "type": "bool"
+        },
+        {
+          "name": "private_vlan_number",
+          "value": "",
+          "type": "string"
+        },
+        {
+          "name": "public_vlan_number",
+          "value": "",
+          "type": "string"
+        },
+        {
+          "name": "entitled_registry_key",
+          "value": "{{ ENTITLED_KEY }}",
+          "type": "string",
+          "secure": true
+        },
+        {
+          "name": "entitled_registry_user_email",
+          "value": "{{ ENTITLED_KEY_EMAIL }}",
+          "type": "string"
+        },
+        {
+          "name": "ibmcloud_api_key",
+          "value": "",
+          "type": "string",
+          "secure": true
+        },
+        {
+          "name": "storage_capacity",
+          "value": "200",
+          "type": "number"
+        },
+        {
+          "name": "storage_iops", 
+          "value": "10",
+          "type": "number"
+        },
+        {
+          "name": "storage_profile",
+          "value": "10iops-tier",
+          "type": "string"
+        },
+        {
+          "name": "create_external_etcd",
+          "value": "false",
+          "type": "bool"
+        },
+        {
+          "name": "etcd_username",
+          "value": "",
+          "type": "string"
+        },
+        {
+          "name": "etcd_password",
+          "value": "",
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}

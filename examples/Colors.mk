@@ -1,0 +1,11 @@
+ECHO 				= echo -e
+C_STD 			= $(shell echo -e "\033[0m")
+C_RED				= $(shell echo -e "\033[91m")
+C_GREEN 		= $(shell echo -e "\033[92m")
+C_YELLOW 		= $(shell echo -e "\033[93m")
+P 			 		= $(shell echo -e "\033[92m> \033[0m")
+INFO		 		= $(shell echo -e "\033[93m[INFO ] \033[0m")
+OK 			 		= $(shell echo -e "\033[92m[ OK  ] \033[0m")
+ERROR		 		= $(shell echo -e "\033[91m[ERROR] \033[0m")
+PASS		 		= $(shell echo -e "\033[92m[PASS ] \033[0m")
+FAIL		 		= $(shell echo -e "\033[91m[FAIL ] \033[0m")

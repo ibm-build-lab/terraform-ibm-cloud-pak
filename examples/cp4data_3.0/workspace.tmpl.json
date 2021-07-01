@@ -1,0 +1,141 @@
+{
+  "name": "{{ WORKSPACE_NAME }}",
+  "type": [
+    "terraform_v0.12"
+  ],
+  "description": "IBM Cloud Schematics Workspace to deploy an OpenShift cluster sandbox for Cloud Pak for Data v3.0 on IBM Cloud Classic",
+  "tags": [
+    "owner:{{ OWNER }}",
+    "env:{{ ENV }}",
+    "project:{{ PROJECT }}"
+  ],
+  "resource_group": "cloud-pak-sandbox",
+  "template_repo": {
+    "url": "https://github.com/ibm-hcbt/cloud-pak-sandboxes",
+    "branch": "{{ BRANCH }}"
+  },
+  "template_data": [
+    {
+      "folder": "terraform/cp4data",
+      "type": "terraform_v0.12",
+      "variablestore": [
+        {
+          "name": "region",
+          "value": "us-south",
+          "type": "string"
+        },
+        {
+          "name": "project_name",
+          "value": "{{ PROJECT }}",
+          "type": "string"
+        },
+        {
+          "name": "owner",
+          "value": "{{ OWNER }}",
+          "type": "string"
+        },
+        {
+          "name": "environment",
+          "value": "{{ ENV }}",
+          "type": "string"
+        },
+        {
+          "name": "resource_group",
+          "value": "cloud-pak-sandbox",
+          "type": "string"
+        },
+        {
+          "name": "cluster_id",
+          "value": "{{ CLUSTER_ID }}",
+          "type": "string"
+        },
+        {
+          "name": "datacenter",
+          "value": "dal10",
+          "type": "string"
+        },
+        {
+          "name": "private_vlan_number",
+          "value": "",
+          "type": "string"
+        },
+        {
+          "name": "public_vlan_number",
+          "value": "",
+          "type": "string"
+        },
+        {
+          "name": "entitled_registry_key",
+          "value": "{{ ENTITLED_KEY }}",
+          "type": "string",
+          "secure": true
+        },
+        {
+          "name": "on_vpc",
+          "value": "false",
+          "type": "bool"
+        },
+        {
+          "name": "vpc_zone_names",
+          "value": "[\"us-south-1\"]",
+          "type": "list(string)"
+        },
+        {
+          "name": "entitled_registry_user_email",
+          "value": "{{ ENTITLED_KEY_EMAIL }}",
+          "type": "string"
+        },
+        {
+          "name": "install_guardium_external_stap",
+          "value": "false",
+          "type": "bool"
+        },
+        {
+          "name": "docker_id",
+          "value": "",
+          "type": "string"
+        },
+        {
+          "name": "docker_access_token",
+          "value": "",
+          "type": "string"
+        },
+        {
+          "name": "install_watson_assistant",
+          "value": "false",
+          "type": "bool"
+        },
+        {
+          "name": "install_watson_assistant_for_voice_interaction",
+          "value": "false",
+          "type": "bool"
+        },
+        {
+          "name": "install_watson_discovery",
+          "value": "false",
+          "type": "bool"
+        },
+        {
+          "name": "install_watson_knowledge_studio",
+          "value": "false",
+          "type": "bool"
+        },
+        {
+          "name": "install_watson_language_translator",
+          "value": "false",
+          "type": "bool"
+        },
+        {
+          "name": "install_watson_speech_text",
+          "value": "false",
+          "type": "bool"
+        },
+        {
+          "name": "install_edge_analytics",
+          "value": "false",
+          "type": "bool"
+        }
+      ]
+    }
+  ]
+}
