@@ -134,7 +134,6 @@ SLEEP_TIME="60"
 RUN_LIMIT=200
 i=0
 
-count = 0
 while true; do
   if ! STATUS_LONG=$(oc -n ${NAMESPACE} get installation.orchestrator.aiops.ibm.com ibm-cp-watson-aiops --output=json | jq -c -r '.status'); then
     echo 'Error getting status'
