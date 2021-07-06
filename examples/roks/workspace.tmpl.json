@@ -9,7 +9,7 @@
   ],
   "resource_group": "cloud-pak-sandbox",
   "template_repo": {
-    "url": "https://github.ibm.com/hcbt/terraform-ibm-cloud-pak/",
+    "url": "https://github.com/ibm-hcbt/terraform-ibm-cloud-pak",
     "branch": "{{ BRANCH }}"
   },
   "template_data": [
