@@ -26,6 +26,8 @@ resource "null_resource" "install_iaf" {
     environment = {
       KUBECONFIG                       = var.cluster_config_path
       IAF_CLUSTER                      = var.cluster_name_id
+      REGION                           = var.region
+      RESOURCE_GROUP                   = var.resource_group
       IAF_CLUSTER_ON_VPC               = var.on_vpc
       IC_API_KEY                       = local.ibmcloud_api_key
       IAF_ENTITLED_REGISTRY_USER       = local.entitled_registry_user

@@ -30,6 +30,14 @@ variable "cluster_name_id" {
   description = "Name or id of the cluster"
 }
 
+variable "region" {
+  description = "Region of the cluster"
+}
+
+variable "resource_group" {
+  description = "Resource group that the cluster is created in"
+}
+
 variable "openshift_version" {
   description = "Openshift version installed in the cluster"
 }
