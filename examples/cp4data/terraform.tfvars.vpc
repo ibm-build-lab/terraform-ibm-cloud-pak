@@ -1,0 +1,82 @@
+// Openshift cluster parameters
+// ----------------------------
+
+// Create a cluster based on values below
+project_name 	= "vpc"
+owner        	= "anonymous"
+environment  	= "test"
+
+// Region, run "ibmcloud regions"
+region       	= "us-south"
+
+// Resource group, run "ibmcloud resource groups" to see options.
+resource_group 	= "cloud-pak-sandbox"
+
+// OpenShift version, run command "ibmcloud ks versions" to see options
+roks_version	= 4.6
+
+// Remove peristent storage during deletion
+force_delete_storage	= true
+
+// Cloud Pak entitlement
+// entitlement    = "cloud-pak"
+entitlement     = ""
+
+// VPC required variables
+on_vpc        	= true
+
+// zone names, run "ibmcloud ks zone ls --provider vpc-gen2"
+vpc_zone_names  = ["us-south-1"]
+// flavor, run "ibmcloud ks flavors --zone <zone> --provider vpc-gen2"
+flavors         = ["bx2.16x64"]
+workers_count   = [4]
+
+install_portworx = true
+
+# enable                  = true
+ibmcloud_api_key        = "[ API_KEY ]"
+
+// Cluster parameters
+# kube_config_path        = ".kube/config"
+# worker_nodes            = 4  // Number of workers
+
+// Storage parameters
+storage_capacity        = 200  // In GBs
+storage_iops            = 10   // Must be a number, it will not be used unless a storage_profile is set to a custom profile
+storage_profile         = "10iops-tier"
+
+// Portworx parameters
+cluster_id                = ""
+
+// These credentials have been hard-coded because the 'Databases for etcd' service instance is not configured to have a publicly accessible endpoint by default.
+// You may override these for additional security.
+create_external_etcd    = false
+etcd_username           = "portworxuser"
+etcd_password           = "portworxpassword"
+# etcd_secret_name        = "px-etcd-certs" # don't change this
+
+// Cloud Pak for Data
+// Entitled Registry parameters:
+entitled_registry_key        = "[ ENTITLEMENT_KEY ]"
+entitled_registry_user_email = "john.doe@ibm.com"
+
+// CP4D License Acceptance
+accept_cpd_license = true
+
+// CP4D Info
+cpd_project_name = "cp4d"
+
+// Parameters to install submodules
+install_watson_knowledge_catalog = false
+install_watson_studio            = false
+install_watson_machine_learning  = false
+install_watson_open_scale        = false
+install_data_virtualization      = false
+install_streams                  = false
+install_analytics_dashboard      = false
+install_spark                    = false
+install_db2_warehouse            = false
+install_db2_data_gate            = false
+install_big_sql                  = false
+install_rstudio                  = false
+install_db2_data_management      = false
