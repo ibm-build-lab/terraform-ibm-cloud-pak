@@ -1,0 +1,13 @@
+apiVersion: metaoperator.cpd.ibm.com/v1
+kind: CPDService
+metadata:
+  name: lite-cpdservice
+  namespace: cp4d
+spec:
+  serviceName: lite
+  version: latest
+  storageClass: ibmc-file-gold-gid
+  overrideConfig: ""
+  license:
+    accept: true
+  optionalModules: []

@@ -1,0 +1,38 @@
+// Openshift cluster parameters
+// ----------------------------
+
+// Use cluster_id if there is a cluster to install the Cloud Pak, example:
+// cluster_id = "****************"
+
+// Otherwise, create a cluster based on values below
+project_name = "cloud-pack"
+owner        = "anonymous"
+environment  = "sandbox"
+region       = "us-south"
+on_vpc       = false
+// Using development resource group on cloud account:
+// resource_group = "cloud-pak-sandbox-ibm"
+// Using a standard partner account resource group
+resource_group = "cloud-pak-sandbox"
+datacenter     = ""
+
+// VLAN's numbers in datacenter, if they exist. 
+//private_vlan_number = ""
+//public_vlan_number  = ""
+
+// Entitlement Key parameters
+// --------------------------
+
+// 1. Get the entitlement key from: https://myibm.ibm.com/products-services/containerlibrary, save the key to the
+// file "./entitlement.key"
+// 2. Set the entitled_registry_user_email with the docker email address to login to the registry, example:
+entitled_registry_user_email = "John.Doe@ibm.com"
+
+// CP4MCM Modules installation parameters
+// --------------------------------------
+
+install_infr_mgt_module      = false
+install_monitoring_module    = false
+install_security_svcs_module = false
+install_operations_module    = false
+install_tech_prev_module     = false
