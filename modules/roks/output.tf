@@ -2,6 +2,11 @@ output "endpoint" {
   value = ! var.enable ? "" : var.on_vpc ? join("", ibm_container_vpc_cluster.cluster.*.public_service_endpoint_url) : join("", ibm_container_cluster.cluster.*.public_service_endpoint_url)
 }
 
+// Used for cp4d output
+output "ingress_hostname" {
+  value = ! var.enable ? "" : length(ibm_container_vpc_cluster.cluster) > 0 ? ibm_container_vpc_cluster.cluster.0.ingress_hostname : ibm_container_cluster.cluster.0.ingress_hostname
+}
+
 output "id" {
   value = var.enable ? (var.on_vpc ? join("", ibm_container_vpc_cluster.cluster.*.id) : join("", ibm_container_cluster.cluster.*.id)) : ""
 }

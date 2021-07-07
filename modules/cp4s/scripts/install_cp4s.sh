@@ -15,7 +15,7 @@
 # - kubectl
 
 # Optional input parameters with default values:
-NAMESPACE=${NAMESPACE:-cp4i}
+NAMESPACE=${default}
 DEBUG=${DEBUG:-false}
 DOCKER_USERNAME=${DOCKER_USERNAME:-cp}
 DOCKER_REGISTRY=${DOCKER_REGISTRY:-cp.icr.io}  # adjust this if needed
@@ -31,11 +31,8 @@ done
 echo "Deploying Catalog Option ${IBM_OPERATOR_CATALOG}"
 echo "${IBM_OPERATOR_CATALOG}" | oc apply -f -
 
-echo "Deploying Catalog Option ${OPENCLOUD_OPERATOR_CATALOG}"
-echo "${OPENCLOUD_OPERATOR_CATALOG}" | oc apply -f -
-
 # echo "Creating namespace ${NAMESPACE}"
-echo "creating namespace ${NAMESPACE}"
+echo "creating namespace cp4i"
 kubectl create namespace ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
 
 create_secret() {
@@ -55,57 +52,27 @@ create_secret() {
 }
 
 create_secret ibm-entitlement-key default
-create_secret ibm-entitlement-key openshift-operators
-create_secret ibm-entitlement-key $NAMESPACE
+create_secret ibm-entitlement-key ${NAMESPACE}
+
+wget https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-linux-amd64.tar.gz
+tar -xf cloudctl-linux-amd64.tar.gz 
 
 sleep 40
 
 echo "Deploying Subscription ${SUBSCRIPTION}"
 echo "${SUBSCRIPTION}" | oc apply -f -
 
-echo "Waiting 17minutes for operators to install..."
-sleep 1020
+sleep 120
 
-if ${ON_VPC}; then
-  storage_class="portworx-rwx-gp3-sc"
-else
-  storage_class="ibmc-file-gold-gid"
-fi
-PLATFORM_NAVIGATOR=`sed -e "s/STORAGECLASS/${storage_class}/g" ../templates/navigator.yaml`
-echo "Deploying Platform Navigator ${PLATFORM_NAVIGATOR}"
-sed -e "s/STORAGECLASS/${storage_class}/g" ../templates/navigator.yaml | oc -n ${NAMESPACE} apply -f -
+HELM3=$(which helm3)
+oc get users
 
-SLEEP_TIME="60"
-RUN_LIMIT=200
-i=0
+chmod +x ./cloudctl-linux-amd64
+./cloudctl-linux-amd64 case save -t 1 --case https://github.com/IBM/cloud-pak/raw/master/repo/case/ibm-cp-security-1.0.17.tgz --outputdir ./cp4s_cli_install/ && tar -xf ./cp4s_cli_install/ibm-cp-security-1.0.17.tgz
+CONF=$(sed -e "s/LDAP_USER_ID/${LDAP_USER_ID}/g" -e "s/ENTITLEMENT_KEY/${DOCKER_REGISTRY_PASS}/g"  ../templates/values.conf)
+echo $CONF > ./ibm-cp-security/inventory/installProduct/files/values.conf
+./cloudctl-linux-amd64 case launch -t 1 --case ibm-cp-security --namespace default  --inventory installProduct --action install --args "--license accept --helm3 $HELM3 --inputDir ./cp4s_cli_install/"
 
-while true; do
-  if ! STATUS_LONG=$(oc -n ${NAMESPACE} get platformnavigator cp4i-navigator --output=json | jq -c -r '.status'); then
-    echo 'Error getting status'
-    exit 1
-  fi
-
-  echo $STATUS_LONG
-  STATUS=$(echo $STATUS_LONG | jq -c -r '.conditions[0].type')
-
-  if [ "$STATUS" == "Ready" ]; then
-    break
-  fi
-  
-  if [ "$STATUS" == "Failed" ]; then
-    echo '=== Installation has failed ==='
-    exit 1
-  fi
-  
-  echo "Sleeping $SLEEP_TIME seconds..."
-  sleep $SLEEP_TIME
-  
-  (( i++ ))
-  if [ "$i" -eq "$RUN_LIMIT" ]; then
-    echo 'Timed out'
-    exit 1
-  fi
-done
 # The following code is taken from get_enpoints.sh, to print what it's getting
 # result_txt=$(kubectl logs -n ${NAMESPACE} $pod | sed 's/[[:cntrl:]]\[[0-9;]*m//g' | tail -20)
 # if ! echo $result_txt | grep -q 'Installation of assembly lite is successfully completed'; then

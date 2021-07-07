@@ -7,28 +7,25 @@ data ibm_resource_group group {
   name = var.resource_group_name
 }
 data ibm_container_vpc_cluster this{
+  count = var.enable ? 1 : 0
   name = var.cluster_id
   resource_group_id = data.ibm_resource_group.group.id
 }
 data "ibm_container_vpc_cluster_worker" "this" {
-  count = var.worker_nodes
+  count = var.enable ? var.worker_nodes : 0
 
   cluster_name_id   = var.cluster_id
   resource_group_id = data.ibm_resource_group.group.id
-  worker_id         = data.ibm_container_vpc_cluster.this.workers[count.index]
+  worker_id         = length(data.ibm_container_vpc_cluster.this) > 0 ? data.ibm_container_vpc_cluster.this[0].workers[count.index] : 0
 }
 
-data "ibm_iam_auth_token" "this" {
-  depends_on = [
-    data.ibm_container_vpc_cluster_worker.this
-  ]
-}
+data "ibm_iam_auth_token" "this" {}
 
 # ibm_is_subnet is currently bugged. On a run, it can error with an expired or bad token. A subsequent rerun fixes this, 
 # but this script should run the first time without any problems.
 data "ibm_is_subnet" "this" {
-  count = var.worker_nodes
-  identifier = data.ibm_container_vpc_cluster_worker.this[count.index].network_interfaces[0].subnet_id
+  count = var.enable ? var.worker_nodes : 0
+  identifier = length(data.ibm_container_vpc_cluster_worker.this) > 0 ? data.ibm_container_vpc_cluster_worker.this[count.index].network_interfaces[0].subnet_id : 0
 }
 
 # data "external" "get_zone_from_subnet" {
@@ -57,10 +54,10 @@ resource "ibm_is_volume" "this" {
   
   capacity = var.storage_capacity
   iops = var.storage_profile == "custom" ? var.storage_iops : null
-  name = "${var.unique_id}-pwx-${split("-", data.ibm_container_vpc_cluster.this.workers[count.index])[4]}"
+  name = length(data.ibm_container_vpc_cluster.this) > 0 ? "${var.unique_id}-pwx-${split("-", data.ibm_container_vpc_cluster.this[0].workers[count.index])[4]}" : "${var.unique_id}-pwx"
   profile = var.storage_profile
   resource_group = data.ibm_resource_group.group.id
-  zone = data.ibm_is_subnet.this[count.index].zone
+  zone = length(data.ibm_is_subnet.this) > 0 ? data.ibm_is_subnet.this[count.index].zone : ""
 }
 
 # locals {
@@ -78,8 +75,8 @@ resource "null_resource" "volume_attachment" {
   # for_each = local.worker_volume_map
   
   triggers = {
-    volume = ibm_is_volume.this[count.index].id
-    worker = data.ibm_container_vpc_cluster_worker.this[count.index].id
+    volume = length(ibm_is_volume.this) > 0 ? ibm_is_volume.this[count.index].id : 0
+    worker = length(data.ibm_container_vpc_cluster_worker.this) > 0 ? data.ibm_container_vpc_cluster_worker.this[count.index].id : 0
   }
 
   provisioner "local-exec" {
@@ -89,8 +86,8 @@ resource "null_resource" "volume_attachment" {
       REGION            = var.region
       RESOURCE_GROUP_ID = data.ibm_resource_group.group.id
       CLUSTER_ID        = var.cluster_id
-      WORKER_ID         = data.ibm_container_vpc_cluster_worker.this[count.index].id
-      VOLUME_ID         = ibm_is_volume.this[count.index].id
+      WORKER_ID         = length(data.ibm_container_vpc_cluster_worker.this) > 0 ? data.ibm_container_vpc_cluster_worker.this[count.index].id : 0
+      VOLUME_ID         = length(ibm_is_volume.this) > 0 ? ibm_is_volume.this[count.index].id : 0
     }
 
     interpreter = ["/bin/bash", "-c"]
@@ -99,21 +96,21 @@ resource "null_resource" "volume_attachment" {
 
   # this breaks beyond terraform 0.12 because destroy provisioners are not allowed to reference other resources
   # check with ibm terraform providers team for a volume_attachment resource
-  provisioner "local-exec" {
-    when = destroy
-    environment = {
-      IBMCLOUD_API_KEY  = var.ibmcloud_api_key
-      TOKEN             = data.ibm_iam_auth_token.this.iam_access_token
-      REGION            = var.region
-      RESOURCE_GROUP_ID = data.ibm_resource_group.group.id
-      CLUSTER_ID        = var.cluster_id
-      WORKER_ID         = data.ibm_container_vpc_cluster_worker.this[count.index].id
-      VOLUME_ID         = ibm_is_volume.this[count.index].id
-    }
+  # provisioner "local-exec" {
+  #   when = destroy
+  #   environment = {
+  #     IBMCLOUD_API_KEY  = var.ibmcloud_api_key
+  #     TOKEN             = data.ibm_iam_auth_token.this.iam_access_token
+  #     REGION            = var.region
+  #     RESOURCE_GROUP_ID = data.ibm_resource_group.group.id
+  #     CLUSTER_ID        = var.cluster_id
+  #     WORKER_ID         = length(data.ibm_container_vpc_cluster_worker.this) > 0 ? data.ibm_container_vpc_cluster_worker.this[count.index].id : 0
+  #     VOLUME_ID         = length(ibm_is_volume.this) > 0 ? ibm_is_volume.this[count.index].id : 0
+  #   }
   
-    interpreter = ["/bin/bash", "-c"]
-    command     = file("${path.module}/scripts/volume_attachment_destroy.sh")
-  }
+  #   interpreter = ["/bin/bash", "-c"]
+  #   command     = file("${path.module}/scripts/volume_attachment_destroy.sh")
+  # }
 }
 
 #############################################
