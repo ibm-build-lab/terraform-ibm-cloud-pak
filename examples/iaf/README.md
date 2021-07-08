@@ -1,8 +1,12 @@
 # IAF Terraform Module example
 
+To run using IBM Cloud Schematics refer [here](https://cloud.ibm.com/docs/schematics?topic=schematics-about-schematics#how-to-workspaces)
+
+To run using the local Terraform Client on your local machine, follow below.  
+
 ## Prerequisites
 
-If running this module from your local terminal, you will need to:
+If running this example from your local terminal, you will need to:
 
 - Have an IBM Cloud account with required privileges
 - [Install IBM Cloud CLI](https://ibm.github.io/cloud-enterprise-examples/iac/setup-environment#install-ibm-cloud-cli)
@@ -15,6 +19,7 @@ If running this module from your local terminal, you will need to:
   - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
   - [oc](https://docs.openshift.com/container-platform/3.6/cli_reference/get_started_cli.html)
 
+
 ## Set up access to IBM Cloud
 
 You can define the IBM Cloud credentials in the IBM provider block but it is recommended to pass them in as environment variables.
@@ -25,13 +30,11 @@ Go [here](../../CREDENTIALS.md) for details.
 
 ## Set Cloud Pak Entitlement Key
 
-This module also requires an Entitlement Key. Obtain it [here](https://myibm.ibm.com/products-services/containerlibrary) and store it in the file `entitlement.key` in the root of this repository. If you use that filename, the file won't be published to GitHub if you accidentally push to GitHub.
+This module also requires an Entitlement Key. Obtain it [here](https://myibm.ibm.com/products-services/containerlibrary) and store it in the file `entitlement.key` in the root of this cloned repository (../..). If you use that filename, the file won't be published to GitHub if you accidentally push to GitHub.
 
 ## Execute
 
-Follow these instructions to execute the example
-
-Create the file `terraform.tfvars` with the following input variables, these values are fake examples:
+Create the file `terraform.tfvars` with the following input variables. NOTE: these values are just examples:
 
 ```hcl
 on_vpc                       = "false"
