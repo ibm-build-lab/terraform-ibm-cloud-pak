@@ -1,6 +1,5 @@
 locals {
   catalogsource_content = templatefile("${path.module}/templates/CatalogSource.yaml.tmpl", {
-    openshift_version_number = local.openshift_version_number
   })
   automationbase_content = templatefile("${path.module}/templates/AutomationBase.yaml.tmpl", {
     namespace                    = local.iaf_namespace

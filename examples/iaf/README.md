@@ -1,87 +1,76 @@
-# IBM Automation Foundation Parameters and Installation Validation
+# IAF Terraform Module example
 
-## Cloud Pak Entitlement Key and IBM Cloud API Key
+This example requires an existing OpenShift cluster with at least 4 nodes sized 16x64.
 
-This Cloud Pak requires an [IBM Cloud API key](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform#create-an-ibm-cloud-api-key) and an [Entitlement Key](https://myibm.ibm.com/products-services/containerlibrary)
+## Run using IBM Cloud Schematics
 
-If running locally, edit the `./my_variables.auto.tfvars` file to define the `ic_api_key`, `entitled_registry_user_email` and `entitled_registry_key` or save the entitlement key in the file `entitlement.key`. The `entitled_registry_user_email` is set to the user email address of the account used to generate the Entitlement Key.
+To run from a schematics workspace, refer [here](https://cloud.ibm.com/docs/schematics?topic=schematics-get-started-terraform).
 
-For example:
+## Run using local Terraform Client
+
+To run using the local Terraform Client on your local machine follow these steps:
+
+### Prerequisites
+
+If running this example from your local terminal, you will need to:
+
+- Have an IBM Cloud account with required privileges
+- [Install IBM Cloud CLI](https://ibm.github.io/cloud-enterprise-examples/iac/setup-environment#install-ibm-cloud-cli)
+- [Install the IBM Cloud CLI Plugins](https://ibm.github.io/cloud-enterprise-examples/iac/setup-environment#ibm-cloud-cli-plugins) `schematics` and `kubernetes-service`.
+- [Login to IBM Cloud with the CLI](https://ibm.github.io/cloud-enterprise-examples/iac/setup-environment#login-to-ibm-cloud)
+- [Install Terraform](https://ibm.github.io/cloud-enterprise-examples/iac/setup-environment#install-terraform) **version 0.12**
+- [Install IBM Cloud Terraform Provider](https://ibm.github.io/cloud-enterprise-examples/iac/setup-environment#configure-access-to-ibm-cloud)
+- Install utility tools:
+  - [jq](https://stedolan.github.io/jq/download/)
+  - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+  - [oc](https://docs.openshift.com/container-platform/3.6/cli_reference/get_started_cli.html)
+
+
+### Set up access to IBM Cloud
+
+You can define the IBM Cloud credentials in the IBM provider block but it is recommended to pass them in as environment variables.
+
+Go [here](../../CREDENTIALS.md) for details.
+
+**NOTE**: These credentials are not required if running this Terraform code within an **IBM Cloud Schematics** workspace. They are automatically set from your account.
+
+### Set Cloud Pak Entitlement Key
+
+This module also requires an Entitlement Key. Obtain it [here](https://myibm.ibm.com/products-services/containerlibrary) and store it in the file `entitlement.key` in the root of this cloned repository (../..). If you use that filename, the file won't be published to GitHub if you accidentally push to GitHub.
+
+### Execute
+
+Create the file `terraform.tfvars` with the following input variables. NOTE: these values are just examples:
 
 ```hcl
-# Required
-ic_api_key = "< your IBM Cloud API key >"
-
-# Required
-entitled_registry_user_email = "< Entitlement Key user email here >"
-
-# Optional if not specifying in entitlement.key file:
-entitled_registry_key        = "< Entitlement Key here >"
+on_vpc                       = "false"
+config_dir                   = ".kube/config"
+cluster_id                   = "btvlh6bd0di5v70fhqn0"
+entitled_registry_user_email = "John.Smith@ibm.com"
+resource_group               = "Default"
+ibmcloud_api_key             = "******************************"
 ```
 
-**IMPORTANT**: Make sure to not commit the Entitlement Key file or content to the github repository.
+These parameters are:
 
-## Input Parameters
+- `entitled_registry_user_email`: username or email address of the user owner of the entitlement key. There is no default value, so this variable is required.
+- `on_vpc`: Infrastructure where the cluster is running. The possible values are: `true` and `false`. The default value is `false`.
+- `resource_group`: Resource group where the cluster is running. Default value is `Default`
+- `config_dir`: Directory to download the kubeconfig file. Default value is `./.kube/config`
+- `cluster_id`: Cluster ID of the OpenShift cluster where to install IAF
+- `ibmcloud_api_key`: IBM Cloud API Key created [here](../../CREDENTIALS.md#create-an-ibm-cloud-api-key) 
 
-Besides the access credentials the Terraform code requires the following input parameters, for some variables are instructions to get the possible values using `ibmcloud`.
-
-| Name                           | Description | Default             | Required |
-| ------------------------------ | ------ | ------------------- | -------- |
-| `entitled_registry_key`        | Required: [Entitlement key](https://myibm.ibm.com/products-services/containerlibrary), copy and paste the key to this variable or save the key to the file `entitlement.key`.  |                     | Yes       |
-| `entitled_registry_user_email` | Optional: Email address of the user owner of the Entitled Registry Key  |                     | Yes      |
-| `ic_api_key` | Required: API Key needed to log in to IBM Cloud  |                     | Yes      |
-| `region`                       | IBM Cloud region to host the cluster. List all available zones with: `ibmcloud is regions`   | `us-south`          | Yes       |
-| `resource_group`               | Resource Group in your account to host the cluster. List all available resource groups with: `ibmcloud resource groups` | `cloud-pak-sandbox` | No       |
-| `cluster_id`                   | Optional: If you have an existing cluster to install the Cloud Pak, use the cluster ID or name. If left blank, a new Openshift cluster will be provisioned   | | No       |
-| `on_vpc`                   | Whether OpenShift cluster is on VPC  | `false`                    | Yes       |
-| `project_name`                 | Only required if cluster_id is not specified. The project name is used to name the cluster with the environment name. It's also used to label the cluster and other resources  | `cloud-pack`        | No      |
-| `environment`                  | Only required if cluster_id is not specified. The environment name is used to label the cluster and other resources | `sandbox`           | No       |
-| `owner`                        | Optional: user name or team name. Used to label the cluster and other resources | `anonymous`         | No      |
-| `flavors`        | Only required if cluster_id is not specified. Array with the flavors or machine types of each of the workers. List all flavors for each zone with: "ibmcloud ks flavors --zone us-south-1 --provider vpc-gen2" or "ibmcloud ks flavors --zone dal10 --provider classic". On Classic it is only possible to have one worker group, so only list one flavor, i.e. ["b3c.16x64"]. Example on VPC ["mx2.4x32", "mx2.8x64", "cx2.4x8"] or ["mx2.4x32"]   | `["b3c.16x64"]`                  | No       |
-| `datacenter`                   | Classic Only: Only required if cluster_id is not specified. Datacenter or zone in the region to provision the cluster. List all available zones with: `ibmcloud ks zone ls --provider classic`   | `dal10`             | No       |
-| `private_vlan_number`          | Classic Only: Only required if cluster_id is not specified. Private VLAN assigned to your zone. List available VLANs in the zone: `ibmcloud ks vlan ls --zone`, make sure the the VLAN type is private and the router begins with **bc**. Use the ID or Number. This value may be empty if there isn't any VLAN in the Zone, however this may cause issues if the code is applied again. |                     | No       |
-| `public_vlan_number`           | Classic Only: Only required if cluster_id is not specified. Public VLAN assigned to your zone. List available VLANs in the zone: `ibmcloud ks vlan ls --zone`, make sure the the VLAN type is public and the router begins with **fc**. Use the ID or Number. This value may be empty if there isn't any VLAN in the Zone, however this may cause issues if the code is applied again.   |                     | No       |
-| `vpc_zone_names`                   | VPC Only: Only required if cluster_id is not specified. Zones in the region to provision the cluster. List all available zones with: `ibmcloud ks zone ls --provider vpc-gen2`   | `us-south-1`             | No       |
-
-If you are using Schematics directly or the Private Catalog, set the variable `entitled_registry_key` with the content of the Entitlement Key, the file `entitlement.key` is not available.
-
-## Output Parameters
-
-The Terraform code return the following output parameters.
-
-| Name               | Description                                                                                                                         |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `cluster_endpoint` | The URL of the public service endpoint for your cluster                                                                             |
-| `cluster_id`       | The unique identifier of the cluster.                                                                                               |
-| `cluster_name`     | The cluster name which should be: `{project_name}-{environment}-cluster`                                                            |
-| `resource_group`   | Resource group where the OpenShift cluster is created                                                                               |
-| `kubeconfig`       | File path to the kubernetes cluster configuration file. Execute `export KUBECONFIG=$(terraform output kubeconfig)` to use `kubectl` |                                                                                        |
-| `iaf_namespace` | Kubernetes namespace where all the iaf resources are installed                                                                     |
-
-## Validations
-
-If you have not setup `kubectl` to access the cluster, execute:
+Execute the following Terraform commands:
 
 ```bash
-# If created with Terraform:
-ibmcloud ks cluster config --cluster $(terraform output cluster_id)
-
-# If created with Schematics:
-ibmcloud ks cluster config --cluster $(ibmcloud schematics workspace output --id $WORKSPACE_ID --json | jq -r '.[].output_values[].cluster_id.value')
-
-# If created with IBM Cloud CLI:
-ibmcloud ks cluster config --cluster $CLUSTER_NAME
+terraform init
+terraform plan
+terraform apply -auto-approve
 ```
 
-Verify the cluster is up and running executing these commands:
+### Verify
 
-```bash
-kubectl cluster-info
-kubectl get nodes
-kubectl get pods --all-namespaces
-```
-
-Execute the following commands to validate this Cloud Pak:
+To verify installation on the Kubernetes cluster you need `kubectl`, then execute:
 
 ```bash
 export KUBECONFIG=$(terraform output config_file_path)
@@ -89,15 +78,20 @@ export KUBECONFIG=$(terraform output config_file_path)
 kubectl cluster-info
 
 # Namespace
-kubectl get namespaces $(terraform output iaf_namespace)
+kubectl get namespaces $(terraform output namespace)
 
-# All resources
-kubectl get all --namespace $(terraform output iaf_namespace)
+# CatalogSource
+kubectl -n openshift-marketplace get catalogsource | grep IBM
+
+# Subscription
+kubectl -n $(terraform output namespace) get subscription | grep ibm-automation
 ```
 
-## Uninstall
+### Cleanup
 
-To uninstall IAF and its dependencies from a cluster, execute the following commands:
+To remove IAF from cluster, execute: `terraform destroy`.
+
+In addition, execute the following commands on the cluster:
 
 ```bash
 kubectl delete -n openshift-marketplace catalogsource.operators.coreos.com opencloud-operators
@@ -106,4 +100,4 @@ kubectl delete -n openshift-operators operatorgroup.operators.coreos.com iaf-gro
 kubectl delete namespace iaf
 ```
 
-**Note**: The uninstall/cleanup process is a work in progress at this time, we are identifying the objects that need to be deleted in order to have a successful re-installation.
+There are some directories and files you may want to manually delete, these are: `rm -rf terraform.tfstate* .terraform .kube`
