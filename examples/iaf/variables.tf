@@ -30,11 +30,6 @@ variable "entitled_registry_key" {
   description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
 }
 
-variable "resource_group" {
-  default     = "Default"
-  description = "resource group where the cluster is running"
-}
-
 variable "config_dir" {
   default     = "./.kube/config"
   description = "directory to store the kubeconfig file"
