@@ -48,6 +48,7 @@ config_dir                   = ".kube/config"
 cluster_id                   = "btvlh6bd0di5v70fhqn0"
 entitled_registry_user_email = "John.Smith@ibm.com"
 resource_group               = "Default"
+ibmcloud_api_key             = "******************************"
 ```
 
 These parameters are:
@@ -57,6 +58,7 @@ These parameters are:
 - `resource_group`: Resource group where the cluster is running. Default value is `Default`
 - `config_dir`: Directory to download the kubeconfig file. Default value is `./.kube/config`
 - `cluster_id`: Cluster ID of the OpenShift cluster where to install IAF
+- `ibmcloud_api_key`: IBM Cloud API Key created [here](../../CREDENTIALS.md#create-an-ibm-cloud-api-key) 
 
 Execute the following Terraform commands:
 
