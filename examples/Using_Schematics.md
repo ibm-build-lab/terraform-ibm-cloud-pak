@@ -1,12 +1,6 @@
-# Provisioning a Cloud Pak Sandbox using Schematics
-
-The Makefile contains all the commands to provision a Cloud Pak using IBM Cloud Schematics, however if you'd like to do it manually, follow these instructions.
-
-For group development and testing it is recommended to use Schematics to provision the OpenShift cluster. The Terraform state of the cluster is shared with the team and the management of the cluster can be done in the IBM Web Console by any team member.
+# Run examples using Schematics
 
 There are two ways to create and execute the Schematics workspace, using [IBM Cloud Web Console](#using-ibm-cloud-web-console) or [IBM Cloud CLI](#using-ibm-cloud-cli). However, to automate the process and facilitate maintenance it is recommended to use the CLI for the creation of the workspace.
-
-
 
 ## Using IBM Cloud Web Console
 
@@ -16,7 +10,7 @@ There are two ways to create and execute the Schematics workspace, using [IBM Cl
 
 3. Provide a name, tags, location. Choose **schematics** resource group
 
-4. Once workspace is created, add **https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/modules/<module_name>** as the github URL
+4. Once workspace is created, add **https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/examples/<module_name>** as the github URL
 
 5. Leave **Personal access token** blank
 
