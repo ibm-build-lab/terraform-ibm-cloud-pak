@@ -2,7 +2,7 @@
 
 This Terraform Module install **Cloud Pak for Data** on an existing Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4data`
+**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4data`
 
 - [Terraform Module to install Cloud Pak for Data](#terraform-module-to-install-cloud-pak-for-data)
   - [Use](#use)
