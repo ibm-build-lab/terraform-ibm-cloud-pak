@@ -1,6 +1,5 @@
 locals {
   catalogsource_content = templatefile("../templates/CatalogSource.yaml.tmpl", {
-    openshift_version_number = local.openshift_version_number
   })
 
   AutomationBase = templatefile("../templates/AutomationBase.yaml.tmpl", {
