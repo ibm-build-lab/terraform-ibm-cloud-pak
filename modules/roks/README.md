@@ -18,7 +18,7 @@ This Terraform Module creates an Openshift (ROKS) cluster on IBM Cloud Classic o
 
 If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
 
-Go [here](../CREDENTIALS.md) for details.
+Go [here](../../CREDENTIALS.md) for details.
 
 ## Building a new ROKS cluster
 
