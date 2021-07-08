@@ -30,7 +30,6 @@ module "iaf" {
   enable = true
 
   // ROKS cluster parameters:
-  openshift_version   = var.openshift_version
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
   cluster_name_id     = var.cluster_id
   on_vpc              = var.on_vpc
