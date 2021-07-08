@@ -10,6 +10,14 @@ variable "cluster_id" {
   description = "ROKS cluster id. Use the ROKS terraform module or other way to create it"
 }
 
+variable "region" {
+  description = "Region of the cluster"
+}
+
+variable "resource_group" {
+  description = "Resource group that the cluster is created in"
+}
+
 variable "ibmcloud_api_key" {
   description = "IBMCloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
 }
