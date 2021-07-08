@@ -18,7 +18,7 @@ Go [here](../../CREDENTIALS.md) for details.
 
 This module also requires an Entitlement Key. Obtain it [here](https://myibm.ibm.com/products-services/containerlibrary) and store it in the file `entitlement.key` in the root of this repository. If you use that filename, the file won't be published to GitHub if you accidentally push to GitHub.
 
-## Test
+## Execute
 
 Follow these instructions to execute the example
 
@@ -47,8 +47,6 @@ terraform init
 terraform plan
 terraform apply -auto-approve
 ```
-
-One of the Test Scenarios is to verify the YAML files rendered to install IAF, these files are generated in the directory `rendered_files`. Go to this directory to validate that they are generated correctly.
 
 ## Verify
 
