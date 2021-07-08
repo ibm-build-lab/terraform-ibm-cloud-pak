@@ -45,7 +45,7 @@ To build the cluster in your code, use the ROKS module, pointing it with `source
 
 ```hcl
 module "cluster" {
-  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks"
+  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/roks"
 
   roks_version         = "4.5"
   flavors              = ["b3c.16x64"]
