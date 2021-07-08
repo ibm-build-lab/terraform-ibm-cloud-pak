@@ -38,10 +38,6 @@ variable "resource_group" {
   description = "Resource group that the cluster is created in"
 }
 
-variable "openshift_version" {
-  description = "Openshift version installed in the cluster"
-}
-
 variable "entitled_registry_key" {
   description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
 }
