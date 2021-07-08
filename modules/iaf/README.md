@@ -71,11 +71,11 @@ Output:
 
 ### Provisioning the IAF Module
 
-Use a `module` block assigning `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//iaf`. Then set the [input variables](#input-variables) required to install Automation Foundation. Refer [here](../../examples/iaf) for an example:
+Use a `module` block assigning `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/iaf`. Then set the [input variables](#input-variables) required to install Automation Foundation. Refer [here](../../examples/iaf) for an example:
 
 ```hcl
 module "iaf" {
-  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//iaf"
+  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/iaf"
   enable = true
 
   // ROKS cluster parameters:
