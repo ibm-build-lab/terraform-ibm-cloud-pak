@@ -70,11 +70,11 @@ Output:
 
 ### Using the CP4App Module
 
-Use the `module` block assigning the `source` parameter to the location of this module, either local (i.e. `../cp4app`) or remote (`git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4app`). Then set the [input variables](#input-variables) required to install the Cloud Pak for Applications.
+Use the `module` block assigning the `source` parameter to the location of this module, either local (i.e. `../../modules/cp4app`) or remote (`git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4auto`). Then set the [input variables](#input-variables) required to install the Cloud Pak for Applications.
 
 ```hcl
 module "cp4app" {
-  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4app"
+  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4auto"
   enable = true
 
   entitled_registry_key        = file("${path.cwd}/entitlement.key")
