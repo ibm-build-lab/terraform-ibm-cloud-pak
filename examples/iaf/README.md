@@ -18,9 +18,9 @@ This module also requires an Entitlement Key. Obtain it [here](https://myibm.ibm
 
 ### Using Terraform client
 
-Follow these instructions to test the Terraform Module manually
+Follow these instructions to execute the example
 
-Create the file `test.auto.tfvars` with the following input variables, these values are fake examples:
+Create the file `terraform.tfvars` with the following input variables, these values are fake examples:
 
 ```hcl
 on_vpc                       = "false"
@@ -48,7 +48,7 @@ terraform apply -auto-approve
 
 One of the Test Scenarios is to verify the YAML files rendered to install IAF, these files are generated in the directory `rendered_files`. Go to this directory to validate that they are generated correctly.
 
-## 5. Verify
+## 4. Verify
 
 To verify installation on the Kubernetes cluster you need `kubectl`, then execute:
 
@@ -66,11 +66,11 @@ kubectl -n openshift-marketplace get catalogsource | grep IBM
 # Subscription
 kubectl -n $(terraform output namespace) get subscription | grep ibm-automation
 ```
-## 6. Cleanup
+## 5. Cleanup
 
-When the test is complete, execute: `terraform destroy`.
+To remove IAF from cluster, execute: `terraform destroy`.
 
-In addition. execute the following commands:
+In addition, execute the following commands on the cluster:
 
 ```bash
 kubectl delete -n openshift-marketplace catalogsource.operators.coreos.com opencloud-operators
@@ -79,6 +79,4 @@ kubectl delete -n openshift-operators operatorgroup.operators.coreos.com iaf-gro
 kubectl delete namespace iaf
 ```
 
-to uninstall IAF and its dependencies from the cluster.
-
-There are some directories and files you may want to manually delete, these are: `rm -rf test.auto.tfvars terraform.tfstate* .terraform .kube rendered_files`
+There are some directories and files you may want to manually delete, these are: `rm -rf terraform.tfstate* .terraform .kube`
