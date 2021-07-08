@@ -10,21 +10,19 @@ This folder contains examples using the Infrastructure as Code or Terraform modu
 - Cloud Pak for Multi Cloud Management (CP4MCM)
 - Cloud Pak for Security
 
-## Table of Contents
+## Run using IBM Cloud Schematics
 
-- [Using the Cloud Pak Sandbox Terraform module examples](#using-the-cloud-pak-sandbox-terraform-module-examples)
-  - [Table of Contents](#table-of-contents)
-  - [Requirements](#requirements)
-  - [Configure Access to IBM Cloud](#configure-access-to-ibm-cloud)
-    - [Create an IBM Cloud API Key](#create-an-ibm-cloud-api-key)
-    - [Create an IBM Cloud Classic Infrastructure API Key](#create-an-ibm-cloud-classic-infrastructure-api-key)
-    - [Create the credentials file](#create-the-credentials-file)
-  - [Executing the examples](#executing-the-examples)
-  - [Design](#design)
+- **[Using Schematics](./Using_Schematics.md)**
 
-## Requirements
+For more information, refer [here](https://cloud.ibm.com/docs/schematics?topic=schematics-get-started-terraform).
 
-These examples have the following dependencies:
+## Run using local Terraform Client
+
+To run using the local Terraform Client on your local machine follow these steps:
+
+### Requirements
+
+To run locally, these examples have the following dependencies:
 
 - Have an IBM Cloud account with required privileges
 - [Install IBM Cloud CLI](https://ibm.github.io/cloud-enterprise-examples/iac/setup-environment#install-ibm-cloud-cli)
@@ -49,23 +47,21 @@ terraform version
 ls ~/.terraform.d/plugins/terraform-provider-ibm_*
 ```
 
-## Configure Access to IBM Cloud
+### Configure Access to IBM Cloud
 
-Terraform requires the IBM Cloud credentials to access IBM Cloud. The credentials can be set using environment variables or - optionally and recommended - in your own `credentials.sh` file.
+Terraform requires the IBM Cloud credentials to access IBM Cloud. The credentials can be set using environment variables or - optionally and recommended - saved in a `credentials.sh` file.
 
-### Create an IBM Cloud API Key
+#### Create an IBM Cloud API Key
 
 Follow these instructions to setup the **IBM Cloud API Key**, for more information read [Creating an API key](https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key).
 
 In a terminal window, execute following commands replacing `<RESOURCE_GROUP_NAME>` with the resource group where you are planning to work and install everything:
 
 ```bash
-ibmcloud login --sso
-ibmcloud resource groups
-ibmcloud target -g <RESOURCE_GROUP_NAME>
+ibmcloud login --sso -g <RESOURCE_GROUP_NAME>
 ```
 
-If you have an IBM Cloud API Key that is either not set or you don't have the JSON file when it was created, you must recreate the key. Delete the old one if it won't be in use anymore.
+If you have an **IBM Cloud API Key** that is either not set or you don't have the JSON file when it was created, you must recreate the key. Delete the old one if it won't be in use anymore.
 
 ```bash
 ibmcloud iam api-keys       # Identify your old API Key Name
@@ -79,7 +75,7 @@ ibmcloud iam api-key-create TerraformKey -d "API Key for Terraform" --file ~/.ib
 export IC_API_KEY=$(grep '"apikey":' ~/.ibm_api_key.json | sed 's/.*: "\(.*\)".*/\1/')
 ```
 
-### Create an IBM Cloud Classic Infrastructure API Key
+#### Create an IBM Cloud Classic Infrastructure API Key
 
 Follow these instructions to get the **Username** and **API Key** to access **IBM Cloud Classic**, for more information read [Managing classic infrastructure API keys](https://cloud.ibm.com/docs/account?topic=account-classic_keys).
 
@@ -88,7 +84,7 @@ Follow these instructions to get the **Username** and **API Key** to access **IB
 3. Go to the actions menu (3 vertical dots) to select **Details**, then **Copy** the API Key.
 4. Go to **Manage** > **Access (IAM)** > **Users**, then search and click on your user's name. Select **Details** at the right top corner to copy the **User ID** from the users info (it may be your email address).
 
-### Create the credentials file
+#### Create the credentials file
 
 In the terminal window, export the following environment variables to let the IBM Provider to retrieve the credentials.
 
@@ -112,10 +108,60 @@ Additionally, you can append the above `export` commands in your shell profile o
 
 ## Executing the examples
 
-To run the Cloud Pak Terraform examples the available methods are:
+   1. Move into the directory of the desired example to install:
 
-- **[Using Terraform](./Using_Terraform.md)**
-- **[Using Schematics](./Using_Schematics.md)**
+      ```bash
+      cd iaf
+      ```
+
+   2. Create the file `terraform.tfvars` with the following Terraform input variables using your own specific values.  Refer to each example README for the specific variables to override:
+
+      ```hcl
+      ibmcloud_api_key             = "******************************"
+      on_vpc                       = "false"
+      config_dir                   = ".kube/config"
+      cluster_id                   = "************************"
+      entitled_registry_user_email = "John.Smith@ibm.com"
+      entitled_registry_key        = "****************************"
+      resource_group               = "Default"
+      ...
+      ```
+
+   3. Issue the following commands to prime the Terraform code:
+
+      ```bash
+      terraform init
+      ```
+
+      If you modified the code, execute the following commands to validate and format the code:
+
+      ```bash
+      terraform fmt -recursive
+      terraform validate
+      terraform plan
+      ```
+
+   4. Issue the following command to execute the Terraform code:
+
+      ```bash
+      terraform apply -auto-approve
+      ```
+
+      At the end of the execution you'll see the output parameters.
+
+      If something fails, it should be safe to execute the `terraform apply` command again.
+
+   5. To get the output parameters again or validate them, execute:
+
+      ```bash
+      terraform output
+      ```
+
+   6. Finally, when you finish using the infrastructure, cleanup everything you created with the execution of:
+
+      ```bash
+      terraform destroy
+      ```
 
 ## Design
 
