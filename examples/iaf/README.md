@@ -2,11 +2,20 @@
 
 ## Prerequisites
 
-Make sure [these](../README.md#requirements) requirements are done to proceed.
+If running this module from your local terminal, you will need to:
+
+- Have an IBM Cloud account with required privileges
+- [Install IBM Cloud CLI](https://ibm.github.io/cloud-enterprise-examples/iac/setup-environment#install-ibm-cloud-cli)
+- [Install the IBM Cloud CLI Plugins](https://ibm.github.io/cloud-enterprise-examples/iac/setup-environment#ibm-cloud-cli-plugins) `schematics` and `kubernetes-service`.
+- [Login to IBM Cloud with the CLI](https://ibm.github.io/cloud-enterprise-examples/iac/setup-environment#login-to-ibm-cloud)
+- [Install Terraform](https://ibm.github.io/cloud-enterprise-examples/iac/setup-environment#install-terraform) **version 0.12**
+- [Install IBM Cloud Terraform Provider](https://ibm.github.io/cloud-enterprise-examples/iac/setup-environment#configure-access-to-ibm-cloud)
+- Install utility tools:
+  - [jq](https://stedolan.github.io/jq/download/)
+  - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+  - [oc](https://docs.openshift.com/container-platform/3.6/cli_reference/get_started_cli.html)
 
 ## Set up access to IBM Cloud
-
-If running this module from your local terminal, you need to set the credentials to access IBM Cloud.
 
 You can define the IBM Cloud credentials in the IBM provider block but it is recommended to pass them in as environment variables.
 
