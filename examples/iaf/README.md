@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-Make sure [these] requirements are done to proceed.
+Make sure [these](../README.md#requirements) requirements are done to proceed.
 
 ## Set up access to IBM Cloud
 
