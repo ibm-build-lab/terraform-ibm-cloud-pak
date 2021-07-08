@@ -14,7 +14,7 @@ This folder contains examples using the Infrastructure as Code or Terraform modu
 
 For instructions to run these examples using IBM Schematics go [here](./Using_Schematics.md)
 
-For more information, refer [here](https://cloud.ibm.com/docs/schematics?topic=schematics-get-started-terraform).
+For more information on IBM Schematics, refer [here](https://cloud.ibm.com/docs/schematics?topic=schematics-get-started-terraform).
 
 ## Run using local Terraform Client
 
