@@ -18,6 +18,10 @@ variable "entitled_registry_user_email" {
   description = "Email address of the user owner of the Entitled Registry Key"
 }
 
+variable "entitled_registry_key" {
+  description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
+}
+
 variable "resource_group" {
   default     = "Default"
   description = "resource group where the cluster is running"
