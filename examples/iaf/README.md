@@ -1,29 +1,15 @@
 # Example to provision IAF Terraform Module
 
 ## Run using IBM Cloud Schematics
-For instructions to run these examples using IBM Schematics go here
 
-For more information on IBM Schematics, refer here.
+For instructions to run these examples using IBM Schematics go [here](../Using_Schematics.md)
+
+For more information on IBM Schematics, refer [here](https://cloud.ibm.com/docs/schematics?topic=schematics-get-started-terraform).
 
 ## Run using local Terraform Client
 
-### 1. Set up access to IBM Cloud
-
-If running this module from your local terminal, you need to set the credentials to access IBM Cloud.
-
-You can define the IBM Cloud credentials in the IBM provider block but it is recommended to pass them in as environment variables.
-
-Go [here](../CREDENTIALS.md) for details.
-
-**NOTE**: These credentials are not required if running this Terraform code within an **IBM Cloud Schematics** workspace. They are automatically set from your account.
-
-### 2. Set Cloud Pak Entitlement Key
-
-This module also requires an Entitlement Key. Obtain it [here](https://myibm.ibm.com/products-services/containerlibrary) and either store it in the file `entitlement.key` in the root of this repository. If you use that filename, the file won't be published to GitHub if you accidentally push to GitHub.
-
-### 3. Configure variables
-
-Create the file `terraform.tfvars` with the following input variables. NOTE: these values are just examples:
+For instructions to run using the local Terraform Client on your local machine go [here](../Using_Terraform.md)
+setting these values in the `terraform.tfvars` file:
 
 ```bash
 on_vpc                       = "false"
@@ -47,17 +33,7 @@ These parameters are:
 - `entitled_registry_key`: Entitlement key for above user. Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary
 - `config_dir`: Directory to download the kubeconfig file. Default value is `./.kube/config`
 
-Execute the following Terraform commands:
-
-```bash
-terraform init
-terraform plan
-terraform apply -auto-approve
-```
-
-One of the Test Scenarios is to verify the YAML files rendered to install IAF, these files are generated in the directory `rendered_files`. Go to this directory to validate that they are generated correctly.
-
-## 5. Verify
+### Verify
 
 To verify IAF installation, execute:
 
@@ -73,7 +49,7 @@ kubectl -n openshift-marketplace get catalogsource | grep IBM
 # Subscription
 kubectl -n iaf get subscription | grep ibm-automation
 ```
-## 6. Cleanup
+### Cleanup
 
 When the test is complete, execute: `terraform destroy`.
 
