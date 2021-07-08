@@ -2,7 +2,7 @@
 
 This Terraform Module installs the [**IBM Automation Foundation**](https://www.ibm.com/docs/en/automationfoundation/1.0_ent) on an Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//iaf`
+**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/iaf`
 
 - [Terraform Module to install IBM Automation Foundation](#terraform-module-to-install-ibm-automation-foundation)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
