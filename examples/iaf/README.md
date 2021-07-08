@@ -1,6 +1,10 @@
-# Test IAF Terraform Module
+# IAF Terraform Module example
 
-## 1. Set up access to IBM Cloud
+## Prerequisites
+
+Make sure [these] requirements are done to proceed.
+
+## Set up access to IBM Cloud
 
 If running this module from your local terminal, you need to set the credentials to access IBM Cloud.
 
@@ -10,13 +14,11 @@ Go [here](../../CREDENTIALS.md) for details.
 
 **NOTE**: These credentials are not required if running this Terraform code within an **IBM Cloud Schematics** workspace. They are automatically set from your account.
 
-## 2. Set Cloud Pak Entitlement Key
+## Set Cloud Pak Entitlement Key
 
 This module also requires an Entitlement Key. Obtain it [here](https://myibm.ibm.com/products-services/containerlibrary) and store it in the file `entitlement.key` in the root of this repository. If you use that filename, the file won't be published to GitHub if you accidentally push to GitHub.
 
-## 3. Test
-
-### Using Terraform client
+## Test
 
 Follow these instructions to execute the example
 
@@ -48,7 +50,7 @@ terraform apply -auto-approve
 
 One of the Test Scenarios is to verify the YAML files rendered to install IAF, these files are generated in the directory `rendered_files`. Go to this directory to validate that they are generated correctly.
 
-## 4. Verify
+## Verify
 
 To verify installation on the Kubernetes cluster you need `kubectl`, then execute:
 
@@ -66,7 +68,7 @@ kubectl -n openshift-marketplace get catalogsource | grep IBM
 # Subscription
 kubectl -n $(terraform output namespace) get subscription | grep ibm-automation
 ```
-## 5. Cleanup
+## Cleanup
 
 To remove IAF from cluster, execute: `terraform destroy`.
 
