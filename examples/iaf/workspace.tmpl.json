@@ -1,38 +1,18 @@
-{
+f{
   "name": "{{ WORKSPACE_NAME }}",
   "type": ["terraform_v0.12"],
   "description": "IBM Cloud Schematics Workspace to deploy an OpenShift cluster sandbox for Multi Cloud Management Cloud Pak on IBM Cloud Classic",
   "tags": ["owner:{{ OWNER }}", "env:{{ ENV }}", "project:{{ PROJECT }}"],
-  "resource_group": "cloud-pak-sandbox",
+  "resource_group": "Default",
   "template_repo": {
-    "url": "https://github.com/ibm-hcbt/cloud-pak-sandboxes",
+    "url": "https://github.com/ibm-hcbt/terraform-ibm-cloud-pak",
     "branch": "{{ BRANCH }}"
   },
   "template_data": [
     {
-      "folder": "terraform/iaf",
+      "folder": "examples/iaf",
       "type": "terraform_v0.12",
       "variablestore": [
-        {
-          "name": "region",
-          "value": "us-south",
-          "type": "string"
-        },
-        {
-          "name": "project_name",
-          "value": "{{ PROJECT }}",
-          "type": "string"
-        },
-        {
-          "name": "owner",
-          "value": "{{ OWNER }}",
-          "type": "string"
-        },
-        {
-          "name": "environment",
-          "value": "{{ ENV }}",
-          "type": "string"
-        },
         {
           "name": "resource_group",
           "value": "cloud-pak-sandbox",
@@ -47,31 +27,6 @@
           "name": "on_vpc",
           "value": "false",
           "type": "bool"
-        },
-        {
-          "name": "vpc_zone_names",
-          "value": "[\"us-south-1\"]",
-          "type": "list(string)"
-        },
-        {
-          "name": "flavors",
-          "value": "[\"b3c.16x64\"]",
-          "type": "list(string)"
-        },
-        {
-          "name": "datacenter",
-          "value": "dal10",
-          "type": "string"
-        },
-        {
-          "name": "private_vlan_number",
-          "value": "",
-          "type": "string"
-        },
-        {
-          "name": "public_vlan_number",
-          "value": "",
-          "type": "string"
         },
         {
           "name": "IC_API_KEY",
