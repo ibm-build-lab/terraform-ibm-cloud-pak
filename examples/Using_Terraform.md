@@ -31,7 +31,7 @@ ls ~/.terraform.d/plugins/terraform-provider-ibm_*
 1. Move into the directory of the desired Cloud Pak to install, for example:
 
    ```bash
-   cd iaf
+   cd <example subdirectory>
    ```
 
 2. Create the file `terraform.tfvars` with the following Terraform input variables using your own specific values.  Refer to each example README for the specific variables to override:
@@ -40,6 +40,7 @@ ls ~/.terraform.d/plugins/terraform-provider-ibm_*
    owner                        = "bob"
    project_name                 = "cloud-pak-app"
    entitled_registry_user_email = "bob@email.com"
+   entitled_registry_key        = "xxxxxxxxxxxxxxxxxxxxx"
    cluster_id                   = "xxxxxxxxxxxxxxxxxxxxx"
    ibmcloud_api_key             = "xxxxxxxxxxxxxxxxxxxxx"
    ...
