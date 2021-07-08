@@ -20,7 +20,7 @@ This Terraform Module install **Applications Cloud Pak** on an existing Openshif
 
 If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
 
-Go [here](../CREDENTIALS.md) for details.
+Go [here](../../CREDENTIALS.md) for details.
 
 ## Provisioning this module in a Terraform Script
 
