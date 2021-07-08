@@ -2,7 +2,7 @@
 
 1. Make sure you have all the [requirements](./README.md#requirements) set. (Terraform, IBM Cloud CLI, IBM Cloud credentials, etc...)
 
-2. Move into the directory of the desired Cloud Pak to install, for example, if you'd like to install CP4MCM:
+2. Move into the directory of the desired Cloud Pak to install, for example:
 
    ```bash
    cd iaf
