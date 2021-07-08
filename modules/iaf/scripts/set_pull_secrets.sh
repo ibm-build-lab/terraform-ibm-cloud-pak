@@ -48,7 +48,7 @@ counter=0
 echo "Waiting for all $worker_count workers to restart"
 while [[ $result -lt $worker_count ]]
 do
-    if [[ $counter -gt 20 ]]; then
+    if [[ $counter -gt 30 ]]; then
         echo "Workers did not reload within 60 minutes.  Please investigate"
         exit 1
     fi
