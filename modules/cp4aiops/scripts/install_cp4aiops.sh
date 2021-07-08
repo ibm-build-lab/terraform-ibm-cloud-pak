@@ -131,8 +131,10 @@ sed -e "s/NAMESPACE/${NAMESPACE}/g" -e "s/STORAGE_CLASS/${storage_class}/g" -e "
 
 
 SLEEP_TIME="60"
-RUN_LIMIT=200
-i=0
+SERVICE_TIMEOUT_LIMIT=90
+RUN_LIMIT=2
+service_timeout_count=0
+run_limit_count=0
 
 while true; do
   if ! STATUS_LONG=$(oc -n ${NAMESPACE} get installation.orchestrator.aiops.ibm.com ibm-cp-watson-aiops --output=json | jq -c -r '.status'); then
@@ -150,9 +152,31 @@ while true; do
   echo "Sleeping $SLEEP_TIME seconds..."
   sleep $SLEEP_TIME
   
-  (( i++ ))
-  if [ "$i" -eq "$RUN_LIMIT" ]; then
-    echo 'Timed out'
+
+  (( service_timeout_count++ ))
+  # Checks to see if the service took too long. If so, it restarts the service
+  if [ "$service_timeout_count" -eq "$SERVICE_TIMEOUT_LIMIT" ]; then
+    service_timeout_count=0
+    (( run_limit_count++ ))
+
+    echo "Waited ${SERVICE_TIMEOUT_LIMIT} minutes. Deleting hanging AIOPS service."
+    oc -n ${NAMESPACE} delete installation.orchestrator.aiops.ibm.com ibm-cp-watson-aiops
+    
+    while true; do
+      echo "Waiting for service to finish deleting..."
+      if [ -z $(oc -n cp4aiops get installation.orchestrator.aiops.ibm.com | grep ibm-cp-watson-aiops | awk '{print $1}') ]; then
+        break
+      fi
+      sleep $SLEEP_TIME
+    done
+
+    echo "Recreating AIOPS service..."
+    sed -e "s/NAMESPACE/${NAMESPACE}/g" -e "s/STORAGE_CLASS/${storage_class}/g" -e "s/STORAGE_BLOCK_CLASS/${storage_block_class}/g" ../templates/cp-aiops-service.yaml | oc -n ${NAMESPACE} apply -f -
+  fi
+
+  # If the service has been restarted 2 times, it will quit and time out.
+  if [ "$run_limit_count" -eq "$RUN_LIMIT" ]; then
+    echo 'Run timed out'
     exit 1
   fi
 done
