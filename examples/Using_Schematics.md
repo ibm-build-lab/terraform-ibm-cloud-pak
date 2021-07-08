@@ -6,6 +6,42 @@ For group development and testing it is recommended to use Schematics to provisi
 
 There are two ways to create and execute the Schematics workspace, using [IBM Cloud Web Console](#using-ibm-cloud-web-console) or [IBM Cloud CLI](#using-ibm-cloud-cli). However, to automate the process and facilitate maintenance it is recommended to use the CLI for the creation of the workspace.
 
+
+
+## Using IBM Cloud Web Console
+
+1. Got to cloud.ibm.com and log in
+
+2. In the IBM Cloud Web Console go to: **Navigation Menu** (_top left corner_) > **Schematics**. Click **Create Workspace** in upper right corner of list of workspaces
+
+3. Provide a name, tags, location. Choose **schematics** resource group
+
+4. Once workspace is created, add **https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/modules/<module_name>** as the github URL
+
+5. Leave **Personal access token** blank
+
+6. Change **Terraform version** to 0.12
+
+7. Click **Save template information**
+
+8. Click on **Generate plan** button at the top, then click on **View log** link and wait until it's completed
+
+9. Click on the **Apply plan** button, then click on the **View log** link
+
+10. On the left side menu check the **Resources** item, to see all the resources created or modified from the workspace
+
+## Viewing the Schematics logs
+
+To follow the progress and ultimately see the Terraform outputs, open the log. Do so by:
+
+1. Go to cloud.ibm.com. Log in
+
+2. In the IBM Cloud Web Console go to: **Navigation Menu** (_top left corner_) > **Schematics** and choose the workspace you created
+
+3. Select "Activity" from the left menu
+
+4. Take the "View Log" link on the right of the desired step
+
 ## Using IBM Cloud CLI
 
 1. Ensure you are logged in to IBM Cloud. Refer to [requirements](./README.md#requirements) for more information.
@@ -83,37 +119,3 @@ There are two ways to create and execute the Schematics workspace, using [IBM Cl
    ibmcloud schematics workspace delete --id $WORKSPACE_ID
    ibmcloud schematics workspace list
    ```
-
-## Using IBM Cloud Web Console
-
-1. Got to cloud.ibm.com and log in
-
-2. In the IBM Cloud Web Console go to: **Navigation Menu** (_top left corner_) > **Schematics**. Click **Create Workspace** in upper right corner of list of workspaces
-
-3. Provide a name, tags, location. Choose **schematics** resource group
-
-4. Once workspace is created, add **https://github.com/ibm-hcbt/cloud-pak-sandboxes/terraform/roks** as the github URL, note `roks` is an example.  Change this to whichever module you want to install
-
-5. Leave **Personal access token** blank
-
-6. Change **Terraform version** to 0.12
-
-7. Click **Save template information**
-
-8. Click on **Generate plan** button at the top, then click on **View log** link and wait until it's completed
-
-9. Click on the **Apply plan** button, then click on the **View log** link
-
-10. On the left side menu check the **Resources** item, to see all the resources created or modified from the workspace
-
-## Viewing the Schematics logs
-
-To follow the progress and ultimately see the Terraform outputs, open the log. Do so by:
-
-1. Go to cloud.ibm.com. Log in
-
-2. In the IBM Cloud Web Console go to: **Navigation Menu** (_top left corner_) > **Schematics** and choose the workspace you created
-
-3. Select "Activity" from the left menu
-
-4. Take the "View Log" link on the right of the desired step
