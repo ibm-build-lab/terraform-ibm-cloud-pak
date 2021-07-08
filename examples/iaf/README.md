@@ -1,10 +1,14 @@
 # IAF Terraform Module example
 
-To run using IBM Cloud Schematics refer [here](https://cloud.ibm.com/docs/schematics?topic=schematics-about-schematics#how-to-workspaces)
+## Run using IBM Cloud Schematics
 
-To run using the local Terraform Client on your local machine, follow below.  
+To run from a schematics workspace, refer [here](https://cloud.ibm.com/docs/schematics?topic=schematics-about-schematics#how-to-workspaces).
 
-## Prerequisites
+## Run using local Terraform Client
+
+To run using the local Terraform Client on your local machine follow these steps:
+
+### Prerequisites
 
 If running this example from your local terminal, you will need to:
 
@@ -20,7 +24,7 @@ If running this example from your local terminal, you will need to:
   - [oc](https://docs.openshift.com/container-platform/3.6/cli_reference/get_started_cli.html)
 
 
-## Set up access to IBM Cloud
+### Set up access to IBM Cloud
 
 You can define the IBM Cloud credentials in the IBM provider block but it is recommended to pass them in as environment variables.
 
@@ -28,11 +32,11 @@ Go [here](../../CREDENTIALS.md) for details.
 
 **NOTE**: These credentials are not required if running this Terraform code within an **IBM Cloud Schematics** workspace. They are automatically set from your account.
 
-## Set Cloud Pak Entitlement Key
+### Set Cloud Pak Entitlement Key
 
 This module also requires an Entitlement Key. Obtain it [here](https://myibm.ibm.com/products-services/containerlibrary) and store it in the file `entitlement.key` in the root of this cloned repository (../..). If you use that filename, the file won't be published to GitHub if you accidentally push to GitHub.
 
-## Execute
+### Execute
 
 Create the file `terraform.tfvars` with the following input variables. NOTE: these values are just examples:
 
@@ -60,7 +64,7 @@ terraform plan
 terraform apply -auto-approve
 ```
 
-## Verify
+### Verify
 
 To verify installation on the Kubernetes cluster you need `kubectl`, then execute:
 
@@ -78,7 +82,8 @@ kubectl -n openshift-marketplace get catalogsource | grep IBM
 # Subscription
 kubectl -n $(terraform output namespace) get subscription | grep ibm-automation
 ```
-## Cleanup
+
+### Cleanup
 
 To remove IAF from cluster, execute: `terraform destroy`.
 
