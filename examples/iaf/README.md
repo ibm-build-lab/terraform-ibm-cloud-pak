@@ -1,5 +1,7 @@
 # IAF Terraform Module example
 
+This example requires an existing OpenShift cluster with at least 4 nodes sized 16x64.
+
 ## Run using IBM Cloud Schematics
 
 To run from a schematics workspace, refer [here](https://cloud.ibm.com/docs/schematics?topic=schematics-about-schematics#how-to-workspaces).
