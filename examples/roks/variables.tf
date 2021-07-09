@@ -11,7 +11,7 @@ variable "entitlement" {
 }
 
 variable "region" {
-  description = "List all available regions with: ibmcloud regions"
+  description = "List all available regions with: `ibmcloud regions`"
 }
 
 variable "project_name" {
