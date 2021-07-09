@@ -1,5 +1,5 @@
 data "ibm_container_cluster_config" "cluster_config" {
-  cluster_name_id   = local.enable ? module.cluster.id : var.cluster_id
+  cluster_name_id   = local.enable ? module.cluster.id : local.cluster_id
   resource_group_id = module.cluster.resource_group.id
   config_dir        = var.config_dir
 }
@@ -24,7 +24,7 @@ resource "kubernetes_namespace" "namespace" {
 }
 
 data "external" "kubectl_namespace" {
-  count = length(var.config_dir) != 0 ? 1 : 0
+  count = length(local.config_dir) != 0 ? 1 : 0
   depends_on = [
     kubernetes_namespace.namespace,
   ]
@@ -33,5 +33,5 @@ data "external" "kubectl_namespace" {
 }
 
 output "namespace" {
-  value = length(var.config_dir) > 0 ? data.external.kubectl_namespace.0.result.namespace : ""
+  value = length(local.config_dir) > 0 ? data.external.kubectl_namespace.0.result.namespace : ""
 }
