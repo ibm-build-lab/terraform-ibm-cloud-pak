@@ -52,7 +52,7 @@ variable "vpc_zone_names" {
 }
 variable "flavors" {
   type    = list(string)
-  default = ["b2c.16x64"]
+  default = ["b3c.16x64"]
   description = "Array with the flavors or machine types of each of the workers. List all flavors for each zone with: `ibmcloud ks flavors --zone us-south-1 --provider vpc-gen2` or `ibmcloud ks flavors --zone dal10 --provider classic`. On Classic only list one flavor, i.e. `[\"b3c.16x64\"]`. On VPC can list multiple flavors `[\"mx2.4x32\", \"mx2.8x64\", \"cx2.4x8\"] or [\"bx2.16x64\"]`"
 }
 variable "workers_count" {
