@@ -32,7 +32,7 @@ public_vlan_number  = "2979230"
 If there aren't any VLANs in that datacenter, leave as empty strings and they will be created by the module.
 
 
-## 4. Test the Kubernetes cluster
+## Verify the Kubernetes cluster
 
 To test the cluster using `kubectl`, execute:
 
@@ -45,6 +45,6 @@ kubectl get namespace terraform-module-is-working
 
 Or any other `kubectl` or `oc` command.
 
-## 5. Destroy
+## Destroy
 
 To delete the cluster, execute: `terraform destroy` and delete all the created files.
