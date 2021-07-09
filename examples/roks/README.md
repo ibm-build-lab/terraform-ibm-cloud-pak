@@ -1,7 +1,5 @@
 # Example using ROKS Terraform Module
 
-# Example to provision IAF Terraform Module
-
 ## Run using IBM Cloud Schematics
 
 For instructions to run these examples using IBM Schematics go [here](../Using_Schematics.md)
