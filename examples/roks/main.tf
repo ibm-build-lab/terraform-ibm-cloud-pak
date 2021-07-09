@@ -1,7 +1,7 @@
 // Requirements
 
 provider "ibm" {
-//  version    = "~> 1.13"
+  version    = "~> 1.12"
   region     = var.region
 }
 
