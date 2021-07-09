@@ -30,12 +30,8 @@ variable "entitled_registry_key" {
   description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
 }
 
-variable "config_dir" {
-  default     = "./.kube/config"
-  description = "directory to store the kubeconfig file"
-}
-
 // ROKS Module : Local Variables and constants
 locals {
   entitled_registry_key_file = "../../entitlement.key"
+  config_dir "./.kube/config"
 }
