@@ -4,10 +4,6 @@ provider "ibm" {
   region     = var.region
 }
 
-locals {
-  enable = true
-}
-
 module "cluster" {
   source = "../../modules/roks"
   enable = local.enable
