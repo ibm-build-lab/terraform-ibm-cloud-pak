@@ -57,7 +57,7 @@ resource "null_resource" "disable_knative_route" {
       KUBECONFIG = var.cluster_config_path
     }
     interpreter = ["/bin/bash", "-c"]
-    command = "oc annotate service.serving.knative.dev/kn-cli -n knative-serving serving.knative.openshift.io/disableRoute=true"
+    command = "oc annotate service.serving.knative.dev/kn-cli -n knative-serving serving.knative.openshift.io/disableRoute=true && sleep 30"
   }
 }
 
