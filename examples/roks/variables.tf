@@ -80,5 +80,6 @@ variable "public_vlan_number" {
 locals {
   cluster_id = ""
   config_dir = "./.kube/config"
+  enable = true
 }
 
