@@ -14,12 +14,6 @@ variable "region" {
 }
 
 // Cluster configuration input variables and default values:
-
-variable "cluster_id" {
-  default     = ""
-  description = "An existing cluster ID or name to install Cloud Paks on. If left blank, a new ROKS cluster will be provisioned."
-}
-
 variable "config_dir" {
   default     = "./.kube/config"
   description = "directory to store the kubeconfig file, set the value to empty string to not download the config"
@@ -29,22 +23,27 @@ variable "project_name" {
   default     = "roks-tfmod"
   description = "The project name is used to name the cluster with the environment name"
 }
+
 variable "owner" {
   default     = "tester"
   description = "Use your user name or team name. The owner is used to label the cluster and other resources"
 }
+
 variable "environment" {
   default     = "test"
   description = "The environment name is used to name the cluster with the project name"
 }
+
 variable "resource_group" {
   default     = "Default"
   description = "List all available resource groups with: ibmcloud resource groups"
 }
+
 variable "roks_version" {
   default     = "4.6"
   description = "List available versions: ibmcloud ks versions"
 }
+
 variable "force_delete_storage" {
   type        = bool
   default     = false
@@ -52,7 +51,6 @@ variable "force_delete_storage" {
 }
 
 // OpenShift cluster specific input parameters and default values:
-
 variable "vpc_zone_names" {
   type    = list(string)
   default = ["us-south-1"]
