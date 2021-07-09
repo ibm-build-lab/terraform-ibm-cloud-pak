@@ -8,7 +8,7 @@ provider "ibm" {
 // Module
 
 locals {
-  enable = length(var.cluster_id) == 0
+  enable = true
 }
 
 module "cluster" {
