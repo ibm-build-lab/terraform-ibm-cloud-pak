@@ -1,4 +1,4 @@
-//Output Parameters
+// Output Parameters
 
 output "endpoint" {
   value = module.cluster.endpoint
@@ -23,3 +23,4 @@ output "name" {
 output "vlan_number" {
   value = module.cluster.vlan_number
 }
+  
