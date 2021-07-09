@@ -4,10 +4,6 @@ provider "ibm" {
   region     = var.region
 }
 
-provider "kubernetes" {
-  config_path = local.config_dir
-}
-
 module "cluster" {
   source = "../../modules/roks"
   enable = local.enable
