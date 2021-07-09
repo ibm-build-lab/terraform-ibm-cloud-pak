@@ -72,12 +72,12 @@ variable "datacenter" {
 
 variable "private_vlan_number" {
   default     = ""
-  description = "Private VLAN assigned to your zone. List available VLANs in the zone: `ibmcloud ks vlan ls --zone <zone_name>`, make sure the the VLAN type is private and the router begins with bc. Use the ID or Number"
+  description = "**Classic Only:** Private VLAN assigned to your zone. List available VLANs in the zone: `ibmcloud ks vlan ls --zone <zone_name>`, make sure the the VLAN type is private and the router begins with bc. Use the ID or Number"
 }
 
 variable "public_vlan_number" {
   default     = ""
-  description = "Public VLAN assigned to your zone. List available VLANs in the zone: `ibmcloud ks vlan ls --zone <zone_name>`, make sure the the VLAN type is public and the router begins with fc. Use the ID or Number"
+  description = "**Classic Only:** Public VLAN assigned to your zone. List available VLANs in the zone: `ibmcloud ks vlan ls --zone <zone_name>`, make sure the the VLAN type is public and the router begins with fc. Use the ID or Number"
 }
 
 locals {
