@@ -13,24 +13,18 @@ variable "region" {
   description = "List all available regions with: ibmcloud regions"
 }
 
-// Cluster configuration input variables and default values:
-variable "config_dir" {
-  default     = "./.kube/config"
-  description = "directory to store the kubeconfig file, set the value to empty string to not download the config"
-}
-
 variable "project_name" {
-  default     = "roks-tfmod"
+  default     = ""
   description = "The project name is used to name the cluster with the environment name"
 }
 
 variable "owner" {
-  default     = "tester"
+  default     = "anonymous"
   description = "Use your user name or team name. The owner is used to label the cluster and other resources"
 }
 
 variable "environment" {
-  default     = "test"
+  default     = "dev"
   description = "The environment name is used to name the cluster with the project name"
 }
 
