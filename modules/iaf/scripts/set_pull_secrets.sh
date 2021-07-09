@@ -6,12 +6,18 @@ ibmcloud login --apikey ${IC_API_KEY} -r ${REGION} -g ${RESOURCE_GROUP} -q
 ibmcloud ks cluster config -c ${IAF_CLUSTER} --admin
 
 echo "Setting Pull Secret"
-oc extract secret/pull-secret -n openshift-config --confirm --to=. 
+# Extract secret
+kubectl get secret/pull-secret -n openshift-config -o json > pull-secret.json
+cat pull-secret.json | jq '.data' | awk '{ print $2 }' | sed -e 's/"//' | base64 -d > dockerconfigjson
+
+# Append to secret
 API_KEY=$(echo -n "${IAF_ENTITLED_REGISTRY_USER}:${IAF_ENTITLED_REGISTRY_KEY}" | base64 | tr -d '[:space:]')
-jq --arg apikey ${API_KEY} --arg registry "${IAF_ENTITLED_REGISTRY}" '.auths += {($registry): {"auth":$apikey}}' .dockerconfigjson > .dockerconfigjson-new
-mv .dockerconfigjson-new .dockerconfigjson
-oc set data secret/pull-secret -n openshift-config --from-file=.dockerconfigjson  
-rm .dockerconfigjson
+NEW_SECRET_VALUE=$(jq --arg apikey ${API_KEY} --arg registry "${IAF_ENTITLED_REGISTRY}" '.auths += {($registry): {"auth":$apikey}}' dockerconfigjson | base64)
+jq --arg value "$NEW_SECRET_VALUE" '.data[".dockerconfigjson"] = $value' pull-secret.json > pull-secret-new.json
+
+# Update Secret
+kubectl apply -f pull-secret-new.json
+rm dockerconfigjson pull-secret-new.json pull-secret.json
 
 worker_count=0
 ibmcloud ks workers --cluster ${IAF_CLUSTER}
@@ -26,7 +32,7 @@ do echo "reloading worker";
 done
 
 echo "Waiting for workers to delete ..."
-oc get nodes | grep SchedulingDisabled
+kubectl get nodes | grep SchedulingDisabled
 result=$?
 counter=0
 while [[ "${result}" -eq 0 ]]
@@ -38,12 +44,12 @@ do
     counter=$((counter + 1))
     echo "Waiting for workers to delete"
     sleep 180s
-    oc get nodes | grep SchedulingDisabled
+    kubectl get nodes | grep SchedulingDisabled
     result=$?
 done
 
 # Loop until all workers are in Ready state
-result=$(oc get nodes | grep " Ready" | awk '{ print $2 }' | wc -l)
+result=$(kubectl get nodes | grep " Ready" | awk '{ print $2 }' | wc -l)
 counter=0
 echo "Waiting for all $worker_count workers to restart"
 while [[ $result -lt $worker_count ]]
@@ -55,6 +61,6 @@ do
     counter=$((counter + 1))
     echo "Waiting for all $worker_count workers to restart"
     sleep 180s
-    result=$(oc get nodes | grep " Ready" | awk '{ print $2 }' | wc -l)
+    result=$(kubectl get nodes | grep " Ready" | awk '{ print $2 }' | wc -l)
 done
 
