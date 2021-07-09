@@ -1,20 +1,16 @@
 # Example using ROKS Terraform Module
 
-Follow these instructions to execute custom the Terraform module.
+# Example to provision IAF Terraform Module
 
-## Set up access to IBM Cloud
+## Run using IBM Cloud Schematics
 
-If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
+For instructions to run these examples using IBM Schematics go [here](../Using_Schematics.md)
 
-You can define the IBM Cloud credentials in the IBM provider block but it is recommended to pass them in as environment variables.
+For more information on IBM Schematics, refer [here](https://cloud.ibm.com/docs/schematics?topic=schematics-get-started-terraform).
 
-Go [here](../../CREDENTIALS.md) for details.
+## Run using local Terraform Client
 
-**NOTE**: These credentials are not required if running this Terraform code within an **IBM Cloud Schematics** workspace. They are automatically set from your account.
-
-## 2. Define custom test parameters
-
-Set values for required input variables in the file `terraform.tfvars`. Pay attention to the sections required for **Classic** vs **VPC**.
+For instructions to run using the local Terraform Client on your local machine go [here](../Using_Terraform.md). Set values for required input variables in the file `terraform.tfvars`. Pay attention to the sections required for **Classic** vs **VPC**.
  
 Examples have been provided as `terraform.tfvars.classic` and `terraform.tfvars.vpc`.
 
@@ -37,15 +33,6 @@ public_vlan_number  = "2979230"
 
 If there aren't any VLANs in that datacenter, leave as empty strings and they will be created by the module.
 
-## 3. Execute
-
-Using your local Terraform client, run by executing execute the following commands:
-
-```bash
-terraform init
-terraform plan
-terraform apply --auto-approve
-```
 
 ## 4. Test the Kubernetes cluster
 
