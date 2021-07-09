@@ -10,7 +10,7 @@ provider "kubernetes" {
 
 module "cluster" {
   source = "../../modules/roks"
-  enable = local.enable_cluster
+  enable = local.enable
   on_vpc = var.on_vpc
 
   // General
