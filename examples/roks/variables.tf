@@ -49,6 +49,7 @@ variable "force_delete_storage" {
 variable "vpc_zone_names" {
   type    = list(string)
   default = ["us-south-1"]
+  description = "**VPC only:** Array with the subzones in the region to create the workers groups. List all the zones with: 'ibmcloud ks zone ls --provider vpc-gen2'. Example [\"us-south-1\", \"us-south-2\", \"us-south-3\"]"
 }
 variable "flavors" {
   type    = list(string)
@@ -62,7 +63,7 @@ variable "workers_count" {
 }
 
 variable "datacenter" {
-  description = "List all available datacenters/zones with: `ibmcloud ks zone ls --provider classic`"
+  description = "**Classic Only:** List all available datacenters/zones with: `ibmcloud ks zone ls --provider classic`"
   default = "dal12"
 }
 
