@@ -1,3 +1,4 @@
+
 variable "on_vpc" {
   default = false
   type        = bool
@@ -74,5 +75,10 @@ variable "private_vlan_number" {
 variable "public_vlan_number" {
   default     = ""
   description = "Public VLAN assigned to your zone. List available VLANs in the zone: `ibmcloud ks vlan ls --zone <zone_name>`, make sure the the VLAN type is public and the router begins with fc. Use the ID or Number"
+}
+
+locals {
+  cluster_id = ""
+  config_dir = "./.kube/config"
 }
 
