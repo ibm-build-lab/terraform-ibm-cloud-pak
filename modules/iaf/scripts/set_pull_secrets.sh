@@ -16,7 +16,7 @@ cat pull-secret.json | jq '.data' | awk '{ print $2 }' | sed -e 's/"//' | base64
 # fi
 
 # Append to secret
-API_KEY=$(echo -n "${IAF_ENTITLED_REGISTRY_USER}:${IAF_ENTITLED_REGISTRY_KEY}" | base64 | tr -d '[:space:]')
+API_KEY=$(printf "%s:%s" $IAF_ENTITLED_REGISTRY_USER $IAF_ENTITLED_REGISTRY_KEY | base64 | tr -d '[:space:]')
 # if [[ $DEBUG ]]; then
   echo "API_KEY: " $API_KEY
   echo ""
