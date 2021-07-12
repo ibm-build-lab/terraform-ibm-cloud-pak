@@ -23,8 +23,6 @@ on_vpc        	      = false
 // Run "ibmcloud ks zone ls --provider classic"
 datacenter            = "dal10"
 // Run "ibmcloud ks flavors --zone <zone> --provider classic"
-flavors               = ["b3c.4x16"]
-workers_count         = [1]
-private_vlan_number   = ""
-public_vlan_number    = ""
+flavors               = ["b3c.16x64"]
+workers_count         = [4]
 

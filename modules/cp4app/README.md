@@ -2,7 +2,7 @@
 
 This Terraform Module install **Applications Cloud Pak** on an existing Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4app`
+**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4app`
 
 - [Terraform Module to install Cloud Pak for Applications](#terraform-module-to-install-cloud-pak-for-applications)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
@@ -20,7 +20,7 @@ This Terraform Module install **Applications Cloud Pak** on an existing Openshif
 
 If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
 
-Go [here](../CREDENTIALS.md) for details.
+Go [here](../../CREDENTIALS.md) for details.
 
 ## Provisioning this module in a Terraform Script
 
@@ -37,7 +37,7 @@ provider "ibm" {
 
 NOTE: an OpenShift cluster is required to install the Cloud Pak. This can be an existing cluster or can be provisioned using our `roks` Terraform module.
 
-To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/roks) for the code to add to your Terraform script. The recommended size for an OpenShift 4.5+ cluster on IBM Cloud Classic contains `4` workers of flavor `c3c.16x32`, however read the Cloud Pak for Applications documentation to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
+To provision a new cluster, refer [here](../roks/README.md#building-a-new-roks-cluster) for the code to add to your Terraform script. The recommended size for an OpenShift 4.5+ cluster on IBM Cloud Classic contains `4` workers of flavor `c3c.16x32`, however read the Cloud Pak for Applications documentation to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
 
 Add the following code to get the OpenShift cluster (new or existing) configuration:
 
@@ -70,11 +70,11 @@ Output:
 
 ### Using the CP4App Module
 
-Use the `module` block assigning the `source` parameter to the location of this module, either local (i.e. `../cp4app`) or remote (`git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4app`). Then set the [input variables](#input-variables) required to install the Cloud Pak for Applications.
+Use the `module` block assigning the `source` parameter to the location of this module, either local (i.e. `../../modules/cp4app`) or remote (`git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4auto`). Then set the [input variables](#input-variables) required to install the Cloud Pak for Applications.
 
 ```hcl
 module "cp4app" {
-  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4app"
+  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4auto"
   enable = true
 
   entitled_registry_key        = file("${path.cwd}/entitlement.key")

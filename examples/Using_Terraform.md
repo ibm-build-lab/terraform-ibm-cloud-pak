@@ -1,49 +1,52 @@
-# Provisioning a Cloud Pak Sandbox using Terraform
+# Running examples using local Terraform client
 
-The Makefile contains all the commands to use Terraform, however if you'd like to do it manually, follow these instructions:
+## Requirements
 
-1. Make sure you have all the [requirements](./README.md#requirements) set. (Terraform, IBM Cloud CLI, IBM Cloud credentials, etc...)
+To run locally, these examples have the following dependencies:
 
-2. Move to the directory of the desired Cloud Pak to install, for example, if you'd like to install CP4MCM:
+- Have an IBM Cloud account with required privileges
+- [Install IBM Cloud CLI](https://ibm.github.io/cloud-enterprise-examples/iac/setup-environment#install-ibm-cloud-cli)
+- [Install the IBM Cloud CLI Plugins](https://ibm.github.io/cloud-enterprise-examples/iac/setup-environment#ibm-cloud-cli-plugins) `schematics` and `kubernetes-service`.
+- [Login to IBM Cloud with the CLI](https://ibm.github.io/cloud-enterprise-examples/iac/setup-environment#login-to-ibm-cloud)
+- [Install Terraform](https://ibm.github.io/cloud-enterprise-examples/iac/setup-environment#install-terraform) **version 0.12**
+- [Install IBM Cloud Terraform Provider](https://ibm.github.io/cloud-enterprise-examples/iac/setup-environment#configure-access-to-ibm-cloud)
+- [Configure Access to IBM Cloud](./CREDENTIALS.md)
+- Utility tools such as:
+  - [jq](https://stedolan.github.io/jq/download/)
+  - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
+  - [oc](https://docs.openshift.com/container-platform/3.6/cli_reference/get_started_cli.html)
+
+Execute these commands to validate some of these requirements:
+
+```bash
+ibmcloud --version
+ibmcloud plugin show schematics | head -3
+ibmcloud plugin show kubernetes-service | head -3
+ibmcloud target
+terraform version
+ls ~/.terraform.d/plugins/terraform-provider-ibm_*
+```
+
+## Executing the examples
+1. Move into the directory of the desired Cloud Pak to install, for example:
 
    ```bash
-   cd cp4mcm
+   cd <example subdirectory>
    ```
 
-3. Create the file `my_variables.auto.tfvars` with the following Terraform input variables using your own specific values:
+2. Create the file `terraform.tfvars` with the following Terraform input variables using your own specific values.  Refer to each example README for the specific variables to override:
 
    ```hcl
    owner                        = "bob"
    project_name                 = "cloud-pak-app"
    entitled_registry_user_email = "bob@email.com"
-   ```
-
-   Append the input variable `cluster_id` if you have an existing Openshift cluster to install the Cloud Pak on, like so:
-
-   ```hcl
+   entitled_registry_key        = "xxxxxxxxxxxxxxxxxxxxx"
    cluster_id                   = "xxxxxxxxxxxxxxxxxxxxx"
+   ibmcloud_api_key             = "xxxxxxxxxxxxxxxxxxxxx"
+   ...
    ```
 
-   Open the file `terraform.tfvars` or `variables.tf` to verify or overwrite the input default values for any of the existing variables. For more information on each Cloud Pak's specific inputs go to [cp4mcm](cp4mcm/README.md), [cp4app](cp4app/README.md) or [cp4data](cp4data/README.md).
-
-   NOTE: Until the permissions issue is solved you need to provide the VLANs. Execute the command `ibmcloud ks vlan ls --zone {datacenter}`, get a private and public VLAN, and store them in the `terraform.tfvars` file. Example:
-
-   ```bash
-   ❯ ibmcloud ks vlan ls --zone dal10
-   OK
-   ID        Name                 Number   Type      Router         Supports Virtual Workers
-   2953608                        2737     private   bcr01a.dal10   true
-   2832804                        2124     private   bcr02a.dal10   true
-   2979296                        1420     private   bcr03a.dal10   true
-   2953606                        2299     public    fcr01a.dal10   true
-   2832802                        1926     public    fcr02a.dal10   true
-   2979294                        1384     public    fcr03a.dal10   true
-   ❯ grep vlan cp4mcm/terraform.tfvars
-   private_vlan_number = "2979232"
-   public_vlan_number  = "2979230"
-   ```
-
-4. Issue the following commands to prime the Terraform code:
+3. Issue the following commands to prime the Terraform code:
 
    ```bash
    terraform init
@@ -57,7 +60,7 @@ The Makefile contains all the commands to use Terraform, however if you'd like t
    terraform plan
    ```
 
-5. Issue the following command to execute the Terraform code:
+4. Issue the following command to execute the Terraform code:
 
    ```bash
    terraform apply -auto-approve
@@ -67,21 +70,13 @@ The Makefile contains all the commands to use Terraform, however if you'd like t
 
    If something fails, it should be safe to execute the `terraform apply` command again.
 
-6. To get the output parameters again or validate them, execute:
+5. To get the output parameters again or validate them, execute:
 
    ```bash
    terraform output
-
-   ibmcloud ks cluster config -cluster $(terraform output cluster_id)
-   # Or
-   export KUBECONFIG=$(terraform output kubeconfig)
-
-   kubectl cluster-info
-   # Or
-   oc cluster-info
    ```
 
-7. Finally, when you finish using the infrastructure, cleanup everything you created with the execution of:
+6. Finally, when you finish using the infrastructure, cleanup everything you created with the execution of:
 
    ```bash
    terraform destroy

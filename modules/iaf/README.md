@@ -2,7 +2,7 @@
 
 This Terraform Module installs the [**IBM Automation Foundation**](https://www.ibm.com/docs/en/automationfoundation/1.0_ent) on an Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//iaf`
+**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/iaf`
 
 - [Terraform Module to install IBM Automation Foundation](#terraform-module-to-install-ibm-automation-foundation)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
@@ -18,7 +18,7 @@ This Terraform Module installs the [**IBM Automation Foundation**](https://www.i
 
 If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
 
-Go [here](../CREDENTIALS.md) for details.
+Go [here](../../CREDENTIALS.md) for details.
 
 ## Provisioning this module in a Terraform Script
 
@@ -34,7 +34,7 @@ provider "ibm" {
 
 NOTE: an OpenShift cluster is required to install the cloud pak. This can be an existing cluster or can be provisioned in the Terraform script.
 
-To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/roks#building-a-new-roks-cluster) for the code to add to your Terraform script. The recommended size for an OpenShift 4.6 (required) cluster on IBM Cloud Classic contains `4` workers of type `b3c.16x64` (classic) or `bx2.16x64` (vpc), however read the [IBM Automation Foundation](https://www.ibm.com/docs/en/automationfoundation/1.0_ent?topic=installing-system-requirements) documentation to confirm these parameters.
+To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script. The recommended size for an OpenShift 4.6 (required) cluster on IBM Cloud Classic contains `4` workers of type `b3c.16x64` (classic) or `bx2.16x64` (vpc), however read the [IBM Automation Foundation](https://www.ibm.com/docs/en/automationfoundation/1.0_ent?topic=installing-system-requirements) documentation to confirm these parameters.
 
 Add the following code to get the OpenShift cluster (new or existing) configuration:
 
@@ -67,11 +67,11 @@ Output:
 
 ### Provisioning the IAF Module
 
-Use a `module` block assigning `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//iaf`. Then set the [input variables](#input-variables) required to install Automation Foundation.
+Use a `module` block assigning `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/iaf`. Then set the [input variables](#input-variables) required to install Automation Foundation. Refer [here](../../examples/iaf) for an example:
 
 ```hcl
 module "iaf" {
-  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//iaf"
+  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/iaf"
   enable = true
 
   // ROKS cluster parameters:
