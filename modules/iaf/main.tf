@@ -47,7 +47,7 @@ resource "null_resource" "install_iaf" {
 //      IAF_INSTALLATION_CONTENT         = local.automationbase_content
 //    }
 //  }
-//}
+}
 
 // TODO: It may be considered in a future version to pass the cluster ID and the
 // resource group to get the cluster configuration and store it in memory and in
