@@ -9,11 +9,25 @@ echo "Setting Pull Secret"
 # Extract secret
 kubectl get secret/pull-secret -n openshift-config -o json > pull-secret.json
 cat pull-secret.json | jq '.data' | awk '{ print $2 }' | sed -e 's/"//' | base64 -d > dockerconfigjson
+if [[ $DEBUG ]]; then
+  echo "dockerconfigjson: "
+  cat dockerconfigjson
+fi
 
 # Append to secret
 API_KEY=$(echo -n "${IAF_ENTITLED_REGISTRY_USER}:${IAF_ENTITLED_REGISTRY_KEY}" | base64 | tr -d '[:space:]')
+if [[ $DEBUG ]]; then
+  echo $API_KEY
+fi
 NEW_SECRET_VALUE=$(jq --arg apikey ${API_KEY} --arg registry "${IAF_ENTITLED_REGISTRY}" '.auths += {($registry): {"auth":$apikey}}' dockerconfigjson | base64)
+if [[ $DEBUG ]]; then
+  echo "NEW_SECRET_VALUE: " $NEW_SECRET_VALUE
+fi
 jq --arg value "$NEW_SECRET_VALUE" '.data[".dockerconfigjson"] = $value' pull-secret.json > pull-secret-new.json
+if [[ $DEBUG ]]; then
+  echo "pull-secret-new.json: "
+  cat pull-secret-net.json
+fi
 
 # Update Secret
 kubectl apply -f pull-secret-new.json

@@ -1,4 +1,4 @@
-f{
+{
   "name": "{{ WORKSPACE_NAME }}",
   "type": ["terraform_v0.12"],
   "description": "IBM Cloud Schematics Workspace to deploy an OpenShift cluster sandbox for Multi Cloud Management Cloud Pak on IBM Cloud Classic",
