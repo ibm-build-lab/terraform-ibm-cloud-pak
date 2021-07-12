@@ -1,14 +1,14 @@
-# Terraform Module to install Cloud Pak for Data
+# Terraform Module to install Cloud Pak for Watson AIOps
 
-This Terraform Module installs **Cloud Pak for Data** on an Openshift (ROKS) cluster on IBM Cloud.
+This Terraform Module installs **Cloud Pak for Watson AIOps** on an Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4data`
+**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4aiops`
 
-- [Terraform Module to install Cloud Pak for Data](#terraform-module-to-install-cloud-pak-for-data)
+- [Terraform Module to install Cloud Pak for Watson AIOps](#terraform-module-to-install-cloud-pak-for-aiops)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
   - [Provisioning this module in a Terraform Script](#provisioning-this-module-in-a-terraform-script)
     - [Setting up the OpenShift cluster](#setting-up-the-openshift-cluster)
-    - [Installing the CP4Data Module](#installing-the-cp4data-module)
+    - [Installing the CP4AIOps Module](#installing-the-cp4aiops-module)
   - [Input Variables](#input-variables)
   - [Executing the Terraform Script](#executing-the-terraform-script)
   - [Accessing the Cloud Pak Console](#accessing-the-cloud-pak-console)
@@ -28,6 +28,7 @@ In your Terraform code define the `ibm` provisioner block with the `region` and 
 ```hcl
 provider "ibm" {
   region     = "us-south"
+  version    = "~> 1.12"
 }
 ```
 
@@ -35,7 +36,7 @@ provider "ibm" {
 
 NOTE: an OpenShift cluster is required to install the Cloud Pak. This can be an existing cluster or can be provisioned using our `roks` Terraform module.
 
-To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/roks) for the code to add to your Terraform script. The recommended size for an OpenShift 4.5+ cluster on IBM Cloud Classic contains `4` workers of flavor `b3c.16x64`, however read the [Cloud Pak for Data documentation](https://www.ibm.com/docs/en/cloud-paks/cp-data) to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
+To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/roks) for the code to add to your Terraform script. The recommended size for an OpenShift 4.5+ cluster on IBM Cloud Classic contains `4` workers of flavor `b3c.16x64`, however read the [Cloud Pak for Watson AIOps documentation](https://www.ibm.com/docs/en/cloud-paks/cp-waiops/3.1.0?topic=requirements-hardware) to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
 
 Add the following code to get the OpenShift cluster (new or existing) configuration:
 
@@ -64,54 +65,29 @@ Input:
 
 Output:
 
-`ibm_container_cluster_config` used as input for the `cp4data` module
+`ibm_container_cluster_config` used as input for the `cp4aiops` module
 
-### Installing the CP4Data Module
+### Installing the CP4AIOPS Module
 
-Use a `module` block assigning `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4data`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Data.
+Use a `module` block assigning `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4aiops`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Watson AIOps.
 
 ```hcl
-module "cp4data" {
+module "cp4aiops" {
   source          = "./.."
   enable          = var.enable
 
   // ROKS cluster parameters:
-  openshift_version   = var.openshift_version
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
   on_vpc              = var.on_vpc
   portworx_is_ready   = var.portworx_is_ready // only need if on_vpc = true
-  
-  // Prereqs
-  worker_node_flavor = var.worker_node_flavor
 
   // Entitled Registry parameters:
   entitled_registry_key        = var.entitled_registry_key
   entitled_registry_user_email = var.entitled_registry_user_email
 
-  // CP4D License Acceptance
-  accept_cpd_license = var.accept_cpd_license
-
-  // CP4D Info
-  cpd_project_name = var.cpd_project_name
-
-  // Parameters to install submodules
-  install_watson_knowledge_catalog = var.install_watson_knowledge_catalog
-  install_watson_studio            = var.install_watson_studio
-  install_watson_machine_learning  = var.install_watson_machine_learning
-  install_watson_open_scale        = var.install_watson_open_scale
-  install_data_virtualization      = var.install_data_virtualization
-  install_streams                  = var.install_streams
-  install_analytics_dashboard      = var.install_analytics_dashboard
-  install_spark                    = var.install_spark
-  install_db2_warehouse            = var.install_db2_warehouse
-  install_db2_data_gate            = var.install_db2_data_gate
-  install_big_sql                  = var.install_big_sql
-  install_rstudio                  = var.install_rstudio
-  install_db2_data_management      = var.install_db2_data_management
+  namespace = var.namespace
 }
 ```
-
-
 
 - 
 
@@ -121,28 +97,15 @@ module "cp4data" {
 | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | -------- |
 | `enable`                           | If set to `false` does not install the cloud pak on the given cluster. By default it's enabled                                                                                                                        | `true`                      | No       |
 | `on_vpc`                           | If set to `false`, it will set the install do classic ROKS. By default it's disabled                                                                                                                        | `false`                      | No       |
-| `openshift_version`                | Openshift version installed in the cluster                                                                                                                                                                                 | `4.6`                       | No       |
+| `cluster_config_path`                | The path of the kube config                                                                                                                                                                                 | `4.6`                       | No       |
 | `entitled_registry_key`            | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
 | `entitled_registry_user_email`     | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key                                                                                                                 |                             | Yes      |
-| `worker_node_flavor`          | Flavor used to determine worker node hardware for the cluster |  | Yes       |
-| `accept_cpd_license`          | If set to `true`, you accept all cpd license agreements including additional modules installed. By default, it's `false` | `false` | Yes       |
-| `install_watson_knowledge_catalog` | Install Watson Knowledge Catalog module. By default it's not installed.                                                                                                                                                    | `false`                     | No       |
-| `install_watson_studio`            | Install Watson Studio module. By default it's not installed.                                                                                                                                                               | `false`                     | No       |
-| `install_watson_machine_learning`  | Install Watson Machine Learning module. By default it's not installed.                                                                                                                                                     | `false`                     | No       |
-| `install_watson_open_scale`        | Install Watson Open Scale module. By default it's not installed.                                                                                                                                                           | `false`                     | No       |
-| `install_data_virtualization`      | Install Data Virtualization module. By default it's not installed.                                                                                                                                                         | `false`                     | No       |
-| `install_streams`                  | Install Streams module. By default it's not installed.                                                                                                                                                                     | `false`                     | No       |
-| `install_analytics_dashboard`      | Install Analytics Dashboard module. By default it's not installed.                                                                                                                                                         | `false`                     | No       |
-| `install_spark`                    | Install Analytics Engine powered by Apache Spark module. By default it's not installed.                                                                                                                                    | `false`                     | No       |
-| `install_db2_warehouse`            | Install DB2 Warehouse module. By default it's not installed.                                                                                                                                                               | `false`                     | No       |
-| `install_db2_data_gate`            | Install DB2 Data_Gate module. By default it's not installed.                                                                                                                                                               | `false`                     | No       |
-| `install_big_sql`                  | Install Big SQL module. By default it's not installed.                                                                                                                                                                     | `false`                     | No       |
-| `install_rstudio`                  | Install RStudio module. By default it's not installed.                                                                                                                                                                     | `false`                     | No       |
-| `install_db2_data_management`      | Install DB2 Data Management module. By default it's not installed.                                                                                                                                                         | `false`                     | No       |
+| `portworx_is_ready`          | Variable to catch the portworx module completion. Set to `1` if Portworx has already been installed or a classic installation. Otherwise set it to `0` |  | Yes       |
+| `namespace`          | Name of the namespace aiops will be located | `cp4aiops` | no       |
 
 **NOTE** The boolean input variable `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
 
-For an example of how to put all this together, refer to our [Cloud Pak for Data Terraform script](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform/cp4data).
+For an example of how to put all this together, refer to our [Cloud Pak for Watson AIOps Terraform script](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform/cp4aiops).
 
 ## Executing the Terraform Script
 
@@ -160,19 +123,19 @@ After execution has completed, access the cluster using `kubectl` or `oc`:
 
 ```bash
 ibmcloud oc cluster config -c <cluster-name> --admin
-kubectl get route -n ibm-common-services cp-console -o jsonpath=‘{.spec.host}’ && echo
+oc get route -n ${NAMESPACE} cpd -o jsonpath=‘{.spec.host}’ && echo
 ```
 
 To get default login id:
 
 ```bash
-kubectl -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_username}\' | base64 -d && echo
+oc -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_username}' | base64 -d && echo
 ```
 
 To get default Password:
 
 ```bash
-kubectl -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d && echo
+oc -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d && echo
 ```
 
 ## Clean up
@@ -181,14 +144,4 @@ When you finish using the cluster, release the resources by executing the follow
 
 ```bash
 terraform destroy
-```
-
-## Troubleshooting
-
-- Once `module.cpd_install.null_resource.install_cpd` completes. You can check the logs to find out more information about the installation of Cloud Pak for Data.
-
-```bash
-cpd-meta-operator: oc -n cpd-meta-ops logs -f deploy/ibm-cp-data-operator
-
-cpd-install-operator: oc -n cpd-tenant logs -f deploy/cpd-install-operator
 ```
