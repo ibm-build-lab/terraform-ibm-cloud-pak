@@ -36,18 +36,18 @@ resource "null_resource" "install_iaf" {
     }
   }
 
-  provisioner "local-exec" {
-    command = "${path.module}/scripts/install_iaf.sh"
-
-    environment = {
-      KUBECONFIG                       = var.cluster_config_path
-      IAF_NAMESPACE                    = local.iaf_namespace
-      IAF_CATALOGSOURCE_CONTENT        = local.catalogsource_content
-      IAF_SUBSCRIPTION_CONTENT         = local.subscription_content
-      IAF_INSTALLATION_CONTENT         = local.automationbase_content
-    }
-  }
-}
+//  provisioner "local-exec" {
+//    command = "${path.module}/scripts/install_iaf.sh"
+//
+//    environment = {
+//      KUBECONFIG                       = var.cluster_config_path
+//      IAF_NAMESPACE                    = local.iaf_namespace
+//      IAF_CATALOGSOURCE_CONTENT        = local.catalogsource_content
+//      IAF_SUBSCRIPTION_CONTENT         = local.subscription_content
+//      IAF_INSTALLATION_CONTENT         = local.automationbase_content
+//    }
+//  }
+//}
 
 // TODO: It may be considered in a future version to pass the cluster ID and the
 // resource group to get the cluster configuration and store it in memory and in
