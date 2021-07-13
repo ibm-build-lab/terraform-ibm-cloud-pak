@@ -36,31 +36,15 @@ resource "null_resource" "install_iaf" {
     }
   }
 
-//  provisioner "local-exec" {
-//    command = "${path.module}/scripts/install_iaf.sh"
-//
-//    environment = {
-//      KUBECONFIG                       = var.cluster_config_path
-//      IAF_NAMESPACE                    = local.iaf_namespace
-//      IAF_CATALOGSOURCE_CONTENT        = local.catalogsource_content
-//      IAF_SUBSCRIPTION_CONTENT         = local.subscription_content
-//      IAF_INSTALLATION_CONTENT         = local.automationbase_content
-//    }
-//  }
+  provisioner "local-exec" {
+    command = "${path.module}/scripts/install_iaf.sh"
+
+    environment = {
+      KUBECONFIG                       = var.cluster_config_path
+      IAF_NAMESPACE                    = local.iaf_namespace
+      IAF_CATALOGSOURCE_CONTENT        = local.catalogsource_content
+      IAF_SUBSCRIPTION_CONTENT         = local.subscription_content
+      IAF_INSTALLATION_CONTENT         = local.automationbase_content
+    }
+  }
 }
-
-// TODO: It may be considered in a future version to pass the cluster ID and the
-// resource group to get the cluster configuration and store it in memory and in
-// a directory, either specified by the user or in the module local directory
-
-// variable "resource_group" {
-//   default     = "default"
-//   description = "List all available resource groups with: ibmcloud resource groups"
-// }
-// data "ibm_resource_group" "group" {
-//   name = var.resource_group
-// }
-// data "ibm_container_cluster_config" "cluster_config" {
-//   cluster_name_id   = var.cluster_id
-//   resource_group_id = data.ibm_resource_group.group.id
-// }
