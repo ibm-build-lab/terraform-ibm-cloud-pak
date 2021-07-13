@@ -14,6 +14,7 @@ variable "install_storage" {
 
 variable "kube_config_path" {
     description = "Path to the k8s config file: ex `~/.kube/config`"
+    default     = ".kube/config"
 }
 
 variable "cluster_id" {
@@ -29,7 +30,6 @@ variable "create_external_etcd" {
 
 variable "region" {
     description = "The region Portworx will be installed in: us-south, us-east, eu-gb, eu-de, jp-tok, au-syd, etc.."
-
 }
 
 variable "resource_group_name" {
