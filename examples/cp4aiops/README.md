@@ -1,4 +1,4 @@
-# Example to provision CP4AIOps Terraform Module
+# Example to provision CP4AIOps Terraform module
 
 ## Run using IBM Cloud Schematics
 
