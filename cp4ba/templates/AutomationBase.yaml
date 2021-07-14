@@ -1,0 +1,11 @@
+apiVersion: base.automation.ibm.com/v1beta1
+kind: AutomationBase
+  name: automationbase-sample
+  namespace: ${ namespace }
+spec:
+  elasticsearch: {}
+  kafka: {}
+  license:
+    accept: true
+  tls: {}
+  version: v1.0

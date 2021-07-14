@@ -8,7 +8,7 @@ credentials.tfvars
 **/.kube
 **/.cp4app_data
 
-# Local .terraform directories
+# Local terraform directories
 **/.terraform
 
 # Terraform & Schematics files
