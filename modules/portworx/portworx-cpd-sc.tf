@@ -14,7 +14,7 @@ resource "null_resource" "delete_db2_sc" {
     }
 
     interpreter = ["/bin/bash", "-c"]
-    command = "oc delete sc portworx-db2-sc"
+    command = "kubectl delete sc portworx-db2-sc"
   }
 }
 

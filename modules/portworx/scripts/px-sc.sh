@@ -3,7 +3,7 @@
 echo "creating storage classes"
 
 # CouchDB (Implemented application-level redundancy)
-cat <<EOF | oc create -f -
+cat <<EOF | kubectl create -f -
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
@@ -20,7 +20,7 @@ volumeBindingMode: Immediate
 EOF
 
 # ElasticSearch (Implemented application-level redundancy)
-cat <<EOF | oc create -f -
+cat <<EOF | kubectl create -f -
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
@@ -37,7 +37,7 @@ volumeBindingMode: Immediate
 EOF
 
 # Solr
-cat <<EOF | oc create -f -
+cat <<EOF | kubectl create -f -
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
@@ -54,7 +54,7 @@ volumeBindingMode: Immediate
 EOF
 
 # Cassandra
-cat <<EOF | oc create -f -
+cat <<EOF | kubectl create -f -
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
@@ -71,7 +71,7 @@ volumeBindingMode: Immediate
 EOF
 
 # Kafka
-cat <<EOF | oc create -f -
+cat <<EOF | kubectl create -f -
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
@@ -88,7 +88,7 @@ volumeBindingMode: Immediate
 EOF
 
 # metastoredb:
-cat <<EOF | oc create -f -
+cat <<EOF | kubectl create -f -
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
@@ -106,7 +106,7 @@ EOF
 
 # General Purpose, 3 Replicas - Default SC for other applications
 # without specific SC defined and with RWX volume access mode - New Install
-cat <<EOF | oc create -f -
+cat <<EOF | kubectl create -f -
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
@@ -125,7 +125,7 @@ EOF
 
 # General Purpose, 3 Replicas [Default for other applications without
 # specific SC defined and with RWX volume access mode] - SC portworx-shared-gp3 for upgrade purposes
-cat <<EOF | oc create -f -
+cat <<EOF | kubectl create -f -
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
@@ -143,7 +143,7 @@ volumeBindingMode: Immediate
 EOF
 
 # General Purpose, 2 Replicas RWX volumes
-cat <<EOF | oc create -f -
+cat <<EOF | kubectl create -f -
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
@@ -161,7 +161,7 @@ volumeBindingMode: Immediate
 EOF
 
 # DV - Single replica
-cat <<EOF | oc create -f -
+cat <<EOF | kubectl create -f -
 allowVolumeExpansion: true
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -178,7 +178,7 @@ volumeBindingMode: Immediate
 EOF
 
 # DV - three replicas
-cat <<EOF | oc create -f -
+cat <<EOF | kubectl create -f -
 allowVolumeExpansion: true
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -195,7 +195,7 @@ volumeBindingMode: Immediate
 EOF
 
 # Streams
-cat <<EOF | oc create -f -
+cat <<EOF | kubectl create -f -
 allowVolumeExpansion: true
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -211,7 +211,7 @@ volumeBindingMode: Immediate
 EOF
 
 #  General Purpose, 1 Replica - RWX volumes for TESTING ONLY.
-cat <<EOF | oc create -f -
+cat <<EOF | kubectl create -f -
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
@@ -229,7 +229,7 @@ reclaimPolicy: Delete
 EOF
 
 # General Purpose, 3 Replicas - RWX volumes - placeholder SC portworx-shared-gp for upgrade purposes
-cat <<EOF | oc create -f -
+cat <<EOF | kubectl create -f -
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
@@ -248,7 +248,7 @@ EOF
 
 
 # General Purpose, 3 Replicas RWO volumes rabbitmq and redis-ha - New Install
-cat <<EOF | oc create -f -
+cat <<EOF | kubectl create -f -
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
@@ -266,7 +266,7 @@ EOF
 
 
 # General Purpose, 3 Replicas RWO volumes rabbitmq and redis-ha - placeholder SC portworx-nonshared-gp2 for upgrade purposes
-cat <<EOF | oc create -f -
+cat <<EOF | kubectl create -f -
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
@@ -283,7 +283,7 @@ volumeBindingMode: Immediate
 EOF
 
 #Shared gp high iops:
-cat <<EOF | oc create -f -
+cat <<EOF | kubectl create -f -
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
@@ -299,7 +299,7 @@ volumeBindingMode: Immediate
 EOF
 
 # gp db
-cat <<EOF | oc create -f -
+cat <<EOF | kubectl create -f -
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
@@ -315,7 +315,7 @@ volumeBindingMode: Immediate
 EOF
 
 # General Purpose for Databases, 2 Replicas - MongoDB - (Implemented application-level redundancy)
-cat <<EOF | oc create -f -
+cat <<EOF | kubectl create -f -
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
@@ -332,7 +332,7 @@ volumeBindingMode: Immediate
 EOF
 
 # General Purpose for Databases, 3 Replicas
-cat <<EOF | oc create -f -
+cat <<EOF | kubectl create -f -
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
@@ -350,7 +350,7 @@ EOF
 
 
 # DB2 RWX shared volumes for System Storage, backup storage, future load storage, and future diagnostic logs storage
-cat <<EOF | oc create -f -
+cat <<EOF | kubectl create -f -
 allowVolumeExpansion: true
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -369,7 +369,7 @@ volumeBindingMode: Immediate
 EOF
 
 # Db2 RWO volumes SC for user storage, future transaction logs storage, future archive/mirrors logs storage. This is also used for WKC DB2 Metastore
-cat <<EOF | oc create -f -
+cat <<EOF | kubectl create -f -
 allowVolumeExpansion: true
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -388,7 +388,7 @@ volumeBindingMode: Immediate
 EOF
 
 # WKC DB2 Metastore - SC portworx-db2-sc for upgrade purposes
-cat <<EOF | oc create -f -
+cat <<EOF | kubectl create -f -
 allowVolumeExpansion: true
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -407,7 +407,7 @@ EOF
 
 
 # Watson Assistant - This was previously named portworx-assistant
-cat <<EOF | oc create -f -
+cat <<EOF | kubectl create -f -
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
@@ -426,7 +426,7 @@ EOF
 
 
 # FCI DB2 Metastore
-cat <<EOF | oc create -f -
+cat <<EOF | kubectl create -f -
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
