@@ -39,8 +39,6 @@ terraform plan
 terraform apply -auto-approve
 ```
 
-One of the Test Scenarios is to verify the YAML files rendered to install IAF, these files are generated in the directory `rendered_files`. Go to this directory to validate that they are generated correctly.
-
 ### Verify
 
 To verify installation on the Kubernetes cluster, take the output URL, username and password and log into the CP4AIOps console.
