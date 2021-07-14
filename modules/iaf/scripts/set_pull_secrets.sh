@@ -30,7 +30,6 @@ worker_count=0
 ibmcloud ks workers --cluster ${IAF_CLUSTER}
 
 echo "Rebooting workers, could take up to 60 minutes"
-$IAF_CLUSTER_ON_VPC ? action=replace : action=reload
 [[ $IAF_CLUSTER_ON_VPC == "true" ]] && action=replace || action=reload
 for worker in $(ibmcloud ks workers --cluster ${IAF_CLUSTER} | grep kube- | awk '{ print $1 }'); 
 do echo "reloading worker";
