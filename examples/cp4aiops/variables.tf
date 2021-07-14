@@ -1,11 +1,15 @@
-variable "region" {}
-variable "resource_group_name" {}
-variable "cluster_id" {}
+variable "cluster_id" {
+  description = "Id of cluster for AIOps to be installed on"
+}
 
-variable "enable" {
-  default     = true
-  type        = bool
-  description = "If set to true installs Cloud-Pak for Data on the given cluster"
+variable "region" {
+  default     = us-south
+  description = "Region that cluster resides in"
+}
+
+variable "resource_group_name" {
+  default     = "Default"
+  description = "Resource group that cluster resides in"
 }
 
 variable "cluster_config_path" {
@@ -20,14 +24,9 @@ variable "on_vpc" {
 }
 
 variable "portworx_is_ready" {
-  type = any
-  default = null
-}
-
-variable "openshift_version" {
-  default     = "4.6"
-  type        = string
-  description = "Openshift version installed in the cluster"
+  type        = bool
+  default     = false
+  description = "Is Portworx is installed. Only checked of cluster is on VPC"
 }
 
 variable "entitled_registry_key" {
