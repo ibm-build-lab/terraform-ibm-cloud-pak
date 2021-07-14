@@ -13,10 +13,12 @@ setting these values in the `terraform.tfvars` file:
 
 ```hcl
   on_vpc                = true | false
+  region                = "us-south"
+  resource_group        = "Default"
   entitled_registry_key = "******************"
   entitled_registry_user_email = "john.doe@email.com"
   namespace             = "aiops"
-  portworkx_is_ready    = 1
+  portworx_is_ready     = 1
 ```
 
 These parameters are:
