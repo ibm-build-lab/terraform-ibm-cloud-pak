@@ -9,20 +9,22 @@ For more information on IBM Schematics, refer [here](https://cloud.ibm.com/docs/
 ## Run using local Terraform Client
 
 For instructions to run using the local Terraform Client on your local machine go [here](../Using_Terraform.md)
-setting these values in the `terraform.tfvars` file:
+customizing these values in the `terraform.tfvars` file:
 
 ```hcl
+  cluster_id            = "******************"
   on_vpc                = true | false
   region                = "us-south"
   resource_group        = "Default"
   entitled_registry_key = "******************"
   entitled_registry_user_email = "john.doe@email.com"
   namespace             = "aiops"
-  portworx_is_ready     = 1
+  portworx_is_ready     = true
 ```
 
 These parameters are:
 
+- `cluster_id`: ID of the cluster to install cloud pak on
 - `on_vpc`: Set to true if the cluster is vpc
 - `portworx_is_ready`: Set to `1` if portworx is installed or if aiops is being installed on a classic cluster
 - `entitled_registry_key`: Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key
