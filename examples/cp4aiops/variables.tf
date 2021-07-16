@@ -3,7 +3,6 @@ variable "cluster_id" {
 }
 
 variable "region" {
-  default     = us-south
   description = "Region that cluster resides in"
 }
 
