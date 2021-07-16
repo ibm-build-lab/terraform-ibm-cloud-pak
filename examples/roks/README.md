@@ -1,4 +1,4 @@
-# Example using ROKS Terraform Module
+# Example using the Terraform Module to install an Openshift (ROKS) cluster on IBM Cloud.
 
 ## Run using IBM Cloud Schematics
 

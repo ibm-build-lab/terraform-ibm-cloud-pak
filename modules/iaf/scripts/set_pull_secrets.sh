@@ -9,18 +9,12 @@ echo "Setting Pull Secret"
 # Extract secret
 kubectl get secret/pull-secret -n openshift-config -o json > pull-secret.json
 cat pull-secret.json | jq '.data[".dockerconfigjson"]' | sed -e 's/"//g' | base64 -d > dockerconfigjson
-#  echo "dockerconfigjson: "
-#  cat dockerconfigjson
-#  echo ""
 
 # Append to secret
 API_KEY=$(printf "%s:%s" $IAF_ENTITLED_REGISTRY_USER $IAF_ENTITLED_REGISTRY_KEY | base64 | tr -d '[:space:]')
 NEW_SECRET_VALUE=$(jq --arg apikey ${API_KEY} --arg registry "${IAF_ENTITLED_REGISTRY}" '.auths += {($registry): {"auth":$apikey}}' dockerconfigjson | base64)
-#  echo "NEW_SECRET_VALUE: " $NEW_SECRET_VALUE
-#  echo ""
 jq --arg value "$NEW_SECRET_VALUE" '.data[".dockerconfigjson"] = $value' pull-secret.json > pull-secret-new.json
-#  echo "pull-secret-new.json: "
-#  cat pull-secret-new.json
+#  echo "pull-secret-new.json: "; cat pull-secret-new.json
 
 # Update Secret
 kubectl apply -f pull-secret-new.json
@@ -30,10 +24,11 @@ worker_count=0
 ibmcloud ks workers --cluster ${IAF_CLUSTER}
 
 echo "Rebooting workers, could take up to 60 minutes"
-$IAF_CLUSTER_ON_VPC ? action=replace : action=reload
 [[ $IAF_CLUSTER_ON_VPC == "true" ]] && action=replace || action=reload
 for worker in $(ibmcloud ks workers --cluster ${IAF_CLUSTER} | grep kube- | awk '{ print $1 }'); 
-do echo "reloading worker";
+do 
+  echo "replacing/reloading workers";
+  printf "ibmcloud ks worker %s --cluster %s -w %s -f" $action $IAF_CLUSTER $worker
   ibmcloud ks worker $action --cluster ${IAF_CLUSTER} -w $worker -f; 
   ((worker_count++))
 done

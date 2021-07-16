@@ -26,12 +26,12 @@ data "ibm_container_cluster_config" "cluster_config" {
 // Module:
 module "cp4aiops" {
   source    = "../../modules/cp4aiops"
-  enable    = var.enable
+  enable    = true
 
   // ROKS cluster parameters:
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
   on_vpc              = var.on_vpc
-  portworx_is_ready   = var.portworx_is_ready // set to 1 if portworx is installed or classic
+  portworx_is_ready   = var.portworx_is_ready // set to true if portworx is installed on cluster
 
   // Entitled Registry parameters:
   entitled_registry_key        = var.entitled_registry_key
