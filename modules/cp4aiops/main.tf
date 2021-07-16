@@ -2,7 +2,7 @@ locals {
   # These are the the yamls that will be pulled from the ./files  these will be used to start hte operator
   cp4aiops_subscription = file(join("/", [path.module, "files", "aiops-subscription.yaml"])) 
 
-  on_vpc_ready = var.on_vpc ? var.portworx_is_ready : 1
+  on_vpc_ready = var.on_vpc ? var.portworx_is_ready : true
 }
 
 # This section checks to see if the values have been updated through out the script running and is required for any dynamic value
