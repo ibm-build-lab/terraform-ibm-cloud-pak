@@ -12,11 +12,6 @@ variable "resource_group_name" {
   description = "Resource group that cluster resides in"
 }
 
-variable "cluster_config_path" {
-  type        = string
-  description = "Path to the Kubernetes configuration file to access your cluster"
-}
-
 variable "on_vpc" {
   default     = false
   type        = bool
@@ -42,4 +37,8 @@ variable "entitled_registry_user_email" {
 variable "namespace" {
   type        = string
   description = "namespace for cp4aiop"
+}
+
+locals {
+  cluster_config_path = "./.kube/config"
 }
