@@ -18,9 +18,7 @@ variable "on_vpc" {
 }
 
 variable "portworx_is_ready" {
-  type        = bool
-  default     = false
-  description = "Is Portworx is installed. Only checked of cluster is on VPC"
+  description = "Is Portworx is installed. Valid values are 0 and 1; Only checked `on_vpc` is true"
 }
 
 variable "entitled_registry_key" {
