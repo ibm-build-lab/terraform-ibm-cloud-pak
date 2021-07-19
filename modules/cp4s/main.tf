@@ -23,8 +23,9 @@ resource "null_resource" "install_cp4s" {
       FORCE                         = var.force
       KUBECONFIG                    = var.cluster_config_path
       NAMESPACE                     = local.namespace
+      
       IBM_OPERATOR_CATALOG          = local.ibm_operator_catalog
-      DOCKER_REGISTRY_PASS          = local.entitled_registry_key
+      DOCKER_REGISTRY_PASS          = var.entitled_registry_key
       DOCKER_USER_EMAIL             = var.entitled_registry_user_email
       DOCKER_USERNAME               = local.docker_username
       DOCKER_REGISTRY               = local.docker_registry

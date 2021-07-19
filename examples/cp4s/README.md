@@ -18,7 +18,7 @@ customizing these values in the `terraform.tfvars` file:
   resource_group_name   = "Default"
   entitled_registry_key = "******************"
   entitled_registry_user_email = "john.doe@email.com"
-  namespace             = "aiops"
+  namespace             = "cp4s"
   portworx_is_ready     = true
 ```
 
