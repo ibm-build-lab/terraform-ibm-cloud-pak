@@ -1,4 +1,4 @@
-# Test CP4D Module
+# Test CP4S Module
 
 ## 1. Set up access to IBM Cloud
 
