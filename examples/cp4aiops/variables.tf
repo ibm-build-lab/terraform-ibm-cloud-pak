@@ -19,7 +19,7 @@ variable "on_vpc" {
 
 variable "portworx_is_ready" {
   type        = any
-  description = "Is Portworx is installed. Valid values are 0 and 1; Only checked `on_vpc` is true"
+  description = "Is Portworx is installed. Valid values are 0 and 1; Only relavant if `on_vpc` is true. Portworx is required to install on VPC clusters"
 }
 
 variable "entitled_registry_key" {
