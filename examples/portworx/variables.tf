@@ -46,7 +46,7 @@ variable "storage_profile" {
 
 variable "unique_id" {
     description = "Unique string for naming resources"
-    default     = "emc-t-1-px-ext-portworx"
+    default     = "px-ext-portworx"
 }
 
 variable "worker_nodes" {
