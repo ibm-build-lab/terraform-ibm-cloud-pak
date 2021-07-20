@@ -12,11 +12,6 @@ variable "install_storage" {
     description = "If set to false does not install storage and attach the volumes to the worker nodes. Enabled by default"
 }
 
-variable "kube_config_path" {
-    description = "Path to the k8s config file: ex `~/.kube/config`"
-    default     = ".kube/config"
-}
-
 variable "cluster_id" {
     description = "The id of the cluster"
 
