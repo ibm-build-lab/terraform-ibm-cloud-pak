@@ -27,11 +27,6 @@ variable "entitled_registry_user_email" {
   description = "Docker email address"
 }
 
-variable "namespace" {
-  type        = string
-  description = "namespace for cp4aiop"
-}
-
 locals {
   cluster_config_path = "./.kube/config"
 }
