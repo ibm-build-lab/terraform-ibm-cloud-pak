@@ -19,11 +19,11 @@ variable "create_external_etcd" {
 }
 
 variable "region" {
-    description = "The region Portworx will be installed in: us-south, us-east, eu-gb, eu-de, jp-tok, au-syd, etc.."
+    description = "The region Portworx will be installed in. To list all available regions fun `ibmcloud regions`"
 }
 
 variable "resource_group_name" {
-    description = "Resource Group in your account. List all available resource groups with: ibmcloud resource groups"
+    description = "Resource Group in your account. List all available resource groups with: `ibmcloud resource groups`"
 }
 
 variable "storage_capacity"{
