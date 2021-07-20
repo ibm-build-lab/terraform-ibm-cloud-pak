@@ -37,7 +37,7 @@ module "cp4s" {
   entitled_registry_user_email = var.entitled_registry_user_email
 
 
-  force = var.Force
+  force = var.force
   ldap_user_id = var.ldap_user_id
   ldap_status = var.ldap_status
 }
