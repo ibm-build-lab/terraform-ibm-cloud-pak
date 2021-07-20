@@ -37,5 +37,6 @@ module "cp4aiops" {
   entitled_registry_key        = var.entitled_registry_key
   entitled_registry_user_email = var.entitled_registry_user_email
 
-  namespace = var.namespace
+  // AIOps specific parameters:
+  namespace           = "cp4aiops"
 }
