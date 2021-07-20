@@ -67,5 +67,5 @@ variable "etcd_secret_name" {
 }
 
 locals {
-  cluster_config_path = "./.kube/config"
+  kube_config_path = "./.kube/config"
 }
