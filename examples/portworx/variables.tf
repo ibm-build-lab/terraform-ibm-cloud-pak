@@ -70,3 +70,7 @@ variable "etcd_password" {
 variable "etcd_secret_name" {
   default = "px-etcd-certs" # don't change this
 }
+
+locals {
+  cluster_config_path = "./.kube/config"
+}
