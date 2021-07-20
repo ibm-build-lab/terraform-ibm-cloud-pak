@@ -58,11 +58,6 @@ create_secret ibm-entitlement-key ${NAMESPACE}
 
 sleep 40
 
-echo "Deploying Subscription ${SUBSCRIPTION}"
-echo "${SUBSCRIPTION}" | oc apply -f -
-
-sleep 120
-
 HELM3=$(which helm3)
 oc get users
 
@@ -70,7 +65,7 @@ oc get users
 cloudctl case save -t 1 --case https://github.com/IBM/cloud-pak/raw/master/repo/case/ibm-cp-security-1.0.17.tgz --outputdir ./cp4s_cli_install/ && tar -xf ./cp4s_cli_install/ibm-cp-security-1.0.17.tgz
 CONF=$(sed -e "s/LDAP_USER_ID/${LDAP_USER_ID}/g" -e "s/ENTITLEMENT_KEY/${DOCKER_REGISTRY_PASS}/g"  ../templates/values.conf)
 echo $CONF > ./ibm-cp-security/inventory/installProduct/files/values.conf
-cloutctl case launch -t 1 --case ibm-cp-security --namespace default  --inventory installProduct --action install --args "--license accept --helm3 $HELM3 --inputDir ./cp4s_cli_install/"
+cloudctl case launch -t 1 --case ibm-cp-security --namespace default  --inventory installProduct --action install --args "--license accept --helm3 $HELM3 --inputDir ./cp4s_cli_install/"
 
 # The following code is taken from get_enpoints.sh, to print what it's getting
 # result_txt=$(kubectl logs -n ${NAMESPACE} $pod | sed 's/[[:cntrl:]]\[[0-9;]*m//g' | tail -20)
