@@ -1,0 +1,16 @@
+[0m[1mvar.cluster_config_path[0m
+  Path to the Kubernetes configuration file to access your cluster
+
+  [1mEnter a value:[0m [0mInterrupt received.
+Please wait for Terraform to exit or data loss may occur.
+Gracefully shutting down...
+
+[0m[1mvar.cluster_config_path[0m
+  Path to the Kubernetes configuration file to access your cluster
+
+  [1mEnter a value:[0m [0m
+[0m[1mvar.cluster_id[0m
+  [1mEnter a value:[0m [0m
+Interrupt received.
+Please wait for Terraform to exit or data loss may occur.
+Gracefully shutting down...
