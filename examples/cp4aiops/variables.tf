@@ -17,11 +17,6 @@ variable "on_vpc" {
   description = "If set to true, lets the module know cluster is using VPC Gen2"
 }
 
-variable "portworx_is_ready" {
-  type        = any
-  description = "Is Portworx is installed. Valid values are 0 and 1; Only checked `on_vpc` is true"
-}
-
 variable "entitled_registry_key" {
   type        = string
   description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
