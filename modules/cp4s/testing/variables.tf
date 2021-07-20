@@ -8,13 +8,7 @@ variable "enable" {
   description = "If set to true installs Cloud-Pak for Security on the given cluster"
 }
 
-variable "on_vpc" {
-  default     = false
-  type        = bool
-  description = "If set to true, lets the module know cluster is using VPC Gen2"
-}
-
-variable "kube_config_path" {
+variable "cluster_config_path" {
   type        = string
   description = "Path to the Kubernetes configuration file to access your cluster"
 }
