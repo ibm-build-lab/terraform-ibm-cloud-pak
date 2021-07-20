@@ -14,11 +14,6 @@ variable "on_vpc" {
   description = "If set to true, lets the module know cluster is using VPC Gen2"
 }
 
-variable "portworx_is_ready" {
-  type = any
-  default = null
-}
-
 variable "accept_cpd_license" {
   type        = bool
   description = "Do you accept the cpd license agreements? This includes any modules chosen as well. `true` or `false`"
@@ -122,4 +117,5 @@ variable "install_big_sql" {
 }
 locals {
   cluster_config_path = "./.kube/config"
+  portworx_is_ready   = 1
 }

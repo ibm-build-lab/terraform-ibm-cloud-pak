@@ -44,7 +44,7 @@ module "cp4data" {
   openshift_version   = var.openshift_version
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
   on_vpc              = var.on_vpc
-  portworx_is_ready   = var.portworx_is_ready // only need if on_vpc = true
+  portworx_is_ready   = local.portworx_is_ready
 
   // Prereqs
   worker_node_flavor = var.worker_node_flavor
