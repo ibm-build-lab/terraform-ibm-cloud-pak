@@ -20,7 +20,6 @@ cluster_id          = "******************"
 region                = "us-south"
 openshift_version   = "4.6"
 on_vpc              = false
-portworx_is_ready   = 1 // Assumes the user has portworx installed on their VPC cluster OR the cluster is classic infrastructure
 
 // Prereqs
 worker_node_flavor = "bc3.16x64"
@@ -55,7 +54,6 @@ These parameters are:
 
 - `enable`: If set to `false` does not install the cloud pak on the given cluster. By default it's enabled
 - `on_vpc`: If set to `false`, it will set the install do classic ROKS. By default it's disabled
-- `portworx_is_ready`: If set to `1`, it will pass checks to enable to creation of CP4D. If `null`, it is waiting for Portworx to install.
 - `openshift_version`: Openshift version installed in the cluster
 - `entitled_registry_key`: Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key
 - `entitled_registry_user_email`: IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key

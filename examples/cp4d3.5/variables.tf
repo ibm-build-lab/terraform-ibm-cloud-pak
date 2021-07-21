@@ -117,5 +117,4 @@ variable "install_big_sql" {
 }
 locals {
   cluster_config_path = "./.kube/config"
-  portworx_is_ready   = 1
 }
