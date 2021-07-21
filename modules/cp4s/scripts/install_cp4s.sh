@@ -63,32 +63,6 @@ oc get users
 
 mkdir cp4s_cli_install
 cloudctl case save -t 1 --case https://github.com/IBM/cloud-pak/raw/master/repo/case/ibm-cp-security-1.0.17.tgz --outputdir ./cp4s_cli_install/ && tar -xf ./cp4s_cli_install/ibm-cp-security-1.0.17.tgz
-#`sed -e "s/LDAP_USER_ID/${LDAP_USER_ID}/g" -e "s/ENTITLEMENT_KEY/${DOCKER_REGISTRY_PASS}/g"  ../templates/values.conf` > ./ibm-cp-security/inventory/installProduct/files/values.conf
 $(sed -e "s/LDAP_USER_ID/${LDAP_USER_ID}/g" -e "s/ENTITLEMENT_KEY/${DOCKER_REGISTRY_PASS}/g"  ../templates/values.conf > ./ibm-cp-security/inventory/installProduct/files/values.conf)
 cloudctl case launch -t 1 --case ibm-cp-security --namespace default  --inventory installProduct --action install --args "--license accept --helm3 ${HELM3} --inputDir ./cp4s_cli_install/"
 
-# The following code is taken from get_enpoints.sh, to print what it's getting
-# result_txt=$(kubectl logs -n ${NAMESPACE} $pod | sed 's/[[:cntrl:]]\[[0-9;]*m//g' | tail -20)
-# if ! echo $result_txt | grep -q 'Installation of assembly lite is successfully completed'; then
-#   echo "[ERROR] a successful installation was not found from the logs"
-# fi
-
-# echo "[DEBUG] Latest lines from logs:"
-# echo "[DEBUG] $result_txt"
-
-# address=$(echo $result_txt | sed 's|.*Access Cloud Pak for Data console using the address: \(.*\) .*|\1|')
-# if [[ -z $address ]]; then
-#   echo "[ERROR] failed to get the endpoint address from the logs"
-# fi
-# echo "[INFO] CPD Endpoint: https://$address"
-
-# [[ "$DEBUG" == "false" ]] && exit
-
-# echo "[DEBUG] Job installer '${JOB_NAME}' description."
-# kubectl describe job ${JOB_NAME} -n ${NAMESPACE}
-# if [[ -n $pod ]]; then
-#   echo "[DEBUG] Decription of Pod $pod created by the Job installer:"
-#   kubectl describe pod $pod -n ${NAMESPACE}
-#   echo "[DEBUG] Log of Pod $pod created by the Job installer:"
-#   kubectl logs $pod -n ${NAMESPACE}
-# fi
