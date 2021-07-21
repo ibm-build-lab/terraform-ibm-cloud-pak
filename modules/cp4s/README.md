@@ -11,7 +11,6 @@ This Terraform Module installs **Cloud Pak for Security** on an Openshift (ROKS)
     - [Using the CP4S Module](#using-the-cp4s-module)
   - [Input Variables](#input-variables)
   - [Executing the Terraform Script](#executing-the-terraform-script)
-  - [Clean up](#clean-up)
 
 ## Set up access to IBM Cloud
 
