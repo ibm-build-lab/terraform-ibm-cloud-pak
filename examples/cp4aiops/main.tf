@@ -31,11 +31,16 @@ module "cp4aiops" {
   // ROKS cluster parameters:
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
   on_vpc              = var.on_vpc
+<<<<<<< HEAD
   portworx_is_ready   = 1           // Assuming portworx is installed if using a VPC cluster
+=======
+  portworx_is_ready   = 1          // Assuming portworx is installed if using VPC infrastructure
+>>>>>>> ca2eeeda257d7c72fba3e72f3165867349779ffd
 
   // Entitled Registry parameters:
   entitled_registry_key        = var.entitled_registry_key
   entitled_registry_user_email = var.entitled_registry_user_email
 
-  namespace = var.namespace
+  // AIOps specific parameters:
+  namespace           = "cp4aiops"
 }
