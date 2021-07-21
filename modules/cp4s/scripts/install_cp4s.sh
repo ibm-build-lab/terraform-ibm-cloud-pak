@@ -59,7 +59,7 @@ create_secret ibm-entitlement-key ${NAMESPACE}
 sleep 40
 
 HELM3=$(which helm)
-oc get users
+
 
 mkdir cp4s_cli_install
 cloudctl case save -t 1 --case https://github.com/IBM/cloud-pak/raw/master/repo/case/ibm-cp-security-1.0.17.tgz --outputdir ./cp4s_cli_install/ && tar -xf ./cp4s_cli_install/ibm-cp-security-1.0.17.tgz
