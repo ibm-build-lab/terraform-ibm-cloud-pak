@@ -59,7 +59,6 @@ These parameters are:
 - `entitled_registry_user_email`: IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key
 - `resource_group_name`: Resource group that the cluster is provisioned in
 - `accept_cpd_license`: If set to `true`, you accept all cpd license agreements including additional modules installed. By default, it's `false`
-- `cpd_project_name` : name of the namespace for the project
 - `install_watson_knowledge_catalog`:  Install Watson Knowledge Catalog module. By default it's not installed.
 - `install_watson_studio`: Install Watson Studio module. By default it's not installed.
 - `install_watson_machine_learning`: Install Watson Machine Learning module. By default it's not installed.
