@@ -1,8 +1,8 @@
 // CP4DATA output parameters
 output "cpd_url" {
   description = "Access your Cloud Pak for Data deployment at this URL."
-  value = "https://${var.cpd_project_name}-cpd-${var.cpd_project_name}.${var.on_vpc ? join("", ibm_container_vpc_cluster.cluster.*.ingress_hostname) 
-  : join("", ibm_container_cluster.cluster.*.ingress_hostname)}"
+  value = "https://cp4d-cpd-cp4d.${var.on_vpc ? join("", data.ibm_container_vpc_cluster.cluster.*.ingress_hostname) 
+  : join("", data.ibm_container_cluster.cluster.*.ingress_hostname)}"
 }
 
 output "cpd_user" {
