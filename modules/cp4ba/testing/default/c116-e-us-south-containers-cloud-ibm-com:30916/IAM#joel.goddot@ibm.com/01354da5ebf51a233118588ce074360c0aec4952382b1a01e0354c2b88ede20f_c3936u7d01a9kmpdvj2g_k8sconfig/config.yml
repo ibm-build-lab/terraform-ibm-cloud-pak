@@ -1,0 +1,26 @@
+apiVersion: v1
+clusters:
+- cluster:
+    server: https://c116-e.us-south.containers.cloud.ibm.com:30916
+  name: cp4ba-classic-jtest-cluster1/c3936u7d01a9kmpdvj2g
+- cluster:
+    server: https://c116-e.us-south.containers.cloud.ibm.com:30916
+  name: c116-e-us-south-containers-cloud-ibm-com:30916
+contexts:
+- context:
+    cluster: cp4ba-classic-jtest-cluster1/c3936u7d01a9kmpdvj2g
+    namespace: default
+    user: joel.goddot@ibm.com/db138d65ce6a4c7889fd6b359053a0a6
+  name: cp4ba-classic-jtest-cluster1/c3936u7d01a9kmpdvj2g
+- context:
+    cluster: c116-e-us-south-containers-cloud-ibm-com:30916
+    namespace: default
+    user: IAM#joel.goddot@ibm.com/c116-e-us-south-containers-cloud-ibm-com:30916
+  name: default/c116-e-us-south-containers-cloud-ibm-com:30916/IAM#joel.goddot@ibm.com
+current-context: default/c116-e-us-south-containers-cloud-ibm-com:30916/IAM#joel.goddot@ibm.com
+kind: Config
+preferences: {}
+users:
+- name: IAM#joel.goddot@ibm.com/c116-e-us-south-containers-cloud-ibm-com:30916
+  user:
+    token: sha256~2GZFGVOovb0hFnILDzBjuI-tuQHwU73MXZz6O1xf3jo
