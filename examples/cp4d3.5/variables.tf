@@ -41,12 +41,6 @@ variable "entitled_registry_user_email" {
   description = "Docker email address"
 }
 
-variable "cpd_project_name" {
-  type        = string
-  default     = "default"
-  description = "Name of the project namespace"
-}
-
 // Modules available to install on CP4D
 
 variable "install_watson_knowledge_catalog" {

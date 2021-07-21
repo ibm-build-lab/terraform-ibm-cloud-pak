@@ -14,7 +14,3 @@ output "cpd_pass" {
   description = "Password for your Cloud Pak for Data deployment."
   value = "password"
 }
-
-output "namespace" {
-  value = var.cpd_project_name
-}

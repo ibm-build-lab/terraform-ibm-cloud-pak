@@ -57,7 +57,7 @@ module "cp4data" {
   accept_cpd_license = var.accept_cpd_license
 
   // CP4D Info
-  cpd_project_name = var.cpd_project_name
+  cpd_project_name = "cp4d"
 
   // Parameters to install submodules
   install_watson_knowledge_catalog = var.install_watson_knowledge_catalog
