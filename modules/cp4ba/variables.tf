@@ -1,6 +1,6 @@
 
 variable "ibmcloud_api_key" {
-  description = "IBMCloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
+  description = "IBM Cloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
 }
 
 variable "cluster_name_id" {
@@ -16,6 +16,12 @@ variable "entitled_registry_user_email" {
 //    error_message = "At least one user must be available in order to proceed. Please refer to the README for the requirements and instructions. The script will now exit!"
 //  }
 }
+
+variable "iaas_classic_api_key" {}
+variable "iaas_classic_username" {}
+variable "ssh_public_key_file" {}
+variable "ssh_private_key_file" {}
+variable "classic_datacenter" {}
 
 variable "cluster_config_path" {
   default     = "./.kube/config"
@@ -46,14 +52,14 @@ variable "local_registry_server" {
   description = "Enter the public image registry or route (e.g., default-route-openshift-image-registry.apps.<hostname>).\nThis is required for docker/podman login validation:"
 }
 
-//variable "portworx_is_ready" {
-//  type    = any
-//  default = null
-//}
-//
+variable "portworx_is_ready" {
+  type    = any
+  default = null
+}
+
 variable "entitled_registry_key" {
   type        = string
-  sensitive = true
+//  sensitive = true
   description = "Do you have a Cloud Pak for Business Automation Entitlement Registry key? If not, Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
 }
 
@@ -204,8 +210,6 @@ locals {
   cp4ba_namespace              = "cp4ba-project"
   entitled_registry            = "cp.icr.io"
   entitled_registry_user       = "cp"
-  docker_registry              = "cp.icr.io" // Staging: "cp.stg.icr.io/cp/cpd"
-  docker_username              = "cp"
   enable_cluster               = var.cluster_name_id == "" || var.cluster_name_id == null
   use_entitlement              = var.use_entitlement #? ["yes", "Yes", "YES", "y", "Y"] : ["", "n", "N", "no", "No", "NO"]
   local_public_registry_server = var.local_public_registry_server
