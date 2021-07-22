@@ -34,3 +34,7 @@ output "id" {
 output "vlan_number" {
   value = module.cluster.vlan_number
 }
+
+output "cluster_config" {
+  value = data.ibm_container_cluster_config.cluster_config
+}

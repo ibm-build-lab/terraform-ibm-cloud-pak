@@ -34,7 +34,7 @@ resource "null_resource" "setting_platform" {
       Local_Registry_User           = local.local_registry_user
       Local_Registry_Password       = local.local_registry_password
       # Storage Classes
-      Storage_Class_Name            = local.storage_class_name
+      Storage_Class_Name               = local.storage_class_name
       Sc_Slow_File_Storage_Classname   = local.sc_slow_file_storage_classname
       Sc_Medium_File_Storage_Classname = local.sc_medium_file_storage_classname
       Sc_Fast_File_Storage_Classname   = local.sc_fast_file_storage_classname

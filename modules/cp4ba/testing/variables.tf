@@ -23,7 +23,7 @@ variable "ssh_public_key_file" {}
 variable "ssh_private_key_file" {}
 variable "classic_datacenter" {}
 
-variable "cluster_config_path" {
+variable "config_dir" {
   default     = "./.kube/config"
   description = "directory to store the kubeconfig file"
 }
@@ -191,6 +191,11 @@ variable "etcd_username" {
 variable "etcd_password" {
   default = ""
   description = "Ignored if Portworx is not enabled: This has been hard-coded because the 'Databases for etcd' service instance is not configured to have a publicly accessible endpoint by default.  Override these for additional security."
+}
+
+variable "cluster_config_path" {
+  default     = "./.kube/config"
+  description = "directory to store the kubeconfig file"
 }
 
 
