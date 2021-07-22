@@ -2,7 +2,7 @@
 
 provider "ibm" {
   region = var.region
-//  version          = "~> 1.12.0"
+  version          = "~> 1.12"
 }
 
 data "ibm_resource_group" "group" {
