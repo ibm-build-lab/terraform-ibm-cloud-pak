@@ -119,7 +119,7 @@ variable "local_registry_password" {
 
 variable "on_vpc" {
   type        = bool
-  default     = false
+//  default     = false
   description = "Enter cluster type to be installed on, `true` = VPC, `false` = Classic"
 }
 
