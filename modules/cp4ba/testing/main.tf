@@ -1,7 +1,7 @@
 # Provider block
 provider "ibm" {
   region           = var.region
-  version          = "~> 1.12.0"
+  version          = "~> 1.12"
   ibmcloud_api_key = var.ibmcloud_api_key
 }
 
