@@ -35,7 +35,7 @@ module "cluster" {
   source = "../../roks"
   // source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/roks"
   enable = local.enable_cluster
-  on_vpc = var.on_vpc
+//  on_vpc = var.on_vpc
 
   project_name             = var.project_name
   owner                    = var.entitled_registry_user_email

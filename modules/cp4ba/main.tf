@@ -15,7 +15,7 @@ resource "null_resource" "setting_platform" {
 
     environment = {
       # Cluster
-      on_vpc                        = var.on_vpc
+//      on_vpc                        = var.on_vpc
       portworx_is_ready             = var.portworx_is_ready
       namespace                     = var.namespace
 
