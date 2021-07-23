@@ -83,13 +83,13 @@ module "cp4ba"{
     openshift_version   = var.openshift_version
     cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_dir
     cluster_name_id     = var.cluster_name_id
-    on_vpc              = var.on_vpc
+//    on_vpc              = var.on_vpc
 
     // IBM Cloud API Key
     ibmcloud_api_key = var.ibmcloud_api_key
 
     # Cluster
-    on_vpc                        = var.on_vpc
+//    on_vpc                        = var.on_vpc
     portworx_is_ready             = var.portworx_is_ready
     namespace                     = var.namespace
 
