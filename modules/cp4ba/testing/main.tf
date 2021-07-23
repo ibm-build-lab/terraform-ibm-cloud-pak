@@ -30,14 +30,6 @@ data "ibm_container_cluster_config" "cluster_config" {
   network           = false
 }
 
-# getting and creation a directory for the cluster config file
-resource "null_resource" "mkdir_kubeconfig_dir" {
-  triggers = { always_run = timestamp() }
-    provisioner "local-exec" {
-    command = "mkdir -p ${var.cluster_config_path}"
-  }
-}
-
 module "cp4ba"{
     source = "../.."
     // TODO: With Terraform 0.13 replace the parameter 'enable' or the conditional expression using 'with_iaf' with 'count'
