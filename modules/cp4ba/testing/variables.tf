@@ -117,11 +117,7 @@ variable "local_registry_password" {
   description = "Enter the password for your docker registry: "
 }
 
-//variable "on_vpc" {
-//  type        = bool
-////  default     = false
-//  description = "Enter cluster type to be installed on, `true` = VPC, `false` = Classic"
-//}
+//1
 
 // Flavor will depend on whether classic or vpc
 variable "flavors" {
