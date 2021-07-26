@@ -23,17 +23,17 @@
 //  value = "${data.n}"
 //}
 
-output "name" {
-  value = module.cluster.name
-}
-
-output "id" {
-  value = module.cluster.id
-}
-
-output "vlan_number" {
-  value = module.cluster.vlan_number
-}
+//output "name" {
+//  value = module.cluster.name
+//}
+//
+//output "id" {
+//  value = module.cluster.id
+//}
+//
+//output "vlan_number" {
+//  value = module.cluster.vlan_number
+//}
 
 output "cluster_config" {
   value = data.ibm_container_cluster_config.cluster_config

@@ -1,4 +1,3 @@
-
 variable "ibmcloud_api_key" {
   description = "IBM Cloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
 }
@@ -48,7 +47,7 @@ variable "openshift_version" {
 //  description = "Do you have a Cloud Pak for Business Automation Entitlement Registry key (Yes/No, default: No):"
 //}
 
-variable "local_registry_server" {
+variable "registry_server" {
   description = "Enter the public image registry or route (e.g., default-route-openshift-image-registry.apps.<hostname>).\nThis is required for docker/podman login validation:"
 }
 
@@ -105,15 +104,15 @@ variable "public_image_registry" {
   description = "Have you pushed the images to the local registry using 'loadimages.sh' (CP4BA images)? If not, Please pull the images to the local images to proceed."
 }
 
-variable "local_public_registry_server" {
+variable "public_registry_server" {
   description = "public image registry or route for docker/podman login validation: \n (e.g., default-route-openshift-image-registry.apps.<hostname>). This is required for docker/podman login validation: "
 }
 
-variable "local_registry_user" {
+variable "registry_user" {
   description = "Enter the user name for your docker registry: "
 }
 
-variable "local_registry_password" {
+variable "registry_password" {
   description = "Enter the password for your docker registry: "
 }
 
@@ -213,11 +212,11 @@ locals {
   entitled_registry_user       = "cp"
   enable_cluster               = var.cluster_name_id == "" || var.cluster_name_id == null
   use_entitlement              = var.use_entitlement #? ["yes", "Yes", "YES", "y", "Y"] : ["", "n", "N", "no", "No", "NO"]
-  local_public_registry_server = var.local_public_registry_server
-  local_public_image_registry  = var.public_image_registry
-  local_registry_server        = var.local_registry_server
-  local_registry_user          = var.local_registry_user
-  local_registry_password      = var.local_registry_password
+//  local_public_registry_server = var.local_public_registry_server
+//  local_public_image_registry  = var.public_image_registry
+//  local_registry_server        = var.local_registry_server
+//  local_registry_user          = var.local_registry_user
+//  local_registry_password      = var.local_registry_password
   entitled_registry_key        = chomp(var.entitled_registry_key)
   ibmcloud_api_key             = chomp(var.ibmcloud_api_key)
   openshift_version_regex      = regex("(\\d+).(\\d+)(.\\d+)*(_openshift)*", var.openshift_version)
