@@ -53,6 +53,7 @@ module "portworx" {
   create_external_etcd  = var.create_external_etcd
   etcd_username         = var.etcd_username
   etcd_password         = var.etcd_password
-  etcd_secret_name      = var.etcd_secret_name
+  // Defaulted.  Don't change
+  etcd_secret_name      = "px-etcd-certs"
 }
 
