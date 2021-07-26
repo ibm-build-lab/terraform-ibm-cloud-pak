@@ -56,12 +56,9 @@ variable "etcd_username" {
   default = "portworxuser"
   description = "Ignored if `create_external_etcd` is `false`"
 }
+
 variable "etcd_password" {
   default = "etcdpassword123"
-  description = "Ignored if `create_external_etcd` is `false`"
-}
-variable "etcd_secret_name" {
-  default = "px-etcd-certs" # don't change this
   description = "Ignored if `create_external_etcd` is `false`"
 }
 
