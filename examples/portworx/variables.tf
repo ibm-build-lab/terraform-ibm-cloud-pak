@@ -20,11 +20,6 @@ variable "resource_group_name" {
     description = "Resource Group in your account. List all available resource groups with: `ibmcloud resource groups`"
 }
 
-variable "install_storage" {
-    default     = true
-    description = "If set to false does not install storage and attach the volumes to the worker nodes. Enabled by default"
-}
-
 variable "create_external_etcd" {
     type = bool
     default = false
