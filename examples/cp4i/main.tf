@@ -30,7 +30,7 @@ module "cp4i" {
 
   // ROKS cluster parameters:
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
-  cluster_name_id     = var.cluster_id
+  // cluster_name_id     = var.cluster_id
   on_vpc              = var.on_vpc
   region              = var.region
   resource_group      = var.resource_group
@@ -43,4 +43,7 @@ module "cp4i" {
   // 2. Save the key to a file, or list here
   entitled_registry_key        = length(var.entitled_registry_key) > 0 ? var.entitled_registry_key : file(local.entitled_registry_key_file)
   entitled_registry_user_email = var.entitled_registry_user_email
+
+  portworx_is_ready   = 1           // Assuming portworx is installed if using VPC infrastructure
+  namespace           = "cp4i"
 }
