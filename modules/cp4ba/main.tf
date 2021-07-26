@@ -11,7 +11,8 @@ resource "null_resource" "setting_platform" {
   }
 
   provisioner "local-exec" {
-    command = "/bin/bash ../scripts/cp4ba-clusteradmin-install.sh"
+//    command = "/bin/bash ../scripts/cp4ba-clusteradmin-install.sh"
+    command = "/bin/bash ../scripts/cp4ba-clusteradmin-setup.sh"
 
     environment = {
       # Cluster
@@ -28,11 +29,11 @@ resource "null_resource" "setting_platform" {
       Use_Entitlement               = local.use_entitlement
       Entitlement_Key               = local.entitled_registry_key
       # Registry Images
-      Local_Public_Registry_Server  = local.local_public_registry_server
-      Local_Public_Image_Registry   = local.local_public_image_registry
-      Local_Registry_Server         = local.local_registry_server
-      Local_Registry_User           = local.local_registry_user
-      Local_Registry_Password       = local.local_registry_password
+      Local_Public_Registry_Server  = var.public_registry_server
+      Local_Public_Image_Registry   = var.public_image_registry
+      Local_Registry_Server         = var.registry_server
+      Local_Registry_User           = var.registry_user
+      Local_Registry_Password       = var.registry_password
       # Storage Classes
       Storage_Class_Name               = local.storage_class_name
       Sc_Slow_File_Storage_Classname   = local.sc_slow_file_storage_classname

@@ -450,75 +450,76 @@ function get_entitlement_registry(){
     printf "\x1B[1;31mFollow the instructions on how to get your Entitlement Key: \n\x1B[0m"
     printf "\x1B[1;31mhttps://www.ibm.com/support/knowledgecenter/en/SSYHZ8_21.0.x/com.ibm.dba.install/op_topics/tsk_images_enterp_entitled.html\n\x1B[0m"
     printf "\n"
-    if [[ $USE_ENTITLEMENT == ""]];
-      while true; do
-          printf "\x1B[1mDo you have a Cloud Pak for Business Automation Entitlement Registry key (Yes/No, default: No): \x1B[0m"
+#    if [[ $USE_ENTITLEMENT == "" ]];
+    while true;
+    do
+        printf "\x1B[1mDo you have a Cloud Pak for Business Automation Entitlement Registry key (Yes/No, default: No): \x1B[0m"
 
-              # During dev, OLM uses stage image repo
-          if [[ "$RUNTIME_MODE" == "dev" ]];
-          then
-              DOCKER_REG_SERVER="cp.stg.icr.io"
-          else
-              DOCKER_REG_SERVER="cp.icr.io"
-          fi
-  #             During dev, OLM uses stage image repo
-          while [[ $entitlement_key == '' ]]
-          do
+            # During dev, OLM uses stage image repo
+        if [[ "$RUNTIME_MODE" == "dev" ]];
+        then
+            DOCKER_REG_SERVER="cp.stg.icr.io"
+        else
+            DOCKER_REG_SERVER="cp.icr.io"
+        fi
+#             During dev, OLM uses stage image repo
+        while [[ $entitlement_key == '' ]]
+        do
+            if [ -z "$entitlement_key" ]; then
+                printf "\n"
+                echo -e "\x1B[1;31mEnter a valid Entitlement Registry key\x1B[0m"
+            else
+                if  [[ $entitlement_key == iamapikey:* ]] ;
+                then
+                    DOCKER_REG_USER="iamapikey"
+                    DOCKER_REG_KEY="${entitlement_key#*:}"
+                else
+                    DOCKER_REG_USER="cp"
+                    DOCKER_REG_KEY=$entitlement_key
 
-              if [ -z "$entitlement_key" ]; then
-                  printf "\n"
-                  echo -e "\x1B[1;31mEnter a valid Entitlement Registry key\x1B[0m"
-              else
-                  if  [[ $entitlement_key == iamapikey:* ]] ;
-                  then
-                      DOCKER_REG_USER="iamapikey"
-                      DOCKER_REG_KEY="${entitlement_key#*:}"
-                  else
-                      DOCKER_REG_USER="cp"
-                      DOCKER_REG_KEY=$entitlement_key
+                fi
+                entitlement_verify_passed=$ENTITLED_REGISTRY_KEY
+                while [[ $entitlement_verify_passed == '' ]]
+                do
+                    printf "\n"
+                    printf "\x1B[1mVerifying the Entitlement Registry key...\n\x1B[0m"
 
-                  fi
-                  entitlement_verify_passed=$ENTITLED_REGISTRY_KEY
-                  while [[ $entitlement_verify_passed == '' ]]
-                  do
-                      printf "\n"
-                      printf "\x1B[1mVerifying the Entitlement Registry key...\n\x1B[0m"
+                    if [[ "$machine" == "Mac" ]]; then
+                        cli_command="docker"
+                    else
+                        cli_command="podman"
+                    fi
 
-                      if [[ "$machine" == "Mac" ]]; then
-                          cli_command="docker"
-                      else
-                          cli_command="podman"
-                      fi
+                    if $cli_command login -u "$DOCKER_REG_USER" -p "$DOCKER_REG_KEY" "$DOCKER_REG_SERVER";
+                    then
+                        printf 'Entitlement Registry key is valid.\n'
+                        entitlement_verify_passed="passed"
+                    else
+                        printf '\x1B[1;31mThe Entitlement Registry key failed.\n\x1B[0m'
+                        printf '\x1B[1mEnter a valid Entitlement Registry key.\n\x1B[0m'
+                        entitlement_key=''
+                        entitlement_verify_passed="failed"
+                    fi
+                done
+            fi
+        done
+        break
+        ;;
 
-                      if $cli_command login -u "$DOCKER_REG_USER" -p "$DOCKER_REG_KEY" "$DOCKER_REG_SERVER"; then
-                          printf 'Entitlement Registry key is valid.\n'
-                          entitlement_verify_passed="passed"
-                      else
-                          printf '\x1B[1;31mThe Entitlement Registry key failed.\n\x1B[0m'
-                          printf '\x1B[1mEnter a valid Entitlement Registry key.\n\x1B[0m'
-                          entitlement_key=''
-                          entitlement_verify_passed="failed"
-                      fi
-                  done
-              fi
-          done
-          break
-  #            ;;
-
-          if [[ "$PLATFORM_SELECTED" == "ROKS" || "$PLATFORM_SELECTED" == "OCP" ]]; then
-              printf "\n"
-              printf "\x1B[1;31mIBM Cloud Pak® for Business Automation only supports the Entitlement Registry on \"${PLATFORM_SELECTED}\", exiting...\n\x1B[0m"
-              exit 1
-          else
-              break
-          fi
-          ;;
-      *)
-          echo -e "Answer must be \"Yes\" or \"No\"\n"
-          ;;
-          esac
-      done
-    fi
+        if [[ "$PLATFORM_SELECTED" == "ROKS" || "$PLATFORM_SELECTED" == "OCP" ]]; then
+            printf "\n"
+            printf "\x1B[1;31mIBM Cloud Pak® for Business Automation only supports the Entitlement Registry on \"${PLATFORM_SELECTED}\", exiting...\n\x1B[0m"
+            exit 1
+        else
+            break
+        fi
+        ;;
+    *)
+        echo -e "Answer must be \"Yes\" or \"No\"\n"
+        ;;
+        esac
+    done
+#    fi
 }
 
 
