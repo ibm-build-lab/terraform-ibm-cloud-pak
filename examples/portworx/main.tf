@@ -37,7 +37,7 @@ module "portworx" {
   worker_nodes     = var.worker_nodes  // Number of workers
 
   // Storage parameters
-  install_storage      = var.install_storage
+  install_storage      = true
   storage_capacity     = var.storage_capacity  // In GBs
   storage_iops         = var.storage_iops   // Must be a number, it will not be used unless a storage_profile is set to a custom profile
   storage_profile      = var.storage_profile
