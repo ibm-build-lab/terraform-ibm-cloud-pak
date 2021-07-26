@@ -3,19 +3,13 @@ variable "ibmcloud_api_key" {
   description = "Get the ibmcloud api key from https://cloud.ibm.com/iam/apikeys"
 }
 
-variable "install_storage" {
-    default     = true
-    description = "If set to false does not install storage and attach the volumes to the worker nodes. Enabled by default"
-}
-
 variable "cluster_id" {
     description = "The id of the cluster"
 }
 
-variable "create_external_etcd" {
-    type = bool
-    default = false
-    description = "Do you want to create an external_etcd? `True` or `False`"
+variable "worker_nodes" {
+    type = number
+    description = "Number of worker nodes"
 }
 
 variable "region" {
@@ -24,6 +18,17 @@ variable "region" {
 
 variable "resource_group_name" {
     description = "Resource Group in your account. List all available resource groups with: `ibmcloud resource groups`"
+}
+
+variable "install_storage" {
+    default     = true
+    description = "If set to false does not install storage and attach the volumes to the worker nodes. Enabled by default"
+}
+
+variable "create_external_etcd" {
+    type = bool
+    default = false
+    description = "Do you want to create an external_etcd? `True` or `False`"
 }
 
 variable "storage_capacity"{
@@ -49,10 +54,6 @@ variable "unique_id" {
     default     = "px-ext-portworx"
 }
 
-variable "worker_nodes" {
-    type = number
-    description = "Number of worker nodes"
-}
 
 # These credentials have been hard-coded because the 'Databases for etcd' service instance is not configured to have a publicly accessible endpoint by default.
 # You may override these for additional security.
