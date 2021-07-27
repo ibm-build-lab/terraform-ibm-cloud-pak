@@ -53,6 +53,11 @@ variable "registry_password" {
   description = "Enter the password for your docker registry: "
 }
 
+variable "region" {
+  description = "Region where the cluster is created"
+}
+
+
 
 locals {
   cp4ba_namespace              = "cp4ba-project"

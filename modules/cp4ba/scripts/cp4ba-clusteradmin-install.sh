@@ -51,7 +51,7 @@ COMMON_SERVICES_TEMP_DIR=$TMEP_FOLDER
 SCRIPT_MODE=""
 
 # Assign the platform selected
-eval "$(jq -r '@sh "export LOCAL_REGISTRY_PWD=\(.local_registry_password) LOCAL_REGISTRY_USER=\(.local_registry_user) LOCAL_PUBLIC_IMAGE_REGISTRY=\(.local_public_image_registry) LOCAL_REGISTRY_SERVER=(.local_registry_server) LOCAL_PUBLIC_REGISTRY_SERVER=\(.local_public_registry_server) USE_ENTITLEMENT=\(.use_entitlement) SC_FAST_FILE_STORAGE_CLASSNAME=\(.sc_fast_file_storage_classname) SC_MEDIUM_FILE_STORAGE_CLASSNAME=\(.sc_medium_file_storage_classname) SC_SLOW_FILE_STORAGE_CLASSNAME=\(.sc_slow_file_storageclassname) STORAGE_CLASSNAME=\(.storage_class_name) PLATFORM_SELECTED=\(.platform_option) DEPLOYMENT_TYPE=\(.deployment_type) PLATFORM_VERSION=\(.platform_version) PROJ_NAME=\(.project_name) USER_NAME_EMAIL=\(.username_email) ENTITLED_REGISTRY_KEY=\(.Entitlement_Key)"')"
+eval "$(jq -r '@sh "export LOCAL_REGISTRY_PWD=\(.local_registry_password) LOCAL_REGISTRY_USER=\(.local_registry_user) LOCAL_PUBLIC_IMAGE_REGISTRY=\(.local_public_image_registry) LOCAL_REGISTRY_SERVER=\(.local_registry_server) LOCAL_PUBLIC_REGISTRY_SERVER=\(.local_public_registry_server) USE_ENTITLEMENT=\(.use_entitlement) SC_FAST_FILE_STORAGE_CLASSNAME=\(.sc_fast_file_storage_classname) SC_MEDIUM_FILE_STORAGE_CLASSNAME=\(.sc_medium_file_storage_classname) SC_SLOW_FILE_STORAGE_CLASSNAME=\(.sc_slow_file_storageclassname) STORAGE_CLASSNAME=\(.storage_class_name) PLATFORM_SELECTED=\(.platform_options) DEPLOYMENT_TYPE=\(.deployment_type) PLATFORM_VERSION=\(.platform_version) PROJ_NAME=\(.project_name) USER_NAME_EMAIL=\(.username_email) ENTITLED_REGISTRY_KEY=\(.entitlement_key)"')"
 
 ####################################################################################
 mkdir -p $TEMP_FOLDER >/dev/null 2>&1
@@ -63,7 +63,6 @@ if [[ $RUNTIME_MODE == "dev" ]];then
 else
     OLM_CATALOG=${PARENT_DIR}/descriptors/op-olm/catalog_source.yaml
 fi
-
 # the source is different for stage of development and final public
 if [[ $RUNTIME_MODE == "dev" ]]; then
     online_source="ibm-cp4ba-operator-catalog"
@@ -122,41 +121,41 @@ function select_platform(){
  }
 
 ################### Selecting the user ######################
- function select_user(){
-     user_result=$(${CLI_CMD} get user 2>&1)
-     user_substring="No resources found"
-     if [[ $user_result == *"$user_substring"* ]];
-     then
-         clear
-         echo -e "\x1B[1;31mAt least one user must be available in order to proceed.\n\x1B[0m"
-         echo -e "\x1B[1;31mPlease refer to the README for the requirements and instructions.  The script will now exit.!\n\x1B[0m"
-         exit 1
+function select_user(){
+   user_result=$(${CLI_CMD} get user 2>&1)
+   user_substring="No resources found"
+   if [[ $user_result == *"$user_substring"* ]];
+   then
+       clear
+       echo -e "\x1B[1;31mAt least one user must be available in order to proceed.\n\x1B[0m"
+       echo -e "\x1B[1;31mPlease refer to the README for the requirements and instructions.  The script will now exit.!\n\x1B[0m"
+       exit 1
+   fi
+   echo
+   userlist=$(${CLI_CMD} get user|awk '{if(NR>1){if(NR==2){ arr=$1; }else{ arr=arr" "$1; }} } END{ print arr }')
+   COLUMNS=12
+   echo -e "\x1B[1mHere are the existing users on this cluster: \x1B[0m"
+   options=($userlist)
+   usernum=${#options[*]}
+
+   for w3id in "${options[@]}";
+   do
+     if [[ "$w3id" == "$USER_NAME_EMAIL" ]]; then
+       user_name=$USER_NAME_EMAIL
+     fi;
+   done
+
+   PS3='Enter an existing username in your cluster, valid option [1 to '${usernum}'], non-admin is suggested: '
+   for opt in "${options[@]}"
+   do
+     if [[ -n "$opt" && "${USER_NAME_EMAIL}" =~ $opt ]]; then
+       user_name=$opt
+       break
+     else
+       echo "invalid option $REPLY"
      fi
-     echo
-     userlist=$(${CLI_CMD} get user|awk '{if(NR>1){if(NR==2){ arr=$1; }else{ arr=arr" "$1; }} } END{ print arr }')
-     COLUMNS=12
-     echo -e "\x1B[1mHere are the existing users on this cluster: \x1B[0m"
-     options=($userlist)
-     usernum=${#options[*]}
-
-     for w3id in "${options[@]}";
-     do
-       if [[ "$w3id" == "$USER_NAME_EMAIL" ]]; then
-         user_name=$USER_NAME_EMAIL
-       fi;
-     done
-
-     PS3='Enter an existing username in your cluster, valid option [1 to '${usernum}'], non-admin is suggested: '
-     select opt in "${options[@]}"
-     do
-         if [[ -n "$opt" && "${options[@]}" && "${USER_NAME_EMAIL}" =~ $opt ]]; then
-             user_name=$opt
-             break
-         else
-             echo "invalid option $REPLY"
-         fi
-     done
- }
+   done
+}
 
  function validate_cli(){
      clear
@@ -451,74 +450,74 @@ function get_entitlement_registry(){
     printf "\x1B[1;31mhttps://www.ibm.com/support/knowledgecenter/en/SSYHZ8_21.0.x/com.ibm.dba.install/op_topics/tsk_images_enterp_entitled.html\n\x1B[0m"
     printf "\n"
 #    if [[ $USE_ENTITLEMENT == "" ]];
-    while true;
-    do
-        printf "\x1B[1mDo you have a Cloud Pak for Business Automation Entitlement Registry key (Yes/No, default: No): \x1B[0m"
+#    while true;
+#    do
+#        printf "\x1B[1mDo you have a Cloud Pak for Business Automation Entitlement Registry key (Yes/No, default: No): \x1B[0m"
 
             # During dev, OLM uses stage image repo
-        if [[ "$RUNTIME_MODE" == "dev" ]];
-        then
-            DOCKER_REG_SERVER="cp.stg.icr.io"
-        else
-            DOCKER_REG_SERVER="cp.icr.io"
-        fi
+    if [[ "$RUNTIME_MODE" == "dev" ]];
+    then
+        DOCKER_REG_SERVER="cp.stg.icr.io"
+    else
+        DOCKER_REG_SERVER="cp.icr.io"
+    fi
 #             During dev, OLM uses stage image repo
-        while [[ $entitlement_key == '' ]]
-        do
-            if [ -z "$entitlement_key" ]; then
-                printf "\n"
-                echo -e "\x1B[1;31mEnter a valid Entitlement Registry key\x1B[0m"
-            else
-                if  [[ $entitlement_key == iamapikey:* ]] ;
-                then
-                    DOCKER_REG_USER="iamapikey"
-                    DOCKER_REG_KEY="${entitlement_key#*:}"
-                else
-                    DOCKER_REG_USER="cp"
-                    DOCKER_REG_KEY=$entitlement_key
+#        while [[ $entitlement_key == '' ]]
+#        do
+#            if [ -z "$entitlement_key" ]; then
+#                printf "\n"
+#                echo -e "\x1B[1;31mEnter a valid Entitlement Registry key\x1B[0m"
+#            else
+    if  [[ $entitlement_key == iamapikey:* ]] ;
+    then
+        DOCKER_REG_USER="iamapikey"
+        DOCKER_REG_KEY="${entitlement_key#*:}"
+    else
+        DOCKER_REG_USER="cp"
+        DOCKER_REG_KEY=$entitlement_key
 
-                fi
-                entitlement_verify_passed=$ENTITLED_REGISTRY_KEY
-                while [[ $entitlement_verify_passed == '' ]]
-                do
-                    printf "\n"
-                    printf "\x1B[1mVerifying the Entitlement Registry key...\n\x1B[0m"
+    fi
+    entitlement_verify_passed=$ENTITLED_REGISTRY_KEY
+#                while [[ $entitlement_verify_passed == '' ]]
+#                do
+#                    printf "\n"
+#                    printf "\x1B[1mVerifying the Entitlement Registry key...\n\x1B[0m"
 
-                    if [[ "$machine" == "Mac" ]]; then
-                        cli_command="docker"
-                    else
-                        cli_command="podman"
-                    fi
+    if [[ "$machine" == "Mac" ]]; then
+        cli_command="docker"
+    else
+        cli_command="podman"
+    fi
 
-                    if $cli_command login -u "$DOCKER_REG_USER" -p "$DOCKER_REG_KEY" "$DOCKER_REG_SERVER";
-                    then
-                        printf 'Entitlement Registry key is valid.\n'
-                        entitlement_verify_passed="passed"
-                    else
-                        printf '\x1B[1;31mThe Entitlement Registry key failed.\n\x1B[0m'
-                        printf '\x1B[1mEnter a valid Entitlement Registry key.\n\x1B[0m'
-                        entitlement_key=''
-                        entitlement_verify_passed="failed"
-                    fi
-                done
-            fi
-        done
-        break
-        ;;
+    if $cli_command login -u "$DOCKER_REG_USER" -p "$DOCKER_REG_KEY" "$DOCKER_REG_SERVER";
+    then
+        printf 'Entitlement Registry key is valid.\n'
+        entitlement_verify_passed="passed"
+    else
+        printf '\x1B[1;31mThe Entitlement Registry key failed.\n\x1B[0m'
+        printf '\x1B[1mEnter a valid Entitlement Registry key.\n\x1B[0m'
+        entitlement_key=''
+        entitlement_verify_passed="failed"
+    fi
+#                done
+#            fi
+#        done
+#        break
+#        ;;
 
-        if [[ "$PLATFORM_SELECTED" == "ROKS" || "$PLATFORM_SELECTED" == "OCP" ]]; then
-            printf "\n"
-            printf "\x1B[1;31mIBM Cloud Pak® for Business Automation only supports the Entitlement Registry on \"${PLATFORM_SELECTED}\", exiting...\n\x1B[0m"
-            exit 1
-        else
-            break
-        fi
-        ;;
-    *)
-        echo -e "Answer must be \"Yes\" or \"No\"\n"
-        ;;
-        esac
-    done
+#        if [[ "$PLATFORM_SELECTED" == "ROKS" || "$PLATFORM_SELECTED" == "OCP" ]]; then
+#            printf "\n"
+#            printf "\x1B[1;31mIBM Cloud Pak® for Business Automation only supports the Entitlement Registry on \"${PLATFORM_SELECTED}\", exiting...\n\x1B[0m"
+#            exit 1
+#        else
+#            break
+#        fi
+#        ;;
+#    *)
+#        echo -e "Answer must be \"Yes\" or \"No\"\n"
+#        ;;
+#        esac
+#    done
 #    fi
 }
 
@@ -1125,11 +1124,12 @@ fi
 
 clear
 ##select_ocp_olm
-#
+select_platform
+validate_cli
 if [[ $PLATFORM_SELECTED == "OCP" || $PLATFORM_SELECTED == "ROKS" ]]; then
     check_platform_version
 fi
-
+select_deployment_type
 ${CLI_CMD} project $project_name >/dev/null 2>&1
 create_project
 #bind_scc
@@ -1218,9 +1218,10 @@ clean_up
 #set the project context back to the user generated one
 ${CLI_CMD} project ${PROJ_NAME} > /dev/null
 
-select_platform
-select_deployment_type
-validate_cli
+#select_platform
+#validate_cli
+
+
 
 #collect_input
 #echo "{\"output\":\"${PLATFORM_SELECTED}" "${DEPLOYMENT_TYPE}" "${PLATFORM_VERSION}" "${PROJ_NAME} ${SC_FAST_FILE_STORAGE_CLASSNAME} ${SC_MEDIUM_FILE_STORAGE_CLASSNAME} ${SC_SLOW_FILE_STORAGE_CLASSNAME} ${STORAGE_CLASSNAME} ${USER_NAME_EMAIL} ${USE_ENTITLEMENT} ${ENTITLED_REGISTRY_KEY} \"}"
