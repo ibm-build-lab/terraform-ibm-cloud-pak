@@ -13,7 +13,4 @@ output "cp4i_pass" {
   value = module.cp4i.cp4i_password
 }
 
-// Namespace
-output "namespace" {
-  value = var.namespace
-}
+

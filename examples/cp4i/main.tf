@@ -1,4 +1,5 @@
 provider "ibm" {
+  region           = var.region
   version          = "~> 1.12"
   ibmcloud_api_key = var.ibmcloud_api_key
 }
@@ -30,13 +31,7 @@ module "cp4i" {
 
   // ROKS cluster parameters:
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
-  // cluster_name_id     = var.cluster_id
   on_vpc              = var.on_vpc
-  region              = var.region
-  resource_group      = var.resource_group
-
-  // IBM Cloud API Key
-  ibmcloud_api_key          = var.ibmcloud_api_key
 
   // Entitled Registry parameters:
   // 1. Get the entitlement key from: https://myibm.ibm.com/products-services/containerlibrary
