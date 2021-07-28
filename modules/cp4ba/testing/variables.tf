@@ -12,6 +12,8 @@ variable "entitled_registry_user_email" {
   description = "Email address of the user owner of the Entitled Registry Key"
 }
 
+//variable "cluster_config_path" {}
+
 variable "iaas_classic_api_key" {}
 variable "iaas_classic_username" {}
 variable "ssh_public_key_file" {}
@@ -49,7 +51,7 @@ variable "registry_user" {
   description = "Enter the user name for your docker registry: "
 }
 
-variable "registry_password" {
+variable "docker_password" {
   description = "Enter the password for your docker registry: "
 }
 
@@ -57,20 +59,34 @@ variable "region" {
   description = "Region where the cluster is created"
 }
 
+variable "docker_username" {
+  description = "Docker username for creating the secret."
+}
+
+variable "docker_secret_name" {
+  description = "Enter the name of the docker registry's image."
+}
+
+//variable "local_registry_server" {}
 
 
 locals {
-  cp4ba_namespace              = "cp4ba-project"
-  entitled_registry            = "cp.icr.io"
-  entitled_registry_user       = "cp"
+  cp4ba_namespace              = "cp4ba"
+
+  docker_secret_name           = "docker-registry"
+  docker_server                = "cp.icr.io"
+  docker_username              = "cp"
+  docker_password              = chomp(var.entitlement_key)
+  docker_email                 = var.entitled_registry_user_email
+
   enable_cluster               = var.cluster_name_id == "" || var.cluster_name_id == null
   use_entitlement              = "yes"
-  project_name                 = "cp4ba-project"
+  project_name                 = "cp4ba"
   platform_options             = 1 // 1: roks - 2: ocp - 3: private cloud
   deployment_type              = 2 // 1: demo - 2: enterprise
   platform_version             = "4.6" // roks version
   
-  entitled_registry_key        = chomp(var.entitlement_key)
+//  entitled_registry_key        = chomp(var.entitlement_key)
   ibmcloud_api_key             = chomp(var.ibmcloud_api_key)
  }
 

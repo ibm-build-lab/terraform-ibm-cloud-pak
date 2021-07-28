@@ -37,10 +37,10 @@ REGISTRY_IN_FILE="cp.icr.io"
 OPERATOR_FILE=${PARENT_DIR}/descriptors/operator.yaml
 OPERATOR_FILE_TMP=$TEMP_FOLDER/.operator_tmp.yaml
 
-OPERATOR_PVC_FILE=${PARENT_DIR}/descriptors/operator-shared-pvc.yaml
+OPERATOR_PVC_FILE=${PARENT_DIR}/descriptors/cp4ba-pvc.yaml
 OPERATOR_PVC_FILE_TMP1=${TEMP_FOLDER}/.operator-shared-pvc_tmp1.yaml
 OPERATOR_PVC_FILE_TMP=${TEMP_FOLDER}/.operator-shared-pvc_tmp.yaml
-OPERATOR_PVC_FILE_BAK=${TEMP_FOLDER}/.operator-shared-pvc.yaml
+OPERATOR_PVC_FILE_BAK=${TEMP_FOLDER}/.cp4ba-pvc.yaml
 JDBC_DRIVER_DIR=${CUR_DIR}/jdbc
 
 COMMON_SERVICES_CRD_DIRECTORY_OCP311=${PARENT_DIR}/descriptors/common-services/scripts

@@ -37,10 +37,12 @@ REGISTRY_IN_FILE="cp.icr.io"
 OPERATOR_FILE=${PARENT_DIR}/descriptors/operator.yaml
 OPERATOR_FILE_TMP=$TEMP_FOLDER/.operator_tmp.yaml
 
-OPERATOR_PVC_FILE=${PARENT_DIR}/descriptors/operator-shared-pvc.yaml
+OPERATOR_PVC_FILE=${PARENT_DIR}/descriptors/cp4ba-pvc.yaml
 OPERATOR_PVC_FILE_TMP1=${TEMP_FOLDER}/.operator-shared-pvc_tmp1.yaml
-OPERATOR_PVC_FILE_TMP=${TEMP_FOLDER}/.operator-shared-pvc_tmp.yaml
-OPERATOR_PVC_FILE_BAK=${TEMP_FOLDER}/.operator-shared-pvc.yaml
+#OPERATOR_PVC_FILE_TMP=${TEMP_FOLDER}/.operator-shared-pvc_tmp.yaml
+OPERATOR_PVC_FILE_TMP=${PARENT_DIR}/descriptors/cp4ba-pvc.yaml
+OPERATOR_PV_FILE_TMP=${PARENT_DIR}/descriptors/cp4ba-pv.yaml
+#OPERATOR_PVC_FILE_BAK=${TEMP_FOLDER}/.cp4ba-pvc.yaml
 JDBC_DRIVER_DIR=${CUR_DIR}/jdbc
 
 COMMON_SERVICES_CRD_DIRECTORY_OCP311=${PARENT_DIR}/descriptors/common-services/scripts
@@ -51,7 +53,8 @@ COMMON_SERVICES_TEMP_DIR=$TMEP_FOLDER
 SCRIPT_MODE=""
 
 # Assign the platform selected
-eval "$(jq -r '@sh "export LOCAL_REGISTRY_PWD=\(.local_registry_password) LOCAL_REGISTRY_USER=\(.local_registry_user) LOCAL_PUBLIC_IMAGE_REGISTRY=\(.local_public_image_registry) LOCAL_REGISTRY_SERVER=\(.local_registry_server) LOCAL_PUBLIC_REGISTRY_SERVER=\(.local_public_registry_server) USE_ENTITLEMENT=\(.use_entitlement) SC_FAST_FILE_STORAGE_CLASSNAME=\(.sc_fast_file_storage_classname) SC_MEDIUM_FILE_STORAGE_CLASSNAME=\(.sc_medium_file_storage_classname) SC_SLOW_FILE_STORAGE_CLASSNAME=\(.sc_slow_file_storageclassname) STORAGE_CLASSNAME=\(.storage_class_name) PLATFORM_SELECTED=\(.platform_options) DEPLOYMENT_TYPE=\(.deployment_type) PLATFORM_VERSION=\(.platform_version) PROJ_NAME=\(.project_name) USER_NAME_EMAIL=\(.username_email) ENTITLED_REGISTRY_KEY=\(.entitlement_key)"')"
+#eval "$(jq -r '@sh "export DOCKER_SECRET_NAME=\(.docker_secret_name) DOCKER_USER_EMAIL=\(.docker_email) DOCKER_REGISTRY_PASS=\(.docker_password) DOCKER_USERNAME=\(.docker_username) DOCKER_REGISTRY=\(.docker_server) LOCAL_REGISTRY_PWD=\(.local_registry_password) LOCAL_REGISTRY_USER=\(.local_registry_user) LOCAL_PUBLIC_IMAGE_REGISTRY=\(.local_public_image_registry) LOCAL_REGISTRY_SERVER=\(.local_registry_server) LOCAL_PUBLIC_REGISTRY_SERVER=\(.public_registry_server) USE_ENTITLEMENT=\(.use_entitlement) SC_FAST_FILE_STORAGE_CLASSNAME=\(.sc_fast_file_storage_classname) SC_MEDIUM_FILE_STORAGE_CLASSNAME=\(.sc_medium_file_storage_classname) SC_SLOW_FILE_STORAGE_CLASSNAME=\(.sc_slow_file_storageclassname) STORAGE_CLASSNAME=\(.storage_class_name) PLATFORM_SELECTED=\(.platform_options) DEPLOYMENT_TYPE=\(.deployment_type) PLATFORM_VERSION=\(.platform_version) PROJ_NAME=\(.project_name) USER_NAME_EMAIL=\(.username_email) ENTITLED_REGISTRY_KEY=\(.entitlement_key)"')"
+#eval "$(jq -r '@sh "export LOCAL_REGISTRY_PWD=\(.local_registry_password) LOCAL_REGISTRY_USER=\(.local_registry_user) LOCAL_PUBLIC_IMAGE_REGISTRY=\(.local_public_image_registry) LOCAL_REGISTRY_SERVER=\(.local_registry_server) LOCAL_PUBLIC_REGISTRY_SERVER=\(.public_registry_server) USE_ENTITLEMENT=\(.use_entitlement) SC_FAST_FILE_STORAGE_CLASSNAME=\(.sc_fast_file_storage_classname) SC_MEDIUM_FILE_STORAGE_CLASSNAME=\(.sc_medium_file_storage_classname) SC_SLOW_FILE_STORAGE_CLASSNAME=\(.sc_slow_file_storageclassname) STORAGE_CLASSNAME=\(.storage_class_name) PLATFORM_SELECTED=\(.platform_options) DEPLOYMENT_TYPE=\(.deployment_type) PLATFORM_VERSION=\(.platform_version) PROJ_NAME=\(.project_name) USER_NAME_EMAIL=\(.username_email) ENTITLED_REGISTRY_KEY=\(.entitlement_key)"')"
 
 ####################################################################################
 mkdir -p $TEMP_FOLDER >/dev/null 2>&1
@@ -92,6 +95,10 @@ function select_platform(){
          SCRIPT_MODE="OLM"
          CLI_CMD=oc
          select_user
+         if [[ LOCAL_PUBLIC_REGISTRY_SERVER == "" ]]
+         then
+           preliminary
+        fi
      elif [[ $PLATFORM_SELECTED == 2 ]]
      then
          PLATFORM_SELECTED="OCP"
@@ -103,6 +110,32 @@ function select_platform(){
          PLATFORM_SELECTED="other"
          CLI_CMD=kubectl
      fi
+}
+
+function preliminary(){
+  echo "creating namespace ${PROJECT_NAME}"
+  kubectl create namespace ${PROJECT_NAME} #--dry-run=client -o yaml |
+  kubectl apply -f -
+
+  create_secret() {
+#    secret_name=$1
+#    namespace=$2
+#    link=$3
+
+    echo "Creating secret ${DOCKER_SECRET_NAME} on ${PROJECT_NAME} from entitlement key"
+    oc create secret docker-registry ${DOCKER_SECRET_NAME} \
+      --docker-server=${DOCKER_SERVER} \
+      --docker-username=${DOCKER_USERNAME} \
+      --docker-password=${DOCKER_REGISTRY_PASS} \
+      --docker-email=${DOCKER_USER_EMAIL} \
+      --namespace=${PROJECT_NAME}
+  }
+
+  #create_secret ibm-entitlement-key default
+  #create_secret ibm-entitlement-key openshift-operators
+  create_secret ibm-entitlement-key $NAMESPACE
+
+  sleep 40
 }
 
 
@@ -184,38 +217,38 @@ function select_user(){
 function create_project() {
 
    if [[ "$PLATFORM_SELECTED" == "OCP" || "$PLATFORM_SELECTED" == "ROKS" ]]; then
-       isProjExists=`${CLI_CMD} get project $project_name --ignore-not-found | wc -l`  >/dev/null 2>&1
+       isProjExists=`${CLI_CMD} get project $PROJECT_NAME --ignore-not-found | wc -l`  >/dev/null 2>&1
 
        if [ $isProjExists -ne 2 ] ; then
-           ${CLI_CMD} new-project ${project_name} >> ${LOG_FILE}
+           ${CLI_CMD} new-project ${PROJECT_NAME} >> ${LOG_FILE}
            returnValue=$?
            if [ "$returnValue" == 1 ]; then
                echo -e "\x1B[1mInvalid project name, please enter a valid name...\x1B[0m"
-               project_name=""
+               PROJECT_NAME=""
            else
-               printf "Using project ${project_name}..."
+               printf "Using project ${PROJECT_NAME}..."
            fi
        else
-           echo -e "\x1B[1mProject \"${project_name}\" already exists! Continue...\x1B[0m"
+           echo -e "\x1B[1mProject \"${PROJECT_NAME}\" already exists! Continue...\x1B[0m"
        fi
    elif [[ "$PLATFORM_SELECTED" == "other" ]]
    then
-       isProjExists=`kubectl get namespace $project_name --ignore-not-found | wc -l`  >/dev/null 2>&1
+       isProjExists=`kubectl get namespace PROJECT_NAME --ignore-not-found | wc -l`  >/dev/null 2>&1
 
        if [ $isProjExists -ne 2 ] ; then
-           kubectl create namespace ${project_name} >> ${LOG_FILE}
+           kubectl create namespace ${PROJECT_NAME} >> ${LOG_FILE}
            returnValue=$?
            if [ "$returnValue" == 1 ]; then
                 echo -e "\x1B[1mInvalid namespace, please enter a valid name...\x1B[0m"
-               project_name=""
+               PROJECT_NAME=""
            else
-               echo -e "\x1B[1mUsing namespace ${project_name}...\x1B[0m"
+               echo -e "\x1B[1mUsing namespace ${PROJECT_NAME}...\x1B[0m"
            fi
        else
-           echo -e "\x1B[1mName space \"${project_name}\" already exists! Continue...\x1B[0m"
+           echo -e "\x1B[1mName space \"${PROJECT_NAME}\" already exists! Continue...\x1B[0m"
        fi
    fi
-   PROJ_NAME=${project_name}
+#   PROJ_NAME=${project_name}
 }
 
  function check_user_exist() {
@@ -244,23 +277,23 @@ function bind_scc() {
 
  function prepare_install() {
      if [[ "$PLATFORM_SELECTED" == "OCP" || "$PLATFORM_SELECTED" == "ROKS" ]]; then
-         ${CLI_CMD} project ${project_name} >> ${LOG_FILE}
+         ${CLI_CMD} project ${PROJECT_NAME} >> ${LOG_FILE}
      fi
      # sed -e "s/<NAMESPACE>/${project_name}/g" ${CLUSTER_ROLE_BINDING_FILE} > ${CLUSTER_ROLE_BINDING_FILE_TEMP}
      echo
      echo -ne "Creating the custom resource definition (CRD) and a service account that has the permissions to manage the resources..."
-     ${CLI_CMD} apply -f ${CRD_FILE} -n ${project_name} --validate=false >/dev/null 2>&1
+     ${CLI_CMD} apply -f ${CRD_FILE} -n ${PROJECT_NAME} --validate=false >/dev/null 2>&1
      echo " Done!"
      # if [[ "$DEPLOYMENT_TYPE" == "demo" ]];then
      #     ${CLI_CMD} apply -f ${CLUSTER_ROLE_FILE} --validate=false >> ${LOG_FILE}
      #     ${CLI_CMD} apply -f ${CLUSTER_ROLE_BINDING_FILE_TEMP} --validate=false >> ${LOG_FILE}
      # fi
-     ${CLI_CMD} apply -f ${SA_FILE} -n ${project_name} --validate=false >> ${LOG_FILE}
-     ${CLI_CMD} apply -f ${ROLE_FILE} -n ${project_name} --validate=false >> ${LOG_FILE}
+     ${CLI_CMD} apply -f ${SA_FILE} -n ${PROJECT_NAME} --validate=false >> ${LOG_FILE}
+     ${CLI_CMD} apply -f ${ROLE_FILE} -n ${PROJECT_NAME} --validate=false >> ${LOG_FILE}
 
      echo -n "Creating ibm-cp4ba-operator role ..."
      while true ; do
-         result=$(${CLI_CMD} get role -n $project_name| grep ibm-cp4ba-operator)
+         result=$(${CLI_CMD} get role -n $PROJECT_NAME| grep ibm-cp4ba-operator)
          if [[ "$result" == "" ]] ; then
              sleep 5
              echo -n "..."
@@ -270,12 +303,12 @@ function bind_scc() {
          fi
      done
      echo -n "Creating ibm-cp4ba-operator role binding ..."
-     ${CLI_CMD} apply -f ${ROLE_BINDING_FILE} -n ${project_name} --validate=false >> ${LOG_FILE}
+     ${CLI_CMD} apply -f ${ROLE_BINDING_FILE} -n ${PROJECT_NAME} --validate=false >> ${LOG_FILE}
          echo "Done!"
          if [[ "$PLATFORM_SELECTED" == "OCP" || "$PLATFORM_SELECTED" == "ROKS" ]]; then
          echo
          echo -ne Adding the user ${user_name} to the ibm-cp4ba-operator role...
-         ${CLI_CMD} project ${project_name} >> ${LOG_FILE}
+         ${CLI_CMD} project ${PROJECT_NAME} >> ${LOG_FILE}
          ${CLI_CMD} adm policy add-role-to-user edit ${user_name} >> ${LOG_FILE}
          ${CLI_CMD} adm policy add-role-to-user registry-editor ${user_name} >> ${LOG_FILE}
          ${CLI_CMD} adm policy add-role-to-user ibm-cp4ba-operator ${user_name} >/dev/null 2>&1
@@ -320,7 +353,7 @@ function bind_scc() {
      #     ${CLI_CMD} delete -f ${OPERATOR_FILE_TMP} >/dev/null 2>&1
      #     sleep 5
      # fi
-     INSTALL_OPERATOR_CMD="${CLI_CMD} apply -f ${OPERATOR_FILE_TMP} -n $project_name"
+     INSTALL_OPERATOR_CMD="${CLI_CMD} apply -f ${OPERATOR_FILE_TMP} -n $PROJECT_NAME"
      sleep 5
      if $INSTALL_OPERATOR_CMD ; then
          echo -e "\x1B[1mDone\x1B[0m"
@@ -333,7 +366,7 @@ function bind_scc() {
      # Check deployment rollout status every 5 seconds (max 10 minutes) until complete.
      echo -e "\x1B[1mWaiting for the Cloud Pak operator to be ready. This might take a few minutes... \x1B[0m"
      ATTEMPTS=0
-     ROLLOUT_STATUS_CMD="${CLI_CMD} rollout status deployment/ibm-cp4ba-operator -n $project_name"
+     ROLLOUT_STATUS_CMD="${CLI_CMD} rollout status deployment/ibm-cp4ba-operator -n $PROJECT_NAME"
      until $ROLLOUT_STATUS_CMD || [ $ATTEMPTS -eq 120 ]; do
          $ROLLOUT_STATUS_CMD
          ATTEMPTS=$((ATTEMPTS + 1))
@@ -385,12 +418,12 @@ function bind_scc() {
      echo
 
      echo -ne Adding the user ${user_name} to the ibm-cp4ba-operator role...
-     role_name_olm=$(${CLI_CMD} get role -n "$project_name" --no-headers|grep ibm-cp4ba-operator.v|awk '{print $1}')
+     role_name_olm=$(${CLI_CMD} get role -n "$PROJECT_NAME" --no-headers|grep ibm-cp4ba-operator.v|awk '{print $1}')
      if [[ -z $role_name_olm ]]; then
          echo "No role found for CP4BA operator"
          exit 1
      else
-         ${CLI_CMD} project ${project_name} >> ${LOG_FILE}
+         ${CLI_CMD} project ${PROJECT_NAME} >> ${LOG_FILE}
          ${CLI_CMD} adm policy add-role-to-user edit ${user_name} >> ${LOG_FILE}
          ${CLI_CMD} adm policy add-role-to-user registry-editor ${user_name} >> ${LOG_FILE}
          ${CLI_CMD} adm policy add-role-to-user $role_name_olm ${user_name} >/dev/null 2>&1
@@ -424,9 +457,9 @@ function check_existing_sc(){
 
 function validate_docker_podman_cli(){
    if [[ "$machine" == "Mac" || $PLATFORM_SELECTED == "other" ]];then
-       which docker &>/dev/null
+       which docker &>/dev/null #--privileged
        [[ $? -ne 0 ]] && \
-       exit 1
+#       exit 1
            echo -e  "\x1B[1;31mUnable to locate docker, please install it first.\x1B[0m" && \
            exit 1
    elif [[ $OCP_VERSION == "4.4OrLater" ]]
@@ -551,9 +584,9 @@ function get_storage_class_name(){
 
 function create_secret_entitlement_registry(){
     # Create docker-registry secret for Entitlement Registry Key in target project
-    printf "\x1B[1mCreating docker-registry secret for Entitlement Registry key in project $project_name...\n\x1B[0m"
+    printf "\x1B[1mCreating docker-registry secret for Entitlement Registry key in project $PROJECT_NAME ...\n\x1B[0m"
 
-    ${CLI_CMD} delete secret "$DOCKER_RES_SECRET_NAME" -n "${project_name}" >/dev/null 2>&1
+    ${CLI_CMD} delete secret "$DOCKER_RES_SECRET_NAME" -n "${PROJECT_NAME}" >/dev/null 2>&1
     CREATE_SECRET_CMD="${CLI_CMD} create secret docker-registry $DOCKER_RES_SECRET_NAME --docker-server=$DOCKER_REG_SERVER --docker-username=$DOCKER_REG_USER --docker-password=$DOCKER_REG_KEY --docker-email=ecmtest@ibm.com -n $project_name"
     if $CREATE_SECRET_CMD ; then
         echo -e "\x1B[1mDone\x1B[0m"
@@ -566,7 +599,7 @@ function create_secret_entitlement_registry(){
 function copy_jdbc_driver(){
     # Get pod name
     echo -e "\x1B[1mCopying the JDBC driver for the operator...\x1B[0m"
-    operator_podname=$(${CLI_CMD} get pod -n $project_name|grep ibm-cp4ba-operator|grep Running|awk '{print $1}')
+    operator_podname=$(${CLI_CMD} get pod -n $PROJECT_NAME|grep ibm-cp4ba-operator|grep Running|awk '{print $1}')
 
     # ${CLI_CMD} exec -it ${operator_podname} -- rm -rf /opt/ansible/share/jdbc
     COPY_JDBC_CMD="${CLI_CMD} cp ${JDBC_DRIVER_DIR} ${operator_podname}:/opt/ansible/share/"
@@ -580,24 +613,33 @@ function copy_jdbc_driver(){
 
 function allocate_operator_pvc_olm_or_cncf(){
     # For dynamic storage classname
-    printf "\n"
-    if [[ $PLATFORM_SELECTED == "OCP" || $PLATFORM_SELECTED == "other" ]]; then
-        echo -e "\x1B[1mApplying the persistent volumes for the Cloud Pak operator by using the storage classname: ${STORAGE_CLASS_NAME}...\x1B[0m"
-        ${COPY_CMD} -rf "${OPERATOR_PVC_FILE}" "${OPERATOR_PVC_FILE_BAK}"
-        printf "\n"
-        sed "s/<StorageClassName>/$STORAGE_CLASS_NAME/g" ${OPERATOR_PVC_FILE_BAK} > ${OPERATOR_PVC_FILE_TMP1}
-        sed "s/<Fast_StorageClassName>/$STORAGE_CLASS_NAME/g" ${OPERATOR_PVC_FILE_TMP1}  > ${OPERATOR_PVC_FILE_TMP} # &> /dev/null
-    else
-        echo -e "\x1B[1mApplying the persistent volumes for the Cloud Pak operator by using the storage classname: ${FAST_STORAGE_CLASS_NAME}...\x1B[0m"
-        ${COPY_CMD} -rf "${OPERATOR_PVC_FILE}" "${OPERATOR_PVC_FILE_BAK}"
-        printf "\n"
-        sed "s/<StorageClassName>/$FAST_STORAGE_CLASS_NAME/g" ${OPERATOR_PVC_FILE_BAK} > ${OPERATOR_PVC_FILE_TMP1}
-        sed "s/<Fast_StorageClassName>/$FAST_STORAGE_CLASS_NAME/g" ${OPERATOR_PVC_FILE_TMP1}  > ${OPERATOR_PVC_FILE_TMP} # &> /dev/null
-    fi
+#    printf "\n"
+#    if [[ $PLATFORM_SELECTED == "OCP" || $PLATFORM_SELECTED == "other" ]]; then
+#        echo -e "\x1B[1mApplying the persistent volumes for the Cloud Pak operator by using the storage classname: ${STORAGE_CLASS_NAME}...\x1B[0m"
+#        ${COPY_CMD} -rf "${OPERATOR_PVC_FILE}" "${OPERATOR_PVC_FILE_BAK}"
+#        printf "\n"
+#        sed "s/<StorageClassName>/$STORAGE_CLASS_NAME/g" ${OPERATOR_PVC_FILE_BAK} > ${OPERATOR_PVC_FILE_TMP1}
+#        sed "s/<Fast_StorageClassName>/$STORAGE_CLASS_NAME/g" ${OPERATOR_PVC_FILE_TMP1}  > ${OPERATOR_PVC_FILE_TMP} # &> /dev/null
+#    else
+#        echo -e "\x1B[1mApplying the persistent volumes for the Cloud Pak operator by using the storage classname: ${FAST_STORAGE_CLASS_NAME}...\x1B[0m"
+#        ${COPY_CMD} -rf "${OPERATOR_PVC_FILE}" "${OPERATOR_PVC_FILE_BAK}"
+#        printf "\n"
+#        sed "s/<StorageClassName>/$FAST_STORAGE_CLASS_NAME/g" ${OPERATOR_PVC_FILE_BAK} > ${OPERATOR_PVC_FILE_TMP1}
+#        sed "s/<Fast_StorageClassName>/$FAST_STORAGE_CLASS_NAME/g" ${OPERATOR_PVC_FILE_TMP1}  > ${OPERATOR_PVC_FILE_TMP} # &> /dev/null
+#    fi
 #     ${COPY_CMD} -rf ${OPERATOR_PVC_FILE_TMP} ${OPERATOR_PVC_FILE_BAK}
     # Create Operator Persistent Volume.
-    CREATE_PVC_CMD="${CLI_CMD} apply -f ${OPERATOR_PVC_FILE_TMP} -n $project_name"
-    if $CREATE_PVC_CMD ; then
+    printf "\n"
+    echo -e "\x1B[1mApplying the persistent volumes (PV) for the Cloud Pak operator by using the storage classname: ${FAST_STORAGE_CLASS_NAME}...\x1B[0m"
+#     CREATE_PV_CMD="kubectl apply -f ${OPERATOR_PV_FILE_TMP} -n $PROJECT_NAME"
+    CLI_CMD=oc
+    CREATE_PV_CMD="${CLI_CMD} apply -f ${OPERATOR_PV_FILE_TMP} -n $PROJECT_NAME"
+
+    echo -e "\x1B[1mApplying the persistent claim volumes (PVC) for the Cloud Pak operator by using the storage classname: ${FAST_STORAGE_CLASS_NAME}...\x1B[0m"
+    CREATE_PVC_CMD="${CLI_CMD} apply -f ${OPERATOR_PVC_FILE_TMP} -n $PROJECT_NAME"
+#     CREATE_PV_CMD="kubectl apply -f ${OPERATOR_PV_FILE_TMP} -n $PROJECT_NAME"
+
+    if [[ $CREATE_PVC_CMD && $CREATE_PV_CMD ]]; then
         echo -e "\x1B[1mDone\x1B[0m"
     else
         echo -e "\x1B[1;31mFailed\x1B[0m"
@@ -607,7 +649,7 @@ function allocate_operator_pvc_olm_or_cncf(){
     TIMEOUT=60
     printf "\n"
     echo -e "\x1B[1mWaiting for the persistent volumes to be ready...\x1B[0m"
-    until ${CLI_CMD} get pvc -n $project_name| grep cp4ba-shared-log-pvc| grep -q -m 1 "Bound" || [ $ATTEMPTS -eq $TIMEOUT ]; do
+    until ${CLI_CMD} get pvc -n $PROJECT_NAME | grep cp4ba-shared-log-pvc | grep -q -m 1 "Bound" || [ $ATTEMPTS -eq $TIMEOUT ]; do
         ATTEMPTS=$((ATTEMPTS + 1))
         echo -e "......"
         sleep 10
@@ -884,7 +926,7 @@ function show_summary(){
     else
         echo -e "\x1B[1;31m1. Cloud platform to deploy: ${PLATFORM_SELECTED} ${PLATFORM_VERSION}\x1B[0m"
     fi
-    echo -e "\x1B[1;31m2. Project to deploy: ${project_name}\x1B[0m"
+    echo -e "\x1B[1;31m2. Project to deploy: ${PROJECT_NAME}\x1B[0m"
     echo -e "\x1B[1;31m3. User selected: ${user_name}\x1B[0m"
     if  [[ $PLATFORM_SELECTED == "ROKS" ]];
     then
@@ -1102,8 +1144,9 @@ function create_secret_local_registry(){
         DOCKER_RES_SECRET_NAME=$builtin_dockercfg_secrect_name
         # CREATE_SECRET_CMD="${CLI_CMD} create secret docker-registry $DOCKER_RES_SECRET_NAME --docker-server=$LOCAL_REGISTRY_SERVER --docker-username=$LOCAL_REGISTRY_USER --docker-password=$(${CLI_CMD} whoami -t) --docker-email=ecmtest@ibm.com"
     else
-        ${CLI_CMD} delete secret "$DOCKER_RES_SECRET_NAME" -n $project_name >/dev/null 2>&1
-        CREATE_SECRET_CMD="${CLI_CMD} create secret docker-registry $DOCKER_RES_SECRET_NAME --docker-server=$LOCAL_REGISTRY_SERVER --docker-username=$LOCAL_REGISTRY_USER --docker-password=$LOCAL_REGISTRY_PWD --docker-email=ecmtest@ibm.com -n $project_name"
+        ${CLI_CMD} delete secret "$DOCKER_RES_SECRET_NAME" -n $PROJECT_NAME >/dev/null 2>&1
+#        create_secret
+        CREATE_SECRET_CMD="${CLI_CMD} create secret docker-registry $DOCKER_SECRET_NAME --docker-server=$DOCKER_SERVER --docker-username=$DOCKER_USERNAME --docker-password=$DOCKER_REGISTRY_PASS --docker-email=ecmtest@ibm.com -n $PROJECT_NAME"
         if $CREATE_SECRET_CMD ; then
             echo -e "\x1B[1mDone\x1B[0m"
         else
@@ -1124,13 +1167,14 @@ fi
 
 clear
 ##select_ocp_olm
+preliminary
 select_platform
 validate_cli
 if [[ $PLATFORM_SELECTED == "OCP" || $PLATFORM_SELECTED == "ROKS" ]]; then
     check_platform_version
 fi
 select_deployment_type
-${CLI_CMD} project $project_name >/dev/null 2>&1
+${CLI_CMD} project $PROJECT_NAME >/dev/null 2>&1
 create_project
 #bind_scc
 if [[ $SCRIPT_MODE == "OLM" ]];then
@@ -1216,7 +1260,7 @@ fi
 
 clean_up
 #set the project context back to the user generated one
-${CLI_CMD} project ${PROJ_NAME} > /dev/null
+${CLI_CMD} project ${PROJECT_NAME} > /dev/null
 
 #select_platform
 #validate_cli

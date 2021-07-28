@@ -45,10 +45,10 @@ OPERATOR_FILE=${PARENT_DIR}/descriptors/operator.yaml
 OPERATOR_FILE_TMP=$TEMP_FOLDER/.operator_tmp.yaml
 OPERATOR_FILE_BAK=$BAK_FOLDER/.operator.yaml
 
-OPERATOR_PVC_FILE=${PARENT_DIR}/descriptors/operator-shared-pvc.yaml
+OPERATOR_PVC_FILE=${PARENT_DIR}/descriptors/cp4ba-pvc.yaml
 OPERATOR_PVC_FILE_TMP1=$TEMP_FOLDER/.operator-shared-pvc_tmp1.yaml
 OPERATOR_PVC_FILE_TMP=$TEMP_FOLDER/.operator-shared-pvc_tmp.yaml
-OPERATOR_PVC_FILE_BAK=$BAK_FOLDER/.operator-shared-pvc.yaml
+OPERATOR_PVC_FILE_BAK=$BAK_FOLDER/.cp4ba-pvc.yaml
 
 
 CP4BA_PATTERN_FILE_TMP=$TEMP_FOLDER/.ibm_cp4ba_cr_final_tmp.yaml

@@ -25,10 +25,10 @@ mkdir -p $BAK_FOLDER >/dev/null 2>&1
 # Import common utilities and environment variables
 source ${CUR_DIR}/helper/common.sh
 
-OPERATOR_PVC_FILE=${PARENT_DIR}/descriptors/operator-shared-pvc.yaml
+OPERATOR_PVC_FILE=${PARENT_DIR}/descriptors/cp4ba-pvc.yaml
 OPERATOR_PVC_FILE_TMP1=$TEMP_FOLDER/.operator-shared-pvc_tmp1.yaml
 OPERATOR_PVC_FILE_TMP=$TEMP_FOLDER/.operator-shared-pvc_tmp.yaml
-OPERATOR_PVC_FILE_BAK=$BAK_FOLDER/.operator-shared-pvc.yaml
+OPERATOR_PVC_FILE_BAK=$BAK_FOLDER/.cp4ba-pvc.yaml
 
 OLM_OPT_GROUP=${PARENT_DIR}/descriptors/op-olm/operator_group.yaml
 OLM_SUBSCRIPTION=${PARENT_DIR}/descriptors/op-olm/subscription.yaml
