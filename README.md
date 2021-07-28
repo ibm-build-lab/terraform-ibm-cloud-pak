@@ -28,7 +28,7 @@ These modules are used by Terraform scripts in [this](https://github.com/ibm-hcb
 
 ## Requirements
 
-The development and testing of the sandbox setup code requires the following elements:
+The use these modules and example, the following is required:
 
 - Have an IBM Cloud account with required privileges
 - [Install IBM Cloud CLI](https://ibm.github.io/cloud-enterprise-examples/iac/setup-environment#install-ibm-cloud-cli)
