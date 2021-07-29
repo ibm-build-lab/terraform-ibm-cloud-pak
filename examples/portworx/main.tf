@@ -37,7 +37,7 @@ module "portworx" {
   worker_nodes     = var.worker_nodes  // Number of workers
 
   // Storage parameters
-  install_storage      = var.install_storage
+  install_storage      = true
   storage_capacity     = var.storage_capacity  // In GBs
   storage_iops         = var.storage_iops   // Must be a number, it will not be used unless a storage_profile is set to a custom profile
   storage_profile      = var.storage_profile
@@ -53,6 +53,7 @@ module "portworx" {
   create_external_etcd  = var.create_external_etcd
   etcd_username         = var.etcd_username
   etcd_password         = var.etcd_password
-  etcd_secret_name      = var.etcd_secret_name
+  // Defaulted.  Don't change
+  etcd_secret_name      = "px-etcd-certs"
 }
 

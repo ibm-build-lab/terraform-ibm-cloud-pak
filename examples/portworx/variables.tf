@@ -3,19 +3,13 @@ variable "ibmcloud_api_key" {
   description = "Get the ibmcloud api key from https://cloud.ibm.com/iam/apikeys"
 }
 
-variable "install_storage" {
-    default     = true
-    description = "If set to false does not install storage and attach the volumes to the worker nodes. Enabled by default"
-}
-
 variable "cluster_id" {
     description = "The id of the cluster"
 }
 
-variable "create_external_etcd" {
-    type = bool
-    default = false
-    description = "Do you want to create an external_etcd? `True` or `False`"
+variable "worker_nodes" {
+    type = number
+    description = "Number of worker nodes"
 }
 
 variable "region" {
@@ -24,6 +18,11 @@ variable "region" {
 
 variable "resource_group_name" {
     description = "Resource Group in your account. List all available resource groups with: `ibmcloud resource groups`"
+}
+
+variable "unique_id" {
+    description = "Unique string for naming Portworx resources"
+    default     = "px-ext-portworx"
 }
 
 variable "storage_capacity"{
@@ -44,26 +43,23 @@ variable "storage_profile" {
     description = "The is the storage profile used for creating storage"
 }
 
-variable "unique_id" {
-    description = "Unique string for naming resources"
-    default     = "px-ext-portworx"
-}
 
-variable "worker_nodes" {
-    type = number
-    description = "Number of worker nodes"
+variable "create_external_etcd" {
+    type = bool
+    default = false
+    description = "Do you want to create an external_etcd? `True` or `False`"
 }
 
 # These credentials have been hard-coded because the 'Databases for etcd' service instance is not configured to have a publicly accessible endpoint by default.
 # You may override these for additional security.
 variable "etcd_username" {
   default = "portworxuser"
+  description = "Ignored if `create_external_etcd` is `false`"
 }
+
 variable "etcd_password" {
   default = "etcdpassword123"
-}
-variable "etcd_secret_name" {
-  default = "px-etcd-certs" # don't change this
+  description = "Ignored if `create_external_etcd` is `false`"
 }
 
 locals {
