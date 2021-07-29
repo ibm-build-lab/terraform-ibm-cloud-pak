@@ -11,55 +11,46 @@ For more information on IBM Schematics, refer [here](https://cloud.ibm.com/docs/
 For instructions to run using the local Terraform Client on your local machine go [here](../Using_Terraform.md)
 setting these values in the `terraform.tfvars` file:
 
-```bash
-on_vpc                       = "false"
-cluster_id                   = "*******************"
-ibmcloud_api_key             = "********************************"
-resource_group               = "cloud-pak-sandbox"
-region                       = "us-south"
-entitled_registry_user_email = "john.doe@ibm.com"
-entitled_registry_key        = "****************************"
+```hcl
+  cluster_id            = "******************"
+  on_vpc                = true
+  region                = "us-south"
+  resource_group_name   = "Default"
+  entitled_registry_key = "******************"
+  entitled_registry_user_email = "john.doe@email.com"
+  namespace             = "cp4i"
 ```
 
 These parameters are:
 
-- `on_vpc`: Infrastructure where the cluster is running. The possible values are: `true` and `false`. The default value is `false`.
-- `cluster_id`: Cluster ID of the OpenShift cluster where to install CP4I
-- `ibmcloud_api_key`: IBMCloud API key (See https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)
-- `region`: Region where the cluster is running.
-- `resource_group`: Resource group where the cluster is running.
-- `entitled_registry_user_email`: username or email address of the user owner of the entitlement key. There is no default value, so this variable is required.
-- `entitled_registry_key`: Entitlement key for above user. Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary
+- `cluster_id`: ID of the cluster to install cloud pak on
+- `on_vpc`: Set to true if the cluster is vpc. **NOTE** Portworx must be installed if using a VPC cluster
+- `region`: The region that the cluster is provisioned in
+- `resource_group_name`: Resource group that the cluster is provisioned in
+- `entitled_registry_key`: Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key
+- `entitled_registry_user_email`: IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key
+- `namespace`: Name of the namespace cp4aiops will be installed into
+
+
+### Execute the example
+
+Execute the following Terraform commands:
+
+```bash
+terraform init
+terraform plan
+terraform apply -auto-approve
+```
 
 ### Verify
 
-To verify CP4I installation, execute:
+To verify installation on the Kubernetes cluster, go to the Openshift console and go to the `Installed Operators` tab. Choose your `namespace` and click on `IBM Cloud Pak for Integration Platform Navigator
+4.2.0 provided by IBM` and finally click on the `Platform Navigator` tab. Finally check the status of the cp4i-navigator
 
-```bash
-ibmcloud ks cluster config -c <cluster_id> --admin
-
-# Namespace
-kubectl get namespaces cp4i
-
-# CatalogSource
-kubectl -n openshift-marketplace get catalogsource | grep IBM
-
-# Subscription
-kubectl -n cp4i get subscription | grep ibm-automation
-```
 ### Cleanup
 
-When the test is complete, execute: `terraform destroy`.
+Go into the console and delete the platform navigator from the verify section. Delete all installed operators and lastly delete the project.
 
-In addition. execute the following commands:
+Finally, execute: `terraform destroy`.
 
-```bash
-kubectl delete -n openshift-marketplace catalogsource.operators.coreos.com opencloud-operators
-kubectl delete -n cp4i subscription.operators.coreos.com ibm-automation
-kubectl delete -n openshift-operators operatorgroup.operators.coreos.com cp4i-group
-kubectl delete namespace cp4i
-```
-
-to uninstall CP4I and its dependencies from the cluster.
-
-There are some directories and files you may want to manually delete, these are: `rm -rf test.auto.tfvars terraform.tfstate* .terraform .kube rendered_files`
+There are some directories and files you may want to manually delete, these are: `rm -rf terraform.tfstate* .terraform .kube`
