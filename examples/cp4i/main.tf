@@ -10,7 +10,7 @@ data "ibm_resource_group" "group" {
 resource "null_resource" "mkdir_kubeconfig_dir" {
   triggers = { always_run = timestamp() }
   provisioner "local-exec" {
-    command = "mkdir -p ${local.config_dir}"
+    command = "mkdir -p ${local.kube_config_path}"
   }
 }
 
