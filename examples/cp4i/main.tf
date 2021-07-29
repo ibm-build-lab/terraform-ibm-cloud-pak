@@ -1,11 +1,10 @@
 provider "ibm" {
   region           = var.region
   version          = "~> 1.12"
-  ibmcloud_api_key = var.ibmcloud_api_key
 }
 
 data "ibm_resource_group" "group" {
-  name = var.resource_group
+  name = var.resource_group_name
 }
 
 resource "null_resource" "mkdir_kubeconfig_dir" {
@@ -19,14 +18,13 @@ data "ibm_container_cluster_config" "cluster_config" {
   depends_on = [null_resource.mkdir_kubeconfig_dir]
   cluster_name_id   = var.cluster_id
   resource_group_id = data.ibm_resource_group.group.id
-  config_dir        = local.config_dir
+  config_dir        = local.kube_config_path
 }
 
 // Module:
 
 module "cp4i" {
   source = "../../modules/cp4i"
-  // TODO: With Terraform 0.13 replace the parameter 'enable' or the conditional expression using 'with_cp4i' with 'count'
   enable = true
 
   // ROKS cluster parameters:
@@ -34,9 +32,7 @@ module "cp4i" {
   on_vpc              = var.on_vpc
 
   // Entitled Registry parameters:
-  // 1. Get the entitlement key from: https://myibm.ibm.com/products-services/containerlibrary
-  // 2. Save the key to a file, or list here
-  entitled_registry_key        = length(var.entitled_registry_key) > 0 ? var.entitled_registry_key : file(local.entitled_registry_key_file)
+  entitled_registry_key        = var.entitled_registry_key
   entitled_registry_user_email = var.entitled_registry_user_email
 
   portworx_is_ready   = 1           // Assuming portworx is installed if using VPC infrastructure
