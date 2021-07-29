@@ -1,15 +1,15 @@
-resource "ibm_compute_vm_instance" "cp4baldap" {
-  hostname             = "cp4baldap"
-  domain               = "<<DOMAIN>>"
+resource "ibm_compute_vm_instance" "ldap" {
+  hostname             = var.hostname
+  domain               = var.ibmcloud_domain
   ssh_key_ids          = ["${ibm_compute_ssh_key.key.id}"]
-  os_reference_code    = "CentOS_8_64"
-  datacenter           = "dal10"
+  os_reference_code    = var.os_reference_code
+  datacenter           = var.datacenter
   network_speed        = 10
   hourly_billing       = true
   private_network_only = false
-  cores                = 1
-  memory               = 1024
-  disks                = [25]
+  cores                = var.cores
+  memory               = var.memory
+  disks                = var.disks
   local_disk           = false
 
 
@@ -18,7 +18,7 @@ connection {
   user        = "root"
   private_key = tls_private_key.ssh.private_key_pem
   agent       = false
-  host        = ibm_compute_vm_instance.cp4baldap.ipv4_address
+  host        = ibm_compute_vm_instance.ldap.ipv4_address
 }
 
 provisioner "file" {
@@ -84,15 +84,15 @@ resource "local_file" "ssh-public-key" {
 }
 
 resource "ibm_compute_ssh_key" "key" {
-  label      = "cp4baldap-vm-to-migrate"
+  label      = "ldap-vm-to-migrate"
   public_key = tls_private_key.ssh.public_key_openssh
   notes = "created by terraform"
 }
 
 output "CLASSIC_ID" {
-  value = ibm_compute_vm_instance.cp4baldap.id
+  value = ibm_compute_vm_instance.ldap.id
 }
 
 output "CLASSIC_IP_ADDRESS" {
-  value = ibm_compute_vm_instance.cp4baldap.ipv4_address
+  value = ibm_compute_vm_instance.ldap.ipv4_address
 }
