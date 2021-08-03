@@ -38,7 +38,7 @@ data "ibm_container_vpc_cluster" "cluster" {
 // Module:
 module "cp4data" {
   source          = "../../modules/cp4data"
-  enable          = var.enable
+  enable          = true
 
   // ROKS cluster parameters:
   openshift_version   = var.openshift_version
