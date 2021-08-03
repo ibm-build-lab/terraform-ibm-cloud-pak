@@ -17,7 +17,6 @@ resource_group_name = "Default"
 // ROKS cluster parameters:
 cluster_id          = "******************"
 region                = "us-south"
-openshift_version   = "4.6"
 on_vpc              = false
 
 // Prereqs

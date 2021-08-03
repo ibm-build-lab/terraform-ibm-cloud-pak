@@ -25,13 +25,13 @@ data "ibm_container_cluster_config" "cluster_config" {
 
 # Get classic cluster ingress_hostname for output
 data "ibm_container_cluster" "cluster" {
-  count = var.enable && ! var.on_vpc ? 1 : 0
+  count = ! var.on_vpc ? 1 : 0
   cluster_name_id = var.cluster_id
 }
 
 # Get vpc cluster ingress_hostname for output
 data "ibm_container_vpc_cluster" "cluster" {
-  count = var.enable && var.on_vpc ? 1 : 0
+  count = var.on_vpc ? 1 : 0
   cluster_name_id = var.cluster_id
 }
 
@@ -41,7 +41,6 @@ module "cp4data" {
   enable          = true
 
   // ROKS cluster parameters:
-  openshift_version   = var.openshift_version
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
   on_vpc              = var.on_vpc
   portworx_is_ready   = 1          // Assuming portworx is installed if using VPC infrastructure

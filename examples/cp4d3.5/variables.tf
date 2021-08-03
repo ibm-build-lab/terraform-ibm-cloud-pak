@@ -13,12 +13,6 @@ variable "accept_cpd_license" {
   description = "Do you accept the cpd license agreements? This includes any modules chosen as well. `true` or `false`"
 }
 
-variable "openshift_version" {
-  default     = "4.6"
-  type        = string
-  description = "Openshift version installed in the cluster"
-}
-
 // Prereq
 variable "worker_node_flavor" {
   type        = string
