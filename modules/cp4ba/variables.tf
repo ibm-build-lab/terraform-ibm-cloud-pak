@@ -2,7 +2,7 @@ variable "ibmcloud_api_key" {
   description = "IBM Cloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
 }
 
-variable "cluster_name_id" {
+variable "cluster_name_or_id" {
   default     = ""
   description = "Enter your cluster id or name to install the Cloud Pak. Leave blank to provision a new Openshift cluster."
 }
@@ -20,9 +20,10 @@ variable "ssh_public_key_file" {}
 variable "ssh_private_key_file" {}
 variable "classic_datacenter" {}
 
-variable "config_dir" {
-  default     = "./.kube/config"
-  description = "directory to store the kubeconfig file"
+variable "kube_config_path" {
+  default     = ".kube/config"
+  type        = string
+  description = "Path to the Kubernetes configuration file to access your cluster"
 }
 
 variable "resource_group" {
@@ -71,7 +72,7 @@ variable "docker_secret_name" {
 
 
 locals {
-  cp4ba_namespace              = "cp4ba"
+//  cp4ba_namespace              = "cp4ba"
 
   docker_secret_name           = "docker-registry"
   docker_server                = "cp.icr.io"
@@ -79,7 +80,7 @@ locals {
   docker_password              = chomp(var.entitlement_key)
   docker_email                 = var.entitled_registry_user_email
 
-  enable_cluster               = var.cluster_name_id == "" || var.cluster_name_id == null
+  enable_cluster               = var.cluster_name_or_id == "" || var.cluster_name_or_id == null
   use_entitlement              = "yes"
   project_name                 = "cp4ba"
   platform_options             = 1 // 1: roks - 2: ocp - 3: private cloud

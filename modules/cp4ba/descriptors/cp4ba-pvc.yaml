@@ -23,5 +23,5 @@ spec:
   resources:
     requests:
       storage: 100Gi
-  volumeName: cp4a-shared-log-pv
+  volumeName: cp4ba-shared-log-pv
   storageClassName: cp4a-file-retain-gold-gid

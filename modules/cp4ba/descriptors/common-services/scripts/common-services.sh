@@ -58,6 +58,7 @@ function docker_logout() {
 }
 
 function upload() {
+    # shellcheck disable=SC2045
     for file in $(ls ../offline)
     do
       if test -f "../offline/$file/image.tar"; then
