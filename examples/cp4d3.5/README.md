@@ -30,9 +30,6 @@ entitled_registry_user_email = "john.doe@email.com"
 // CP4D License Acceptance
 accept_cpd_license = true
 
-// CP4D Info
-cpd_project_name = "cp4d"
-
 // Parameters to install submodules
 install_watson_knowledge_catalog = false
 install_watson_studio            = false
