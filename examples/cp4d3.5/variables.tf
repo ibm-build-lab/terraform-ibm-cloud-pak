@@ -2,12 +2,6 @@ variable "region" {}
 variable "resource_group_name" {}
 variable "cluster_id" {}
 
-variable "enable" {
-  default     = true
-  type        = bool
-  description = "If set to true installs Cloud-Pak for Data on the given cluster"
-}
-
 variable "on_vpc" {
   default     = false
   type        = bool
