@@ -1,3 +1,8 @@
+variable "enable" {
+    default = true
+    description = "Flag to enable or disable the module to create the LDAP server"
+}
+
 variable "ibmcloud_api_key" {
     default = null
     description = "IBM Cloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
@@ -39,13 +44,13 @@ variable "cores" {
 }
 
 variable "memory" {
-    default = 4096
+    default = null
     description = "Virtual Server Memory"
 }
 
 variable "disks" {
-    default     =   [25]
-    description = "Boot disk size"
+    default = null
+    description = "The numeric disk sizes in GBs for the instance's block device and disk image settings."
 }
 
 variable "hostname" {
@@ -54,6 +59,27 @@ variable "hostname" {
 }
 
 variable "datacenter" {
-    default = null
-    description = "IBM Cloud Datacenter"
+    default = ""
+    description = "IBM Cloud data center in which you want to provision the instance."
+}
+
+variable "network_speed" {
+    default = 100
+    description = "The connection speed (in Mbps) for the instance's network components. The default value is 100"
+}
+
+
+variable "hourly_billing" {
+    default = true
+    description = "The billing type for the instance. When set to true, the computing instance is billed on hourly usage. Otherwise, the instance is billed monthly. The default value is true."
+}
+
+variable "private_network_only" {
+    default = false
+    description = "When set to true, a compute instance has only access to the private network. The default value is false."
+}
+
+ variable "local_disk" {
+    default = true
+    description = "The disk type for the instance. When set to true, the disks for the computing instance are provisioned on the host that the instance runs. Otherwise, SAN disks are provisioned. The default value is true."
 }

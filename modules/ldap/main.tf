@@ -1,16 +1,19 @@
 resource "ibm_compute_vm_instance" "ldap" {
+
+  count                = var.enable ? 1 : 0
+
   hostname             = var.hostname
   domain               = var.ibmcloud_domain
   ssh_key_ids          = ["${ibm_compute_ssh_key.key.id}"]
   os_reference_code    = var.os_reference_code
   datacenter           = var.datacenter
-  network_speed        = 10
-  hourly_billing       = true
-  private_network_only = false
+  network_speed        = var.network_speed
+  hourly_billing       = var.hourly_billing
+  private_network_only = var.private_network_only
   cores                = var.cores
   memory               = var.memory
   disks                = var.disks
-  local_disk           = false
+  local_disk           = var.local_disk
 
 
 connection {
@@ -18,7 +21,7 @@ connection {
   user        = "root"
   private_key = tls_private_key.ssh.private_key_pem
   agent       = false
-  host        = ibm_compute_vm_instance.ldap.ipv4_address
+  host        = ibm_compute_vm_instance.ldap[count.index].ipv4_address
 }
 
 provisioner "file" {
@@ -90,9 +93,13 @@ resource "ibm_compute_ssh_key" "key" {
 }
 
 output "CLASSIC_ID" {
-  value = ibm_compute_vm_instance.ldap.id
+
+value = var.enable && length(ibm_compute_vm_instance.ldap) > 0 ? ibm_compute_vm_instance.ldap.0.id : ""
+
 }
 
 output "CLASSIC_IP_ADDRESS" {
-  value = ibm_compute_vm_instance.ldap.ipv4_address
+
+  value = var.enable && length(ibm_compute_vm_instance.ldap) > 0 ? ibm_compute_vm_instance.ldap.0.ipv4_address: ""
+
 }
