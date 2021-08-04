@@ -12,7 +12,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   creationTimestamp: null
-  name: ibm-cp4a-operator
+  name: ibm-cp4ba-operator
   labels:
     app.kubernetes.io/instance: ibm-dba
     app.kubernetes.io/managed-by: ibm-dba
@@ -53,7 +53,7 @@ rules:
 - apiGroups:
   - apps
   resourceNames:
-  - ibm-cp4a-operator
+  - ibm-cp4ba-operator
   resources:
   - deployments/finalizers
   verbs:

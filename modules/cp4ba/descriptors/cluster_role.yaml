@@ -11,7 +11,7 @@
 apiVersion: authorization.openshift.io/v1
 kind: ClusterRole
 metadata:
-  name: ibm-cp4a-operator
+  name: ibm-cp4ba-operator
   labels:
     app.kubernetes.io/instance: ibm-dba
     app.kubernetes.io/managed-by: ibm-dba

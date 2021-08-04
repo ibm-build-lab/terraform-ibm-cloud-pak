@@ -9,7 +9,7 @@ spec:
   capacity:
     storage: 1Gi
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: cp4a-file-retain-gold-gid
+  storageClassName: cp4ba-file-retain-gold-gid
   nfs:
     path: /shared/operator
     server: 172.17.0.2
@@ -25,7 +25,7 @@ spec:
   capacity:
     storage: 100Gi
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: cp4a-file-retain-gold-gid
+  storageClassName: cp4ba-file-retain-gold-gid
   nfs:
     path: /root/logs
     server: 172.17.0.2

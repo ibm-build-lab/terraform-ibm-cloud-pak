@@ -17,14 +17,14 @@ metadata:
     app.kubernetes.io/managed-by: ibm-dba
     app.kubernetes.io/name: ibm-dba
     release: 21.0.1
-  namespace: cp4ba-project
+  namespace: cp4ba
   finalizers:
     - kubernetes.io/pvc-protection
 spec:
   accessModes:
     - ReadWriteMany
   volumeName: operator-shared-pv
-  storageClassName: cp4a-file-retain-gold-gid
+  storageClassName: cp4ba-file-retain-gold-gid
   resources:
     requests:
       storage: 1Gi
@@ -32,49 +32,23 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: cp4a-shared-log-pvc
+  name: cp4ba-shared-log-pvc
   labels:
     app.kubernetes.io/instance: ibm-dba
     app.kubernetes.io/managed-by: ibm-dba
     app.kubernetes.io/name: ibm-dba
     release: 21.0.1
-  namespace: cp4ba-project
+  namespace: cp4ba
   finalizers:
     - kubernetes.io/pvc-protection
 spec:
   accessModes:
     - ReadWriteMany
-  volumeName: cp4a-shared-log-pv
-  storageClassName: cp4a-file-retain-gold-gid
+  volumeName: cp4ba-shared-log-pv
+  storageClassName: cp4ba-file-retain-gold-gid
   resources:
     requests:
       storage: 100Gi
 
 
-
-
-kind: PersistentVolume
-apiVersion: v1
-metadata:
-  name: cp4a-shared-log-pv
-spec:
-  capacity:
-    storage: 100Gi
-  nfs:
-    server: 172.17.0.2
-    path: /tmp
-  accessModes:
-    - ReadWriteMany
-  claimRef:
-    kind: PersistentVolumeClaim
-    namespace: cp4ba-project
-    name: cp4a-shared-log-pvc
-    uid: 28e6b4dd-611b-4fb9-9437-c78632ccdd4c
-    apiVersion: v1
-    resourceVersion: '2415321'
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: cp4a-file-retain-gold-gid
-  volumeMode: Filesystem
-status:
-  phase: Bound
 

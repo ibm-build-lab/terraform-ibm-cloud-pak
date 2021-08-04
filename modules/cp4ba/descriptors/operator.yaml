@@ -11,7 +11,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ibm-cp4a-operator
+  name: ibm-cp4ba-operator
   labels:
     app.kubernetes.io/instance: ibm-dba
     app.kubernetes.io/managed-by: ibm-dba
@@ -21,11 +21,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      name: ibm-cp4a-operator
+      name: ibm-cp4ba-operator
   template:
     metadata:
       labels:
-        name: ibm-cp4a-operator
+        name: ibm-cp4ba-operator
         app.kubernetes.io/instance: ibm-dba
         app.kubernetes.io/managed-by: ibm-dba
         app.kubernetes.io/name: ibm-dba
@@ -45,7 +45,7 @@ spec:
       hostIPC: false
       securityContext:
         runAsNonRoot: true
-      serviceAccountName: ibm-cp4a-operator
+      serviceAccountName: ibm-cp4ba-operator
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -66,7 +66,7 @@ spec:
       containers:
         - name: operator
           # Replace this with the built image name
-          image: "cp.icr.io/cp/cp4a/icp4a-operator:21.0.1"
+          image: "cp.icr.io/cp/cp4ba/icp4a-operator:21.0.1"
           imagePullPolicy: "IfNotPresent"
           securityContext:
             allowPrivilegeEscalation: false
@@ -106,7 +106,7 @@ spec:
                 fieldRef:
                   fieldPath: metadata.name
             - name: OPERATOR_NAME
-              value: "ibm-cp4a-operator"
+              value: "ibm-cp4ba-operator"
             - name: WORKER_ICP4ACLUSTER_ICP4A_IBM_COM
               value: "10"
             - name: ANSIBLE_GATHERING
@@ -119,7 +119,7 @@ spec:
       volumes:
         - name: logs-backup
           persistentVolumeClaim:
-            claimName: "cp4a-shared-log-pvc"
+            claimName: "cp4ba-shared-log-pvc"
         - name: "operator-shared-folder"
           persistentVolumeClaim:
             claimName: "operator-shared-pvc"

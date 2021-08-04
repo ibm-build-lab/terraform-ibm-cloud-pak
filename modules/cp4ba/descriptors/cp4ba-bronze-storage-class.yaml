@@ -11,7 +11,7 @@
 apiVersion: storage.k8s.io/v1beta1
 kind: StorageClass
 metadata:
-  name: cp4a-file-retain-bronze-gid
+  name: cp4ba-file-retain-bronze-gid
   labels:
     kubernetes.io/cluster-service: "true"
 provisioner: ibm.io/ibmc-file

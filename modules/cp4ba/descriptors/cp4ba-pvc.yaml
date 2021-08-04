@@ -10,7 +10,7 @@ spec:
     requests:
       storage: 1Gi
   volumeName: operator-shared-pv
-  storageClassName: cp4a-file-retain-gold-gid
+  storageClassName: cp4ba-file-retain-gold-gid
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -24,4 +24,4 @@ spec:
     requests:
       storage: 100Gi
   volumeName: cp4ba-shared-log-pv
-  storageClassName: cp4a-file-retain-gold-gid
+  storageClassName: cp4ba-file-retain-gold-gid

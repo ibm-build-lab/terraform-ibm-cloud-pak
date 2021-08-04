@@ -20,8 +20,8 @@ TEMP_FOLDER=${CUR_DIR}/.tmp
 INSTALL_BAI=""
 CRD_FILE=${PARENT_DIR}/descriptors/ibm_cp4ba_crd.yaml
 SA_FILE=${PARENT_DIR}/descriptors/service_account.yaml
-# CLUSTER_ROLE_FILE=${PARENT_DIR}/descriptors/cluster_role.yaml
-# CLUSTER_ROLE_BINDING_FILE=${PARENT_DIR}/descriptors/cluster_role_binding.yaml
+CLUSTER_ROLE_FILE=${PARENT_DIR}/descriptors/cluster_role.yaml
+CLUSTER_ROLE_BINDING_FILE=${PARENT_DIR}/descriptors/cluster_role_binding.yaml
 # CLUSTER_ROLE_BINDING_FILE_TEMP=${TEMP_FOLDER}/.cluster_role_binding.yaml
 ROLE_FILE=${PARENT_DIR}/descriptors/role.yaml
 ROLE_BINDING_FILE=${PARENT_DIR}/descriptors/role_binding.yaml
@@ -38,7 +38,7 @@ OPERATOR_FILE=${PARENT_DIR}/descriptors/operator.yaml
 OPERATOR_FILE_TMP=$TEMP_FOLDER/.operator_tmp.yaml
 
 OPERATOR_PVC_FILE=${PARENT_DIR}/descriptors/cp4ba-pvc.yaml
-OPERATOR_PVC_FILE_TMP1=${TEMP_FOLDER}/.operator-shared-pvc_tmp1.yaml
+#OPERATOR_PVC_FILE_TMP1=${TEMP_FOLDER}/.operator-shared-pvc_tmp1.yaml
 #OPERATOR_PVC_FILE_TMP=${TEMP_FOLDER}/.operator-shared-pvc_tmp.yaml
 #OPERATOR_PVC_FILE_TMP=${PARENT_DIR}/descriptors/cp4ba-pvc.yaml
 OPERATOR_PV_FILE_TMP=${PARENT_DIR}/descriptors/cp4ba-pv.yaml
@@ -53,7 +53,7 @@ COMMON_SERVICES_TEMP_DIR=$TMEP_FOLDER
 SCRIPT_MODE=""
 
 ####################################################################################
-mkdir -p "$TEMP_FOLDER" >/dev/null 2>&1
+#mkdir -p "$TEMP_FOLDER" >/dev/null 2>&1
 #echo "creating temp folder"
 # During the development cycle we will need to apply cp4ba_catalogsource.yaml
 # catalog_source.yaml is the final deliver yaml.
@@ -72,12 +72,14 @@ fi
 OLM_OPT_GROUP="${PARENT_DIR}"/descriptors/op-olm/operator_group.yaml
 OLM_SUBSCRIPTION="${PARENT_DIR}"/descriptors/op-olm/subscription.yaml
 
-OLM_CATALOG_TMP="${TEMP_FOLDER}"/.catalog_source.yaml
-OLM_OPT_GROUP_TMP="${TEMP_FOLDER}"/.operator_group.yaml
-OLM_SUBSCRIPTION_TMP="${TEMP_FOLDER}"/.subscription.yaml
+#OLM_CATALOG_TMP="${TEMP_FOLDER}"/catalog_source.yaml
+#OLM_OPT_GROUP_TMP="${TEMP_FOLDER}"/.operator_group.yaml
+#OLM_SUBSCRIPTION_TMP="${TEMP_FOLDER}"/.subscription.yaml
 
 CLI_CMD=oc
 #PLATFORM_SELECTED="ROKS"
+PLATFORM_SELECTED="ROKS"
+SCRIPT_MODE="OLM"
 
 echo '' > "$LOG_FILE"
 
@@ -86,8 +88,8 @@ function select_platform(){
     printf "\n"
     COLUMNS=12
 
-    PLATFORM_SELECTED="ROKS"
-    SCRIPT_MODE="OLM"
+#    PLATFORM_SELECTED="ROKS"
+#    SCRIPT_MODE="OLM"
 
     select_user
     if [[ $LOCAL_PUBLIC_REGISTRY_SERVER == "" ]]
@@ -309,10 +311,10 @@ function prepare_install() {
    echo -ne "Creating the custom resource definition (CRD) and a service account that has the permissions to manage the resources..."
    ${CLI_CMD} apply -f "${CRD_FILE}" -n "${PROJECT_NAME}" --validate=false >/dev/null 2>&1
    echo " Done!"
-   # if [[ "$DEPLOYMENT_TYPE" == "demo" ]];then
-   #     ${CLI_CMD} apply -f ${CLUSTER_ROLE_FILE} --validate=false >> ${LOG_FILE}
-   #     ${CLI_CMD} apply -f ${CLUSTER_ROLE_BINDING_FILE_TEMP} --validate=false >> ${LOG_FILE}
-   # fi
+   if [[ "$DEPLOYMENT_TYPE" == "demo" ]];then
+      ${CLI_CMD} apply -f "${CLUSTER_ROLE_FILE} "--validate=false >> "${LOG_FILE}"
+      ${CLI_CMD} apply -f "${CLUSTER_ROLE_BINDING_FILE}" --validate=false >> "${LOG_FILE}"
+   fi
    ${CLI_CMD} apply -f "${SA_FILE}" -n "${PROJECT_NAME}" --validate=false >> "${LOG_FILE}"
    ${CLI_CMD} apply -f "${ROLE_FILE}" -n "${PROJECT_NAME}" --validate=false >> "${LOG_FILE}"
 
