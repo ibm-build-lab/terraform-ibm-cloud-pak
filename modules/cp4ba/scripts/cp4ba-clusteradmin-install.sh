@@ -250,7 +250,7 @@ function display_installationprompt(){
 function select_user(){
      user_result=$(${CLI_CMD} get user 2>&1) #$(oc get user 2>&1)   # $(${CLI_CMD} get user 2>&1)
      user_substring="No resources found"
-     if [[ $user_result == *"$user_substring"* ]];
+     if [[ $user_result == "$user_substring" ]];
      then
   #       clear
          echo -e "\x1B[1;31mAt least one user must be available in order to proceed.\n\x1B[0m"
@@ -264,11 +264,13 @@ function select_user(){
      options="$userlist"
 #     usernum=${#options[*]}
 
-     for opt in "${options[@]}";
+     for opt in "${options[@]}"
      do
 #       if [[ -n "$opt" && "${options[@]}" && *"$USER_NAME_EMAIL"* =~ $opt ]]; then
-        if [[ -n "$opt" && "*$USER_NAME_EMAIL*" =~ $opt ]]; then
-           user_name="$USER_NAME_EMAIL"
+#        if [[ -n "$opt" && "*$USER_NAME_EMAIL*" =~ $opt ]]; then
+        if [[ $opt == *"$USER_NAME_EMAIL"* ]]; then
+#           user_name="$USER_NAME_EMAIL"
+           break
          else
            echo "invalid option here $REPLY"
          fi;
@@ -278,13 +280,13 @@ function select_user(){
 
 
 function check_user_exist() {
-   "${CLI_CMD}" get user | grep "${user_name}" >/dev/null 2>&1
+   "${CLI_CMD}" get user | grep "${USER_NAME_EMAIL}" >/dev/null 2>&1
    returnValue=$?
    if [ "$returnValue" == 1 ] ; then
-       echo -e "\x1B[1mUser \"${user_name}\" NOT exists! Please enter an existing username in your cluster...\x1B[0m"
-       user_name=""
+       echo -e "\x1B[1mUser \"${USER_NAME_EMAIL}\" NOT exists! Please enter an existing username in your cluster...\x1B[0m"
+       USER_NAME_EMAIL=""
    else
-       echo -e "\x1B[1mUser \"${user_name}\" exists! Continue...\x1B[0m"
+       echo -e "\x1B[1mUser \"${USER_NAME_EMAIL}\" exists! Continue...\x1B[0m"
    fi
 }
 
@@ -335,14 +337,15 @@ function prepare_install() {
        echo "Done!"
        if [[ "$PLATFORM_SELECTED" == "OCP" || "$PLATFORM_SELECTED" == "ROKS" ]]; then
        echo
-       echo -ne Adding the user ${user_name} to the ibm-cp4ba-operator role...
+       echo -ne Adding the user ${USER_NAME_EMAIL} to the ibm-cp4ba-operator role...
+       printf "\n"
        "${CLI_CMD}" project "${PROJECT_NAME}" >> "${LOG_FILE}"
-       ${CLI_CMD} adm policy add-role-to-user edit ${user_name} >> "${LOG_FILE}"
-       ${CLI_CMD} adm policy add-role-to-user registry-editor ${user_name} >> "${LOG_FILE}"
-       ${CLI_CMD} adm policy add-role-to-user ibm-cp4ba-operator "${user_name}" >/dev/null 2>&1
-       ${CLI_CMD} adm policy add-role-to-user ibm-cp4ba-operator "${user_name}" >> "${LOG_FILE}"
+       ${CLI_CMD} adm policy add-role-to-user edit ${USER_NAME_EMAIL} >> "${LOG_FILE}"
+       ${CLI_CMD} adm policy add-role-to-user registry-editor ${USER_NAME_EMAIL} >> "${LOG_FILE}"
+       ${CLI_CMD} adm policy add-role-to-user ibm-cp4ba-operator "${USER_NAME_EMAIL}" >/dev/null 2>&1
+       ${CLI_CMD} adm policy add-role-to-user ibm-cp4ba-operator "${USER_NAME_EMAIL}" >> "${LOG_FILE}"
        if [[ "$DEPLOYMENT_TYPE" == "demo" ]];then
-           "${CLI_CMD}" adm policy add-cluster-role-to-user ibm-cp4ba-operator "${user_name}" >> "${LOG_FILE}"
+           "${CLI_CMD}" adm policy add-cluster-role-to-user ibm-cp4ba-operator "${USER_NAME_EMAIL}" >> "${LOG_FILE}"
        fi
        echo "Done!"
    fi
@@ -491,24 +494,25 @@ function prepare_olm_install() {
    done
 
    echo
-   echo -ne Adding the user ${user_name} to the ibm-cp4ba-operator role...
+   echo -ne Adding the user ${USER_NAME_EMAIL} to the ibm-cp4ba-operator role...
+   printf "\n"
    role_name_olm=$(${CLI_CMD} get role -n "$PROJECT_NAME" --no-headers | grep ibm-cp4ba-operator.v|awk '{print $1}')
    if [[ -z $role_name_olm ]]; then
        echo "No role found for CP4BA operator"
        exit 1
    else
        ${CLI_CMD} project "${PROJECT_NAME}" >> "${LOG_FILE}"
-       ${CLI_CMD} adm policy add-role-to-user edit "${user_name}" >> "${LOG_FILE}"
-       ${CLI_CMD} adm policy add-role-to-user registry-editor "${user_name}" >> "${LOG_FILE}"
-       ${CLI_CMD} adm policy add-role-to-user "$role_name_olm" "${user_name}" >/dev/null 2>&1
-       ${CLI_CMD} adm policy add-role-to-user "$role_name_olm" "${user_name}" >> "${LOG_FILE}"
+       ${CLI_CMD} adm policy add-role-to-user edit "${USER_NAME_EMAIL}" >> "${LOG_FILE}"
+       ${CLI_CMD} adm policy add-role-to-user registry-editor "${USER_NAME_EMAIL}" >> "${LOG_FILE}"
+       ${CLI_CMD} adm policy add-role-to-user "$role_name_olm" "${USER_NAME_EMAIL}" >/dev/null 2>&1
+       ${CLI_CMD} adm policy add-role-to-user "$role_name_olm" "${USER_NAME_EMAIL}" >> "${LOG_FILE}"
        if [[ "$DEPLOYMENT_TYPE" == "demo" ]];then
            cluster_role_name_olm=$(${CLI_CMD} get clusterrole|grep ibm-cp4ba-operator.v|sort -t"t" -k1r|awk 'NR==1{print $1}')
            if [[ -z $cluster_role_name_olm ]]; then
                echo "No cluster role found for CP4BA operator 2"
                exit 1
            else
-               ${CLI_CMD} adm policy add-cluster-role-to-user "$cluster_role_name_olm" "${user_name}" >> "${LOG_FILE}"
+               ${CLI_CMD} adm policy add-cluster-role-to-user "$cluster_role_name_olm" "${USER_NAME_EMAIL}" >> "${LOG_FILE}"
            fi
        fi
        echo -e "Done!"
@@ -948,7 +952,7 @@ function show_summary(){
         echo -e "\x1B[1;31m1. Cloud platform to deploy: ${PLATFORM_SELECTED} ${PLATFORM_VERSION}\x1B[0m"
     fi
     echo -e "\x1B[1;31m2. Project to deploy: ${PROJECT_NAME}\x1B[0m"
-    echo -e "\x1B[1;31m3. User selected: ${user_name}\x1B[0m"
+    echo -e "\x1B[1;31m3. User selected: ${USER_NAMEUSER_NAME_EMAIL}\x1B[0m"
 #    if  [[ $PLATFORM_SELECTED == "ROKS" ]];
 #    then
     echo -e "\x1B[1;31m5. Storage Class created: \x1B[0m"
