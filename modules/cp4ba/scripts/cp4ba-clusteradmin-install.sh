@@ -13,7 +13,7 @@
 CUR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PARENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 # Import common utilities and environment variables
-source ${CUR_DIR}/helper/common.sh
+source "${CUR_DIR}"/helper/common.sh
 RUNTIME_MODE=$1
 
 TEMP_FOLDER=${CUR_DIR}/.tmp
@@ -35,13 +35,14 @@ LOG_FILE=${CUR_DIR}/prepare_install.log
 DOCKER_RES_SECRET_NAME="admin.registrykey"
 REGISTRY_IN_FILE="cp.icr.io"
 OPERATOR_FILE=${PARENT_DIR}/descriptors/operator.yaml
-OPERATOR_FILE_TMP=$TEMP_FOLDER/.operator_tmp.yaml
+#OPERATOR_FILE_TMP=$TEMP_FOLDER/.operator_tmp.yaml
 
 OPERATOR_PVC_FILE=${PARENT_DIR}/descriptors/cp4ba-pvc.yaml
+OPERATOR_PV_FILE=${PARENT_DIR}/descriptors/cp4ba-pv.yaml
 #OPERATOR_PVC_FILE_TMP1=${TEMP_FOLDER}/.operator-shared-pvc_tmp1.yaml
 #OPERATOR_PVC_FILE_TMP=${TEMP_FOLDER}/.operator-shared-pvc_tmp.yaml
 #OPERATOR_PVC_FILE_TMP=${PARENT_DIR}/descriptors/cp4ba-pvc.yaml
-OPERATOR_PV_FILE_TMP=${PARENT_DIR}/descriptors/cp4ba-pv.yaml
+
 #OPERATOR_PVC_FILE_BAK=${TEMP_FOLDER}/.cp4ba-pvc.yaml
 JDBC_DRIVER_DIR=${CUR_DIR}/jdbc
 
@@ -414,32 +415,84 @@ function prepare_olm_install() {
          exit 1
        fi
    else
-
-     for ((retry=0;retry<=${maxRetry};retry++)); do
-       echo "Waiting for CP4BA Operator Catalog pod initialization"
-
-       isReady=$(${CLI_CMD} get pod -n openshift-marketplace --no-headers | grep $online_source | grep "Running")
-       if [[ -z $isReady ]]; then
-         if [[ $retry -eq ${maxRetry} ]]; then
-           echo "Timeout Waiting for  CP4BA Operator Catalog pod to start"
-           exit 1
-         else
-           sleep 15
-           continue
-         fi
-       else
-          echo "CP4BA Operator Catalog is running $isReady"
-          if [[ "$DEPLOYMENT_TYPE" == "enterprise" && "$RUNTIME_MODE" == "dev" ]]; then
-              copy_jdbc_driver
-          fi
-          break
-       fi
-     done
+        ${CLI_CMD} apply -f "$OLM_CATALOG"
+        if [ $? -eq 0 ]; then
+          echo "IBM Operator Catalog source created!"
+        else
+          echo "Generic Operator catalog source creation failed"
+          exit 1
+        fi
    fi
-   echo
 
+   for ((retry=0;retry<=${maxRetry};retry++)); do
+      echo "Waiting for CP4A Operator Catalog pod initialization"
+
+      isReady=$(${CLI_CMD} get pod -n openshift-marketplace --no-headers | grep $online_source | grep "Running")
+      if [[ -z $isReady ]]; then
+        if [[ $retry -eq ${maxRetry} ]]; then
+          echo "Timeout Waiting for  CP4BA Operator Catalog pod to start"
+          exit 1
+        else
+          sleep 15
+          continue
+        fi
+      else
+        echo "CP4BA Operator Catalog is running $isReady"
+        break
+      fi
+   done
+
+
+   if [[ $(${CLI_CMD} get og -n "${PROJECT_NAME}" -o=go-template --template='{{len .items}}' ) -gt 0 ]]; then
+        echo "Found operator group"
+        ${CLI_CMD} get og -n "${PROJECT_NAME}"
+    else
+      sed "s/REPLACE_NAMESPACE/$PROJECT_NAME/g" "${OLM_OPT_GROUP}" # > "${OLM_OPT_GROUP}"
+      ${CLI_CMD} apply -f "${OLM_OPT_GROUP}"
+      if [ $? -eq 0 ]
+         then
+         echo "CP4BA Operator Group Created!"
+       else
+         echo "CP4BA Operator Operator Group creation failed"
+       fi
+    fi
+
+    sed "s/REPLACE_NAMESPACE/$project_name/g" "${OLM_SUBSCRIPTION}" # > ${OLM_SUBSCRIPTION_TMP}
+    ${YQ_CMD} w -i "${OLM_SUBSCRIPTION}" spec.source "$online_source"
+    ${CLI_CMD} apply -f "${OLM_SUBSCRIPTION}"
+    # sed <"${OLM_SUBSCRIPTION}" "s|REPLACE_NAMESPACE|${project_name}|g; s|REPLACE_CHANNEL_NAME|stable|g" | oc apply -f -
+    if [ $? -eq 0 ]
+        then
+        echo "CP4BA Operator Subscription Created!"
+    else
+        echo "CP4BA Operator Subscription creation failed"
+        exit 1
+    fi
+
+   for ((retry=0;retry<=${maxRetry};retry++)); do
+     echo "Waiting for CP4BA Operator Catalog pod initialization"
+
+     isReady=$(${CLI_CMD} get pod -n openshift-marketplace --no-headers | grep $online_source | grep "Running")
+     if [[ -z $isReady ]]; then
+       if [[ $retry -eq ${maxRetry} ]]; then
+         echo "Timeout Waiting for  CP4BA Operator Catalog pod to start"
+         exit 1
+       else
+         sleep 15
+         continue
+       fi
+     else
+        echo "CP4BA Operator Catalog is running $isReady"
+        if [[ "$DEPLOYMENT_TYPE" == "enterprise" && "$RUNTIME_MODE" == "dev" ]]; then
+            copy_jdbc_driver
+        fi
+        break
+     fi
+   done
+
+   echo
    echo -ne Adding the user ${user_name} to the ibm-cp4ba-operator role...
-   role_name_olm=$(${CLI_CMD} get role -n "$PROJECT_NAME" --no-headers|grep ibm-cp4ba-operator.v|awk '{print $1}')
+   role_name_olm=$(${CLI_CMD} get role -n "$PROJECT_NAME" --no-headers | grep ibm-cp4ba-operator.v|awk '{print $1}')
    if [[ -z $role_name_olm ]]; then
        echo "No role found for CP4BA operator"
        exit 1
@@ -452,7 +505,7 @@ function prepare_olm_install() {
        if [[ "$DEPLOYMENT_TYPE" == "demo" ]];then
            cluster_role_name_olm=$(${CLI_CMD} get clusterrole|grep ibm-cp4ba-operator.v|sort -t"t" -k1r|awk 'NR==1{print $1}')
            if [[ -z $cluster_role_name_olm ]]; then
-               echo "No cluster role found for CP4BA operator"
+               echo "No cluster role found for CP4BA operator 2"
                exit 1
            else
                ${CLI_CMD} adm policy add-cluster-role-to-user "$cluster_role_name_olm" "${user_name}" >> "${LOG_FILE}"
@@ -460,6 +513,10 @@ function prepare_olm_install() {
        fi
        echo -e "Done!"
    fi
+       echo
+    echo -ne Label the default namespace to allow network policies to open traffic to the ingress controller using a namespaceSelector...
+    ${CLI_CMD} label --overwrite namespace default 'network.openshift.io/policy-group=ingress'
+    echo "Done"
 }
 
 function check_existing_sc(){
@@ -615,19 +672,25 @@ function allocate_operator_pvc_olm_or_cncf(){
     printf "\n"
     echo -e "\x1B[1mApplying the persistent volumes (PV) for the Cloud Pak operator by using the storage classname: ${FAST_STORAGE_CLASS_NAME}...\x1B[0m"
 #     CREATE_PV_CMD="kubectl apply -f ${OPERATOR_PV_FILE_TMP} -n $PROJECT_NAME"
-    CREATE_PV_CMD=$("${CLI_CMD}" apply -f "${OPERATOR_PV_FILE_TMP}" -n "$PROJECT_NAME")
-
-    echo -e "\x1B[1mApplying the persistent claim volumes (PVC) for the Cloud Pak operator by using the storage classname: ${FAST_STORAGE_CLASS_NAME}...\x1B[0m"
-    CREATE_PVC_CMD=$("${CLI_CMD}" apply -f "${OPERATOR_PVC_FILE_TMP}" -n "$PROJECT_NAME")   # "${CLI_CMD} apply -f ${OPERATOR_PVC_FILE_TMP} -n $PROJECT_NAME"
-    echo "############## Files PVC RuN ####################"
-
-#     CREATE_PV_CMD="kubectl apply -f ${OPERATOR_PV_FILE_TMP} -n $PROJECT_NAME"
-
-    if [[ $CREATE_PVC_CMD && $CREATE_PV_CMD ]]; then
+    CREATE_PV_CMD=$("${CLI_CMD}" apply -f "${OPERATOR_PV_FILE}" -n "$PROJECT_NAME")
+    if [[ $CREATE_PV_CMD ]]; then
         echo -e "\x1B[1;34mDone\x1B[0m"
     else
         echo -e "\x1B[1;31mFailed\x1B[0m"
     fi
+
+    echo -e "\x1B[1mApplying the persistent claim volumes (PVC) for the Cloud Pak operator by using the storage classname: ${FAST_STORAGE_CLASS_NAME}...\x1B[0m"
+    CREATE_PVC_CMD=$("${CLI_CMD}" apply -f "${OPERATOR_PVC_FILE}" -n "$PROJECT_NAME")   # "${CLI_CMD} apply -f ${OPERATOR_PVC_FILE_TMP} -n $PROJECT_NAME"
+    echo "############## Files PVC RuN ####################"
+
+#     CREATE_PV_CMD="kubectl apply -f ${OPERATOR_PV_FILE_TMP} -n $PROJECT_NAME"
+
+    if [[ $CREATE_PVC_CMD ]]; then
+        echo -e "\x1B[1;34mDone\x1B[0m"
+    else
+        echo -e "\x1B[1;31mFailed\x1B[0m"
+    fi
+
 #    Check Operator Persistent Volume status every 5 seconds (max 10 minutes) until allocate.
     ATTEMPTS=0
     TIMEOUT=60
@@ -1123,46 +1186,59 @@ fi
 #allocate_operator_pvc_olm_or_cncf
 
 select_platform # G
-
-if [[ $PLATFORM_SELECTED == "OCP" || $PLATFORM_SELECTED == "ROKS" ]]; then
-#    echo "checking version"
-    validate_cli # L
-    create_secret_entitlement_registry
-    check_platform_version
+validate_cli # L
+create_secret_entitlement_registry
+check_platform_version
 #fi
-    select_deployment_type
-    "${CLI_CMD}" project $PROJECT_NAME >/dev/null 2>&1
-    create_project
-    ##bind_scc
-    if [[ $SCRIPT_MODE == "OLM" ]];then
-    #     echo "*********** OLM *************"
-        validate_docker_podman_cli
-        get_entitlement_registry
-        get_storage_class_name
-        allocate_operator_pvc_olm_or_cncf
-        prepare_olm_install
-        prepare_install
-        apply_cp4ba_operator
-    else
-        validate_docker_podman_cli
-        if [[ $PLATFORM_SELECTED == "other" ]]; then
-            get_entitlement_registry
-        fi
-        if [[ $USE_ENTITLEMENT == "no" ]]; then
-            verify_local_registry_password
-        fi
-        get_storage_class_name
-        if [[ $USE_ENTITLEMENT == "yes" ]]; then
-            create_secret_entitlement_registry
-        fi
-        if [[ $USE_ENTITLEMENT == "no" ]]; then
-            create_secret_local_registry
-        fi
-        allocate_operator_pvc_olm_or_cncf
-        prepare_install
-        apply_cp4ba_operator
-    fi
-fi
+select_deployment_type
+
+validate_docker_podman_cli
+get_entitlement_registry
+get_storage_class_name
+allocate_operator_pvc_olm_or_cncf
+prepare_olm_install
+prepare_install
+apply_cp4ba_operator
+
+#if [[ $PLATFORM_SELECTED == "OCP" || $PLATFORM_SELECTED == "ROKS" ]]; then
+##    echo "checking version"
+#    validate_cli # L
+#    create_secret_entitlement_registry
+#    check_platform_version
+##fi
+#    select_deployment_type
+#    "${CLI_CMD}" project $PROJECT_NAME >/dev/null 2>&1
+#    create_project
+#    ##bind_scc
+#    if [[ $SCRIPT_MODE == "OLM" ]];then
+#    #     echo "*********** OLM *************"
+#        validate_docker_podman_cli
+#        get_entitlement_registry
+#        get_storage_class_name
+#        allocate_operator_pvc_olm_or_cncf
+#        prepare_olm_install
+#        prepare_install
+#        apply_cp4ba_operator
+#    else
+#        validate_docker_podman_cli
+#        if [[ $PLATFORM_SELECTED == "other" ]]; then
+#            get_entitlement_registry
+#        fi
+#        if [[ $USE_ENTITLEMENT == "no" ]]; then
+#            verify_local_registry_password
+#        fi
+#        get_storage_class_name
+#        if [[ $USE_ENTITLEMENT == "yes" ]]; then
+#            create_secret_entitlement_registry
+#        fi
+#        if [[ $USE_ENTITLEMENT == "no" ]]; then
+#            create_secret_local_registry
+#        fi
+#        allocate_operator_pvc_olm_or_cncf
+#        prepare_install
+#        apply_cp4ba_operator
+#    fi
+#fi
 
 #prepare_olm_install
 #apply_cp4ba_operator # will be removed
