@@ -19,7 +19,6 @@ resource_group               = "cloud-pak-sandbox"
 region                       = "us-south"
 entitled_registry_user_email = "john.doe@ibm.com"
 entitled_registry_key        = "****************************"
-config_dir                   = ".kube/config"
 ```
 
 These parameters are:
@@ -31,7 +30,6 @@ These parameters are:
 - `resource_group`: Resource group where the cluster is running.
 - `entitled_registry_user_email`: username or email address of the user owner of the entitlement key. There is no default value, so this variable is required.
 - `entitled_registry_key`: Entitlement key for above user. Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary
-- `config_dir`: Directory to download the kubeconfig file. Default value is `./.kube/config`
 
 ### Verify
 

@@ -26,3 +26,6 @@ datacenter            = "dal10"
 flavors               = ["b3c.16x64"]
 workers_count         = [4]
 
+// Run "ibmcloud target -g <resource_group>; ibmcloud ks vlan ls --zone <zone>" to get list.  Leave blank if no VLANS exist yet, they will be created
+private_vlan_number   = ""
+public_vlan_number    = ""

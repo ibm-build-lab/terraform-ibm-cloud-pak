@@ -67,17 +67,14 @@ variable "datacenter" {
   default = "dal12"
 }
 
-// VLAN's numbers variables on the datacenter, they are here until the
-// permissions issues is fixed on Humio account
-
 variable "private_vlan_number" {
   default     = ""
-  description = "**Classic Only:** Private VLAN assigned to your zone. List available VLANs in the zone: `ibmcloud ks vlan ls --zone <zone_name>`, make sure the the VLAN type is private and the router begins with bc. Use the ID or Number"
+  description = "**Classic Only:** Private VLAN assigned to your zone. List available VLANs in the zone: `ibmcloud target <resource_group>; ibmcloud ks vlan ls --zone <zone_name>`, make sure the the VLAN type is private and the router begins with bc. Use the ID or Number"
 }
 
 variable "public_vlan_number" {
   default     = ""
-  description = "**Classic Only:** Public VLAN assigned to your zone. List available VLANs in the zone: `ibmcloud ks vlan ls --zone <zone_name>`, make sure the the VLAN type is public and the router begins with fc. Use the ID or Number"
+  description = "**Classic Only:** Public VLAN assigned to your zone. List available VLANs in the zone: `ibmcloud target <resource_group>; ibmcloud ks vlan ls --zone <zone_name>`, make sure the the VLAN type is public and the router begins with fc. Use the ID or Number"
 }
 
 locals {
