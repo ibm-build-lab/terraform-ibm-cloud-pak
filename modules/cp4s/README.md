@@ -5,13 +5,17 @@ This Terraform Module installs **Cloud Pak for Security** on an Openshift (ROKS)
 **Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4s`
 
 - [Terraform Module to install Cloud Pak for Security](#terraform-module-to-install-cloud-pak-for-security)
+  - [Required command line tools](#setup-tools)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
   - [Provisioning this module in a Terraform Script](#provisioning-this-module-in-a-terraform-script)
     - [Setting up the OpenShift cluster](#setting-up-the-openshift-cluster)
     - [Using the CP4S Module](#using-the-cp4s-module)
   - [Input Variables](#input-variables)
   - [Executing the Terraform Script](#executing-the-terraform-script)
-  - [Clean up](#clean-up)
+
+## Setup Tools
+
+The cloud pak for security installer runs on your machine, for the installer go [here](https://www.ibm.com/docs/en/cloud-paks/cp-security/1.6.0?topic=tasks-installing-developer-tools) to be sure your command line tools are compatible.
 
 ## Set up access to IBM Cloud
 
@@ -21,20 +25,13 @@ Go [here](../../CREDENTIALS.md) for details.
 
 ## Provisioning this module in a Terraform Script
 
-In your Terraform script define the `ibm` provisioner block with the `region` and the `generation`, which is **1** for **Classic** and **2** for **VPC Gen 2**.
-
-```hcl
-provider "ibm" {
-  generation = 1
-  region     = "us-south"
-}
-```
-
 ### Setting up the OpenShift cluster
 
-NOTE: an OpenShift cluster is required to install the Cloud Pak. This can be an existing cluster or can be provisioned using our `roks` Terraform module.
+NOTE: an OpenShift cluster and and LDAP is required to install the Cloud Pak. This can be an existing cluster or can be provisioned using our `roks` Terraform module. For the LDAP you can set up a LDAP on your own or use our `ldap` Terrform module then get the admin user name for the script.
 
-To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/roks) for the code to add to your Terraform script. The recommended size for an OpenShift 4.5+ cluster on IBM Cloud Classic contains `4` workers of flavor `b3c.16x64`, however read the [Cloud Pak for Security documentation](https://www.ibm.com/docs/en/cloud-paks/cp-security) to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
+If you do not have an LDAP you can complete the installation however full features will not be available until after LDAP configuration is complete.
+
+To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/roks) for the code to add to your Terraform script. The recommended size for an OpenShift 4.6+ cluster on IBM Cloud Classic contains `5` workers of flavor `b3c.8x32`, however read the [Cloud Pak for Security documentation](https://www.ibm.com/docs/en/cloud-paks/cp-security/1.6.0?topic=requirements-hardware) .
 
 Add the following code to get the OpenShift cluster (new or existing) configuration:
 
@@ -61,6 +58,10 @@ Input:
 
 - `ibm_resource_group`:  resource group where the cluster is running
 
+- `ldap_status`: true for a configured LDAP and user name, false otherwise
+
+- `ldap_user_id`: value of ldap admin uid
+
 Output:
 
 `ibm_container_cluster_config` used as input for the `cp4s` module
@@ -74,13 +75,16 @@ module "cp4s" {
   source          = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4s"
   enable          = true
 
-  // ROKS cluster parameters:
-  openshift_version   = var.roks_version
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
 
   // Entitled Registry parameters:
   entitled_registry_key        = var.entitled_registry_key
   entitled_registry_user_email = var.entitled_registry_user_email
+
+  // LDAP
+
+  ldap_user_id = var.ldap_user_id
+  ldap_status = var.ldap_status
 }
 ```
 
@@ -89,9 +93,10 @@ module "cp4s" {
 | Name                               | Description                                                                                                                                                                                                                | Default                     | Required |
 | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | -------- |
 | `enable`                           | If set to `false` does not install the cloud pak on the given cluster. By default it's enabled                                                                                                                        | `true`                      | No       |
-| `openshift_version`                | Openshift version installed in the cluster                                                                                                                                                                                 | `4.5`                       | No       |
 | `entitled_registry_key`            | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
 | `entitled_registry_user_email`     | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key                                                                                                                 |                             | Yes      |
+| `ldap_status`                           | Set to true if ldap is available for configuration                                                                                                                        |                       | Yes       |
+| `ldap_user_id`                           | LDAP admin user uid                                                                                                                        |                       | Yes       |
 
 **NOTE** The boolean input variable `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
 
@@ -105,12 +110,4 @@ Execute the following commands to install the Cloud Pak:
 terraform init
 terraform plan
 terraform apply
-```
-
-## Clean up
-
-When you finish using the cluster, release the resources by executing the following command:
-
-```bash
-terraform destroy
 ```

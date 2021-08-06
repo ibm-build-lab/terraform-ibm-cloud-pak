@@ -20,8 +20,12 @@ ID=$(echo $RESPONSE | jq -r --arg VOLUMEID "$VOLUME_ID" '.volume_attachments[] |
 # If should create attachment, create attachment
 if [ "$ID" == "" ] || [ "$ID" == "null" ]; then
     if ! RESPONSE=$(
-        curl -s -X POST -H "Authorization: $TOKEN" \
-            "https://$REGION.containers.cloud.ibm.com/v2/storage/vpc/createAttachment?cluster=$CLUSTER_ID&worker=$WORKER_ID&volumeID=$VOLUME_ID"
+        curl -s -X POST "https://containers.cloud.ibm.com/global/v2/storage/createAttachment" \
+          -H "accept: application/json" \
+          -H "Authorization: $TOKEN" \
+          -H "X-Auth-Resource-Group-ID: $RESOURCE_GROUP_ID" \
+          -H "Content-Type: application/json" \
+          -d "{  \"cluster\": \"${CLUSTER_ID}\",  \"volumeID\": \"${VOLUME_ID}\",  \"worker\": \"${WORKER_ID}\" }"
     ); then
       echo "Error when trying to /createAttachment"
       exit 1
