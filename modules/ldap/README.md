@@ -1,42 +1,38 @@
-# Example to provision LDAP Terraform Module
+# Terraform Module to provision a Classic Virtual Server Instance and installs and configures IBM Secure Directory Server
 
-## Run using local Terraform Client
+This Terraform Module to provision a Classic Virtual Server Instance and installs and configures IBM Secure Directory Server
 
-For instructions to run using the local Terraform Client on your local machine go [here](../Using_Terraform.md)
-Set the following values in a `terraform.tfvars` file:
+**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/ldap`
 
-```bash
-ibmcloud_api_key      = "*******************"
-iaas_classic_api_key  = "*******************"
-iaas_classic_username = "******"
-region                = "dal10"
-os_reference_code     = "CentOS_8_64"
-datacenter            = "*****"
-hostname              = "ldapvm"
-ibmcloud_domain       = "<my company>.cloud" 
-cores                 = "2"
-memory                = "4096"
-disks                 = [25]
+- [Terraform Module to install and configure IBM Secure Directory Server](#Terraform-Module-to-provision-a-Classic-Virtual-Server-Instance-and-installs-and-configures-IBM-Secure-Directory-Server)
+  - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
+  - [Provisioning this module in a Terraform Script](#provisioning-this-module-in-a-terraform-script)
+    - [Download required license files](#Download-required-license-files)
+    - [Update the ldif file](#update-the-ldif-file)
+  - [Input Variables](#input-variables)
+  - [Executing the Terraform Script](#executing-the-terraform-script)
+  - [Clean up](#clean-up)
+
+
+## Set up access to IBM Cloud
+
+If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
+
+Go [here](../../CREDENTIALS.md) for details.
+
+## Provisioning this module in a Terraform Script
+
+In your Terraform code define the `ibm` provisioner block with the `region`.
+
+```hcl
+provider "ibm" {
+  region     = "us-south"
+}
 ```
 
-These parameters are:
+### Download required license files
 
-- `ibmcloud_api_key`        : IBM Cloud API key (See https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)
-- `iaas_classic_api_key`    : IBM Classic Infrastucture API Key (see https://cloud.ibm.com/docs/account?topic=account-classic_keys)
-- `iaas_classic_username`   : IBM Classic Infrastucture User Name (see https://cloud.ibm.com/docs/schematics?topic=schematics-create-tf-config)
-- `region`                  : Region code (https://cloud.ibm.com/docs/codeengine?topic=codeengine-regions)
-- `os_reference_code`       : The Operating System Reference Code, for example CentOS_8_64 (see https://cloud.ibm.com/docs/ibm-cloud-provider-for-terraform)
-- `datacenter`              : The datacenter to which the Virtual Machine will be deployed to, for example dal10. (see https://cloud.ibm.com/docs/schematics?topic=schematics-create-tf-config)
-- `hostname`                : Hostname of the virtual Server.
-- `ibmcloud_domain`         : Domain of the Cloud Account.
-- `cores`                   : Virtual Server CPU Cores.
-- `memory`                  : Virtual Server Memory
-- `disks`                   : Boot disk size
-
-
-Prerequsites:
-
-1. Download the following DB2 and IBM SDS license files:
+Download the following DB2 and IBM SDS license files:
 
 DB2:
 PartUmber   : CNB21ML
@@ -46,15 +42,40 @@ IBM SDS:
 PartUmber   : CRV3IML
 Filename    : sds64-premium-feature-act-pkg.zip
 
-Copy the files to the /files fodler
+Copy the files to the /files folder
+
+###  Update the ldif file
+
+Update the ldif file as needed to change the Directory Struture and user information
+
+Update the /files/cp.ldif. 
 
 
-2. Update the ldif file as needed to change the Directory Struture and user information
 
-Update the cp.ldif. 
+## Input Variables
+
+| Name                           | Description                                                                                                                                                                                                                | Default | Required |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | -------- |
+| `enable`                       | If set to `false` does not install IBM Secure Directory Server. Enabled by default                                                                                                                                         | `true`  | No       |
+| `ibmcloud_api_key`             | IBM Cloud API key (See https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)                                                                                                                        |         | Yes      |
+| `iaas_classic_api_key`         | IBM Classic Infrastucture API Key (see https://cloud.ibm.com/docs/account?topic=account-classic_keys)                                                                                                                      |         | Yes      |
+| `iaas_classic_username`        | IBM Classic Infrastucture API Key (see https://cloud.ibm.com/docs/account?topic=account-classic_keys)                                                                                                                      |         | Yes      |
+| `region`                       | Region code (https://cloud.ibm.com/docs/codeengine?topic=codeengine-regions)                                                                                                                                               |         | Yes      |
+| `os_reference_code`            | The Operating System Reference Code, for example CentOS_8_64 (see https://cloud.ibm.com/docs/ibm-cloud-provider-for-terraform)                                                                                             |         | Yes      |
+| `datacenter`                   | IBM Cloud data center in which you want to provision the instance.                                                                                                                                                         |         | Yes      |
+| `hostname`                     | Hostname of the virtual Server                                                                                                                                                                                             |         | Yes      |
+| `ibmcloud_domain`              | IBM Cloud account Domain, example <My Company>.cloud                                                                                                                                                                       |         | Yes      |
+| `cores`                        | Virtual Server CPU Cores                                                                                                                                                                                                   |         | Yes      |
+| `memory`                       | Virtual Server Memory                                                                                                                                                                                                      |         | Yes      |
+| `disks`                        | The numeric disk sizes in GBs for the instance's block device and disk image settings.                                                                                                                                     |         | Yes      |
+| `network_speed`                | The connection speed (in Mbps) for the instance's network components. The default value is 100                                                                                                                             | `100`   | Yes      |
+| `hourly_billing`               | The billing type for the instance. When set to true, the computing instance is billed on hourly usage. Otherwise, the instance is billed monthly. The default value is true.                                               | `true`  | Yes      |
+| `private_network_only`         | When set to true, a compute instance has only access to the private network. The default value is false.                                                                                                                   | `false` | Yes      |
+| `local_disk`                   | The disk type for the instance. When set to true, the disks for the computing instance are provisioned on the host that the instance runs. Otherwise, SAN disks are provisioned. The default value is true.                | `true`  | Yes      |
+| `datacenter`                   | IBM Cloud data center in which you want to provision the instance.                                                                                                                                                         |         | Yes      |
 
 
-### Execute the example
+### Executing the Terraform Script
 
 Execute the following Terraform commands:
 
