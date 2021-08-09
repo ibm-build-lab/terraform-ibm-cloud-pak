@@ -31,7 +31,7 @@ data "ibm_container_cluster_config" "cluster_config" {
 }
 
 module "cp4ba"{
-    source = "git::https://github.com/jgod1360/terraform-ibm-cloud-pak//cp4ba"
+    source = "git::https://github.com/jgod1360/terraform-ibm-cloud-pak//modules/cp4ba"
    // source = ".././"
    
 //    CLUSTER_NAME_OR_ID     = var.cluster_name_or_id
