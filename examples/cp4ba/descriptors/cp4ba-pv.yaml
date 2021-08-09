@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: operator-shared-pv
+#  namespace: cp4ba
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 1Gi
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: cp4ba-file-retain-gold-gid
+  nfs:
+    path: /shared/operator
+    server: 172.17.0.2
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+    name: cp4ba-shared-log-pv
+#    namespace: cp4ba
+spec:
+  accessModes:
+    - ReadWriteMany
+  capacity:
+    storage: 100Gi
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: cp4ba-file-retain-gold-gid
+  nfs:
+    path: /root/logs
+    server: 172.17.0.2
+
+
+
+
