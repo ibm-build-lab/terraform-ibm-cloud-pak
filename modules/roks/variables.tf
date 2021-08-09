@@ -13,16 +13,16 @@ variable "on_vpc" {
 }
 
 variable "project_name" {
-  description = "The project name is used to name the cluster with the environment name"
+  description = "The project name is used to name the cluster with the environment name. Do not use blanks or special characters."
 }
 
 variable "owner" {
-  description = "Use your user name or team name. The owner is used to label the cluster and other resources"
+  description = "Use your user name or team name. The owner is used to label the cluster and other resources. Do not use blanks or special characters."
 }
 
 variable "environment" {
   default     = "dev"
-  description = "The environment name is used to name the cluster with the project name"
+  description = "The environment name is used to name the cluster with the project name.  Do not use blanks or special characters."
 }
 
 variable "resource_group" {

@@ -1,0 +1,11 @@
+ibmcloud_api_key      = "<****>"
+iaas_classic_api_key  = "<****>"
+iaas_classic_username = "<****>"
+hostname              = "ldapvm"
+region                = "us-south"
+ibmcloud_domain       = "<****>"
+os_reference_code     = "CentOS_8_64"
+datacenter            = "dal10"
+cores                 = "2"
+memory                = "4096"
+disks                 = [25]

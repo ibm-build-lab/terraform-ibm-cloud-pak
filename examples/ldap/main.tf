@@ -7,13 +7,13 @@ resource "ibm_compute_vm_instance" "ldap" {
   ssh_key_ids          = ["${ibm_compute_ssh_key.key.id}"]
   os_reference_code    = var.os_reference_code
   datacenter           = var.datacenter
-  network_speed        = var.network_speed
-  hourly_billing       = var.hourly_billing
-  private_network_only = var.private_network_only
+  network_speed        = 10
+  hourly_billing       = true
+  private_network_only = false
   cores                = var.cores
   memory               = var.memory
   disks                = var.disks
-  local_disk           = var.local_disk
+  local_disk           = false
 
 
 connection {
@@ -21,7 +21,7 @@ connection {
   user        = "root"
   private_key = tls_private_key.ssh.private_key_pem
   agent       = false
-  host        = ibm_compute_vm_instance.ldap[count.index].ipv4_address
+  ibm_compute_vm_instance.ldap[count.index].ipv4_address
 }
 
 provisioner "file" {
