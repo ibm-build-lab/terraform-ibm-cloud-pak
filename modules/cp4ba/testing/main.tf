@@ -32,7 +32,7 @@ data "ibm_container_cluster_config" "cluster_config" {
 
 module "cp4ba"{
    // source = "git::https://github.com/jgod1360/terraform-ibm-cloud-pak/blob/cp4ba/modules/cp4ba/main.tf"
-    source = "/../."
+    source = "../.."
    
 //    CLUSTER_NAME_OR_ID     = var.cluster_name_or_id
     //    on_vpc              = var.on_vpc
