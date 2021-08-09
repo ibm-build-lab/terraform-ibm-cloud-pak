@@ -28,7 +28,7 @@ data "ibm_container_cluster_config" "cluster_config" {
 
 resource "null_resource" "setting_platform" {
   provisioner "local-exec" {
-    command = "/bin/bash ./../scripts/cp4ba-clusteradmin-install.sh"
+    command = "/bin/bash ./scripts/cp4ba-clusteradmin-install.sh"
 
     environment = {
       # Cluster
