@@ -1,6 +1,6 @@
-# Terraform Module to provision a Classic Virtual Server Instance and installs and configures IBM Secure Directory Server
+# Terraform Module that installs and configures an IBM Secure Directory Server on a provisioned Classic Virtual Server Instance
 
-This Terraform Module to provision a Classic Virtual Server Instance and installs and configures IBM Secure Directory Server
+This Terraform Module provisions a Classic Virtual Server Instance and installs and configures IBM Secure Directory Server
 
 **Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/ldap`
 
