@@ -34,23 +34,6 @@ These parameters are:
 - `memory`                  : Virtual Server Memory
 - `disks`                   : Boot disk size
 
-
-Prerequsites:
-
-1. Download the following DB2 and IBM SDS license files:
-
-DB2:
-PartUmber   : CNB21ML
-Filename    : DB2_AWSE_Restricted_Activation_11.1.zip
-
-IBM SDS:
-PartUmber   : CRV3IML
-Filename    : sds64-premium-feature-act-pkg.zip
-
-Copy the files to the `./files` folder
-
-2. Update the `./files/cp.ldif` file as needed to change the Directory Struture and user information
-
 ### Execute the example
 
 Execute the following Terraform commands:
@@ -67,14 +50,16 @@ CLASSIC_IP_ADDRESS = "***.**.***.***"
 
 Note: The LDAP server should not be exposed in the Public interface using port 389. Configure the appropriate Security Groups required for the Server.
 
-A public and private key is created to access the Virtual Machine
+A public and private key is created to access the Virtual Machine:
 
-generated_key_rsa
-generated_key_rsa.piub
+- generated_key_rsa
+- generated_key_rsa.piub
 
 use ssh to access the server provding the key files
 
+```bash
 ssh root@<CLASSIC_IP_ADDRESS> -k generated_key_rsa
+```
 
 Apache Directory Studio can be used to access the server (see https://directory.apache.org/studio/download/download-macosx.html)
 
