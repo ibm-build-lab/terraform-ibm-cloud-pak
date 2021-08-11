@@ -1,4 +1,4 @@
-# Terraform Module that installs and configures an IBM Secure Directory Server on a provisioned Classic Virtual Server Instance
+# Terraform Module that installs and configures an IBM Secure Directory Server (LDAP)
 
 This Terraform Module provisions a Classic Virtual Server Instance and installs and configures IBM Secure Directory Server
 
