@@ -3,8 +3,8 @@
 
 ## Run using local Terraform Client
 
-For instructions to run using the local Terraform Client on your local machine go [here](../Using_Terraform.md)
-Set the following values in a `terraform.tfvars` file:
+For instructions to run using the local Terraform Client on your local machine go [here](../Using_Terraform.md).
+Set required values in a `terraform.tfvars` file.  Here are some examples:
 
 ```bash
 ibmcloud_api_key      = "*******************"
@@ -47,13 +47,9 @@ IBM SDS:
 PartUmber   : CRV3IML
 Filename    : sds64-premium-feature-act-pkg.zip
 
-Copy the files to the /files fodler
+Copy the files to the `./files` folder
 
-
-2. Update the ldif file as needed to change the Directory Struture and user information
-
-Update the cp.ldif. 
-
+2. Update the `./files/cp.ldif` file as needed to change the Directory Struture and user information
 
 ### Execute the example
 
