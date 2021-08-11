@@ -12,13 +12,11 @@ For instructions to run using the local Terraform Client on your local machine g
 customizing these values in the `terraform.tfvars` file:
 
 ```hcl
-enable              = true
 resource_group_name = "Default"
 
 // ROKS cluster parameters:
 cluster_id          = "******************"
 region                = "us-south"
-openshift_version   = "4.6"
 on_vpc              = false
 
 // Prereqs
@@ -30,9 +28,6 @@ entitled_registry_user_email = "john.doe@email.com"
 
 // CP4D License Acceptance
 accept_cpd_license = true
-
-// CP4D Info
-cpd_project_name = "cp4d"
 
 // Parameters to install submodules
 install_watson_knowledge_catalog = false

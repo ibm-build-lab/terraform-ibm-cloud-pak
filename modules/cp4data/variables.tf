@@ -38,7 +38,7 @@ variable "accept_cpd_license" {
 
 variable "cpd_project_name" {
   type        = string
-  default     = "default"
+  default     = "cp4d"
   description = "Name of the project namespace"
 }
 // Prereq

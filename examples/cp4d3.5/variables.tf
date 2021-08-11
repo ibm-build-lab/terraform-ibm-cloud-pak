@@ -2,12 +2,6 @@ variable "region" {}
 variable "resource_group_name" {}
 variable "cluster_id" {}
 
-variable "enable" {
-  default     = true
-  type        = bool
-  description = "If set to true installs Cloud-Pak for Data on the given cluster"
-}
-
 variable "on_vpc" {
   default     = false
   type        = bool
@@ -17,12 +11,6 @@ variable "on_vpc" {
 variable "accept_cpd_license" {
   type        = bool
   description = "Do you accept the cpd license agreements? This includes any modules chosen as well. `true` or `false`"
-}
-
-variable "openshift_version" {
-  default     = "4.6"
-  type        = string
-  description = "Openshift version installed in the cluster"
 }
 
 // Prereq
