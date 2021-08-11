@@ -64,10 +64,10 @@ Update the `./files/cp.ldif` file as needed to change the Directory Structure an
 | `cores`                        | Virtual Server CPU Cores                                                                                                                                                                                                   |         | Yes      |
 | `memory`                       | Virtual Server Memory                                                                                                                                                                                                      |         | Yes      |
 | `disks`                        | The numeric disk sizes in GBs for the instance's block device and disk image settings.                                                                                                                                     |         | Yes      |
-| `network_speed`                | The connection speed (in Mbps) for the instance's network components. The default value is 100                                                                                                                             | `100`   | Yes      |
-| `hourly_billing`               | The billing type for the instance. When set to true, the computing instance is billed on hourly usage. Otherwise, the instance is billed monthly. The default value is true.                                               | `true`  | Yes      |
-| `private_network_only`         | When set to true, a compute instance has only access to the private network. The default value is false.                                                                                                                   | `false` | Yes      |
-| `local_disk`                   | The disk type for the instance. When set to true, the disks for the computing instance are provisioned on the host that the instance runs. Otherwise, SAN disks are provisioned. The default value is true.                | `true`  | Yes      |
+| `network_speed`                | The connection speed (in Mbps) for the instance's network components. The default value is `100`                                                                                                                           | `100`   | Yes      |
+| `hourly_billing`               | The billing type for the instance. When set to `true`, the computing instance is billed on hourly usage. Otherwise, the instance is billed monthly. The default value is true.                                               | `true`  | Yes      |
+| `private_network_only`         | When set to `true`, a compute instance has only access to the private network. The default value is `false`.                                                                                                                   | `false` | Yes      |
+| `local_disk`                   | The disk type for the instance. When set to `true`, the disks for the computing instance are provisioned on the host that the instance runs. Otherwise, SAN disks are provisioned. The default value is `true`.                | `true`  | Yes      |
 | `datacenter`                   | IBM Cloud data center in which you want to provision the instance.                                                                                                                                                         |         | Yes      |
 
 
@@ -94,7 +94,9 @@ generated_key_rsa.piub
 
 use ssh to access the server provding the key files
 
+```bash
 ssh root@<CLASSIC_IP_ADDRESS> -k generated_key_rsa
+```
 
 Apache Directory Studio can be used to access the server (see https://directory.apache.org/studio/download/download-macosx.html)
 
