@@ -42,15 +42,11 @@ IBM SDS:
 PartUmber   : CRV3IML
 Filename    : sds64-premium-feature-act-pkg.zip
 
-Copy the files to the /files folder
+Copy the files to the `/files` folder
 
 ###  Update the ldif file
 
-Update the ldif file as needed to change the Directory Struture and user information
-
-Update the /files/cp.ldif. 
-
-
+Update the `/files/cp.ldif` file as needed to change the Directory Structure and user information
 
 ## Input Variables
 
