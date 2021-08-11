@@ -1,14 +1,13 @@
 # Terraform Module to install Cloud Pak for Multi Cloud Management
 
-This Terraform Module installs the **Multi Cloud Management Cloud Pak** on an Openshift (ROKS) cluster on IBM Cloud.
+This Terraform Module installs the **Multi Cloud Management Cloud Pak** on an Openshift (ROKS) cluster on AWS.
 
-**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4mcm`
+**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4mcm_aws`
 
 - [Terraform Module to install Cloud Pak for Multi Cloud Management](#terraform-module-to-install-cloud-pak-for-multi-cloud-management)
-  - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
-  - [Provisioning this module in a Terraform Script](#provisioning-this-module-in-a-terraform-script)
-    - [Setting up the OpenShift cluster](#setting-up-the-openshift-cluster)
-    - [Installing the CP4MCM Module](#installing-the-cp4mcm-module)
+  
+  - [Set Cloud Pak Entitlement Key](#set-cloud-pak-entitlement-key)
+  - [Installing the CP4MCM Module](#provisioning-the-CP4MCM-module)
   - [Input Variables](#input-variables)
   - [Testing](#testing)
   - [Executing the Terraform Script](#executing-the-terraform-script)
@@ -16,65 +15,20 @@ This Terraform Module installs the **Multi Cloud Management Cloud Pak** on an Op
   - [Accessing the Cloud Pak Console](#accessing-the-cloud-pak-console)
   - [Clean up](#clean-up)
 
-## Set up access to IBM Cloud
 
-If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
+### Set Cloud Pak Entitlement Key
 
-Go [here](../CREDENTIALS.md) for details.
-
-## Provisioning this module in a Terraform Script
-
-In your Terraform code define the `ibm` provisioner block with the `region` and the `generation`, which is **1 for Classic** and **2 for VPC Gen 2**.
-
-```hcl
-provider "ibm" {
-  generation = 1
-  region     = "us-south"
-}
-```
-
-### Setting up the OpenShift cluster
-
-NOTE: an OpenShift cluster is required to install the cloud pak. This can be an existing cluster or can be provisioned in the Terraform script.
-
-To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script. The recommended size for an OpenShift 4.5+ cluster on IBM Cloud Classic contains `5` workers of type `c3c.16x32`, however read the [Cloud Pak for Multi Cloud Management](https://www.ibm.com/docs/en/cloud-paks/cp-management) documentation to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
-
-Add the following code to get the OpenShift cluster (new or existing) configuration:
-
-```hcl
-data "ibm_resource_group" "group" {
-  name = var.resource_group
-}
-
-data "ibm_container_cluster_config" "cluster_config" {
-  cluster_name_id   = var.cluster_name_id
-  resource_group_id = data.ibm_resource_group.group.id
-  download          = true
-  config_dir        = "./kube/config"     // Create this directory in advance
-  admin             = false
-  network           = false
-}
-```
-
-**NOTE**: Create the `./kube/config` directory if it doesn't exist.
-
-Input:
-
-- `cluster_name_id`: either the cluster name or ID.
-
-- `ibm_resource_group`:  resource group where the cluster is running
-
-Output:
-
-`ibm_container_cluster_config` used as input for the `cp4mcm` module.
+This module also requires an Entitlement Key. Obtain it [here](https://myibm.ibm.com/products-services/containerlibrary) and store it in the file `entitlement.key` in the root of this repository. If you use that filename, the file won't be published to GitHub if you accidentally push to GitHub. 
 
 ### Provisioning the CP4MCM Module
 
-Use a `module` block assigning `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4mcm`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Multi Cloud Management and submodules.
+**NOTE**: Create the `./kube/config` directory if it doesn't exist.
+
+Use a `module` block assigning `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4mcm_aws`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Multi Cloud Management and submodules.
 
 ```hcl
 module "cp4mcm" {
-  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4mcm"
+  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4mcm_aws"
   enable = true
 
   // ROKS cluster parameters:
