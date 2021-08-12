@@ -33,7 +33,6 @@ unique_id               = "roks-px-tf"
 create_external_etcd    = false
 etcd_username           = "portworxuser"
 etcd_password           = "portworxpassword"
-etcd_secret_name        = "px-etcd-certs" # don't change this
 ```
 
 These parameters are:
