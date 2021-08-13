@@ -25,7 +25,7 @@ cloudctl case launch \
 oc project ${NAMESPACE}
 
 # Create cde CR: 
-sed -i -e s#REPLACE_NAMESPACE#${NAMESPACE}#g cde-cr.yaml
+sed -i -e "s/REPLACE_NAMESPACE/${NAMESPACE}/g" cde-cr.yaml
 echo '*** executing **** oc create -f cde-cr.yaml'
 result=$(oc create -f cde-cr.yaml)
 echo $result

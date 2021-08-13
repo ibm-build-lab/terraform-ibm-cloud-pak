@@ -35,7 +35,7 @@ oc project ${NAMESPACE}
 
 # # Install wkc Customer Resource
 
-#sed -i -e s#REPLACE_STORAGECLASS#${local.cpd-storageclass}#g wkc-cr.yaml
+#sed -i -e "s/REPLACE_STORAGECLASS/${local.cpd-storageclass}/g" wkc-cr.yaml
 echo '*** executing **** oc create -f wkc-cr.yaml'
 result=$(oc create -f wkc-cr.yaml)
 echo $result
@@ -45,7 +45,7 @@ echo $result
 
 ## IIS cr installation 
 
-sed -i -e s#REPLACE_NAMESPACE#${NAMESPACE}#g wkc-iis-scc.yaml
+sed -i -e "s/REPLACE_NAMESPACE/${NAMESPACE}/g" wkc-iis-scc.yaml
 echo '*** executing **** oc create -f wkc-iis-scc.yaml'
 result=$(oc create -f wkc-iis-scc.yaml)
 echo $result
@@ -71,7 +71,7 @@ cloudctl case launch --case  ${CASE_PACKAGE_NAME} \
 oc project ${NAMESPACE}
 
 # # Install wkc Customer Resource
-sed -i -e s#REPLACE_NAMESPACE#${NAMESPACE}#g wkc-iis-cr.yaml
+sed -i -e "s/REPLACE_NAMESPACE/${NAMESPACE}/g" wkc-iis-cr.yaml
 echo '*** executing **** oc create -f wkc-iis-cr.yaml'
 result=$(oc create -f wkc-iis-cr.yaml)
 echo $result

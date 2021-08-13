@@ -29,10 +29,14 @@ cloudctl case launch --case ./${CASE_PACKAGE_NAME} \
 
 oc project ${NAMESPACE}
 
+cd ../files
+
 # Create wsl CR: 
 
 result=$(oc create -f wsl-cr.yaml)
 echo $result
+
+cd ../scripts
 
 # check the CCS cr status
 

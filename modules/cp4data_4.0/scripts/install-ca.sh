@@ -34,7 +34,7 @@ oc project ${NAMESPACE}
 
 # Create ca CR: 	
 
-sed -i -e s#REPLACE_NAMESPACE#${NAMESPACE}#g ca-cr.yaml
+sed -i -e "s/REPLACE_NAMESPACE/${NAMESPACE}/g" ca-cr.yaml
 echo '*** executing **** oc create -f ca-cr.yaml'
 result=$(oc create -f ca-cr.yaml)
 echo $result

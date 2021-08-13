@@ -28,7 +28,7 @@ cloudctl case launch --tolerance 1 --case ./${CASE_PACKAGE_NAME} \
 oc project ${NAMESPACE}
 
 # Create spss CR: 
-sed -i -e s#REPLACE_NAMESPACE#${NAMESPACE}#g spss-cr.yaml
+sed -i -e "s/REPLACE_NAMESPACE/${NAMESPACE}/g" spss-cr.yaml
 echo '*** executing **** oc create -f spss-cr.yaml'
 result=$(oc create -f spss-cr.yaml)
 echo $result

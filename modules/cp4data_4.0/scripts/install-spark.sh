@@ -38,9 +38,9 @@ cloudctl case launch --case ${CASE_PACKAGE_NAME} \
 oc project ${NAMESPACE}
 
 # Create spark CR: 
-sed -i -e s#BUILD_NUMBER#4.0.0#g spark-cr.yaml
+sed -i -e "s/BUILD_NUMBER/4.0.0/g" ../files/spark-cr.yaml
 echo '*** executing **** oc create -f spark-cr.yaml'
-result=$(oc create -f spark-cr.yaml)
+result=$(oc create -f ../files/spark-cr.yaml)
 echo $result
 
 # check the spark cr status

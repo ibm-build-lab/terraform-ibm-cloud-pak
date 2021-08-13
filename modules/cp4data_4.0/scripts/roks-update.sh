@@ -38,6 +38,8 @@ oc adm policy add-scc-to-group privileged system:serviceaccounts:${ns}
 # create a config map
 oc create cm ${cm} -n ${ns} --from-file=${cm}
 
+cd ../files
+
 # run the update script as a job on each worker
 workers=$(ibmcloud oc worker ls -s --cluster ${cluster_name} --json | jq -r '.[].id')
 (( count=1 ))
@@ -61,6 +63,8 @@ fi
 
 # delete the namespace
 oc delete ns ${ns}
+
+cd ../scripts
 
 # reboot the cluster
 ./roks-reboot.sh ${cluster_name}

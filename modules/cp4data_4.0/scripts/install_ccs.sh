@@ -25,11 +25,15 @@ cloudctl case launch --case ./${CASE_PACKAGE_NAME} \
 
 oc project ${NAMESPACE} 
 
+cd ../files
+
 # Create CCS CR: 
 
 echo '*** executing **** oc create -f ccs-cr.yaml'
 result=$(oc create -f ccs-cr.yaml)
 echo $result
+
+cd ../scripts
 
 # check the CCS cr status
 

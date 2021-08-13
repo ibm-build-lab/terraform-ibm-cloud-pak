@@ -38,11 +38,15 @@ cloudctl case launch --case ${CASE_PACKAGE_NAME} \
 
 oc project ${NAMESPACE}
 
+cd ../files
+
 # Create wml CR: 
 
 echo '*** executing **** oc create -f wml-cr.yaml'
 result=$(oc create -f wml-cr.yaml)
 echo $result
+
+cd ../scripts
 
 # check the WML cr status
 

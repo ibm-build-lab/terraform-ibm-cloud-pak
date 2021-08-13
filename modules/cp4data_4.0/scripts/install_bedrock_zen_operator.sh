@@ -9,6 +9,8 @@ ibmcloud login --apikey ${IBMCLOUD_APIKEY} -g ${IBMCLOUD_RG_NAME} -r ${REGION}
 ./roks-update.sh ${CLUSTER_NAME}
 
 
+cd ../files
+
 # # create bedrock catalog source 
 
 echo '*** executing **** oc create -f bedrock-catalog-source.yaml'
@@ -25,7 +27,7 @@ oc project ${OP_NAMESPACE}
 
 # Create bedrock operator group: 
 
-sed -i -e s#OPERATOR_NAMESPACE#${OP_NAMESPACE}#g bedrock-operator-group.yaml
+sed -i -e "s/OPERATOR_NAMESPACE/${OP_NAMESPACE}/g" bedrock-operator-group.yaml
 
 echo '*** executing **** oc create -f bedrock-operator-group.yaml'
 
@@ -36,7 +38,7 @@ sleep 1m
 
 
 # Create bedrock subscription. This will deploy the bedrock: 
-sed -i -e s#OPERATOR_NAMESPACE#${OP_NAMESPACE}#g bedrock-sub.yaml
+sed -i -e "s/OPERATOR_NAMESPACE/${OP_NAMESPACE}/g" bedrock-sub.yaml
 
 echo '*** executing **** oc create -f bedrock-sub.yaml'
 
@@ -78,6 +80,8 @@ done
   
 sleep 60
 
+cd ../scripts
+
 # Checking if the bedrock operator pods are ready and running. 
 
 # checking status of ibm-namespace-scope-operator
@@ -93,6 +97,8 @@ sleep 60
 
 ./pod-status-check.sh ibm-common-service-operator ${OP_NAMESPACE}
 
+cd ../files
+
 # Creating zen catalog source 
 
 echo '*** executing **** oc create -f zen-catalog-source.yaml'
@@ -101,7 +107,7 @@ echo $result
 
 sleep 1m
 
-sed -i -e s#OPERATOR_NAMESPACE#${OP_NAMESPACE}#g cpd-operator-sub.yaml
+sed -i -e "s/OPERATOR_NAMESPACE/${OP_NAMESPACE}/g" cpd-operator-sub.yaml
 echo '*** executing **** oc create -f cpd-operator-sub.yaml'
 result=$(oc create -f cpd-operator-sub.yaml)
 echo $result
@@ -115,7 +121,7 @@ oc new-project ${NAMESPACE}
 oc project ${NAMESPACE}
 
 # Create the zen operator 
-sed -i -e s#CPD_NAMESPACE#${NAMESPACE}#g zen-operandrequest.yaml
+sed -i -e "s/CPD_NAMESPACE/${NAMESPACE}/g" zen-operandrequest.yaml
 
 echo '*** executing **** oc create -f zen-operandrequest.yaml'
 result=$(oc create -f zen-operandrequest.yaml)
@@ -126,10 +132,12 @@ sleep 30
 
 
 # Create lite CR: 
-sed -i -e s#CPD_NAMESPACE#${NAMESPACE}#g zen-lite-cr.yaml
+sed -i -e "s/CPD_NAMESPACE/${NAMESPACE}/g" zen-lite-cr.yaml
 echo '*** executing **** oc create -f zen-lite-cr.yaml'
 result=$(oc create -f zen-lite-cr.yaml)
 echo $result
+
+cd ../scripts
 
 # check if the zen operator pod is up and running.
 

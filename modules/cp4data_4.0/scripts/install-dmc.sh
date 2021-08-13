@@ -30,7 +30,7 @@ sleep 5m
 oc project ${NAMESPACE} 
 
 # Create dmc CR: 
-sed -i -e s#CPD_NAMESPACE#${NAMESPACE}#g dmc-cr.yaml
+sed -i -e "s/CPD_NAMESPACE/${NAMESPACE}/g" dmc-cr.yaml
 echo '*** executing **** oc create -f dmc-cr.yaml'
 result=$(oc create -f dmc-cr.yaml)
 echo $result

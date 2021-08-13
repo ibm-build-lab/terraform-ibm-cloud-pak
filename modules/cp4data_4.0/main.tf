@@ -1,3 +1,12 @@
+locals {
+  # ibm_operator_catalog              = file(join("/", [path.module, "files", "ibm-operator-catalog.yaml"]))
+  # opencloud_operator_catalog        = file(join("/", [path.module, "files", "opencloud-operator-catalog.yaml"]))
+  # subscription                      = file(join("/", [path.module, "files", "subscription.yaml"]))
+  # operator_group                    = file(join("/", [path.module, "files", "operator-group.yaml"]))
+
+  # on_vpc_ready = var.on_vpc ? var.portworx_is_ready : 1
+}
+
 ##############################
 # Install Bedrock Zen Operator
 #############################
@@ -74,7 +83,7 @@ resource "null_resource" "install_data_refinery" {
   ]
 }
 
-resource "null_resource" "install_db2uoperator" {
+resource "null_resource" "install_db2u_operator" {
   count = var.accept_cpd_license == "yes" && var.install_services["db2uoperator"] ? 1 : 0
   
   provisioner "local-exec" {
@@ -119,7 +128,7 @@ resource "null_resource" "install_dmc" {
     null_resource.bedrock_zen_operator,
     null_resource.install_ccs,
     null_resource.install_data_refinery,
-    null_resource.install_db2uoperator,
+    null_resource.install_db2u_operator,
   ]
 }
 
@@ -144,7 +153,7 @@ resource "null_resource" "install_db2aaservice" {
     null_resource.bedrock_zen_operator,
     null_resource.install_ccs,
     null_resource.install_data_refinery,
-    null_resource.install_db2uoperator,
+    null_resource.install_db2u_operator,
     null_resource.install_dmc,
   ]
 }
@@ -170,7 +179,7 @@ resource "null_resource" "install_wsl" {
     null_resource.bedrock_zen_operator,
     null_resource.install_ccs,
     null_resource.install_data_refinery,
-    null_resource.install_db2uoperator,
+    null_resource.install_db2u_operator,
     null_resource.install_dmc,
     null_resource.install_db2aaservice,
   ]
@@ -197,7 +206,7 @@ resource "null_resource" "install_aiopenscale" {
     null_resource.bedrock_zen_operator,
     null_resource.install_ccs,
     null_resource.install_data_refinery,
-    null_resource.install_db2uoperator,
+    null_resource.install_db2u_operator,
     null_resource.install_dmc,
     null_resource.install_db2aaservice,
     null_resource.install_wsl,
@@ -225,7 +234,7 @@ resource "null_resource" "install_wml" {
     null_resource.bedrock_zen_operator,
     null_resource.install_ccs,
     null_resource.install_data_refinery,
-    null_resource.install_db2uoperator,
+    null_resource.install_db2u_operator,
     null_resource.install_dmc,
     null_resource.install_db2aaservice,
     null_resource.install_wsl,
@@ -254,7 +263,7 @@ resource "null_resource" "install_wkc" {
     null_resource.bedrock_zen_operator,
     null_resource.install_ccs,
     null_resource.install_data_refinery,
-    null_resource.install_db2uoperator,
+    null_resource.install_db2u_operator,
     null_resource.install_dmc,
     null_resource.install_db2aaservice,
     null_resource.install_wsl,
@@ -284,7 +293,7 @@ resource "null_resource" "install_dv" {
     null_resource.bedrock_zen_operator,
     null_resource.install_ccs,
     null_resource.install_data_refinery,
-    null_resource.install_db2uoperator,
+    null_resource.install_db2u_operator,
     null_resource.install_dmc,
     null_resource.install_db2aaservice,
     null_resource.install_wsl,
@@ -315,7 +324,7 @@ resource "null_resource" "install_spss" {
     null_resource.bedrock_zen_operator,
     null_resource.install_ccs,
     null_resource.install_data_refinery,
-    null_resource.install_db2uoperator,
+    null_resource.install_db2u_operator,
     null_resource.install_dmc,
     null_resource.install_db2aaservice,
     null_resource.install_wsl,
@@ -347,7 +356,7 @@ resource "null_resource" "install_cde" {
     null_resource.bedrock_zen_operator,
     null_resource.install_ccs,
     null_resource.install_data_refinery,
-    null_resource.install_db2uoperator,
+    null_resource.install_db2u_operator,
     null_resource.install_dmc,
     null_resource.install_db2aaservice,
     null_resource.install_wsl,
@@ -380,7 +389,7 @@ resource "null_resource" "install_spark" {
     null_resource.bedrock_zen_operator,
     null_resource.install_ccs,
     null_resource.install_data_refinery,
-    null_resource.install_db2uoperator,
+    null_resource.install_db2u_operator,
     null_resource.install_dmc,
     null_resource.install_db2aaservice,
     null_resource.install_wsl,
@@ -414,7 +423,7 @@ resource "null_resource" "install_dods" {
     null_resource.bedrock_zen_operator,
     null_resource.install_ccs,
     null_resource.install_data_refinery,
-    null_resource.install_db2uoperator,
+    null_resource.install_db2u_operator,
     null_resource.install_dmc,
     null_resource.install_db2aaservice,
     null_resource.install_wsl,
@@ -449,7 +458,7 @@ resource "null_resource" "install_ca" {
     null_resource.bedrock_zen_operator,
     null_resource.install_ccs,
     null_resource.install_data_refinery,
-    null_resource.install_db2uoperator,
+    null_resource.install_db2u_operator,
     null_resource.install_dmc,
     null_resource.install_db2aaservice,
     null_resource.install_wsl,
@@ -485,7 +494,7 @@ resource "null_resource" "install_ds" {
     null_resource.bedrock_zen_operator,
     null_resource.install_ccs,
     null_resource.install_data_refinery,
-    null_resource.install_db2uoperator,
+    null_resource.install_db2u_operator,
     null_resource.install_dmc,
     null_resource.install_db2aaservice,
     null_resource.install_wsl,
@@ -522,7 +531,7 @@ resource "null_resource" "install_db2oltp" {
     null_resource.bedrock_zen_operator,
     null_resource.install_ccs,
     null_resource.install_data_refinery,
-    null_resource.install_db2uoperator,
+    null_resource.install_db2u_operator,
     null_resource.install_dmc,
     null_resource.install_db2aaservice,
     null_resource.install_wsl,
@@ -560,7 +569,7 @@ resource "null_resource" "install_db2wh" {
     null_resource.bedrock_zen_operator,
     null_resource.install_ccs,
     null_resource.install_data_refinery,
-    null_resource.install_db2uoperator,
+    null_resource.install_db2u_operator,
     null_resource.install_dmc,
     null_resource.install_db2aaservice,
     null_resource.install_wsl,
@@ -599,7 +608,7 @@ resource "null_resource" "install_bigsql" {
     null_resource.bedrock_zen_operator,
     null_resource.install_ccs,
     null_resource.install_data_refinery,
-    null_resource.install_db2uoperator,
+    null_resource.install_db2u_operator,
     null_resource.install_dmc,
     null_resource.install_db2aaservice,
     null_resource.install_wsl,
