@@ -48,6 +48,7 @@ resource "null_resource" "setting_platform" {
       PLATFORM_VERSION              = local.platform_version
       PROJECT_NAME                     = local.project_name
       DEPLOYMENT_TYPE               = local.deployment_type
+      RUNTIME_MODE                  = local.runtime_mode
       USER_NAME_EMAIL                = var.entitled_registry_user_email
       USE_ENTITLEMENT               = local.use_entitlement
       ENTITLED_REGISTRY_KEY               = var.entitlement_key # file("${path.cwd}/../../entitlement.key")
@@ -68,5 +69,15 @@ resource "null_resource" "setting_platform" {
       SC_MEDIUM_FILE_STORAGE_CLASSNAME = local.sc_medium_file_storage_classname
       SC_FAST_FILE_STORAGE_CLASSNAME   = local.sc_fast_file_storage_classname
     }
+  }
+
+  provisioner "local-exec" {
+    command = "/bin/bash ./scripts/cp4ba-post-deployment.sh"
+
+//    environment = {
+//      # Cluster
+//      CLUSTER_NAME_OR_ID     = var.cluster_name_or_id
+
+//    }
   }
 }

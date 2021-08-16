@@ -22,7 +22,7 @@ function set_global_env_vars() {
         Darwin*)    readonly machine="Mac";;
         *)          readonly machine="UNKNOWN:${unameOut}"
     esac
-
+    machine="Linux" # will be removed
     if [[ "$machine" == "Mac" ]]; then
         YQ_CMD=${CUR_DIR}/helper/yq/yq_darwin_amd64
     else
@@ -36,24 +36,25 @@ CMD="find $FINAL_CR_FOLDER -maxdepth 1 -name \"ibm_cp4ba_cr_final.yaml\" -print"
 if $CMD ; then
   echo -e "\x1B[1mShowing the access information and User credentials\x1B[0m"
 
-  pattern_file=$(find $FINAL_CR_FOLDER -maxdepth 1 -name "ibm_cp4ba_cr_final.yaml" -print)
-  if [ -z $pattern_file ]; then
+  pattern_file=$(find "$FINAL_CR_FOLDER" -maxdepth 1 -name "ibm_cp4ba_cr_final.yaml" -print)
+  if [ -z "$pattern_file" ]; then
     echo -e "\x1B[1;31mCan not find Custom Resource file \"ibm_cp4ba_cr_final.yaml\" under $FINAL_CR_FOLDER\x1B[0m"
     echo -e "\x1B[1;31mPlease run cp4ba-deployment.sh script to deploy pattern firstly\x1B[0m"
     exit 1
   fi
-
-  pattern_name=$(${YQ_CMD} r $pattern_file spec.shared_configuration.sc_deployment_patterns)
+  echo "Heereee"
+  echo "${pattern_file}"
+  pattern_name=$(${YQ_CMD} -r "$pattern_file" spec.shared_configuration.sc_deployment_patterns)
   OIFS=$IFS
   IFS=',' read -r -a PATTERN_ARR <<< "$pattern_name"
   IFS=$OIFS
 
   # metadata_name=$(grep -A1 'metadata:' $pattern_file | tail -n1); metadata_name=${metadata_name//*name: /}
-  metadata_name=$(${YQ_CMD} r $pattern_file metadata.name)
-  optional_components=$(${YQ_CMD} r $pattern_file spec.shared_configuration.sc_optional_components)
-  deployment_type=$(${YQ_CMD} r $pattern_file spec.shared_configuration.sc_deployment_type)
-  platform_type=$(${YQ_CMD} r $pattern_file spec.shared_configuration.sc_deployment_platform)
-  graphql_flag=$(${YQ_CMD} r $pattern_file spec.ecm_configuration.graphql.graphql_production_setting.enable_graph_iql)
+  metadata_name=$(${YQ_CMD} r "$pattern_file" metadata.name)
+  optional_components=$(${YQ_CMD} r "$pattern_file" spec.shared_configuration.sc_optional_components)
+  deployment_type=$(${YQ_CMD} r "$pattern_file" spec.shared_configuration.sc_deployment_type)
+  platform_type=$(${YQ_CMD} r "$pattern_file" spec.shared_configuration.sc_deployment_platform)
+  graphql_flag=$(${YQ_CMD} r "$pattern_file" spec.ecm_configuration.graphql.graphql_production_setting.enable_graph_iql)
 
   OIFS=$IFS
   IFS=',' read -r -a OPT_COMPONENT_ARR <<< "$optional_components"
@@ -126,19 +127,23 @@ function display_content_routes_credentials() {
       if [[ "$graphql_val" == "true" ]]; then
         echo -e "https://$(oc get ingress --no-headers | grep fncm-ingress | awk -v temp=${INGRESS_COLUMN} {'print $temp'})/content-services-graphql"
       fi
-      if [[ " ${OPT_COMPONENT_ARR[@]} " =~ "cmis" ]]; then
-        echo -e "https://$(oc get ingress --no-headers | grep fncm-ingress | awk -v temp=${INGRESS_COLUMN} {'print $temp'})/openfncmis_wlp"
-      fi
-      echo -e "https://$(oc get ingress --no-headers | grep ban-ingress | awk -v temp=${INGRESS_COLUMN} {'print $temp'})/navigator"
-    else
-      echo -e "https://$(oc get routes --no-headers | grep cpe-route | awk {'print $2'})/acce"
-      echo -e "https://$(oc get routes --no-headers | grep navigator-route | awk {'print $2'})/navigator"
-      if [[ "$graphql_val" == "true" ]]; then
-        echo -e "https://$(oc get routes --no-headers | grep graphql-route | awk {'print $2'})/content-services-graphql"
-      fi
-      if [[ " ${OPT_COMPONENT_ARR[@]} " =~ "cmis" ]]; then
-        echo -e "https://$(oc get routes --no-headers | grep cmis-route | awk {'print $2'})/openfncmis_wlp"
-      fi
+      for opt_comp in "${OPT_COMPONENT_ARR[@]}";
+      do
+        if [[ " ${opt_comp} " =~ "cmis" ]]; then
+          echo -e "https://$(oc get ingress --no-headers | grep fncm-ingress | awk -v temp=${INGRESS_COLUMN} {'print $temp'})/openfncmis_wlp"
+#        fi
+        echo -e "https://$(oc get ingress --no-headers | grep ban-ingress | awk -v temp=${INGRESS_COLUMN} {'print $temp'})/navigator"
+        else
+          echo -e "https://$(oc get routes --no-headers | grep cpe-route | awk {'print $2'})/acce"
+          echo -e "https://$(oc get routes --no-headers | grep navigator-route | awk {'print $2'})/navigator"
+          if [[ "$graphql_val" == "true" ]]; then
+            echo -e "https://$(oc get routes --no-headers | grep graphql-route | awk {'print $2'})/content-services-graphql"
+          fi
+          if [[ " ${opt_comp} " =~ "cmis" ]]; then
+            echo -e "https://$(oc get routes --no-headers | grep cmis-route | awk {'print $2'})/openfncmis_wlp"
+          fi
+        fi
+      done
     fi
     echo
     if [[ $deployment_type == "demo" ]]; then
@@ -165,25 +170,29 @@ function display_workflow_workstreams_routes_credentials() {
     fi
     echo
     echo
-    if [[ " ${PATTERN_ARR[@]} " =~ "workflow" || " ${PATTERN_ARR[@]} " =~ "workflow-workstreams" || " ${PATTERN_ARR[@]} " =~ "document_processing" ]]; then
-      echo -e "\x1B[1mYou can access Business Automation Workflow Portal, Case Client using the following URLs:\x1B[0m"
-      if [ "$isIngressEnabed" = "true" ]; then
-        oc get ingress --no-headers | grep baw-service | awk  -v temp=${INGRESS_COLUMN} '{print "https://"$temp"/ProcessPortal"}'
-        echo -e $(oc get ingress --no-headers | grep ban-ingress | awk  -v temp=${INGRESS_COLUMN} {'print "https://"$temp"/navigator?desktop=baw"'})
-      else
-        oc get routes --no-headers | grep baw-server | awk '{print "https://"$2"/ProcessPortal"}'
-        echo -e $(oc get routes --no-headers | grep navigator-route | awk {'print "https://"$2"/navigator?desktop=baw"'})
+    for patt in "${PATTERN_ARR[@]}";
+    do
+      if [[ "${patt}" =~ "workflow" || " ${patt} " =~ "workflow-workstreams" || " ${patt} " =~ "document_processing" ]]; then
+        echo -e "\x1B[1mYou can access Business Automation Workflow Portal, Case Client using the following URLs:\x1B[0m"
+        if [ "$isIngressEnabed" = "true" ]; then
+          oc get ingress --no-headers | grep baw-service | awk  -v temp=${INGRESS_COLUMN} '{print "https://"$temp"/ProcessPortal"}'
+          echo -e $(oc get ingress --no-headers | grep ban-ingress | awk  -v temp=${INGRESS_COLUMN} {'print "https://"$temp"/navigator?desktop=baw"'})
+        else
+          oc get routes --no-headers | grep baw-server | awk '{print "https://"$2"/ProcessPortal"}'
+          echo -e $(oc get routes --no-headers | grep navigator-route | awk {'print "https://"$2"/navigator?desktop=baw"'})
+        fi
+        echo
+        echo -e "\x1B[1mTo access Portal and Case Client, first go to the following URLs and accept the self-signed certificates:\x1B[0m"
+        if [ "$isIngressEnabed" = "true" ]; then
+          echo -e $(oc get ingress --no-headers | grep pfs-service | awk  -v temp=${INGRESS_COLUMN} {'print "https://"$temp'})
+          oc get ingress --no-headers | grep baw-service | awk  -v temp=${INGRESS_COLUMN} '{print "https://"$temp}'
+        else
+          echo -e $(oc get routes --no-headers | grep pfs-route | awk {'print "https://"$2'})
+          oc get routes --no-headers | grep baw-server | awk '{print "https://"$2}'
+        fi
       fi
-      echo
-      echo -e "\x1B[1mTo access Portal and Case Client, first go to the following URLs and accept the self-signed certificates:\x1B[0m"
-      if [ "$isIngressEnabed" = "true" ]; then
-        echo -e $(oc get ingress --no-headers | grep pfs-service | awk  -v temp=${INGRESS_COLUMN} {'print "https://"$temp'})
-        oc get ingress --no-headers | grep baw-service | awk  -v temp=${INGRESS_COLUMN} '{print "https://"$temp}'
-      else
-        echo -e $(oc get routes --no-headers | grep pfs-route | awk {'print "https://"$2'})
-        oc get routes --no-headers | grep baw-server | awk '{print "https://"$2}'
-      fi
-    fi
+    done
+
     echo
     echo
     echo -e "\x1B[1mYou can access IBM Workplace using the following URLs:\x1B[0m"
@@ -569,7 +578,7 @@ function display_document_processing_routes_credentials() {
 }
 
 function display_ier_routes_credentials() {
-    isIngressEnabed=$(${YQ_CMD} r $pattern_file spec.shared_configuration.sc_ingress_enable)
+    isIngressEnabed=$(${YQ_CMD} r "$pattern_file" spec.shared_configuration.sc_ingress_enable)
     printf "\n"
     echo -e "\x1B[1mYou can access IER using the following URL:\x1B[0m" 
 
@@ -581,7 +590,7 @@ function display_ier_routes_credentials() {
 }
 
 function display_iccsap_routes_credentials() {
-    isIngressEnabed=$(${YQ_CMD} r $pattern_file spec.shared_configuration.sc_ingress_enable)
+    isIngressEnabed=$(${YQ_CMD} r "$pattern_file" spec.shared_configuration.sc_ingress_enable)
     printf "\n"
     echo -e "\x1B[1mYou can access ICCSAP using the following URL:\x1B[0m" 
 
@@ -609,39 +618,42 @@ for item in "${PATTERN_ARR[@]}"; do
           break
           ;;
         "workflow"|"workstreams"|"workflow-workstreams")
-          if [[ " ${OPT_COMPONENT_ARR[@]} " =~ "baw_authoring" ]]; then
-            display_workflow_authoring_routes_credentials
-          else
-            display_workflow_workstreams_routes_credentials
-          fi
-          break
-          ;;
-        "application")
-          display_application_routes_credentials
-          break
-          ;;
-        "decisions")
-          display_decisions_routes_credentials
-          break
-          ;;
-        "decisions_ads")
-          display_decisions_ads_routes_credentials
-          break
-          ;;
-        "digitalworker")
-          display_digitalworker_routes_credentials
-          break
-          ;;
-        "document_processing")
-          display_document_processing_routes_credentials
-          if [[ " ${OPT_COMPONENT_ARR[@]} " =~ "document_processing_workflow" ]]; then
-            display_workflow_workstreams_routes_credentials
-          fi
-          break
-          ;;
-        "foundation")
-          break
-          ;;
+          for opt_comp in "${OPT_COMPONENT_ARR[@]}";
+          do
+            if [[ " ${opt_comp} " =~ "baw_authoring" ]]; then
+              display_workflow_authoring_routes_credentials
+            else
+              display_workflow_workstreams_routes_credentials
+            fi
+            break
+            ;;
+          "application")
+            display_application_routes_credentials
+            break
+            ;;
+          "decisions")
+            display_decisions_routes_credentials
+            break
+            ;;
+          "decisions_ads")
+            display_decisions_ads_routes_credentials
+            break
+            ;;
+          "digitalworker")
+            display_digitalworker_routes_credentials
+            break
+            ;;
+          "document_processing")
+            display_document_processing_routes_credentials
+            if [[ " ${OPT_COMPONENT_ARR[@]} " =~ "document_processing_workflow" ]]; then
+              display_workflow_workstreams_routes_credentials
+            fi
+            break
+            ;;
+          "foundation")
+            break
+            ;;
+          done
       esac
     done
 done

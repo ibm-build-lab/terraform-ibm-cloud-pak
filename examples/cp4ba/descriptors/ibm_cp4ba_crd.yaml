@@ -47,7 +47,7 @@ spec:
                   type: string
               type: object
             status:
-              description: CloudPakBusinessAutomationStatus defines the observed state of Automation
+              description: Cloud Pak Business Automation Status defines the observed state of Automation
               properties:
                 cpAutoStatus:
                   description: It will be as "OK when all objects are created successfully

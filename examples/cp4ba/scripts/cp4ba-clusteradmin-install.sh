@@ -14,7 +14,7 @@ CUR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PARENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 # Import common utilities and environment variables
 source "${CUR_DIR}"/helper/common.sh
-RUNTIME_MODE=$1
+#RUNTIME_MODE=$1
 
 TEMP_FOLDER=${CUR_DIR}/.tmp
 INSTALL_BAI=""
@@ -35,10 +35,13 @@ LOG_FILE=${CUR_DIR}/prepare_install.log
 DOCKER_RES_SECRET_NAME="admin.registrykey"
 REGISTRY_IN_FILE="cp.icr.io"
 OPERATOR_FILE=${PARENT_DIR}/descriptors/operator.yaml
-#OPERATOR_FILE_TMP=$TEMP_FOLDER/.operator_tmp.yaml
+OPERATOR_FILE_TMP=$TEMP_FOLDER/.operator_tmp.yaml
 
 OPERATOR_PVC_FILE=${PARENT_DIR}/descriptors/cp4ba-pvc.yaml
 OPERATOR_PV_FILE=${PARENT_DIR}/descriptors/cp4ba-pv.yaml
+
+TLS_SECRET_FILE="${PARENT_DIR}"/descriptors/patterns/tls_secret_template.yaml
+CP4BA_CR_FINAL_FILE="${PARENT_DIR}"/descriptors/scripts/generated-cr/ibm_cp4ba_cr_final.yaml
 #OPERATOR_PVC_FILE_TMP1=${TEMP_FOLDER}/.operator-shared-pvc_tmp1.yaml
 #OPERATOR_PVC_FILE_TMP=${TEMP_FOLDER}/.operator-shared-pvc_tmp.yaml
 #OPERATOR_PVC_FILE_TMP=${PARENT_DIR}/descriptors/cp4ba-pvc.yaml
@@ -73,9 +76,13 @@ fi
 OLM_OPT_GROUP="${PARENT_DIR}"/descriptors/op-olm/operator_group.yaml
 OLM_SUBSCRIPTION="${PARENT_DIR}"/descriptors/op-olm/subscription.yaml
 
-#OLM_CATALOG_TMP="${TEMP_FOLDER}"/catalog_source.yaml
-#OLM_OPT_GROUP_TMP="${TEMP_FOLDER}"/.operator_group.yaml
-#OLM_SUBSCRIPTION_TMP="${TEMP_FOLDER}"/.subscription.yaml
+ENTERPRISE_FOUNDATION="${PARENT_DIR}"/descriptors/patterns/ibm_cp4ba_cr_enterprise_foundation.yaml
+ENTERPRISE_FOUNDATION_TMP="${TEMP_FOLDER}"/ibm_cp4ba_cr_enterprise_foundation.yaml
+
+
+OLM_CATALOG_TMP="${TEMP_FOLDER}"/catalog_source.yaml
+OLM_OPT_GROUP_TMP="${TEMP_FOLDER}"/.operator_group.yaml
+OLM_SUBSCRIPTION_TMP="${TEMP_FOLDER}"/.subscription.yaml
 
 CLI_CMD=oc
 #PLATFORM_SELECTED="ROKS"
@@ -314,16 +321,16 @@ function prepare_install() {
    echo -ne "Creating the custom resource definition (CRD) and a service account that has the permissions to manage the resources..."
    ${CLI_CMD} apply -f "${CRD_FILE}" -n "${PROJECT_NAME}" --validate=false >/dev/null 2>&1
    echo " Done!"
-   if [[ "$DEPLOYMENT_TYPE" == "demo" ]];then
-      ${CLI_CMD} apply -f "${CLUSTER_ROLE_FILE} "--validate=false >> "${LOG_FILE}"
-      ${CLI_CMD} apply -f "${CLUSTER_ROLE_BINDING_FILE}" --validate=false >> "${LOG_FILE}"
-   fi
+#   if [[ "$DEPLOYMENT_TYPE" == "demo" ]];then
+#      ${CLI_CMD} apply -f "${CLUSTER_ROLE_FILE} "--validate=false >> "${LOG_FILE}"
+#      ${CLI_CMD} apply -f "${CLUSTER_ROLE_BINDING_FILE}" --validate=false >> "${LOG_FILE}"
+#   fi
    ${CLI_CMD} apply -f "${SA_FILE}" -n "${PROJECT_NAME}" --validate=false >> "${LOG_FILE}"
    ${CLI_CMD} apply -f "${ROLE_FILE}" -n "${PROJECT_NAME}" --validate=false >> "${LOG_FILE}"
 
    echo -n "Creating ibm-cp4ba-operator role ..."
    while true ; do
-       result=$(${CLI_CMD} get role -n $PROJECT_NAME| grep ibm-cp4ba-operator)
+       result=$(${CLI_CMD} get role -n $PROJECT_NAME | grep ibm-cp4ba-operator)
        if [[ "$result" == "" ]] ; then
            sleep 5
            echo -n "..."
@@ -332,14 +339,16 @@ function prepare_install() {
            break
        fi
    done
+
    echo -n "Creating ibm-cp4ba-operator role binding ..."
    ${CLI_CMD} apply -f "${ROLE_BINDING_FILE}" -n ${PROJECT_NAME} --validate=false >> "${LOG_FILE}"
-       echo "Done!"
-       if [[ "$PLATFORM_SELECTED" == "OCP" || "$PLATFORM_SELECTED" == "ROKS" ]]; then
+   echo "Done!"
+
+   if [[ "$PLATFORM_SELECTED" == "OCP" || "$PLATFORM_SELECTED" == "ROKS" ]]; then
        echo
        echo -ne Adding the user ${USER_NAME_EMAIL} to the ibm-cp4ba-operator role...
        printf "\n"
-       "${CLI_CMD}" project "${PROJECT_NAME}" >> "${LOG_FILE}"
+       ${CLI_CMD} project "${PROJECT_NAME}" >> "${LOG_FILE}"
        ${CLI_CMD} adm policy add-role-to-user edit ${USER_NAME_EMAIL} >> "${LOG_FILE}"
        ${CLI_CMD} adm policy add-role-to-user registry-editor ${USER_NAME_EMAIL} >> "${LOG_FILE}"
        ${CLI_CMD} adm policy add-role-to-user ibm-cp4ba-operator "${USER_NAME_EMAIL}" >/dev/null 2>&1
@@ -385,7 +394,7 @@ function apply_cp4ba_operator(){
        echo -e "\x1B[1;31mFailed\x1B[0m"
    fi
 
-   # ${COPY_CMD} -rf ${OPERATOR_FILE_TMP} ${OPERATOR_FILE_BAK}
+    ${COPY_CMD} -rf "${OPERATOR_FILE_TMP}" "${OPERATOR_FILE_BAK}"
    printf "\n"
    # Check deployment rollout status every 5 seconds (max 10 minutes) until complete.
    echo -e "\x1B[1mWaiting for the Cloud Pak operator to be ready. This might take a few minutes... \x1B[0m"
@@ -428,7 +437,7 @@ function prepare_olm_install() {
    fi
 
    for ((retry=0;retry<=${maxRetry};retry++)); do
-      echo "Waiting for CP4A Operator Catalog pod initialization"
+      echo "Waiting for CP4BA Operator Catalog pod initialization"
 
       isReady=$(${CLI_CMD} get pod -n openshift-marketplace --no-headers | grep $online_source | grep "Running")
       if [[ -z $isReady ]]; then
@@ -450,7 +459,7 @@ function prepare_olm_install() {
         echo "Found operator group"
         ${CLI_CMD} get og -n "${PROJECT_NAME}"
     else
-      sed "s/REPLACE_NAMESPACE/$PROJECT_NAME/g" "${OLM_OPT_GROUP}" # > "${OLM_OPT_GROUP}"
+      sed "s/REPLACE_NAMESPACE/$PROJECT_NAME/g" "${OLM_OPT_GROUP}" > "${OLM_OPT_GROUP_TMP}"
       ${CLI_CMD} apply -f "${OLM_OPT_GROUP}"
       if [ $? -eq 0 ]
          then
@@ -460,7 +469,7 @@ function prepare_olm_install() {
        fi
     fi
 
-    sed "s/REPLACE_NAMESPACE/$project_name/g" "${OLM_SUBSCRIPTION}" # > ${OLM_SUBSCRIPTION_TMP}
+    sed "s/REPLACE_NAMESPACE/$project_name/g" "${OLM_SUBSCRIPTION}" > "${OLM_SUBSCRIPTION_TMP}"
     ${YQ_CMD} w -i "${OLM_SUBSCRIPTION}" spec.source "$online_source"
     ${CLI_CMD} apply -f "${OLM_SUBSCRIPTION}"
     # sed <"${OLM_SUBSCRIPTION}" "s|REPLACE_NAMESPACE|${project_name}|g; s|REPLACE_CHANNEL_NAME|stable|g" | oc apply -f -
@@ -486,7 +495,7 @@ function prepare_olm_install() {
        fi
      else
         echo "CP4BA Operator Catalog is running $isReady"
-        if [[ "$DEPLOYMENT_TYPE" == "enterprise" && "$RUNTIME_MODE" == "dev" ]]; then
+        if [[ "$DEPLOYMENT_TYPE" == "Enterprise" && "$RUNTIME_MODE" == "dev" ]]; then
             copy_jdbc_driver
         fi
         break
@@ -590,7 +599,8 @@ function get_entitlement_registry(){
             # During dev, OLM uses stage image repo
     if [[ "$RUNTIME_MODE" == "dev" ]];
     then
-        DOCKER_REG_SERVER="cp.stg.icr.io"
+#        DOCKER_REG_SERVER="cp.stg.icr.io" # Error response from daemon: Get https://cp.stg.icr.io/v2/: unauthorized: The login credentials are not valid.
+        DOCKER_REG_SERVER="cp.icr.io"
     else
         DOCKER_REG_SERVER="cp.icr.io"
     fi
@@ -1178,6 +1188,53 @@ function create_secret_local_registry(){
     fi
 }
 
+function add_capabilities(){
+
+#     sc_slow_file_storage_classname: REPLACE_SC_SLOW_FILE_STORAGE_CLASSNAME # "<Required>"
+#      sc_medium_file_storage_classname: SC_MEDIUM_FILE_STORAGE_CLASSNAME # "<Required>"
+#      sc_fast_file_storage_classname: SC_FAST_FILE_STORAGE_CLASSNAME
+    sed "s/REPLACE_SC_SLOW_FILE_STORAGE_CLASSNAME/$SC_SLOW_FILE_STORAGE_CLASSNAME/g" "${ENTERPRISE_FOUNDATION}" > "${ENTERPRISE_FOUNDATION_TMP}"
+    sed "s/REPLACE_SC_MEDIUM_FILE_STORAGE_CLASSNAME/$SC_MEDIUM_FILE_STORAGE_CLASSNAME/g" "${ENTERPRISE_FOUNDATION}" > "${ENTERPRISE_FOUNDATION_TMP}"
+    sed "s/REPLACE_SC_FAST_FILE_STORAGE_CLASSNAME/$SC_FAST_FILE_STORAGE_CLASSNAME/g" "${ENTERPRISE_FOUNDATION}" > "${ENTERPRISE_FOUNDATION_TMP}"
+    echo "Creating IBM CP4BA CR Enterprise Foundation ..."
+    ${CLI_CMD} apply -f "${ENTERPRISE_FOUNDATION}"
+
+#    "FileNet Content Manager"
+#    "Automation Content Analyzer"
+#
+#    "Operational Decision Manager"
+#
+#    "Automation Decision Services"
+#
+#    "Business Automation Workflow"
+#
+#    "(a) Workflow Authoring"
+#
+#    "(b) Workflow Runtime"
+#
+#    "Business Automation Workflow and Automation Workstream Services"
+#
+#    "Automation Workstream Services"
+#
+#    "Business Automation Application"
+#
+#    "Automation Digital Worker"
+#
+#    "IBM Automation Document Processing"
+#
+#    "(a) Development Environment"
+#
+#    "(b) Runtime Environment"
+
+}
+
+function cp4ba_deployment() {
+    echo "Creating tls secret key ..."
+    ${CLI_CMD} apply -f "${TLS_SECRET_FILE}" -n "${PROJECT_NAME}"
+
+    echo "Deploying Cloud Pak for Business Automation Capabilities ..."
+    ${CLI_CMD} apply -f "${CP4BA_CR_FINAL_FILE}" -n "${PROJECT_NAME}"
+}
 
 if [[ $1 == "dev" ]]
 then
@@ -1189,33 +1246,34 @@ fi
 
 #allocate_operator_pvc_olm_or_cncf
 
-select_platform # G
-validate_cli # L
-create_secret_entitlement_registry
-check_platform_version
+#select_platform # G
+#validate_cli # L
+#create_secret_entitlement_registry
+#check_platform_version
 #fi
-select_deployment_type
+#select_deployment_type
 
-validate_docker_podman_cli
-get_entitlement_registry
-get_storage_class_name
-allocate_operator_pvc_olm_or_cncf
-prepare_olm_install
-prepare_install
-apply_cp4ba_operator
+#validate_docker_podman_cli
+#get_entitlement_registry
+#get_storage_class_name
+#allocate_operator_pvc_olm_or_cncf
+#prepare_olm_install
+#prepare_install
+#apply_cp4ba_operator
 
-#if [[ $PLATFORM_SELECTED == "OCP" || $PLATFORM_SELECTED == "ROKS" ]]; then
-##    echo "checking version"
-#    validate_cli # L
-#    create_secret_entitlement_registry
-#    check_platform_version
-##fi
-#    select_deployment_type
-#    "${CLI_CMD}" project $PROJECT_NAME >/dev/null 2>&1
-#    create_project
-#    ##bind_scc
-#    if [[ $SCRIPT_MODE == "OLM" ]];then
-#    #     echo "*********** OLM *************"
+
+if [[ $PLATFORM_SELECTED == "OCP" || $PLATFORM_SELECTED == "ROKS" ]]; then
+#    echo "checking version"
+    validate_cli # L
+    create_secret_entitlement_registry
+    check_platform_version
+#fi
+    select_deployment_type
+    "${CLI_CMD}" project $PROJECT_NAME >/dev/null 2>&1
+    create_project
+    ##bind_scc
+    if [[ $SCRIPT_MODE == "OLM" ]];then
+    #     echo "*********** OLM *************"
 #        validate_docker_podman_cli
 #        get_entitlement_registry
 #        get_storage_class_name
@@ -1223,26 +1281,36 @@ apply_cp4ba_operator
 #        prepare_olm_install
 #        prepare_install
 #        apply_cp4ba_operator
-#    else
-#        validate_docker_podman_cli
-#        if [[ $PLATFORM_SELECTED == "other" ]]; then
-#            get_entitlement_registry
-#        fi
-#        if [[ $USE_ENTITLEMENT == "no" ]]; then
-#            verify_local_registry_password
-#        fi
-#        get_storage_class_name
-#        if [[ $USE_ENTITLEMENT == "yes" ]]; then
-#            create_secret_entitlement_registry
-#        fi
-#        if [[ $USE_ENTITLEMENT == "no" ]]; then
-#            create_secret_local_registry
-#        fi
-#        allocate_operator_pvc_olm_or_cncf
-#        prepare_install
-#        apply_cp4ba_operator
-#    fi
-#fi
+         validate_docker_podman_cli
+         get_entitlement_registry
+         get_storage_class_name
+         create_secret_entitlement_registry
+         allocate_operator_pvc_olm_or_cncf
+         cp4ba_deployment
+         prepare_olm_install
+
+    else
+        validate_docker_podman_cli
+        if [[ $PLATFORM_SELECTED == "other" ]]; then
+            get_entitlement_registry
+        fi
+        if [[ $USE_ENTITLEMENT == "no" ]]; then
+            verify_local_registry_password
+        fi
+        get_storage_class_name
+        if [[ $USE_ENTITLEMENT == "yes" ]]; then
+            create_secret_entitlement_registry
+        fi
+        if [[ $USE_ENTITLEMENT == "no" ]]; then
+            create_secret_local_registry
+        fi
+        allocate_operator_pvc_olm_or_cncf
+        prepare_install
+        apply_cp4ba_operator
+    fi
+fi
+
+#add_capabilities
 
 #prepare_olm_install
 #apply_cp4ba_operator # will be removed
@@ -1305,4 +1373,5 @@ fi
 clean_up
 #set the project context back to the user generated one
 ${CLI_CMD} project ${PROJECT_NAME} > /dev/null
+
 
