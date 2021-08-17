@@ -17,7 +17,8 @@ spec:
   displayName: ibm-cp4ba-operator
   publisher: IBM
   sourceType: grpc
-  image: cp.stg.icr.io/cp/cp4ba/ibm-cp-automation-catalog:latest
+  image: docker.io/ibmcom/ibm-operator-catalog
+#  image: cp.icr.io/cp/cp4ba/ibm-cp-automation-catalog:latest
 #  image: cp.stg.icr.io/cp/cp4ba/ibm-cp-automation-catalog:21.1.1
   updateStrategy:
     registryPoll:

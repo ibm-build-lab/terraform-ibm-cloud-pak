@@ -40,8 +40,8 @@ OPERATOR_FILE_TMP=$TEMP_FOLDER/.operator_tmp.yaml
 OPERATOR_PVC_FILE=${PARENT_DIR}/descriptors/cp4ba-pvc.yaml
 OPERATOR_PV_FILE=${PARENT_DIR}/descriptors/cp4ba-pv.yaml
 
-TLS_SECRET_FILE="${PARENT_DIR}"/descriptors/patterns/tls_secret_template.yaml
-CP4BA_CR_FINAL_FILE="${PARENT_DIR}"/descriptors/scripts/generated-cr/ibm_cp4ba_cr_final.yaml
+TLS_SECRET_FILE="${PARENT_DIR}"/descriptors/tls_secret_template.yaml
+CP4BA_CR_FINAL_FILE="${PARENT_DIR}"/scripts/generated-cr/ibm_cp4ba_cr_final.yaml
 #OPERATOR_PVC_FILE_TMP1=${TEMP_FOLDER}/.operator-shared-pvc_tmp1.yaml
 #OPERATOR_PVC_FILE_TMP=${TEMP_FOLDER}/.operator-shared-pvc_tmp.yaml
 #OPERATOR_PVC_FILE_TMP=${PARENT_DIR}/descriptors/cp4ba-pvc.yaml
@@ -55,7 +55,7 @@ COMMON_SERVICES_OPERATOR_ROLES=${PARENT_DIR}/descriptors/common-services/roles
 COMMON_SERVICES_TEMP_DIR=$TMEP_FOLDER
 
 SCRIPT_MODE=""
-
+RUNTIME_MODE="dev"
 ####################################################################################
 #mkdir -p "$TEMP_FOLDER" >/dev/null 2>&1
 #echo "creating temp folder"
@@ -126,7 +126,8 @@ function create_secret_entitlement_registry(){
   sleep 40
 
   if ${CREATE_SECRET_CMD} ; then
-      echo -e "\x1B[1;34mDone\x1B[0m"
+#    \033[0;32m
+      echo -e "\033[1;32m %s ${DOCKER_SECRET_NAME} secret is created\x1B[0m"
   else
       echo -e "\x1B[1mFailed\x1B[0m"
   fi
@@ -183,6 +184,7 @@ function select_deployment_type(){
    elif [[ $DEPLOYMENT_TYPE == 2 ]]
    then
        DEPLOYMENT_TYPE="Enterprise"
+
    fi
 }
 
@@ -226,6 +228,8 @@ function create_project() {
 
 
 function apply_no_root_squash() {
+   echo
+   echo
    if [[ $PLATFORM_SELECTED == "ROKS" ]] && [[ "$DEPLOYMENT_TYPE" == "demo" ]] && [[ "$DEPLOYMENT_TYPE" == "Demo" ]];
    then
       echo ""
@@ -255,6 +259,8 @@ function display_installationprompt(){
 
 ################### Selecting the user ######################
 function select_user(){
+     echo
+     echo
      user_result=$(${CLI_CMD} get user 2>&1) #$(oc get user 2>&1)   # $(${CLI_CMD} get user 2>&1)
      user_substring="No resources found"
      if [[ $user_result == "$user_substring" ]];
@@ -267,7 +273,7 @@ function select_user(){
      echo
      userlist=$(${CLI_CMD} get user|awk '{if(NR>1){if(NR==2){ arr=$1; }else{ arr=arr" "$1; }} } END{ print arr }')   #$(oc get user|awk '{if(NR>1){if(NR==2){ arr=$1; }else{ arr=arr" "$1; }} } END{ print arr }') #
      COLUMNS=12
-     echo -e "\x1B[1mHere are the existing users on this cluster: \x1B[0m"
+     echo -e "\x1B[1mHere are the existing users on this cluster: %s ${userlist}\x1B[0m"
      options="$userlist"
 #     usernum=${#options[*]}
 
@@ -275,11 +281,11 @@ function select_user(){
      do
 #       if [[ -n "$opt" && "${options[@]}" && *"$USER_NAME_EMAIL"* =~ $opt ]]; then
 #        if [[ -n "$opt" && "*$USER_NAME_EMAIL*" =~ $opt ]]; then
-        if [[ $opt == *"$USER_NAME_EMAIL"* ]]; then
+        if [[ $opt == "$USER_NAME_EMAIL" ]]; then
 #           user_name="$USER_NAME_EMAIL"
            break
          else
-           echo "invalid option here $REPLY"
+           echo "invalid option $REPLY"
          fi;
      done
 }
@@ -287,6 +293,9 @@ function select_user(){
 
 
 function check_user_exist() {
+   echo
+   echo
+
    "${CLI_CMD}" get user | grep "${USER_NAME_EMAIL}" >/dev/null 2>&1
    returnValue=$?
    if [ "$returnValue" == 1 ] ; then
@@ -313,6 +322,9 @@ function bind_scc() {
 
 
 function prepare_install() {
+   echo
+   echo
+
 #     if [[ "$PLATFORM_SELECTED" == "OCP" || "$PLATFORM_SELECTED" == "ROKS" ]]; then
    "${CLI_CMD}" project "${PROJECT_NAME}" >> "${LOG_FILE}"
 #     fi
@@ -366,6 +378,9 @@ function prepare_install() {
 
 
 function apply_cp4ba_operator(){
+   echo
+   echo
+
    "${COPY_CMD}" -rf "${OPERATOR_FILE}" "${OPERATOR_FILE_TMP}"
 
    printf "\n"
@@ -415,6 +430,8 @@ function apply_cp4ba_operator(){
 
 
 function prepare_olm_install() {
+   echo
+   echo
    local maxRetry=20
 
    if (${CLI_CMD} get catalogsource -n openshift-marketplace | grep $online_source); then
@@ -533,6 +550,8 @@ function prepare_olm_install() {
 }
 
 function check_existing_sc(){
+   echo
+   echo
 #  Check existing storage class
    sc_result=$(${CLI_CMD} get sc 2>&1)
 
@@ -547,6 +566,8 @@ function check_existing_sc(){
 }
 
 function validate_docker_podman_cli(){
+    echo
+    echo
     echo "Checking docker podman"
 #   if [[ "$machine" == "Mac" || $PLATFORM_SELECTED == "other" ]];then
 #    if [[ $? -ne 0 ]]
@@ -579,7 +600,8 @@ function validate_docker_podman_cli(){
 
 
 function get_entitlement_registry(){
-
+   echo
+   echo
     # For Entitlement Registry key
     entitlement_key=$ENTITLED_REGISTRY_KEY
 #    ENTITLED_REGISTRY_KEY
@@ -642,6 +664,9 @@ function get_entitlement_registry(){
 ######################## Getting the storage classes #######################
 function get_storage_class_name(){
 
+    echo
+    echo
+
     check_storage_class
 
     STORAGE_CLASS_NAME=${STORAGE_CLASSNAME}
@@ -666,9 +691,11 @@ function get_storage_class_name(){
 
 
 function copy_jdbc_driver(){
+    echo
+    echo
     # Get pod name
     echo -e "\x1B[1mCopying the JDBC driver for the operator...\x1B[0m"
-    operator_podname=$(${CLI_CMD} get pod -n $PROJECT_NAME|grep ibm-cp4ba-operator|grep Running|awk '{print $1}')
+    operator_podname=$(${CLI_CMD} get pod -n $PROJECT_NAME | grep ibm-cp4ba-operator | grep Running | awk '{print $1}')
 
     # ${CLI_CMD} exec -it ${operator_podname} -- rm -rf /opt/ansible/share/jdbc
     COPY_JDBC_CMD="${CLI_CMD} cp ${JDBC_DRIVER_DIR} ${operator_podname}:/opt/ansible/share/"
@@ -681,6 +708,9 @@ function copy_jdbc_driver(){
 }
 
 function allocate_operator_pvc_olm_or_cncf(){
+
+    echo
+    echo
     # For dynamic storage classname
 
     printf "\n"
@@ -755,6 +785,8 @@ function create_scc() {
 
 
 function check_storage_class() {
+    echo
+    echo
     if [[ $PLATFORM_SELECTED == "ROKS" ]];
     then
         # echo ""
@@ -767,6 +799,7 @@ function check_storage_class() {
 }
 
 function create_storage_classes_roks() {
+    echo
     echo
     echo -ne "\x1B[1mCreate storage classes for deployment... \x1B[0m"
     ${CLI_CMD} apply -f "${BRONZE_STORAGE_CLASS}" --validate=false >/dev/null 2>&1
@@ -811,6 +844,7 @@ function check_platform_version(){
 function prepare_common_service(){
 
     echo
+    echo
     echo -e "\x1B[1mThe script is preparing the custom resources (CR) files for OCP Common Services.  You are required to update (fill out) the necessary values in the CRs and deploy Common Services prior to the deployment. \x1B[0m"
     echo -e "The prepared CRs for IBM common Services are located here: %s""${COMMON_SERVICES_CRD_DIRECTORY}"
     echo -e "After making changes to the CRs, execute the 'deploy_CS.sh' script to install Common Services."
@@ -818,7 +852,8 @@ function prepare_common_service(){
 }
 
 function install_common_service_34(){
-
+    echo
+    echo
     if [ "$INSTALL_BAI" == "Yes" ] ; then
     echo -e "Preparing full Common Services Release 3.4 CR for BAI Deployment.."
         func_operand_request_cr_bai_34
@@ -836,7 +871,8 @@ function install_common_service_34(){
 }
 
 function install_common_service_33(){
-
+    echo
+    echo
     func_operand_request_cr_nonbai_33
     echo -e "\x1B[1mThe installation of Common Services Release 3.3 for OCP 4.2+ has started.\x1B[0m"
     sh "${PARENT_DIR}"/scripts/deploy_CS3.3.sh
@@ -846,7 +882,8 @@ function install_common_service_33(){
 
 function func_operand_request_cr_bai_34()
 {
-
+   echo
+   echo
    echo "Creating Common Services V3.4 Operand Request for BAI deployments on OCP 4.3+ ..\x1B[0m" >> "${LOG_FILE}"
    operator_source_path=${PARENT_DIR}/descriptors/common-services/crds/operator_operandrequest_cr.yaml
  cat << ENDF > "${operator_source_path}"
@@ -874,7 +911,8 @@ ENDF
 
 function func_operand_request_cr_nonbai_34()
 {
-
+   echo
+   echo
    echo "Creating Common-Services V3.4 Operand Request for non-BAI deployments on OCP 4.3 ..\x1B[0m" >> "${LOG_FILE}"
    operator_source_path=${PARENT_DIR}/descriptors/common-services/crds/operator_operandrequest_cr.yaml
  cat << ENDF > "${operator_source_path}"
@@ -900,6 +938,8 @@ ENDF
 
 function func_operand_request_cr_bai_33()
 {
+    echo
+    echo
    echo "Creating Common Services V3.3 Operand Request for BAI deployments on OCP 4.2+ ..\x1B[0m" >> "${LOG_FILE}"
    operator_source_path=${PARENT_DIR}/descriptors/common-services/crds/operator_operandrequest_cr.yaml
  cat << ENDF > "${operator_source_path}"
@@ -927,7 +967,8 @@ ENDF
 
 function func_operand_request_cr_nonbai_33()
 {
-
+   echo
+   echo
    echo "Creating Common Services V3.3 Request Operand for non-BAI deployments on OCP 4.2+ ..\x1B[0m" >> "${LOG_FILE}"
    operator_source_path=${PARENT_DIR}/descriptors/common-services/crds/operator_operandrequest_cr.yaml
  cat << ENDF > "${operator_source_path}"
@@ -951,7 +992,8 @@ ENDF
 
 
 function show_summary(){
-
+    echo
+    echo
     printf "\n"
     echo -e "\x1B[1m*******************************************************\x1B[0m"
     echo -e "\x1B[1m                    Summary of input                   \x1B[0m"
@@ -972,7 +1014,8 @@ function show_summary(){
 }
 
 function check_csoperator_exists(){
-
+    echo
+    echo
     project="common-service"
 
     check_project=$(${CLI_CMD} get namespace $project --ignore-not-found | wc -l ) >/dev/null 2>&1
@@ -990,6 +1033,8 @@ function check_csoperator_exists(){
 
 
 function get_local_registry_server(){
+    echo
+    echo
     # For internal/external Registry Server
     printf "\n"
     if [[ "${REGISTRY_TYPE}" == "internal" && ("${OCP_VERSION}" == "4.4OrLater") ]];then
@@ -1030,6 +1075,9 @@ function get_local_registry_server(){
 
 
 function verify_local_registry_password(){
+
+    echo
+    echo
     # require to preload image for CP4A image and ldap/db2 image for demo
     printf "\n"
 
@@ -1168,6 +1216,8 @@ function verify_local_registry_password(){
 
 
 function create_secret_local_registry(){
+    echo
+    echo
     echo -e "\x1B[1mCreating the secret based on the local docker registry information...\x1B[0m"
     # Create docker-registry secret for local Registry Key
     # echo -e "Create docker-registry secret for Local Registry...\n"
@@ -1245,9 +1295,12 @@ else
 fi
 
 #allocate_operator_pvc_olm_or_cncf
+#echo "Select platform ..."
 
-#select_platform # G
+#echo "Validate cli ..."
 #validate_cli # L
+#echo "Select user ..."
+#select_user
 #create_secret_entitlement_registry
 #check_platform_version
 #fi
@@ -1261,16 +1314,18 @@ fi
 #prepare_install
 #apply_cp4ba_operator
 
+#select_platform # Uncomment
 
 if [[ $PLATFORM_SELECTED == "OCP" || $PLATFORM_SELECTED == "ROKS" ]]; then
 #    echo "checking version"
-    validate_cli # L
-    create_secret_entitlement_registry
-    check_platform_version
+#    select_user  # Uncomment
+#    validate_cli ## Uncomment
+#    create_secret_entitlement_registry  # Uncomment
+#    check_platform_version  # Uncomment
 #fi
-    select_deployment_type
+#    select_deployment_type  # Uncomment
     "${CLI_CMD}" project $PROJECT_NAME >/dev/null 2>&1
-    create_project
+#    create_project  # Uncomment
     ##bind_scc
     if [[ $SCRIPT_MODE == "OLM" ]];then
     #     echo "*********** OLM *************"
@@ -1281,12 +1336,12 @@ if [[ $PLATFORM_SELECTED == "OCP" || $PLATFORM_SELECTED == "ROKS" ]]; then
 #        prepare_olm_install
 #        prepare_install
 #        apply_cp4ba_operator
-         validate_docker_podman_cli
-         get_entitlement_registry
-         get_storage_class_name
-         create_secret_entitlement_registry
-         allocate_operator_pvc_olm_or_cncf
-         cp4ba_deployment
+#         validate_docker_podman_cli   # Uncomment
+#         get_entitlement_registry   # Uncomment
+#         get_storage_class_name   # Uncomment
+#         create_secret_entitlement_registry   # Uncomment
+#         allocate_operator_pvc_olm_or_cncf    # Uncomment
+#         cp4ba_deployment   # Uncomment
          prepare_olm_install
 
     else

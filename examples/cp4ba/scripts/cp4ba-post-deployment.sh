@@ -620,39 +620,39 @@ for item in "${PATTERN_ARR[@]}"; do
         "workflow"|"workstreams"|"workflow-workstreams")
           for opt_comp in "${OPT_COMPONENT_ARR[@]}";
           do
-            if [[ " ${opt_comp} " =~ "baw_authoring" ]]; then
-              display_workflow_authoring_routes_credentials
-            else
-              display_workflow_workstreams_routes_credentials
-            fi
-            break
-            ;;
-          "application")
-            display_application_routes_credentials
-            break
-            ;;
-          "decisions")
-            display_decisions_routes_credentials
-            break
-            ;;
-          "decisions_ads")
-            display_decisions_ads_routes_credentials
-            break
-            ;;
-          "digitalworker")
-            display_digitalworker_routes_credentials
-            break
-            ;;
-          "document_processing")
-            display_document_processing_routes_credentials
-            if [[ " ${OPT_COMPONENT_ARR[@]} " =~ "document_processing_workflow" ]]; then
-              display_workflow_workstreams_routes_credentials
-            fi
-            break
-            ;;
-          "foundation")
-            break
-            ;;
+              if [[ " ${opt_comp} " =~ "baw_authoring" ]]; then
+                display_workflow_authoring_routes_credentials
+              else
+                display_workflow_workstreams_routes_credentials
+              fi
+              break
+              ;;
+            "application")
+              display_application_routes_credentials
+              break
+              ;;
+            "decisions")
+              display_decisions_routes_credentials
+              break
+              ;;
+            "decisions_ads")
+              display_decisions_ads_routes_credentials
+              break
+              ;;
+            "digitalworker")
+              display_digitalworker_routes_credentials
+              break
+              ;;
+            "document_processing")
+              display_document_processing_routes_credentials
+              if [[ " ${opt_comp} " =~ "document_processing_workflow" ]]; then
+                display_workflow_workstreams_routes_credentials
+              fi
+              break
+              ;;
+            "foundation")
+              break
+              ;;
           done
       esac
     done
