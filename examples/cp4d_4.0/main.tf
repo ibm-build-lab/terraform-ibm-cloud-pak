@@ -58,18 +58,27 @@ module "cp4data" {
   // CP4D Info
   cpd_project_name = "zen"
 
+  // IBM Cloud API Key
+  # ibmcloud_api_key          = var.ibmcloud_api_key
+
   // Parameters to install submodules
-  install_watson_knowledge_catalog = var.install_watson_knowledge_catalog
-  install_watson_studio            = var.install_watson_studio
-  install_watson_machine_learning  = var.install_watson_machine_learning
-  install_watson_open_scale        = var.install_watson_open_scale
-  install_data_virtualization      = var.install_data_virtualization
-  install_streams                  = var.install_streams
-  install_analytics_dashboard      = var.install_analytics_dashboard
-  install_spark                    = var.install_spark
-  install_db2_warehouse            = var.install_db2_warehouse
-  install_db2_data_gate            = var.install_db2_data_gate
-  install_big_sql                  = var.install_big_sql
-  install_rstudio                  = var.install_rstudio
-  install_db2_data_management      = var.install_db2_data_management
+  install_bedrock_zen_operator = var.bedrock_zen_operator
+  install_ccs = var.install_ccs
+  install_data_refinery = var.install_data_refinery
+  install_db2u_operator = var.install_db2u_operator
+  install_dmc = var.install_dmc
+  install_db2aaservice = var.install_db2aaservice
+  install_wsl = var.install_wsl
+  install_aiopenscale = var.install_aiopenscale
+  install_wml = var.install_wml
+  install_wkc = var.install_wkc
+  install_dv = var.install_dv
+  install_spss = var.install_spss
+  install_cde = var.install_cde
+  install_spark = var.install_spark
+  install_dods = var.install_dods
+  install_ca = var.install_ca
+  install_ds = var.install_ds
+  install_db2oltp = var.install_db2oltp
+  install_db2wh = var.install_db2wh
 }
