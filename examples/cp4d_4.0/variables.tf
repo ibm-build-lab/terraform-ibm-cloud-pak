@@ -1,6 +1,20 @@
-variable "region" {}
-variable "resource_group_name" {}
-variable "cluster_id" {}
+variable "operator_namespace" {}
+
+variable "cluster_id" {
+  description = "ROKS cluster id. Use the ROKS terraform module or other way to create it"
+}
+
+variable "ibmcloud_api_key" {
+  description = "IBMCloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
+}
+
+variable "region" {
+  description = "Region of the cluster"
+}
+
+variable "resource_group_name" {
+  description = "Resource group that the cluster is created in"
+}
 
 variable "on_vpc" {
   default     = false
@@ -31,7 +45,7 @@ variable "entitled_registry_user_email" {
 
 // Modules available to install on CP4D
 
-variable "install_bedrock_zen_operator" {
+variable "bedrock_zen_operator" {
   default = false
   type = string
   description = "Install Bedrock Zen Operator. Only for Cloud Pak for Data v4.0"

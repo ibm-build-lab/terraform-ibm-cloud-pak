@@ -1,3 +1,9 @@
+# variable "region" {}
+variable "ibmcloud_api_key" {}
+# variable "resource_group_name" {}
+# variable "operator_namespace" {}
+
+
 variable "enable" {
   default     = true
   description = "If set to true installs Cloud-Pak for Data on the given cluster"
@@ -58,7 +64,7 @@ variable "empty_module_list" {
   type        = bool
   description = "Determine if any modules need to be installed for CP4D"
 }
-variable "install_bedrock_zen_operator" {
+variable "bedrock_zen_operator" {
   default = false
   type = string
   description = "Install Bedrock Zen Operator. Only for Cloud Pak for Data v4.0"
@@ -179,6 +185,7 @@ locals {
   docker_registry          = "cp.icr.io" // Staging: "cp.stg.icr.io/cp/cpd"
   docker_username          = "cp"               // "ekey"
   entitled_registry_key    = chomp(var.entitled_registry_key)
+  ibmcloud_api_key         = chomp(var.ibmcloud_api_key)
   openshift_version_regex  = regex("(\\d+).(\\d+)(.\\d+)*(_openshift)*", var.openshift_version)
   openshift_version_number = local.openshift_version_regex[3] == "_openshift" ? tonumber("${local.openshift_version_regex[0]}.${local.openshift_version_regex[1]}") : 0
 }

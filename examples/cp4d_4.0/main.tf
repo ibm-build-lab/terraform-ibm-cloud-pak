@@ -3,6 +3,7 @@
 provider "ibm" {
   region = var.region
   version    = "~> 1.12"
+  ibmcloud_api_key = var.ibmcloud_api_key
 }
 
 data "ibm_resource_group" "group" {
@@ -59,10 +60,12 @@ module "cp4data" {
   cpd_project_name = "zen"
 
   // IBM Cloud API Key
-  # ibmcloud_api_key          = var.ibmcloud_api_key
+  ibmcloud_api_key          = var.ibmcloud_api_key
+
+  # bedrock_zen_operator = var.bedrock_zen_operator
+
 
   // Parameters to install submodules
-  install_bedrock_zen_operator = var.bedrock_zen_operator
   install_ccs = var.install_ccs
   install_data_refinery = var.install_data_refinery
   install_db2u_operator = var.install_db2u_operator

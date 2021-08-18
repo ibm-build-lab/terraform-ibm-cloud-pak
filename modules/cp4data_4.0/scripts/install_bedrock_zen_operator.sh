@@ -6,7 +6,7 @@
 
 ibmcloud login --apikey ${IBMCLOUD_APIKEY} -g ${IBMCLOUD_RG_NAME} -r ${REGION}
 
-./roks-update.sh ${CLUSTER_NAME}
+# ./roks-update.sh ${CLUSTER_NAME}
 
 
 cd ../files
