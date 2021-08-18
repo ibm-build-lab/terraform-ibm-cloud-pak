@@ -82,7 +82,7 @@ ENTERPRISE_FOUNDATION_TMP="${TEMP_FOLDER}"/ibm_cp4ba_cr_enterprise_foundation.ya
 
 OLM_CATALOG_TMP="${TEMP_FOLDER}"/catalog_source.yaml
 OLM_OPT_GROUP_TMP="${TEMP_FOLDER}"/.operator_group.yaml
-OLM_SUBSCRIPTION_TMP="${TEMP_FOLDER}"/.subscription.yaml
+#OLM_SUBSCRIPTION_TMP="${TEMP_FOLDER}"/.subscription.yaml
 
 CLI_CMD=oc
 #PLATFORM_SELECTED="ROKS"
@@ -1314,18 +1314,18 @@ fi
 #prepare_install
 #apply_cp4ba_operator
 
-#select_platform # Uncomment
+select_platform # Uncomment
 
 if [[ $PLATFORM_SELECTED == "OCP" || $PLATFORM_SELECTED == "ROKS" ]]; then
 #    echo "checking version"
-#    select_user  # Uncomment
-#    validate_cli ## Uncomment
-#    create_secret_entitlement_registry  # Uncomment
-#    check_platform_version  # Uncomment
+    select_user  # Uncomment
+    validate_cli ## Uncomment
+    create_secret_entitlement_registry  # Uncomment
+    check_platform_version  # Uncomment
 #fi
-#    select_deployment_type  # Uncomment
+    select_deployment_type  # Uncomment
     "${CLI_CMD}" project $PROJECT_NAME >/dev/null 2>&1
-#    create_project  # Uncomment
+    create_project  # Uncomment
     ##bind_scc
     if [[ $SCRIPT_MODE == "OLM" ]];then
     #     echo "*********** OLM *************"
@@ -1336,12 +1336,12 @@ if [[ $PLATFORM_SELECTED == "OCP" || $PLATFORM_SELECTED == "ROKS" ]]; then
 #        prepare_olm_install
 #        prepare_install
 #        apply_cp4ba_operator
-#         validate_docker_podman_cli   # Uncomment
-#         get_entitlement_registry   # Uncomment
-#         get_storage_class_name   # Uncomment
-#         create_secret_entitlement_registry   # Uncomment
-#         allocate_operator_pvc_olm_or_cncf    # Uncomment
-#         cp4ba_deployment   # Uncomment
+         validate_docker_podman_cli   # Uncomment
+         get_entitlement_registry   # Uncomment
+         get_storage_class_name   # Uncomment
+         create_secret_entitlement_registry   # Uncomment
+         allocate_operator_pvc_olm_or_cncf    # Uncomment
+         cp4ba_deployment   # Uncomment
          prepare_olm_install
 
     else

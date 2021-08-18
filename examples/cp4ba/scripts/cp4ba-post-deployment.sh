@@ -254,30 +254,34 @@ function display_application_routes_credentials() {
     fi
     printf "\n"
     bastudio_install=$(${YQ_CMD} r $pattern_file spec.bastudio_configuration)
-    if [[ " ${OPT_COMPONENT_ARR[@]} " =~ "app_designer" || (-n "$bastudio_install") ]]; then
-      echo -e "\x1B[1mTo access Business Automation Studio, first go to the following URLs and accept the self-signed certificates:\x1B[0m"
-      if [ "$isIngressEnabed" = "true" ]; then
-        baw_authoring_serve="$(oc get ingress --no-headers | grep authoring-baw-server | awk -v temp=${INGRESS_COLUMN} {'print $temp'})"
-        if [[ -n "$baw_authoring_serve" ]]; then
-          echo -e "https://$baw_authoring_serve/"
+
+    for opt_comp in "${OPT_COMPONENT_ARR[@]}"; do
+      if [[ "${opt_comp}" =~ "app_designer" || (-n "$bastudio_install") ]]; then
+        echo -e "\x1B[1mTo access Business Automation Studio, first go to the following URLs and accept the self-signed certificates:\x1B[0m"
+        if [ "$isIngressEnabed" = "true" ]; then
+          baw_authoring_serve="$(oc get ingress --no-headers | grep authoring-baw-server | awk -v temp=${INGRESS_COLUMN} {'print $temp'})"
+          if [[ -n "$baw_authoring_serve" ]]; then
+            echo -e "https://$baw_authoring_serve/"
+          fi
+          echo -e "https://$(oc get ingress --no-headers | grep pbk-ae-service | awk -v temp=${INGRESS_COLUMN} {'print $temp'})/"
+        else
+          baw_authoring_serve="$(oc get routes --no-headers | grep authoring-baw-server | awk {'print $2'})"
+          if [[ -n "$baw_authoring_serve" ]]; then
+            echo -e "https://$baw_authoring_serve/"
+          fi
+          echo -e "https://$(oc get routes --no-headers | grep pbk-ae-service | awk {'print $2'})/"
         fi
-        echo -e "https://$(oc get ingress --no-headers | grep pbk-ae-service | awk -v temp=${INGRESS_COLUMN} {'print $temp'})/"
-      else
-        baw_authoring_serve="$(oc get routes --no-headers | grep authoring-baw-server | awk {'print $2'})"
-        if [[ -n "$baw_authoring_serve" ]]; then
-          echo -e "https://$baw_authoring_serve/"
+        printf "\n"
+        echo -e "\x1B[1mYou can access Business Automation Studio using the following URLs:\x1B[0m"
+        echo -e "https://$(oc get routes --no-headers | grep ^cpd | awk {'print $2'})/"
+        if [ "$isIngressEnabed" = "true" ]; then
+          echo -e "https://$(oc get ingress --no-headers | grep bastudio-route | awk -v temp=${INGRESS_COLUMN} {'print $temp'})/BAStudio"
+        else
+          echo -e "https://$(oc get routes --no-headers | grep bastudio-route | awk {'print $2'})/BAStudio"
         fi
-        echo -e "https://$(oc get routes --no-headers | grep pbk-ae-service | awk {'print $2'})/"
       fi
-      printf "\n"
-      echo -e "\x1B[1mYou can access Business Automation Studio using the following URLs:\x1B[0m"
-      echo -e "https://$(oc get routes --no-headers | grep ^cpd | awk {'print $2'})/"
-      if [ "$isIngressEnabed" = "true" ]; then
-        echo -e "https://$(oc get ingress --no-headers | grep bastudio-route | awk -v temp=${INGRESS_COLUMN} {'print $temp'})/BAStudio"
-      else
-        echo -e "https://$(oc get routes --no-headers | grep bastudio-route | awk {'print $2'})/BAStudio"
-      fi
-    fi
+    done
+
     echo
     if [[ $deployment_type == "demo" ]]; then
       echo "User credentials:"
@@ -309,7 +313,7 @@ function display_decisions_routes_credentials() {
     echo -e "\x1B[1mYou can access Operational Decision Manager using the following URLs:\x1B[0m"
     isDsrEnabled=$(${YQ_CMD} r $pattern_file spec.odm_configuration.decisionServerRuntime.enabled)
     isDrEnabled=$(${YQ_CMD} r $pattern_file spec.odm_configuration.decisionRunner.enabled)
-    if [ $(${YQ_CMD} r $pattern_file spec.odm_configuration.decisionCenter.enabled) == true ]; then
+    if [ $(${YQ_CMD} r "$pattern_file" spec.odm_configuration.decisionCenter.enabled) == true ]; then
       echo -e "\x1B[1mTo access Decision Center console, first go to the following URLs and accept the self-signed certificates:\x1B[0m"
       echo -e "https://$(getODMUrl 'odm-decisioncenter')"
     fi
@@ -338,49 +342,52 @@ function display_decisions_routes_credentials() {
 function display_decisions_ads_routes_credentials() {
     isIngressEnabed=$(${YQ_CMD} r $pattern_file spec.shared_configuration.sc_ingress_enable)
     printf "\n"
-    if [[ " ${OPT_COMPONENT_ARR[@]} " =~ "ads_designer" ]]; then
-        echo -e "\x1B[1mYou can access ADS Designer using the Business Automation Studio URL:\x1B[0m"
-        echo -e "https://$(oc get routes --no-headers | grep ^cpd | awk {'print $2'})/"
-        if [ "$isIngressEnabed" = "true" ]; then
-          echo -e "https://$(oc get ingress --no-headers | grep bastudio-route | awk -v temp=${INGRESS_COLUMN} {'print $temp'})/BAStudio"
-        else
-          echo -e "https://$(oc get routes --no-headers | grep bastudio-route | awk {'print $2'})/BAStudio"
-        fi
-        if [ "$(${YQ_CMD} r $pattern_file spec.ads_configuration.decision_designer.embedded_build_and_run.enabled)" != "false" ]; then
-          echo -e "\x1B[1mYou can access ADS Embedded Runtime swagger URL (UMS authentication):\x1B[0m"
-          if [ "$isIngressEnabed" = "true" ]; then
-            echo -e "https://$(oc get ingress --no-headers | grep embedded-runtime-service | awk -v temp=${INGRESS_COLUMN} {'print $temp'})/api/swagger-ui"
-          else
-            echo -e "https://$(oc get routes --no-headers | grep embedded-runtime-service | awk {'print $2'})/api/swagger-ui"
-          fi
-        fi
-        echo
-        if [[ ${deployment_type} == "demo" ]]; then
-            echo "User credentials:"
-            echo "================="
-            echo
-            echo -n "Default administrator username: "; echo "cp4admin"
-            echo -n "Default administrator password: "; pwd=$(echo $(oc get secret ${metadata_name}-openldap-customldif -o yaml | grep ldap_user.ldif | cut -d ' ' -f4) | base64 --decode | grep "userpassword: " | head -n1); pwd=${pwd//*userpassword: /}; echo "$pwd"
-            echo
-        fi
-        display_gitea_routes_credentails
-    fi
-    if [[ " ${OPT_COMPONENT_ARR[@]} " =~ "ads_runtime" ]]; then
-        echo -e "\x1B[1mYou can access ADS Runtime swagger URL:\x1B[0m"
-        if [ "$isIngressEnabed" = "true" ]; then
-          echo -e "https://$(oc get ingress --no-headers | grep ads-runtime-service | awk -v temp=${INGRESS_COLUMN} {'print $temp'})/api/swagger-ui"
-        else
-          echo -e "https://$(oc get routes --no-headers | grep ads-runtime-service | awk {'print $2'})/api/swagger-ui"
-        fi
 
-        echo
-        echo "User credentials (for execution):"
-        echo "================================="
-        echo
-        echo -n "username: "; oc get secret ibm-dba-ads-runtime-secret -o jsonpath='{ .data.decisionRuntimeUser}' | base64 --decode; echo
-        echo -n "password: "; oc get secret ibm-dba-ads-runtime-secret -o jsonpath='{ .data.decisionRuntimePassword}' | base64 --decode; echo
-        echo
-    fi
+    for opt_comp in "${OPT_COMPONENT_ARR[@]}"; do
+      if [[ " ${opt_comp} " =~ "ads_designer" ]]; then
+          echo -e "\x1B[1mYou can access ADS Designer using the Business Automation Studio URL:\x1B[0m"
+          echo -e "https://$(oc get routes --no-headers | grep ^cpd | awk {'print $2'})/"
+          if [ "$isIngressEnabed" = "true" ]; then
+            echo -e "https://$(oc get ingress --no-headers | grep bastudio-route | awk -v temp=${INGRESS_COLUMN} {'print $temp'})/BAStudio"
+          else
+            echo -e "https://$(oc get routes --no-headers | grep bastudio-route | awk {'print $2'})/BAStudio"
+          fi
+          if [ "$(${YQ_CMD} r $pattern_file spec.ads_configuration.decision_designer.embedded_build_and_run.enabled)" != "false" ]; then
+            echo -e "\x1B[1mYou can access ADS Embedded Runtime swagger URL (UMS authentication):\x1B[0m"
+            if [ "$isIngressEnabed" = "true" ]; then
+              echo -e "https://$(oc get ingress --no-headers | grep embedded-runtime-service | awk -v temp=${INGRESS_COLUMN} {'print $temp'})/api/swagger-ui"
+            else
+              echo -e "https://$(oc get routes --no-headers | grep embedded-runtime-service | awk {'print $2'})/api/swagger-ui"
+            fi
+          fi
+          echo
+          if [[ ${deployment_type} == "demo" ]]; then
+              echo "User credentials:"
+              echo "================="
+              echo
+              echo -n "Default administrator username: "; echo "cp4admin"
+              echo -n "Default administrator password: "; pwd=$(echo $(oc get secret "${metadata_name}"-openldap-customldif -o yaml | grep ldap_user.ldif | cut -d ' ' -f4) | base64 --decode | grep "userpassword: " | head -n1); pwd=${pwd//*userpassword: /}; echo "$pwd"
+              echo
+          fi
+          display_gitea_routes_credentails
+      fi
+      if [[ " ${opt_comp} " == "ads_runtime" ]]; then
+          echo -e "\x1B[1mYou can access ADS Runtime swagger URL:\x1B[0m"
+          if [ "$isIngressEnabed" = "true" ]; then
+            echo -e "https://$(oc get ingress --no-headers | grep ads-runtime-service | awk -v temp=${INGRESS_COLUMN} {'print $temp'})/api/swagger-ui"
+          else
+            echo -e "https://$(oc get routes --no-headers | grep ads-runtime-service | awk {'print $2'})/api/swagger-ui"
+          fi
+
+          echo
+          echo "User credentials (for execution):"
+          echo "================================="
+          echo
+          echo -n "username: "; oc get secret ibm-dba-ads-runtime-secret -o jsonpath='{ .data.decisionRuntimeUser}' | base64 --decode; echo
+          echo -n "password: "; oc get secret ibm-dba-ads-runtime-secret -o jsonpath='{ .data.decisionRuntimePassword}' | base64 --decode; echo
+          echo
+      fi
+    done
 }
 
 function display_digitalworker_routes_credentials() {
@@ -544,35 +551,38 @@ function display_workflow_authoring_routes_credentials() {
 }
 
 function display_document_processing_routes_credentials() {
-  isIngressEnabed=$(${YQ_CMD} r $pattern_file spec.shared_configuration.sc_ingress_enable)
+  isIngressEnabed=$(${YQ_CMD} r "$pattern_file" spec.shared_configuration.sc_ingress_enable)
   printf "\n"
   echo -e "\x1B[1mYou can access Content Project Deployment Service using the following URLs:\x1B[0m"
-  if [[ (" ${OPT_COMPONENT_ARR[@]} " =~ "document_processing_designer") || (" ${OPT_COMPONENT_ARR[@]} " =~ "document_processing_runtime") ]]; then
-    if [ "$isIngressEnabed" = "true" ]; then
-      echo -e "https://$(oc get ingress --no-headers | grep fncm-ingress | awk -v temp=${INGRESS_COLUMN} {'print $temp'})"
-    else
-      echo -e "https://$(oc get routes --no-headers | grep cpds-route | awk {'print $2'})"
-    fi
 
-    echo
-    if [[ $deployment_type == "demo" ]]; then
-      if [[ (" ${OPT_COMPONENT_ARR[@]} " =~ "document_processing_designer") ]]; then
-        echo -e "\x1B[1mYou can access Business Automation Studio using the following URLs:\x1B[0m"
-        echo -e "https://$(oc get routes --no-headers | grep ^cpd | awk {'print $2'})/"
-        if [ "$isIngressEnabed" = "true" ]; then
-          echo -e "https://$(oc get ingress --no-headers | grep bastudio-route | awk -v temp=${INGRESS_COLUMN} {'print $temp'})/BAStudio"
-        else
-          echo -e "https://$(oc get routes --no-headers | grep bastudio-route | awk {'print $2'})/BAStudio"
-        fi
+  for opt_comp in "${OPT_COMPONENT_ARR[@]}"; do
+    if [[ ("${opt_comp}" =~ "document_processing_designer") || ("${opt_comp} " =~ "document_processing_runtime") ]]; then
+      if [ "$isIngressEnabed" = "true" ]; then
+        echo -e "https://$(oc get ingress --no-headers | grep fncm-ingress | awk -v temp=${INGRESS_COLUMN} {'print $temp'})"
+      else
+        echo -e "https://$(oc get routes --no-headers | grep cpds-route | awk {'print $2'})"
       fi
+
       echo
-      echo "User credentials:"
-      echo "================="
-      echo
-      echo -n "Default administrator username: "; echo "cp4admin"
-      echo -n "Default administrator password: "; pwd=$(echo $(oc get secret ${metadata_name}-openldap-customldif -o yaml | grep ldap_user.ldif | cut -d ' ' -f4) | base64 --decode | grep "userpassword: " | head -n1); pwd=${pwd//*userpassword: /}; echo "$pwd"
+      if [[ $deployment_type == "demo" ]]; then
+        if [[ ("${opt_comp} " =~ "document_processing_designer") ]]; then
+          echo -e "\x1B[1mYou can access Business Automation Studio using the following URLs:\x1B[0m"
+          echo -e "https://$(oc get routes --no-headers | grep ^cpd | awk {'print $2'})/"
+          if [ "$isIngressEnabed" = "true" ]; then
+            echo -e "https://$(oc get ingress --no-headers | grep bastudio-route | awk -v temp=${INGRESS_COLUMN} {'print $temp'})/BAStudio"
+          else
+            echo -e "https://$(oc get routes --no-headers | grep bastudio-route | awk {'print $2'})/BAStudio"
+          fi
+        fi
+        echo
+        echo "User credentials:"
+        echo "================="
+        echo
+        echo -n "Default administrator username: "; echo "cp4admin"
+        echo -n "Default administrator password: "; pwd=$(echo $(oc get secret ${metadata_name}-openldap-customldif -o yaml | grep ldap_user.ldif | cut -d ' ' -f4) | base64 --decode | grep "userpassword: " | head -n1); pwd=${pwd//*userpassword: /}; echo "$pwd"
+      fi
     fi
-  fi
+  done
   display_gitea_routes_credentails
   display_content_routes_credentials
 }
@@ -610,51 +620,51 @@ check_ocp_version
 # 1Q only supports single pattern, 2Q will search dedicated file to support multiple pattern
 
 workflowWorkstreamsDisplayed="false"
+
+choices=("content" "application" "decisions" "digitalworker" "document_processing" "foundation" "decisions_ads")
+
 for item in "${PATTERN_ARR[@]}"; do
     while true; do
-      case "$item" in
-        "content")
-          display_content_routes_credentials
-          break
-          ;;
-        "workflow"|"workstreams"|"workflow-workstreams")
+      for choice in "${choices[@]}";
+      do
+        if [[ "$choice" == "$item" ]]; then
+            display_content_routes_credentials
+            break
+        elif [[ "workflow" == "$item" || "workstreams" == "$item" || "workflow-workstreams" == "$item"  ]];
+        then
           for opt_comp in "${OPT_COMPONENT_ARR[@]}";
           do
-              if [[ " ${opt_comp} " =~ "baw_authoring" ]]; then
-                display_workflow_authoring_routes_credentials
+              if [[ " ${opt_comp} " = "baw_authoring" ]]; then
+                  display_workflow_authoring_routes_credentials
+              elif [[ " ${opt_comp} " == "document_processing_workflow" ]]; then
+                    display_workflow_workstreams_routes_credentials
+                  break
+              elif [ "$choice" == "$item" ]; then
+                  display_application_routes_credentials
+                  break
+              elif [ "$choice" == "$item" ]; then
+                  display_decisions_routes_credentials
+                  break
+              elif [ "$choice" == "$item" ]; then
+                  display_decisions_ads_routes_credentials
+                  break
+              elif [ "$choice" == "$item" ]; then
+                  display_digitalworker_routes_credentials
+                  break
+              elif [ "$choice" == "$item" ]; then
+                  display_document_processing_routes_credentials
+              elif [[ " ${opt_comp} " == "document_processing_workflow" ]]; then
+                  display_workflow_workstreams_routes_credentials
+                  break
+              elif [ "$choice" == "$item" ]; then
+                  break
               else
                 display_workflow_workstreams_routes_credentials
+                break
               fi
-              break
-              ;;
-            "application")
-              display_application_routes_credentials
-              break
-              ;;
-            "decisions")
-              display_decisions_routes_credentials
-              break
-              ;;
-            "decisions_ads")
-              display_decisions_ads_routes_credentials
-              break
-              ;;
-            "digitalworker")
-              display_digitalworker_routes_credentials
-              break
-              ;;
-            "document_processing")
-              display_document_processing_routes_credentials
-              if [[ " ${opt_comp} " =~ "document_processing_workflow" ]]; then
-                display_workflow_workstreams_routes_credentials
-              fi
-              break
-              ;;
-            "foundation")
-              break
-              ;;
           done
-      esac
+        fi
+      done
     done
 done
 
