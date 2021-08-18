@@ -8,8 +8,9 @@ For more information on IBM Schematics, refer [here](https://cloud.ibm.com/docs/
 
 ## Run using local Terraform Client
 
-For instructions to run using the local Terraform Client on your local machine go [here](../Using_Terraform.md)
-setting these values in the `terraform.tfvars` file:
+For instructions to run using the local Terraform Client on your local machine go [here](../Using_Terraform.md). 
+
+Set these values in the `terraform.tfvars` file:
 
 ```hcl
 cluster_id            = "******************"
