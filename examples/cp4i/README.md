@@ -13,6 +13,7 @@ For instructions to run using the local Terraform Client on your local machine g
 Set the desired values in the `terraform.tfvars` file:
 
 ```hcl
+<<<<<<< Updated upstream
 cluster_id                   = "******************"
 on_vpc                       = false
 region                       = "us-south"
@@ -20,6 +21,14 @@ resource_group_name          = "Default"
 entitled_registry_key        = "******************"
 entitled_registry_user_email = "john.doe@email.com"
 namespace                    = "cp4i"
+=======
+  cluster_id            = "******************"
+  on_vpc                = true
+  region                = "us-south"
+  resource_group_name   = "Default"
+  entitled_registry_key = "******************"
+  entitled_registry_user_email = "john.doe@email.com"
+>>>>>>> Stashed changes
 ```
 
 These parameters are:
@@ -30,8 +39,6 @@ These parameters are:
 - `resource_group_name`: Resource group that the cluster is provisioned in
 - `entitled_registry_key`: Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable
 - `entitled_registry_user_email`: IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key
-- `namespace`: Name of the namespace cp4i will be installed into
-
 
 ### Execute the example
 

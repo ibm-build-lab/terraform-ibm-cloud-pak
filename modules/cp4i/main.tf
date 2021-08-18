@@ -34,8 +34,8 @@ resource "null_resource" "install_cp4i" {
       SUBSCRIPTION                  = local.subscription
       DOCKER_REGISTRY_PASS          = local.entitled_registry_key
       DOCKER_USER_EMAIL             = var.entitled_registry_user_email
-      DOCKER_USERNAME               = local.docker_username
-      DOCKER_REGISTRY               = local.docker_registry
+      DOCKER_USERNAME               = local.entitled_registry_user
+      DOCKER_REGISTRY               = local.entitled_registry
     }
   }
 
