@@ -13,13 +13,13 @@ For instructions to run using the local Terraform Client on your local machine g
 Set these values in the `terraform.tfvars` file:
 
 ```hcl
-cluster_id            = "******************"
-on_vpc                = false
-region                = "us-south"
-resource_group_name   = "Default"
-entitled_registry_key = "******************"
+cluster_id                   = "******************"
+on_vpc                       = false
+region                       = "us-south"
+resource_group_name          = "Default"
+entitled_registry_key        = "******************"
 entitled_registry_user_email = "john.doe@email.com"
-namespace             = "cp4i"
+namespace                    = "cp4i"
 ```
 
 These parameters are:
