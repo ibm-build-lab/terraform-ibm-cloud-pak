@@ -21,11 +21,11 @@ resource "null_resource" "bedrock_zen_operator" {
       ENTITLEMENT_KEY = var.entitled_registry_key
       # CLUSTER_NAME = "${var.unique_id}-cluster"
       KUBECONFIG = var.cluster_config_path
-      IBMCLOUD_APIKEY = var.ibmcloud_api_key
-      IBMCLOUD_RG_NAME = var.resource_group_name
-      REGION = var.region
+      IBMCLOUD_APIKEY = local.ibmcloud_api_key
+      IBMCLOUD_RG_NAME = local.resource_group_name
+      REGION = local.region
       NAMESPACE = var.cpd_project_name
-      OP_NAMESPACE = var.operator_namespace
+      OP_NAMESPACE = local.operator_namespace
     }
     
     working_dir = "${path.module}/scripts/"

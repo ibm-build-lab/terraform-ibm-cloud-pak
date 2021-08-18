@@ -1,7 +1,7 @@
-# variable "region" {}
+variable "region" {}
 variable "ibmcloud_api_key" {}
-# variable "resource_group_name" {}
-# variable "operator_namespace" {}
+variable "resource_group_name" {}
+variable "operator_namespace" {}
 
 
 variable "enable" {
