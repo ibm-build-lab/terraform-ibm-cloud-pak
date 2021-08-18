@@ -28,7 +28,7 @@ These parameters are:
 - `on_vpc`: Set to `true` if the cluster is vpc, `false` if cluster is classic. **NOTE** Portworx must be installed if using a VPC cluster
 - `region`: The region that the cluster is provisioned in
 - `resource_group_name`: Resource group that the cluster is provisioned in
-- `entitled_registry_key`: Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key
+- `entitled_registry_key`: Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable
 - `entitled_registry_user_email`: IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key
 - `namespace`: Name of the namespace cp4i will be installed into
 
