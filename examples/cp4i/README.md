@@ -14,7 +14,7 @@ Set the desired values in the `terraform.tfvars` file:
 
 ```hcl
   cluster_id            = "******************"
-  on_vpc                = true
+  on_vpc                = false
   region                = "us-south"
   resource_group_name   = "Default"
   entitled_registry_key = "******************"
