@@ -80,17 +80,21 @@ terraform init
 terraform plan
 terraform apply -auto-approve
 ```
+### Verify
+If LDAP is successful, you should see
 
-Verify the output "ibm_compute_vm_instance.cp4baldap (remote-exec): Start LDAP complete" is displayed and a Public IP created after the process is complete.
-
+```console
+ibm_compute_vm_instance.cp4baldap (remote-exec): Start LDAP complete
 CLASSIC_IP_ADDRESS = "***.**.***.***"
+```
+displayed after the process is complete.
 
 Note: The LDAP server should not be exposed in the Public interface using port 389. Configure the appropriate Security Groups required for the Server.
 
-A public and private key is created to access the Virtual Machine
+A public and private key is created locally to access the Virtual Machine
 
 generated_key_rsa
-generated_key_rsa.piub
+generated_key_rsa.pub
 
 use ssh to access the server provding the key files
 
