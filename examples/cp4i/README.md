@@ -24,7 +24,7 @@ namespace             = "cp4i"
 These parameters are:
 
 - `cluster_id`: ID of the cluster to install cloud pak on
-- `on_vpc`: Set to true if the cluster is vpc. **NOTE** Portworx must be installed if using a VPC cluster
+- `on_vpc`: Set to `true` if the cluster is vpc, `false` if cluster is classic. **NOTE** Portworx must be installed if using a VPC cluster
 - `region`: The region that the cluster is provisioned in
 - `resource_group_name`: Resource group that the cluster is provisioned in
 - `entitled_registry_key`: Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key
