@@ -29,10 +29,10 @@ while [[ -z $(kubectl get route -n openshift-ingress router-default -o jsonpath=
 done
 
 echo "Deploying Catalog Option ${IBM_OPERATOR_CATALOG}"
-echo "${IBM_OPERATOR_CATALOG}" | oc apply -f -
+echo "${IBM_OPERATOR_CATALOG}" | kubectl apply -f -
 
 echo "Deploying Catalog Option ${OPENCLOUD_OPERATOR_CATALOG}"
-echo "${OPENCLOUD_OPERATOR_CATALOG}" | oc apply -f -
+echo "${OPENCLOUD_OPERATOR_CATALOG}" | kubectl apply -f -
 
 # echo "Creating namespace ${NAMESPACE}"
 echo "creating namespace ${NAMESPACE}"
@@ -44,7 +44,7 @@ create_secret() {
   link=$3
 
   echo "Creating secret ${secret_name} on ${namespace} from entitlement key"
-  oc create secret docker-registry ${secret_name} \
+  kubectl create secret docker-registry ${secret_name} \
     --docker-server=${DOCKER_REGISTRY} \
     --docker-username=${DOCKER_USERNAME} \
     --docker-password=${DOCKER_REGISTRY_PASS} \
@@ -61,7 +61,7 @@ create_secret ibm-entitlement-key $NAMESPACE
 sleep 40
 
 echo "Deploying Subscription ${SUBSCRIPTION}"
-echo "${SUBSCRIPTION}" | oc apply -f -
+echo "${SUBSCRIPTION}" | kubectl apply -f -
 
 echo "Waiting 17minutes for operators to install..."
 sleep 1020
@@ -73,7 +73,7 @@ else
 fi
 PLATFORM_NAVIGATOR=`sed -e "s/STORAGECLASS/${storage_class}/g" ../templates/navigator.yaml`
 echo "Deploying Platform Navigator ${PLATFORM_NAVIGATOR}"
-sed -e "s/STORAGECLASS/${storage_class}/g" ../templates/navigator.yaml | oc -n ${NAMESPACE} apply -f -
+sed -e "s/STORAGECLASS/${storage_class}/g" ../templates/navigator.yaml | kubectl -n ${NAMESPACE} apply -f -
 
 SLEEP_TIME="60"
 RUN_LIMIT=200
