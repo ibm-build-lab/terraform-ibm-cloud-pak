@@ -1,6 +1,6 @@
-variable "region" {}
+# variable "region" {}
 variable "ibmcloud_api_key" {}
-variable "resource_group_name" {}
+# variable "resource_group_name" {}
 variable "operator_namespace" {}
 
 
@@ -178,6 +178,12 @@ variable "install_db2wh" {
   description = "Install DB2WH module. Only for Cloud Pak for Data v4.0"
 }
 
+variable "install_big_sql" {
+  default = false
+  type = string
+  description = "Install Big SQL module. Only for Cloud Pak for Data v4.0"
+}
+
 locals {
   namespace                = "default"
   entitled_registry        = "cp.icr.io"
@@ -185,7 +191,7 @@ locals {
   docker_registry          = "cp.icr.io" // Staging: "cp.stg.icr.io/cp/cpd"
   docker_username          = "cp"               // "ekey"
   entitled_registry_key    = chomp(var.entitled_registry_key)
-  ibmcloud_api_key         = chomp(var.ibmcloud_api_key)
+  # ibmcloud_api_key         = chomp(var.ibmcloud_api_key)
   openshift_version_regex  = regex("(\\d+).(\\d+)(.\\d+)*(_openshift)*", var.openshift_version)
   openshift_version_number = local.openshift_version_regex[3] == "_openshift" ? tonumber("${local.openshift_version_regex[0]}.${local.openshift_version_regex[1]}") : 0
 }

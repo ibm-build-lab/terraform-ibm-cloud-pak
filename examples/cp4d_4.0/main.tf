@@ -61,6 +61,8 @@ module "cp4data" {
   // CP4D Info
   cpd_project_name = "zen"
 
+  # OP_NAMESPACE="ibm-common-services"
+
   // IBM Cloud API Key
   ibmcloud_api_key          = var.ibmcloud_api_key
 

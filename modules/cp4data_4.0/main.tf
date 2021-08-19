@@ -21,11 +21,11 @@ resource "null_resource" "bedrock_zen_operator" {
       ENTITLEMENT_KEY = var.entitled_registry_key
       # CLUSTER_NAME = "${var.unique_id}-cluster"
       KUBECONFIG = var.cluster_config_path
-      IBMCLOUD_APIKEY = local.ibmcloud_api_key
-      IBMCLOUD_RG_NAME = local.resource_group_name
-      REGION = local.region
+      IBMCLOUD_APIKEY = var.ibmcloud_api_key
+      # IBMCLOUD_RG_NAME = local.resource_group_name
+      # REGION = local.region
       NAMESPACE = var.cpd_project_name
-      OP_NAMESPACE = local.operator_namespace
+      OP_NAMESPACE = var.operator_namespace
     }
     
     working_dir = "${path.module}/scripts/"
@@ -40,7 +40,7 @@ resource "null_resource" "bedrock_zen_operator" {
 }
 
 resource "null_resource" "install_ccs" {
-  count = var.accept_cpd_license == "yes" && var.install_services["ccs"] ? 1 : 0
+  count = var.accept_cpd_license && var.install_ccs ? 1 : 0
   
   provisioner "local-exec" {
     environment = {
@@ -62,8 +62,8 @@ resource "null_resource" "install_ccs" {
 }
 
 resource "null_resource" "install_data_refinery" {
-  count = var.accept_cpd_license == "yes" && var.install_services["data-refinery"] ? 1 : 0
-  
+  count = var.accept_cpd_license && var.install_data_refinery ? 1 : 0
+
   provisioner "local-exec" {
     environment = {
       # CLUSTER_NAME = "${var.unique_id}-cluster"
@@ -86,7 +86,7 @@ resource "null_resource" "install_data_refinery" {
 }
 
 resource "null_resource" "install_db2u_operator" {
-  count = var.accept_cpd_license == "yes" && var.install_services["db2uoperator"] ? 1 : 0
+  count = var.accept_cpd_license == "yes" && var.install_db2u_operator ? 1 : 0
   
   provisioner "local-exec" {
     environment = {
@@ -111,7 +111,7 @@ resource "null_resource" "install_db2u_operator" {
 }
 
 resource "null_resource" "install_dmc" {
-  count = var.accept_cpd_license == "yes" && var.install_services["dmc"] ? 1 : 0
+  count = var.accept_cpd_license == "yes" && var.install_dmc ? 1 : 0
   
   provisioner "local-exec" {
     environment = {
@@ -137,7 +137,7 @@ resource "null_resource" "install_dmc" {
 }
 
 resource "null_resource" "install_db2aaservice" {
-  count = var.accept_cpd_license == "yes" && var.install_services["db2aaservice"] ? 1 : 0
+  count = var.accept_cpd_license == "yes" && var.install_db2aaservice ? 1 : 0
   
   provisioner "local-exec" {
     environment = {
@@ -164,7 +164,7 @@ resource "null_resource" "install_db2aaservice" {
 }
 
 resource "null_resource" "install_wsl" {
-  count = var.accept_cpd_license == "yes" && var.install_services["wsl"] ? 1 : 0
+  count = var.accept_cpd_license == "yes" && var.install_wsl ? 1 : 0
   
   provisioner "local-exec" {
     environment = {
@@ -192,7 +192,7 @@ resource "null_resource" "install_wsl" {
 }
 
 resource "null_resource" "install_aiopenscale" {
-  count = var.accept_cpd_license == "yes" && var.install_services["aiopenscale"] ? 1 : 0
+  count = var.accept_cpd_license == "yes" && var.install_aiopenscale ? 1 : 0
   
   provisioner "local-exec" {
     environment = {
@@ -221,7 +221,7 @@ resource "null_resource" "install_aiopenscale" {
 }
 
 resource "null_resource" "install_wml" {
-  count = var.accept_cpd_license == "yes" && var.install_services["wml"] ? 1 : 0
+  count = var.accept_cpd_license == "yes" && var.install_wml ? 1 : 0
   
   provisioner "local-exec" {
     environment = {
@@ -251,7 +251,7 @@ resource "null_resource" "install_wml" {
 }
 
 resource "null_resource" "install_wkc" {
-  count = var.accept_cpd_license == "yes" && var.install_services["wkc"] ? 1 : 0
+  count = var.accept_cpd_license == "yes" && var.install_wkc ? 1 : 0
   
   provisioner "local-exec" {
     environment = {
@@ -282,7 +282,7 @@ resource "null_resource" "install_wkc" {
 }
 
 resource "null_resource" "install_dv" {
-  count = var.accept_cpd_license == "yes" && var.install_services["dv"] ? 1 : 0
+  count = var.accept_cpd_license == "yes" && var.install_dv ? 1 : 0
   
   provisioner "local-exec" {
     environment = {
@@ -314,7 +314,7 @@ resource "null_resource" "install_dv" {
 }
 
 resource "null_resource" "install_spss" {
-  count = var.accept_cpd_license == "yes" && var.install_services["spss-modeler"] ? 1 : 0
+  count = var.accept_cpd_license == "yes" && var.install_spss ? 1 : 0
   
   provisioner "local-exec" {
     environment = {
@@ -347,7 +347,7 @@ resource "null_resource" "install_spss" {
 }
 
 resource "null_resource" "install_cde" {
-  count = var.accept_cpd_license == "yes" && var.install_services["cde"] ? 1 : 0
+  count = var.accept_cpd_license == "yes" && var.install_cde ? 1 : 0
   
   provisioner "local-exec" {
     environment = {
@@ -381,7 +381,7 @@ resource "null_resource" "install_cde" {
 }
 
 resource "null_resource" "install_spark" {
-  count = var.accept_cpd_license == "yes" && var.install_services["spark"] ? 1 : 0
+  count = var.accept_cpd_license == "yes" && var.install_spark ? 1 : 0
   
   provisioner "local-exec" {
     environment = {
@@ -416,7 +416,7 @@ resource "null_resource" "install_spark" {
 }
 
 resource "null_resource" "install_dods" {
-  count = var.accept_cpd_license == "yes" && var.install_services["dods"] ? 1 : 0
+  count = var.accept_cpd_license == "yes" && var.install_dods ? 1 : 0
   
   provisioner "local-exec" {
     environment = {
@@ -452,7 +452,7 @@ resource "null_resource" "install_dods" {
 }
 
 resource "null_resource" "install_ca" {
-  count = var.accept_cpd_license == "yes" && var.install_services["ca"] ? 1 : 0
+  count = var.accept_cpd_license == "yes" && var.install_ca ? 1 : 0
   
   provisioner "local-exec" {
     environment = {
@@ -489,7 +489,7 @@ resource "null_resource" "install_ca" {
 }
 
 resource "null_resource" "install_ds" {
-  count = var.accept_cpd_license == "yes" && var.install_services["ds"] ? 1 : 0
+  count = var.accept_cpd_license == "yes" && var.install_ds ? 1 : 0
   
   provisioner "local-exec" {
     environment = {
@@ -527,7 +527,7 @@ resource "null_resource" "install_ds" {
 }
 
 resource "null_resource" "install_db2oltp" {
-  count = var.accept_cpd_license == "yes" && var.install_services["db2oltp"] ? 1 : 0
+  count = var.accept_cpd_license == "yes" && var.install_db2oltp ? 1 : 0
   
   provisioner "local-exec" {
     environment = {
@@ -566,7 +566,7 @@ resource "null_resource" "install_db2oltp" {
 }
 
 resource "null_resource" "install_db2wh" {
-  count = var.accept_cpd_license == "yes" && var.install_services["db2wh"] ? 1 : 0
+  count = var.accept_cpd_license == "yes" && var.install_db2wh ? 1 : 0
   
   provisioner "local-exec" {
     environment = {
@@ -605,8 +605,8 @@ resource "null_resource" "install_db2wh" {
   ]
 }
 
-resource "null_resource" "install_bigsql" {
-  count = var.accept_cpd_license == "yes" && var.install_services["big-sql"] ? 1 : 0
+resource "null_resource" "install_big_sql" {
+  count = var.accept_cpd_license == "yes" && var.install_big_sql ? 1 : 0
   
   provisioner "local-exec" {
     environment = {
