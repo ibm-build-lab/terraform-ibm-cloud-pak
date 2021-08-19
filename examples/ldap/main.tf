@@ -1,18 +1,22 @@
 resource "ibm_compute_vm_instance" "ldap" {
 
-  count                = var.enable ? 1 : 0
+
+  source = "../../modules/ldap"
+
+
+  enable               = true
 
   hostname             = var.hostname
   domain               = var.ibmcloud_domain
   ssh_key_ids          = ["${ibm_compute_ssh_key.key.id}"]
-  os_reference_code    = var.os_reference_code
+  os_reference_code    = "CentOS_8_64"
   datacenter           = var.datacenter
   network_speed        = 10
   hourly_billing       = true
   private_network_only = false
-  cores                = var.cores
-  memory               = var.memory
-  disks                = var.disks
+  cores                = "2"
+  memory               = "4096"
+  disks                = [25]
   local_disk           = false
 
 

@@ -1,6 +1,26 @@
 
 # Example to provision LDAP Terraform Module
 
+### Download required license files
+
+Download the following DB2 and IBM SDS license files:
+
+DB2:
+PartUmber : CNB21ML
+Filename : DB2_AWSE_Restricted_Activation_11.1.zip
+
+IBM SDS:
+PartUmber : CRV3IML
+Filename : sds64-premium-feature-act-pkg.zip
+
+Copy the files to the ./files folder
+
+### Update the ldif file
+
+Update the ldif file as needed to change the Directory Struture and user information
+
+Update the /files/cp.ldif.
+
 ## Run using local Terraform Client
 
 For instructions to run using the local Terraform Client on your local machine go [here](../Using_Terraform.md)
@@ -34,25 +54,6 @@ These parameters are:
 - `memory`                  : Virtual Server Memory
 - `disks`                   : Boot disk size
 
-
-Prerequsites:
-
-1. Download the following DB2 and IBM SDS license files:
-
-DB2:
-PartUmber   : CNB21ML
-Filename    : DB2_AWSE_Restricted_Activation_11.1.zip
-
-IBM SDS:
-PartUmber   : CRV3IML
-Filename    : sds64-premium-feature-act-pkg.zip
-
-Copy the files to the /files fodler
-
-
-2. Update the ldif file as needed to change the Directory Struture and user information
-
-Update the cp.ldif. 
 
 
 ### Execute the example

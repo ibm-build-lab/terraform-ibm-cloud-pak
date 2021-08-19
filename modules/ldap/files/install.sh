@@ -37,7 +37,7 @@ unzip /repo/software/sds64-premium-feature-act-pkg.zip -d /repo/software/install
 #Copy response file
 cp /tmp/db2server-V11.1.rsp /repo/software/data/
 
-#Insatll DB2
+#Install DB2
 
 cd /repo/software/installables/V11.1/install/universal/
 ./db2setup -r /repo/software/data/db2server-V11.1.rsp -l log.txt
