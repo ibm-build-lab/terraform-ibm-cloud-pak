@@ -159,6 +159,12 @@ variable "install_db2wh" {
   description = "Install DB2WH module. Only for Cloud Pak for Data v4.0"
 }
 
+variable "install_big_sql" {
+  default = false
+  type = string
+  description = "Install Big SQL module. Only for Cloud Pak for Data v4.0"
+}
+
 locals {
   cluster_config_path = "./.kube/config"
 }
