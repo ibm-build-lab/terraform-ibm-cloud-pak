@@ -7,15 +7,10 @@ variable "cluster_config_path" {
   description = "Path to the Kubernetes configuration file to access your cluster"
 }
 
-variable "on_vpc" {
-  default     = false
-  type        = bool
-  description = "If set to true, lets the module know cluster is using VPC Gen2"
-}
-
-variable "portworx_is_ready" {
-  type = any
-  default = null
+variable "storage_class" {
+  default     = "ibmc-file-gold-gid"
+  type        = string
+  description = "Storage class to use.  If VPC, set to `portworx-rwx-gp3-sc` and make sure Portworx is set up on cluster"
 }
 
 variable "entitled_registry_key" {
@@ -31,9 +26,8 @@ variable "namespace" {
   description = "Namespace for Cloud Pak for Integration"
 }
 
-
 locals {
   entitled_registry        = "cp.icr.io"
   entitled_registry_user   = "cp"
   entitled_registry_key    = chomp(var.entitled_registry_key)
-  }
+}
