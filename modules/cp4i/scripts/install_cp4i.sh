@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Required input parameters
-# - KUBECONFIG : Not used directly but required by oc
+# - KUBECONFIG : Not used directly but required by kubectl
 # - STORAGE_CLASS_NAME
 # - DOCKER_REGISTRY_PASS
 # - DOCKER_USER_EMAIL
@@ -57,7 +57,7 @@ sleep 40
 echo "Deploying Subscription ${SUBSCRIPTION}"
 echo "${SUBSCRIPTION}" | kubectl apply -f -
 
-echo "Waiting 17minutes for operators to install..."
+echo "Waiting 17 minutes for operators to install..."
 sleep 1020
 
 if ${ON_VPC}; then
@@ -74,7 +74,7 @@ RUN_LIMIT=200
 i=0
 
 while true; do
-  if ! STATUS_LONG=$(oc -n ${NAMESPACE} get platformnavigator cp4i-navigator --output=json | jq -c -r '.status'); then
+  if ! STATUS_LONG=$(kubectl -n ${NAMESPACE} get platformnavigator cp4i-navigator --output=json | jq -c -r '.status'); then
     echo 'Error getting status'
     exit 1
   fi
