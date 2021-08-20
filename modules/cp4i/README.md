@@ -74,7 +74,6 @@ module "cp4i" {
   enable          = true
 
   // ROKS cluster parameters:
-  openshift_version   = var.roks_version
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
 
   // Entitled Registry parameters:
@@ -88,8 +87,8 @@ module "cp4i" {
 | Name                               | Description                                                                                                                                                                                                                | Default                     | Required |
 | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | -------- |
 | `enable`                           | If set to `false` does not install the cloud pak on the given cluster. By default it's enabled                                                                                                                        | `true`                      | No       |
-| `force`                           | Force the execution. Useful to execute the job again                                                     | `true`                      | No       |
-| `openshift_version`                | Openshift version installed in the cluster                                                                                                                                                                                 | `4.5`                       | No       |
+| `on_vpc`                           | If set to `true`, lets the module know cluster is using VPC Gen2. If set to `false`, classic infrastructure is being used.                                                 | `false`                      | No       |
+| `portworx_is_ready`                           | Only used if `on_vpc` is `true`. Defaults to `null`. Set with a non-null value if using a VPC cluster with Portworx installed                                      | `null`                      | No       |
 | `entitled_registry_key`            | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
 | `entitled_registry_user_email`     | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key                                                                                                                 |                             | Yes      |
 

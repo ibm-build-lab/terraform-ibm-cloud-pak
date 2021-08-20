@@ -16,7 +16,7 @@ done
 
 echo "Deploying Catalog Option ${CATALOG_CONTENT}"
 kubectl apply -f -<<EOF
-${IBM_OPERATOR_CATALOG_CONTENT}
+${CATALOG_CONTENT}
 EOF
 
 # echo "Creating namespace ${NAMESPACE}"
