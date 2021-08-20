@@ -45,11 +45,11 @@ variable "entitled_registry_user_email" {
 
 // Modules available to install on CP4D
 
-variable "bedrock_zen_operator" {
-  default = false
-  type = string
-  description = "Install Bedrock Zen Operator. Only for Cloud Pak for Data v4.0"
-}
+# variable "bedrock_zen_operator" {
+#   default = false
+#   type = string
+#   description = "Install Bedrock Zen Operator. Only for Cloud Pak for Data v4.0"
+@ }
 
 variable "install_ccs" {
   default = false

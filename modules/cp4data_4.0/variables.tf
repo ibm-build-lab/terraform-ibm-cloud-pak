@@ -64,11 +64,11 @@ variable "empty_module_list" {
   type        = bool
   description = "Determine if any modules need to be installed for CP4D"
 }
-variable "bedrock_zen_operator" {
-  default = false
-  type = string
-  description = "Install Bedrock Zen Operator. Only for Cloud Pak for Data v4.0"
-}
+# variable "bedrock_zen_operator" {
+#   default = false
+#   type = string
+#   description = "Install Bedrock Zen Operator. Only for Cloud Pak for Data v4.0"
+# }
 
 variable "install_ccs" {
   default = false
