@@ -3,11 +3,6 @@ variable "enable" {
   description = "If set to true installs Cloud-Pak for Integration on the given cluster"
 }
 
-variable "force" {
-  default     = false
-  description = "Force the execution. Useful to execute the job again"
-}
-
 variable "cluster_config_path" {
   description = "Path to the Kubernetes configuration file to access your cluster"
 }
