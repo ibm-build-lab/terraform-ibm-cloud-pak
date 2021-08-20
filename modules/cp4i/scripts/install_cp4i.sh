@@ -1,18 +1,5 @@
 #!/bin/sh
 
-# Required input parameters
-# - KUBECONFIG : Not used directly but required by kubectl
-# - STORAGE_CLASS_NAME
-# - DOCKER_REGISTRY_PASS
-# - DOCKER_USER_EMAIL
-# - STORAGE_CLASS_CONTENT
-# - INSTALLER_SENSITIVE_DATA
-# - INSTALLER_JOB_CONTENT
-# - SCC_ZENUID_CONTENT
-
-# Software requirements:
-# - kubectl
-
 # Optional input parameters with default values:
 NAMESPACE=${NAMESPACE:-cp4i}
 DEBUG=${DEBUG:-false}
@@ -27,7 +14,7 @@ while [[ -z $(kubectl get route -n openshift-ingress router-default -o jsonpath=
   sleep $WAITING_TIME
 done
 
-echo "Deploying Catalog Option ${IBM_OPERATOR_CATALOG_CONTENT}"
+echo "Deploying Catalog Option ${CATALOG_CONTENT}"
 kubectl apply -f -<<EOF
 ${IBM_OPERATOR_CATALOG_CONTENT}
 EOF

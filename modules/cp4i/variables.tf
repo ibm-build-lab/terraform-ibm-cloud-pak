@@ -7,7 +7,7 @@ variable "cluster_config_path" {
   description = "Path to the Kubernetes configuration file to access your cluster"
 }
 
-variable "storage_class" {
+variable "storageclass" {
   default     = "ibmc-file-gold-gid"
   type        = string
   description = "Storage class to use.  If VPC, set to `portworx-rwx-gp3-sc` and make sure Portworx is set up on cluster"

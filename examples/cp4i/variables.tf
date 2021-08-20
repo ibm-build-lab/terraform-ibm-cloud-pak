@@ -17,7 +17,7 @@ variable "resource_group_name" {
   description = "Resource group that the cluster is created in"
 }
 
-variable "storage_class" {
+variable "storageclass" {
   default     = "ibmc-file-gold-gid"
   type        = string
   description = "Storage class to use.  If running on VPC, set to `portworx-rwx-gp3-sc` and make sure Portworx is set up on cluster"
