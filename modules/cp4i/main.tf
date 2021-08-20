@@ -11,7 +11,7 @@ resource "null_resource" "install_cp4i" {
   count = var.enable ? 1 : 0
 
   triggers = {
-    force_to_run                              = var.force ? timestamp() : 0
+#    force_to_run                              = var.force ? timestamp() : 0
     namespace_sha1                            = sha1(var.namespace)
     docker_params_sha1                        = sha1(join("", [var.entitled_registry_user_email, local.entitled_registry_key]))
     ibm_operator_catalog_sha1                 = sha1(local.ibm_operator_catalog)
