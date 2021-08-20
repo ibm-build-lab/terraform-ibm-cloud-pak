@@ -1,7 +1,15 @@
 locals {
   # These are the the yamls that will be pulled from the ./files  these will be used to start hte operator
-  ibm_operator_catalog       = file(join("/", [path.module, "files", "ibm-operator-catalog.yaml"])) 
-  subscription               = file(join("/", [path.module, "files", "subscription.yaml"])) 
+  ibm_operator_catalog_content = templatefile("${path.module}/templates/ibm_operator_catalog.yaml.tmpl", {
+    namespace = var.namespace
+  })
+  subscription_content = templatefile("${path.module}/templates/subscription.yaml.tmpl", {
+    namespace = var.namespace
+  })
+  navigator_content = templatefile("${path.module}/templates/navigator.yaml.tmpl", {
+    namespace                    = local.namespace,
+    storageclass                 = var.storageclass
+  })
 
   #on_vpc_ready = var.on_vpc ? var.portworx_is_ready : 1
 }
@@ -14,8 +22,9 @@ resource "null_resource" "install_cp4i" {
 #    force_to_run                              = var.force ? timestamp() : 0
     namespace_sha1                            = sha1(var.namespace)
     docker_params_sha1                        = sha1(join("", [var.entitled_registry_user_email, local.entitled_registry_key]))
-    ibm_operator_catalog_sha1                 = sha1(local.ibm_operator_catalog)
-    subscription_sha1                         = sha1(local.subscription)
+    ibm_operator_catalog_sha1                 = sha1(local.ibm_operator_catalog_content)
+    subscription_sha1                         = sha1(local.subscription_content)
+    navigator_sha1                            = sha1(local.navigator_content)
   }
 
   provisioner "local-exec" {
@@ -26,8 +35,9 @@ resource "null_resource" "install_cp4i" {
       KUBECONFIG                    = var.cluster_config_path
       NAMESPACE                     = var.namespace
       STORAGECLASS                  = var.storage_class
-      IBM_OPERATOR_CATALOG          = local.ibm_operator_catalog
-      SUBSCRIPTION                  = local.subscription
+      IBM_OPERATOR_CATALOG_CONTENT  = local.ibm_operator_catalog_content
+      SUBSCRIPTION_CONTENT          = local.subscription_content
+      NAVIGATOR_CONTENT             = local.navigator_content
       DOCKER_REGISTRY_PASS          = local.entitled_registry_key
       DOCKER_USER_EMAIL             = var.entitled_registry_user_email
       DOCKER_USERNAME               = local.entitled_registry_user
