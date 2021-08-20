@@ -1,6 +1,6 @@
 variable "enable" {
   default     = true
-  description = "If set to `true` installs Cloud-Pak for Integration on the given cluster"
+  description = "If set to true installs Cloud-Pak for Integration on the given cluster"
 }
 
 variable "force" {

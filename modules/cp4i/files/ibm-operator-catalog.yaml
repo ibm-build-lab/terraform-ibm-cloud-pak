@@ -4,10 +4,19 @@ metadata:
   name: ibm-operator-catalog
   namespace: openshift-marketplace
 spec:
-  displayName: ibm-operator-catalog 
-  publisher: IBM Content
+  displayName: IBM Operator Catalog
+  image: 'icr.io/cpopen/ibm-operator-catalog:latest'
+  publisher: IBM
   sourceType: grpc
-  image: docker.io/ibmcom/ibm-operator-catalog
   updateStrategy:
     registryPoll:
       interval: 45m
+---
+apiVersion: operators.coreos.com/v1alpha2
+kind: OperatorGroup
+metadata:
+  name: ibm-cp-integration-catalog-group
+  namespace: cp4i
+spec:
+  targetNamespaces:
+  - cp4i
