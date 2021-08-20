@@ -3,7 +3,7 @@ locals {
   ibm_operator_catalog       = file(join("/", [path.module, "files", "ibm-operator-catalog.yaml"])) 
   subscription               = file(join("/", [path.module, "files", "subscription.yaml"])) 
 
-  on_vpc_ready = var.on_vpc ? var.portworx_is_ready : 1
+  #on_vpc_ready = var.on_vpc ? var.portworx_is_ready : 1
 }
 
 # This section checks to see if the values have been updated through out the script running and is required for any dynamic value
@@ -23,10 +23,9 @@ resource "null_resource" "install_cp4i" {
     working_dir = "${path.module}/scripts"
 
     environment = {
-      FORCE                         = var.force
       KUBECONFIG                    = var.cluster_config_path
       NAMESPACE                     = var.namespace
-      ON_VPC                        = var.on_vpc
+      STORAGECLASS                  = var.storage_class
       IBM_OPERATOR_CATALOG          = local.ibm_operator_catalog
       SUBSCRIPTION                  = local.subscription
       DOCKER_REGISTRY_PASS          = local.entitled_registry_key
@@ -36,9 +35,9 @@ resource "null_resource" "install_cp4i" {
     }
   }
 
-  depends_on = [
-    local.on_vpc_ready
-  ]
+#   depends_on = [
+#     local.on_vpc_ready
+#   ]
 }
 
 data "external" "get_endpoints" {
