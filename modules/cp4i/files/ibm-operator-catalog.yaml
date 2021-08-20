@@ -16,7 +16,7 @@ apiVersion: operators.coreos.com/v1alpha2
 kind: OperatorGroup
 metadata:
   name: ibm-cp-integration-catalog-group
-  namespace: cp4i
+  namespace: ${ namespace }
 spec:
   targetNamespaces:
-  - cp4i
+  - ${ namespace }
