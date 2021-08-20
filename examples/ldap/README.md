@@ -66,20 +66,26 @@ terraform plan
 terraform apply -auto-approve
 ```
 
+## outputs
+
 Verify the output "ibm_compute_vm_instance.cp4baldap (remote-exec): Start LDAP complete" is displayed and a Public IP created after the process is complete.
 
-CLASSIC_IP_ADDRESS = "***.**.***.***"
-
-Note: The LDAP server should not be exposed in the Public interface using port 389. Configure the appropriate Security Groups required for the Server.
+| Name                 | Description                                                                                                                                |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `CLASSIC_IP_ADDRESS` | Note: The LDAP server should not be exposed in the Public interface using port 389.                                                        |
+|                      | Configure the appropriate Security Groups required for the Server.                                                                         |
+|                      | For more infomration on how to manage Security Groups visit : https://cloud.ibm.com/docs/security-groups?topic=security-groups-managing-sg |
 
 A public and private key is created to access the Virtual Machine
 
 generated_key_rsa
 generated_key_rsa.piub
 
-use ssh to access the server provding the key files
+use ssh to access the server provding the key files.
 
 ssh root@<CLASSIC_IP_ADDRESS> -k generated_key_rsa
+
+For more information on accessing the Virtual Machine, visit (https://cloud.ibm.com/docs/account?topic=account-mngclassicinfra)
 
 Apache Directory Studio can be used to access the server (see https://directory.apache.org/studio/download/download-macosx.html)
 
