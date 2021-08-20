@@ -60,14 +60,14 @@ echo "${SUBSCRIPTION}" | kubectl apply -f -
 echo "Waiting 17 minutes for operators to install..."
 sleep 1020
 
-if ${ON_VPC}; then
-  storage_class="portworx-rwx-gp3-sc"
-else
-  storage_class="ibmc-file-gold-gid"
-fi
-PLATFORM_NAVIGATOR=`sed -e "s/STORAGECLASS/${storage_class}/g" ../templates/navigator.yaml`
+# if ${ON_VPC}; then
+#   storage_class="portworx-rwx-gp3-sc"
+# else
+#   storage_class="ibmc-file-gold-gid"
+# fi
+PLATFORM_NAVIGATOR=`sed -e "s/STORAGECLASS/${STORAGECLASS}/g" ../templates/navigator.yaml`
 echo "Deploying Platform Navigator ${PLATFORM_NAVIGATOR}"
-sed -e "s/STORAGECLASS/${storage_class}/g" ../templates/navigator.yaml | kubectl -n ${NAMESPACE} apply -f -
+sed -e "s/STORAGECLASS/${STORAGECLASS}/g" ../templates/navigator.yaml | kubectl -n ${NAMESPACE} apply -f -
 
 SLEEP_TIME="60"
 RUN_LIMIT=200
