@@ -1,8 +1,6 @@
-resource "ibm_compute_vm_instance" "ldap" {
-
+module "ldap" {
 
   source = "../../modules/ldap"
-
 
   enable               = true
 
@@ -19,57 +17,6 @@ resource "ibm_compute_vm_instance" "ldap" {
   disks                = [25]
   local_disk           = false
 
-
-connection {
-  type        = "ssh"
-  user        = "root"
-  private_key = tls_private_key.ssh.private_key_pem
-  agent       = false
-  ibm_compute_vm_instance.ldap[count.index].ipv4_address
-}
-
-provisioner "file" {
-  source      = "files/install.sh"
-  destination = "/tmp/install.sh"
-}
-
-provisioner "file" {
-  source      = "files/DB2_AWSE_Restricted_Activation_11.1.zip"
-  destination = "/tmp/DB2_AWSE_Restricted_Activation_11.1.zip"
-}
-
-provisioner "file" {
-  source      = "files/sds64-premium-feature-act-pkg.zip"
-  destination = "/tmp/sds64-premium-feature-act-pkg.zip"
-}
-
-provisioner "file" {
-  source      = "files/cp.ldif"
-  destination = "/tmp/cp.ldif"
-}
-
-provisioner "file" {
-  source      = "files/db2server-V11.1.rsp"
-  destination = "/tmp/db2server-V11.1.rsp"
-}
-
-
-provisioner "remote-exec" {
-    # install required libraries and software
-    inline = [
-      "touch this_file_was_created_in_classic",
-      "yum install -y epel-release",
-      "yum install -y tar",
-      "yum install -y unzip",
-      "yum install -y libstdc++.i686",
-      "yum install -y pam.i686",
-      "yum install -y gcc-c++",
-      "yum install -y ksh",
-      "yum install -y libaio",
-      "chmod +x /tmp/install.sh",
-      "sh /tmp/install.sh",
-    ]
-  }
 }
 
 # Generate an SSH key/pair to be used to provision the classic VSI

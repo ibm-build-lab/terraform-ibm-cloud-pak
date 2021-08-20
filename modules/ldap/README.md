@@ -81,7 +81,7 @@ terraform plan
 terraform apply -auto-approve
 ```
 
-## outputs
+## Outputs
 
 Verify the output "ibm_compute_vm_instance.cp4baldap (remote-exec): Start LDAP complete" is displayed and a Public IP created after the process is complete.
 
