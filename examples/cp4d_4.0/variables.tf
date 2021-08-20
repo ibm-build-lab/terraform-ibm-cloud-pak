@@ -49,7 +49,7 @@ variable "entitled_registry_user_email" {
 #   default = false
 #   type = string
 #   description = "Install Bedrock Zen Operator. Only for Cloud Pak for Data v4.0"
-@ }
+# }
 
 variable "install_ccs" {
   default = false
