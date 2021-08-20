@@ -27,8 +27,10 @@ while [[ -z $(kubectl get route -n openshift-ingress router-default -o jsonpath=
   sleep $WAITING_TIME
 done
 
-echo "Deploying Catalog Option ${IBM_OPERATOR_CATALOG}"
-echo "${IBM_OPERATOR_CATALOG}" | kubectl apply -f -
+echo "Deploying Catalog Option ${IBM_OPERATOR_CATALOG_CONTENT}"
+kubectl apply -f -<<EOF
+${IBM_OPERATOR_CATALOG_CONTENT}
+EOF
 
 # echo "Creating namespace ${NAMESPACE}"
 echo "creating namespace ${NAMESPACE}"
@@ -54,20 +56,18 @@ create_secret ibm-entitlement-key $NAMESPACE
 
 sleep 40
 
-echo "Deploying Subscription ${SUBSCRIPTION}"
-echo "${SUBSCRIPTION}" | kubectl apply -f -
+echo "Deploying Subscription ${SUBSCRIPTION_CONTENT}"
+kubectl apply -f -<<EOF
+${SUBSCRIPTION_CONTENT}
+EOF
 
 echo "Waiting 17 minutes for operators to install..."
 sleep 1020
 
-# if ${ON_VPC}; then
-#   storage_class="portworx-rwx-gp3-sc"
-# else
-#   storage_class="ibmc-file-gold-gid"
-# fi
-PLATFORM_NAVIGATOR=`sed -e "s/STORAGECLASS/${STORAGECLASS}/g" ../templates/navigator.yaml`
-echo "Deploying Platform Navigator ${PLATFORM_NAVIGATOR}"
-sed -e "s/STORAGECLASS/${STORAGECLASS}/g" ../templates/navigator.yaml | kubectl -n ${NAMESPACE} apply -f -
+echo "Deploying Platform Navigator ${NAVIGATORCONTENT}"
+kubectl apply -f -<<EOF
+${NAVIGATOR_CONTENT}
+EOF
 
 SLEEP_TIME="60"
 RUN_LIMIT=200
