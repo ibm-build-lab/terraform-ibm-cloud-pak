@@ -7,11 +7,6 @@ variable "cluster_config_path" {
   description = "Path to the Kubernetes configuration file to access your cluster"
 }
 
-variable "openshift_version" {
-  default     = "4.6"
-  description = "Openshift version installed in the cluster"
-}
-
 variable "on_vpc" {
   default     = false
   type        = bool
