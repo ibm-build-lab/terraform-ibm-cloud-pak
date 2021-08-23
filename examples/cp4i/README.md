@@ -14,8 +14,7 @@ Set the desired values in the `terraform.tfvars` file:
 
 ```hcl
   cluster_id            = "******************"
-  on_vpc                = false
-  region                = "us-south"
+  storageclass          = "ibmc-file-gold-gid"
   resource_group_name   = "Default"
   entitled_registry_key = "******************"
   entitled_registry_user_email = "john.doe@email.com"

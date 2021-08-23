@@ -14,14 +14,14 @@ while [[ -z $(kubectl get route -n openshift-ingress router-default -o jsonpath=
   sleep $WAITING_TIME
 done
 
+# echo "Creating namespace ${NAMESPACE}"
+echo "creating namespace ${NAMESPACE}"
+kubectl create namespace ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
+
 echo "Deploying Catalog Option ${CATALOG_CONTENT}"
 kubectl apply -f -<<EOF
 ${CATALOG_CONTENT}
 EOF
-
-# echo "Creating namespace ${NAMESPACE}"
-echo "creating namespace ${NAMESPACE}"
-kubectl create namespace ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
 
 create_secret() {
   secret_name=$1
@@ -49,10 +49,10 @@ ${SUBSCRIPTION_CONTENT}
 EOF
 
 echo "Waiting 17 minutes for operators to install..."
-sleep 1020
+sleep 600
 
-echo "Deploying Platform Navigator ${NAVIGATORCONTENT}"
-kubectl apply -f -<<EOF
+echo "Deploying Platform Navigator ${NAVIGATOR_CONTENT}"
+kubectl apply -n ${NAMESPACE} -f -<<EOF
 ${NAVIGATOR_CONTENT}
 EOF
 

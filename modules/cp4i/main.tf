@@ -7,8 +7,7 @@ locals {
     namespace = var.namespace
   })
   navigator_content = templatefile("${path.module}/templates/navigator.yaml.tmpl", {
-    namespace                    = var.namespace,
-    storageclass                 = var.storageclass
+    storageclass = var.storageclass
   })
 
   #on_vpc_ready = var.on_vpc ? var.portworx_is_ready : 1
