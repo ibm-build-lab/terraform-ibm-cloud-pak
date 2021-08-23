@@ -41,7 +41,7 @@ variable "roks_version" {
 
 variable "force_delete_storage" {
   type        = bool
-  default     = false
+  default     = true
   description = "If set to true, force the removal of persistent storage associated with the cluster during cluster deletion. Default value is false"
 }
 
