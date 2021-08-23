@@ -81,8 +81,8 @@ variable "workers_count" {
 
 variable "force_delete_storage" {
   type        = bool
-  default     = false
-  description = "If set to true, force the removal of persistent storage associated with the cluster during cluster deletion. Default value is false"
+  default     = true
+  description = "If set to true, force the removal of persistent storage associated with the cluster during cluster deletion. Default value is true"
 }
 
 variable "datacenter" {
