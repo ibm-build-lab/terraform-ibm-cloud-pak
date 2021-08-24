@@ -86,11 +86,12 @@ module "cp4i" {
 
 | Name                               | Description                                                                                                                                                                                                                | Default                     | Required |
 | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | -------- |
-| `enable`                           | If set to `false` does not install the cloud pak on the given cluster. By default it's enabled                                                                                                                        | `true`                      | No       |
-| `on_vpc`                           | If set to `true`, lets the module know cluster is using VPC Gen2. If set to `false`, classic infrastructure is being used.                                                 | `false`                      | No       |
-| `portworx_is_ready`                           | Only used if `on_vpc` is `true`. Defaults to `null`. Set with a non-null value if using a VPC cluster with Portworx installed                                      | `null`                      | No       |
+| `enable`                           | If set to `false` does not install the cloud pak on the given cluster. By default it's enabled  | `true`                      | No       |
+| `storageclass`                           | Storage class to use.  For Classic, use `ibmc-file-gold-gid`. For VPC, set to `portworx-rwx-gp3-sc` and make sure Portworx is set up on the cluster                                                | `ibmc-file-gold-gid`                      | No       |
+| `namespace`                           | Namespace to install for Cloud Pak for Integration | `cp4i`                      | No       |
+| `cluster_config_path`                           | Path to the Kubernetes configuration file to access your cluster | `./.kube/config`                      | No       |
 | `entitled_registry_key`            | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
-| `entitled_registry_user_email`     | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key                                                                                                                 |                             | Yes      |
+| `entitled_registry_user_email`     | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key |                             | Yes      |
 
 **NOTE** The boolean input variable `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
 
