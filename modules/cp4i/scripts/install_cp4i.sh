@@ -48,7 +48,7 @@ kubectl apply -f -<<EOF
 ${SUBSCRIPTION_CONTENT}
 EOF
 
-echo "Waiting 17 minutes for operators to install..."
+echo "Waiting 10 minutes for operators to install..."
 sleep 600
 
 echo "Deploying Platform Navigator ${NAVIGATOR_CONTENT}"

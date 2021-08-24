@@ -1,17 +1,7 @@
 
-# variable "on_vpc" {
-#   type        = bool
-#   default     = false
-#   description = "if true the ROKS cluster will be created in IBM Cloud VPC, otherwise will be Classic"
-# }
-
 variable "cluster_id" {
   description = "ROKS cluster id. Use the ROKS terraform module or other way to create it"
 }
-
-# variable "region" {
-#   description = "Region of the cluster"
-# }
 
 variable "resource_group_name" {
   description = "Resource group that the cluster is created in"

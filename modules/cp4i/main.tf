@@ -9,8 +9,6 @@ locals {
   navigator_content = templatefile("${path.module}/templates/navigator.yaml.tmpl", {
     storageclass = var.storageclass
   })
-
-  #on_vpc_ready = var.on_vpc ? var.portworx_is_ready : 1
 }
 
 # This section checks to see if the values have been updated through out the script running and is required for any dynamic value
@@ -18,7 +16,6 @@ resource "null_resource" "install_cp4i" {
   count = var.enable ? 1 : 0
 
   triggers = {
-#    force_to_run                              = var.force ? timestamp() : 0
     namespace_sha1               = sha1(var.namespace)
     docker_params_sha1           = sha1(join("", [var.entitled_registry_user_email, local.entitled_registry_key]))
     catalog_sha1                 = sha1(local.catalog_content)
@@ -43,10 +40,6 @@ resource "null_resource" "install_cp4i" {
       DOCKER_REGISTRY               = local.entitled_registry
     }
   }
-
-#   depends_on = [
-#     local.on_vpc_ready
-#   ]
 }
 
 data "external" "get_endpoints" {
