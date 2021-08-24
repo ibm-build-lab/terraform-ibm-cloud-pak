@@ -1,16 +1,18 @@
-// CP4DATA output parameters
+output "login_command" {
+  value = module.ocp.login_cmd
+}
+
 output "cpd_url" {
   description = "Access your Cloud Pak for Data deployment at this URL."
-  value = "https://cp4d-cpd-cp4d.${var.on_vpc ? join("", data.ibm_container_vpc_cluster.cluster.*.ingress_hostname) 
-  : join("", data.ibm_container_cluster.cluster.*.ingress_hostname)}"
+  value       = "$(oc get routes -n ${var.cpd_namespace})"
 }
 
-output "cpd_user" {
+output "cpd_url_username" {
   description = "Username for your Cloud Pak for Data deployment."
-  value = "admin"
+  value       = "admin"
 }
 
-output "cpd_pass" {
+output "cpd_url_password" {
   description = "Password for your Cloud Pak for Data deployment."
-  value = "password"
+  value       = "$(oc extract secret/admin-user-details --keys=initial_admin_password --to=-)"
 }
