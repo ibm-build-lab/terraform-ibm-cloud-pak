@@ -10,5 +10,5 @@ output "cpd_user" {
 
 output "cpd_pass" {
   description = "Password for your Cloud Pak for Data deployment."
-  value       = "$(oc extract secret/admin-user-details --keys=initial_admin_password --to=-)"
+  value       = "$(oc extract secret/admin-user-details --keys=initial_admin_password --to=- -n zen)"
 }
