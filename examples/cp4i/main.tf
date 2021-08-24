@@ -1,5 +1,4 @@
 provider "ibm" {
-  region           = var.region
   version          = "~> 1.12"
 }
 
@@ -22,19 +21,17 @@ data "ibm_container_cluster_config" "cluster_config" {
 }
 
 // Module:
-
 module "cp4i" {
   source = "../../modules/cp4i"
   enable = true
 
   // ROKS cluster parameters:
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
-  on_vpc              = var.on_vpc
+  storageclass        = var.storageclass
 
   // Entitled Registry parameters:
   entitled_registry_key        = var.entitled_registry_key
   entitled_registry_user_email = var.entitled_registry_user_email
 
-  portworx_is_ready   = 1           // Assuming portworx is installed if using VPC infrastructure
   namespace           = "cp4i"
 }
