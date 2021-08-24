@@ -163,4 +163,4 @@ tar -xvf cloudctl-linux-amd64.tar.gz -C /tmp
 mv /tmp/cloudctl-linux-amd64 /tmp/cloudctl
 
 # and point PATH
-export PATH=$PATH:/tmp
+export PATH="$PATH:/tmp"
