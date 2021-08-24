@@ -37,8 +37,9 @@ data "ibm_container_vpc_cluster" "cluster" {
 
 // Module:
 module "cp4data" {
-  # source          = "../../modules/cp4data"
-  source          = "https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/cp4data-tf0.13/modules/cp4data"
+  source          = "../../modules/cp4data"
+  # source          = "https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/cp4data-tf0.13/modules/cp4data"
+  # source          = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/roks"
   enable          = true
 
   // ROKS cluster parameters:
