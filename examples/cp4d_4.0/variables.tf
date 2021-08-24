@@ -47,121 +47,121 @@ variable "entitled_registry_user_email" {
 
 # variable "bedrock_zen_operator" {
 #   default = false
-#   type = string
+#   type = bool
 #   description = "Install Bedrock Zen Operator. Only for Cloud Pak for Data v4.0"
 # }
 
 variable "install_ccs" {
   default = false
-  type = string
+  type = bool
   description = "Install CCS module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_data_refinery" {
   default = false
-  type = string
+  type = bool
   description = "Install Data Refinery module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_db2u_operator" {
   default = false
-  type = string
+  type = bool
   description = "Install DB2U Operator. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_dmc" {
   default = false
-  type = string
+  type = bool
   description = "Install DMC module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_db2aaservice" {
   default = false
-  type = string
+  type = bool
   description = "Install DB2aaService module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_wsl" {
   default = false
-  type = string
+  type = bool
   description = "Install WSL module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_aiopenscale" {
   default = false
-  type = string
+  type = bool
   description = "Install AI Open Scale module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_wml" {
   default = false
-  type = string
+  type = bool
   description = "Install Watson Machine Learning module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_wkc" {
   default = false
-  type = string
+  type = bool
   description = "Install Watson Knowledge Catalog module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_dv" {
   default = false
-  type = string
+  type = bool
   description = "Install Data Virtualization module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_spss" {
   default = false
-  type = string
+  type = bool
   description = "Install SPSS module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_cde" {
   default = false
-  type = string
+  type = bool
   description = "Install CDE module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_spark" {
   default = false
-  type = string
+  type = bool
   description = "Install Analytics Engine powered by Apache Spark module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_dods" {
   default = false
-  type = string
+  type = bool
   description = "Install DODS module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_ca" {
   default = false
-  type = string
+  type = bool
   description = "Install CA module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_ds" {
   default = false
-  type = string
+  type = bool
   description = "Install DS module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_db2oltp" {
   default = false
-  type = string
+  type = bool
   description = "Install DB2OLTP module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_db2wh" {
   default = false
-  type = string
+  type = bool
   description = "Install DB2WH module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_big_sql" {
   default = false
-  type = string
+  type = bool
   description = "Install Big SQL module. Only for Cloud Pak for Data v4.0"
 }
 
