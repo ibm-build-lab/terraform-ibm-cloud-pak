@@ -1,6 +1,6 @@
 output "cpd_url" {
   description = "Access your Cloud Pak for Data deployment at this URL."
-  value       = "$(oc get routes -n ${var.cpd_namespace})"
+  value       = "$(oc get routes -n zen)"
 }
 
 output "cpd_user" {
