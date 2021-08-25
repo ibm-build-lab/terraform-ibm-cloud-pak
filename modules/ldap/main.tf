@@ -14,43 +14,41 @@ resource "ibm_compute_vm_instance" "ldap" {
   memory               = var.memory
   disks                = var.disks
   local_disk           = var.local_disk
-}
 
-connection {
-  type        = "ssh"
-  user        = "root"
-  private_key = tls_private_key.ssh.private_key_pem
-  agent       = false
-  host        = ibm_compute_vm_instance.ldap[count.index].ipv4_address
-}
+  connection {
+    type        = "ssh"
+    user        = "root"
+    private_key = tls_private_key.ssh.private_key_pem
+    agent       = false
+    host        = ibm_compute_vm_instance.ldap[count.index].ipv4_address
+  }
 
-provisioner "file" {
-  source      = "files/install.sh"
-  destination = "/tmp/install.sh"
-}
+  provisioner "file" {
+    source      = "files/install.sh"
+    destination = "/tmp/install.sh"
+  }
 
-provisioner "file" {
-  source      = "files/DB2_AWSE_Restricted_Activation_11.1.zip"
-  destination = "/tmp/DB2_AWSE_Restricted_Activation_11.1.zip"
-}
+  provisioner "file" {
+    source      = "files/DB2_AWSE_Restricted_Activation_11.1.zip"
+    destination = "/tmp/DB2_AWSE_Restricted_Activation_11.1.zip"
+  }
 
-provisioner "file" {
-  source      = "files/sds64-premium-feature-act-pkg.zip"
-  destination = "/tmp/sds64-premium-feature-act-pkg.zip"
-}
+  provisioner "file" {
+    source      = "files/sds64-premium-feature-act-pkg.zip"
+    destination = "/tmp/sds64-premium-feature-act-pkg.zip"
+  }
 
-provisioner "file" {
-  source      = "files/cp.ldif"
-  destination = "/tmp/cp.ldif"
-}
+  provisioner "file" {
+    source      = "files/cp.ldif"
+    destination = "/tmp/cp.ldif"
+  }
 
-provisioner "file" {
-  source      = "files/db2server-V11.1.rsp"
-  destination = "/tmp/db2server-V11.1.rsp"
-}
+  provisioner "file" {
+    source      = "files/db2server-V11.1.rsp"
+    destination = "/tmp/db2server-V11.1.rsp"
+  }
 
-
-provisioner "remote-exec" {
+  provisioner "remote-exec" {
     # install required libraries and software
     inline = [
       "touch this_file_was_created_in_classic",
