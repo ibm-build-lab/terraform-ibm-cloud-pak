@@ -73,11 +73,18 @@ terraform apply --auto-approve
 
 ## Outputs
 
-Verify the output "ibm_compute_vm_instance.cp4baldap (remote-exec): Start LDAP complete" is displayed and a Public IP created after the process is complete.
+Verify the output:
+
+```console
+ibm_compute_vm_instance.cp4baldap (remote-exec): Start LDAP complete
+CLASSIC_IP_ADDRESS = "***.**.***.***"
+```
+
+is displayed and a Public IP created after the process is complete.
 
 | Name                 | Description                                                                                                                                |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `CLASSIC_IP_ADDRESS` | Note: The LDAP server should not be exposed in the Public interface using port 389. Configure the appropriate Security Groups required for the Server. For more infomration on how to manage Security Groups visit : https://cloud.ibm.com/docs/security-groups?topic=security-groups-managing-sg |
+| `CLASSIC_IP_ADDRESS` | Note: The LDAP server should not be exposed in the Public interface using port 389. Configure the appropriate Security Groups required for the Server. For more information on how to manage Security Groups visit : https://cloud.ibm.com/docs/security-groups?topic=security-groups-managing-sg |
 
 A public and private key is created to access the Virtual Machine:
 
