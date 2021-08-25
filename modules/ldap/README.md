@@ -31,7 +31,7 @@ module "ldap" {
   iaas_classic_api_key  = "*******************"
   iaas_classic_username = "john.doe@ibm.com"
   os_reference_code     = "CentOS_8_64"
-  datacenter            = var.datacenter
+  datacenter            = "dal10"
   hostname              = "ldapvm"
   ibmcloud_domain       = "ibm.cloud" 
   cores                 = 2
