@@ -3,6 +3,11 @@ variable "region" {
     description = "Region code (https://cloud.ibm.com/docs/codeengine?topic=codeengine-regions)"
 }
 
+variable "ibmcloud_api_key" {
+    default = null
+    description = "IBM Cloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
+}
+
 variable "iaas_classic_api_key" {
     default = null
     description = "IBM Classic Infrastucture API Key (https://cloud.ibm.com/docs/account?topic=account-classic_keys)"
