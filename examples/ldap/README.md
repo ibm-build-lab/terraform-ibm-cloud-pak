@@ -23,8 +23,8 @@ Update the /files/cp.ldif.
 
 ## Run using local Terraform Client
 
-For instructions to run using the local Terraform Client on your local machine go [here](../Using_Terraform.md)
-Set the following values in a `terraform.tfvars` file:
+For instructions to run using the local Terraform Client on your local machine go [here](../Using_Terraform.md).
+Set required values in a `terraform.tfvars` file.  Here are some examples:
 
 ```bash
 ibmcloud_api_key      = "*******************"
@@ -46,15 +46,13 @@ These parameters are:
 - `iaas_classic_api_key`    : IBM Classic Infrastucture API Key (see https://cloud.ibm.com/docs/account?topic=account-classic_keys)
 - `iaas_classic_username`   : IBM Classic Infrastucture User Name (see https://cloud.ibm.com/docs/schematics?topic=schematics-create-tf-config)
 - `region`                  : Region code (https://cloud.ibm.com/docs/codeengine?topic=codeengine-regions)
-- `os_reference_code`       : The Operating System Reference Code, for example CentOS_8_64 (see https://cloud.ibm.com/docs/ibm-cloud-provider-for-terraform)
+- `os_reference_code`       : The Operating System Reference Code, for example `CentOS_8_64` (see https://cloud.ibm.com/docs/ibm-cloud-provider-for-terraform)
 - `datacenter`              : The datacenter to which the Virtual Machine will be deployed to, for example dal10. (see https://cloud.ibm.com/docs/schematics?topic=schematics-create-tf-config)
 - `hostname`                : Hostname of the virtual Server.
 - `ibmcloud_domain`         : Domain of the Cloud Account.
 - `cores`                   : Virtual Server CPU Cores.
 - `memory`                  : Virtual Server Memory
 - `disks`                   : Boot disk size
-
-
 
 ### Execute the example
 
@@ -76,14 +74,16 @@ Verify the output "ibm_compute_vm_instance.cp4baldap (remote-exec): Start LDAP c
 |                      | Configure the appropriate Security Groups required for the Server.                                                                         |
 |                      | For more infomration on how to manage Security Groups visit : https://cloud.ibm.com/docs/security-groups?topic=security-groups-managing-sg |
 
-A public and private key is created to access the Virtual Machine
+A public and private key is created to access the Virtual Machine:
 
-generated_key_rsa
-generated_key_rsa.piub
+- generated_key_rsa
+- generated_key_rsa.piub
 
 use ssh to access the server provding the key files.
 
+```bash
 ssh root@<CLASSIC_IP_ADDRESS> -k generated_key_rsa
+```
 
 For more information on accessing the Virtual Machine, visit (https://cloud.ibm.com/docs/account?topic=account-mngclassicinfra)
 

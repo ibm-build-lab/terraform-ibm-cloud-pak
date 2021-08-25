@@ -1,3 +1,4 @@
+
 # Terraform Module to install and configure IBM Secure Directory Server on a Classic Virtual Server Instance
 
 **Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/ldap`
@@ -84,6 +85,7 @@ Update the `./files/cp.ldif` file as needed to change the Directory Struture and
 | `local_disk`            | The disk type for the instance. When set to `true`, the disks for the computing instance are provisioned on the host that the instance runs. Otherwise, SAN disks are provisioned. The default value is `true`. | `true`  | Yes      |
 | `datacenter`            | IBM Cloud data center in which you want to provision the instance.                                                                                                                                          |         | Yes      |
 
+
 ### Executing the Terraform Script
 
 Execute the following Terraform commands:
@@ -93,16 +95,22 @@ terraform init
 terraform plan
 terraform apply --auto-approve
 ```
+### Verify
+If LDAP is successful, you should see
+
+```console
+ibm_compute_vm_instance.cp4baldap (remote-exec): Start LDAP complete
+CLASSIC_IP_ADDRESS = "***.**.***.***"
+```
+displayed after the process is complete.
 
 ## Outputs
-
-Verify the output "ibm_compute_vm_instance.cp4baldap (remote-exec): Start LDAP complete" is displayed and a Public IP created after the process is complete.
 
 | Name                 | Description                                                                                                                                |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | `CLASSIC_IP_ADDRESS` | Note: The LDAP server should not be exposed in the Public interface using port 389. Configure the appropriate Security Groups required for the Server. For more information on how to manage Security Groups visit : https://cloud.ibm.com/docs/security-groups?topic=security-groups-managing-sg |
 
-A public and private key is created to access the Virtual Machine
+A public and private key are created locally to access the Virtual Machine
 
 ```console
 generated_key_rsa
