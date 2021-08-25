@@ -1,7 +1,3 @@
-provider "ibm" {
-  region     = var.region
-}
-
 module "ldap" {
   source = "../../modules/ldap"
   enable               = true
