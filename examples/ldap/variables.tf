@@ -1,13 +1,3 @@
-variable "enable" {
-    default = true
-    description = "Flag to enable or disable the module to create the LDAP server"
-}
-
-variable "ibmcloud_api_key" {
-    default = null
-    description = "IBM Cloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
-}
-
 variable "region" {
     default = null
     description = "Region code (https://cloud.ibm.com/docs/codeengine?topic=codeengine-regions)"
@@ -67,7 +57,6 @@ variable "network_speed" {
     default = 100
     description = "The connection speed (in Mbps) for the instance's network components. The default value is 100"
 }
-
 
 variable "hourly_billing" {
     default = true
