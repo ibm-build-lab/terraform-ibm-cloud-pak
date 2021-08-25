@@ -80,7 +80,7 @@ ibm_compute_vm_instance.cp4baldap (remote-exec): Start LDAP complete
 CLASSIC_IP_ADDRESS = "***.**.***.***"
 ```
 
-is displayed and a Public IP created after the process is complete.
+is displayed.
 
 | Name                 | Description                                                                                                                                |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
