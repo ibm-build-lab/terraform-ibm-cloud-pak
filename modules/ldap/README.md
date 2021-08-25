@@ -37,9 +37,10 @@ module "ldap" {
   cores                 = "2"
   memory                = "4096"
   network_speed         = "100"
-  disks                 = [25]
+  disks                 = 25
   hourly_billing        = false
   local_disk            = false
+  private_network_only  = true
 }
 ```
 
@@ -74,16 +75,16 @@ Update the `./files/cp.ldif` file as needed to change the Directory Struture and
 | `region`                | Region code (https://cloud.ibm.com/docs/codeengine?topic=codeengine-regions)                                                                                                                                |         | Yes      |
 | `os_reference_code`     | The Operating System Reference Code, for example `CentOS_8_64` (see https://cloud.ibm.com/docs/ibm-cloud-provider-for-terraform)                                                                              |         | Yes      |
 | `datacenter`            | IBM Cloud data center in which you want to provision the instance.                                                                                                                                          |         | Yes      |
-| `hostname`              | Hostname of the virtual Server                                                                                                                                                                              |         | Yes      |
-| `ibmcloud_domain`       | IBM Cloud account Domain, example `<My Company>.cloud`                                                                                                                                                        |         | Yes      |
+| `hostname`              | Hostname of the virtual Server                                                                                                                                                                              |    "ldapvm"     | No      |
+| `ibmcloud_domain`       | IBM Cloud account Domain, example `<My Company>.cloud`                                                                                                                                                        |    ibm.cloud     | Yes      |
 | `cores`                 | Virtual Server CPU Cores                                                                                                                                                                                    |         | Yes      |
 | `memory`                | Virtual Server Memory                                                                                                                                                                                       |         | Yes      |
-| `disks`                 | The numeric disk sizes (in GBs) for the instance's block device and disk image settings.                                                                                                                      |         | Yes      |
-| `network_speed`         | The connection speed (in Mbps) for the instance's network components. The default value is `100`                                                                                                             | `100`   | Yes      |
-| `hourly_billing`        | The billing type for the instance. When set to `true`, the computing instance is billed on hourly usage. Otherwise, the instance is billed monthly. The default value is `true`.                                | `true`  | Yes      |
-| `private_network_only`  | When set to `true`, a compute instance has only access to the private network. The default value is `false`.                                                                                                    | `false` | Yes      |
-| `local_disk`            | The disk type for the instance. When set to `true`, the disks for the computing instance are provisioned on the host that the instance runs. Otherwise, SAN disks are provisioned. The default value is `true`. | `true`  | Yes      |
-| `datacenter`            | IBM Cloud data center in which you want to provision the instance.                                                                                                                                          |         | Yes      |
+| `disks`                 | The numeric disk sizes (in GBs) for the instance's block device and disk image settings.                                                                                                                      |          | Yes      |
+| `network_speed`         | The connection speed (in Mbps) for the instance's network components. The default value is `100`                                                                                                             | `100`   | No      |
+| `hourly_billing`        | The billing type for the instance. When set to `true`, the computing instance is billed on hourly usage. Otherwise, the instance is billed monthly. The default value is `true`.                                | `true`  | No      |
+| `private_network_only`  | When set to `true`, a compute instance has only access to the private network. The default value is `false`.                                                                                                    | `false` | No      |
+| `local_disk`            | The disk type for the instance. When set to `true`, the disks for the computing instance are provisioned on the host that the instance runs. Otherwise, SAN disks are provisioned. The default value is `true`. | `true`  | No      |
+| `private_network_only`  | When set to `true`, a compute instance has only access to the private network. The default value is `false`.| `false`  | No      |
 
 
 ### Executing the Terraform Script
