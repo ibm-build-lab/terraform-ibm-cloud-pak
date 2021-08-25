@@ -37,7 +37,7 @@ module "ldap" {
   cores                 = "2"
   memory                = "4096"
   network_speed         = "100"
-  disks                 = 25
+  disks                 = [25]
   hourly_billing        = false
   local_disk            = false
   private_network_only  = true
@@ -79,7 +79,7 @@ Update the `./files/cp.ldif` file as needed to change the Directory Struture and
 | `ibmcloud_domain`       | IBM Cloud account Domain, example `<My Company>.cloud`                                                                                                                                                        |    ibm.cloud     | Yes      |
 | `cores`                 | Virtual Server CPU Cores                                                                                                                                                                                    |         | Yes      |
 | `memory`                | Virtual Server Memory                                                                                                                                                                                       |         | Yes      |
-| `disks`                 | The numeric disk sizes (in GBs) for the instance's block device and disk image settings.                                                                                                                      |          | Yes      |
+| `disks`                 | Array of numeric disk sizes in GBs for the instance's block device and disk image settings. Example: [25] or [25, 10, 20]                                                                                                                    |          | Yes      |
 | `network_speed`         | The connection speed (in Mbps) for the instance's network components. The default value is `100`                                                                                                             | `100`   | No      |
 | `hourly_billing`        | The billing type for the instance. When set to `true`, the computing instance is billed on hourly usage. Otherwise, the instance is billed monthly. The default value is `true`.                                | `true`  | No      |
 | `private_network_only`  | When set to `true`, a compute instance has only access to the private network. The default value is `false`.                                                                                                    | `false` | No      |
