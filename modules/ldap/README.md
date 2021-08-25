@@ -34,9 +34,9 @@ module "ldap" {
   datacenter            = var.datacenter
   hostname              = "ldapvm"
   ibmcloud_domain       = "ibm.cloud" 
-  cores                 = "2"
-  memory                = "4096"
-  network_speed         = "100"
+  cores                 = 2
+  memory                = 4096
+  network_speed         = 100
   disks                 = [25]
   hourly_billing        = false
   local_disk            = false
