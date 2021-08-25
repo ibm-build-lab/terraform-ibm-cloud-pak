@@ -1,17 +1,6 @@
-# Terraform Module to provision a Classic Virtual Server Instance and installs and configures IBM Secure Directory Server
-
-This Terraform Module to provision a Classic Virtual Server Instance and installs and configures IBM Secure Directory Server
+# Terraform Module to install and configure IBM Secure Directory Server on a Classic Virtual Server Instance
 
 **Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/ldap`
-
-- [Terraform Module to install and configure IBM Secure Directory Server](#Terraform-Module-to-provision-a-Classic-Virtual-Server-Instance-and-installs-and-configures-IBM-Secure-Directory-Server)
-  - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
-  - [Provisioning this module in a Terraform Script](#provisioning-this-module-in-a-terraform-script)
-    - [Download required license files](#Download-required-license-files)
-    - [Update the ldif file](#update-the-ldif-file)
-  - [Input Variables](#input-variables)
-  - [Executing the Terraform Script](#executing-the-terraform-script)
-  - [Clean up](#clean-up)
 
 ## Set up access to IBM Cloud
 
@@ -26,6 +15,30 @@ In your Terraform code define the `ibm` provisioner block with the `region`.
 ```hcl
 provider "ibm" {
   region     = "us-south"
+}
+```
+
+Then add the code to provision the module. Values below are examples:
+
+```bash
+module "ldap" {
+  source = "../../modules/ldap"
+  enable = true
+
+  // other parameters:
+  ibmcloud_api_key      = "**************"
+  iaas_classic_api_key  = "*******************"
+  iaas_classic_username = "john.doe@ibm.com"
+  os_reference_code     = "CentOS_8_64"
+  datacenter            = var.datacenter
+  hostname              = "ldapvm"
+  ibmcloud_domain       = "ibm.cloud" 
+  cores                 = "2"
+  memory                = "4096"
+  network_speed         = "100"
+  disks                 = [25]
+  hourly_billing        = false
+  local_disk            = false
 }
 ```
 
