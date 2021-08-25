@@ -1,5 +1,5 @@
 provider "ibm" {
-  region     = "us-south"
+  region     = var.region
 }
 
 module "ldap" {
