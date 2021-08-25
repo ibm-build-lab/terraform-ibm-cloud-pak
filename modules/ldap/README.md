@@ -91,7 +91,7 @@ Execute the following Terraform commands:
 ```bash
 terraform init
 terraform plan
-terraform apply -auto-approve
+terraform apply --auto-approve
 ```
 
 ## Outputs
