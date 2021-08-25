@@ -45,8 +45,9 @@ echo "Deploying Catalog Option ${OPENCLOUD_OPERATOR_CATALOG}"
 echo "${OPENCLOUD_OPERATOR_CATALOG}" | oc apply -f -
 
 echo "Creating namespace ${NAMESPACE}"
-kubectl create namespace "${NAMESPACE}" # --dry-run=client -o yaml | kubectl apply -f -
-kubectl create namespace cpd-meta-ops # --dry-run=client -o yaml | kubectl apply -f -
+kubectl create namespace "${NAMESPACE}"
+echo "Creating namespace cpd-meta-ops"
+kubectl create namespace cpd-meta-ops
 
 create_secret() {
   secret_name=$1
