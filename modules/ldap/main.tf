@@ -14,7 +14,7 @@ resource "ibm_compute_vm_instance" "ldap" {
   memory               = var.memory
   disks                = var.disks
   local_disk           = var.local_disk
-
+}
 
 connection {
   type        = "ssh"
