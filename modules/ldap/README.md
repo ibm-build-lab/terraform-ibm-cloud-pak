@@ -109,7 +109,7 @@ generated_key_rsa
 generated_key_rsa.pub
 ```
 
-use ssh to access the server provding the key files.
+use ssh to access the server providing the key files.
 
 ```console
 ssh root@<CLASSIC_IP_ADDRESS> -k generated_key_rsa
