@@ -1,9 +1,9 @@
 
 # Example to provision LDAP Terraform Module
 
-### Download required license files
+## Setup
 
-Download the following DB2 and IBM SDS license files:
+### 1. Download required license files from [IBM Internal Software Download](https://w3.ibm.com/w3publisher/software-downloads) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `../../modules/ldap/files` folder
 
 ```console
 DB2:
@@ -15,11 +15,9 @@ PartUmber : CRV3IML
 Filename : sds64-premium-feature-act-pkg.zip
 ```
 
-Copy the files to the `./files` folder
+### 2. Update the ldif file
 
-### Update the ldif file
-
-Update the `./files/cp.ldif` file as needed to change the Directory Struture and user information
+Update the `../../modules/files/cp.ldif` file as needed to change the Directory Structure and user information
 
 ## Run using local Terraform Client
 
