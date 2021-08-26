@@ -25,11 +25,6 @@ variable "iaas_classic_username" {
 
 }
 
-variable "ssh_key_label" {
-    default = "ldap-ssh-key"
-    description = "label for unique ssh key"
-}
-
 variable "ibmcloud_domain" {
     default = null
     description = "IBM Cloud account Domain, example <My Company>.cloud"
