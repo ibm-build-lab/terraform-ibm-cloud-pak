@@ -1,7 +1,6 @@
 resource "ibm_compute_vm_instance" "ldap" {
 
   count                = var.enable ? 1 : 0
-
   hostname             = var.hostname
   domain               = var.ibmcloud_domain
   ssh_key_ids          = ["${ibm_compute_ssh_key.key.id}"]
@@ -15,42 +14,40 @@ resource "ibm_compute_vm_instance" "ldap" {
   disks                = var.disks
   local_disk           = var.local_disk
 
+  connection {
+    type        = "ssh"
+    user        = "root"
+    private_key = tls_private_key.ssh.private_key_pem
+    agent       = false
+    host        = ibm_compute_vm_instance.ldap[count.index].ipv4_address
+  }
 
-connection {
-  type        = "ssh"
-  user        = "root"
-  private_key = tls_private_key.ssh.private_key_pem
-  agent       = false
-  host        = ibm_compute_vm_instance.ldap[count.index].ipv4_address
-}
+  provisioner "file" {
+    source      = "files/install.sh"
+    destination = "/tmp/install.sh"
+  }
 
-provisioner "file" {
-  source      = "files/install.sh"
-  destination = "/tmp/install.sh"
-}
+  provisioner "file" {
+    source      = "files/DB2_AWSE_Restricted_Activation_11.1.zip"
+    destination = "/tmp/DB2_AWSE_Restricted_Activation_11.1.zip"
+  }
 
-provisioner "file" {
-  source      = "files/DB2_AWSE_Restricted_Activation_11.1.zip"
-  destination = "/tmp/DB2_AWSE_Restricted_Activation_11.1.zip"
-}
+  provisioner "file" {
+    source      = "files/sds64-premium-feature-act-pkg.zip"
+    destination = "/tmp/sds64-premium-feature-act-pkg.zip"
+  }
 
-provisioner "file" {
-  source      = "files/sds64-premium-feature-act-pkg.zip"
-  destination = "/tmp/sds64-premium-feature-act-pkg.zip"
-}
+  provisioner "file" {
+    source      = "files/cp.ldif"
+    destination = "/tmp/cp.ldif"
+  }
 
-provisioner "file" {
-  source      = "files/cp.ldif"
-  destination = "/tmp/cp.ldif"
-}
+  provisioner "file" {
+    source      = "files/db2server-V11.1.rsp"
+    destination = "/tmp/db2server-V11.1.rsp"
+  }
 
-provisioner "file" {
-  source      = "files/db2server-V11.1.rsp"
-  destination = "/tmp/db2server-V11.1.rsp"
-}
-
-
-provisioner "remote-exec" {
+  provisioner "remote-exec" {
     # install required libraries and software
     inline = [
       "touch this_file_was_created_in_classic",
@@ -64,7 +61,7 @@ provisioner "remote-exec" {
       "yum install -y libaio",
       "chmod +x /tmp/install.sh",
       "sh /tmp/install.sh",
-    ]
+      ]
   }
 }
 
@@ -90,16 +87,4 @@ resource "ibm_compute_ssh_key" "key" {
   label      = "ldap-vm-to-migrate"
   public_key = tls_private_key.ssh.public_key_openssh
   notes = "created by terraform"
-}
-
-output "CLASSIC_ID" {
-
-value = var.enable && length(ibm_compute_vm_instance.ldap) > 0 ? ibm_compute_vm_instance.ldap.0.id : ""
-
-}
-
-output "CLASSIC_IP_ADDRESS" {
-
-  value = var.enable && length(ibm_compute_vm_instance.ldap) > 0 ? ibm_compute_vm_instance.ldap.0.ipv4_address: ""
-
 }

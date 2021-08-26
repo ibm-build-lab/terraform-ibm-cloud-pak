@@ -1,16 +1,11 @@
-variable "enable" {
-    default = true
-    description = "Flag to enable or disable the module to create the LDAP server"
+variable "region" {
+    default = null
+    description = "Region code (https://cloud.ibm.com/docs/codeengine?topic=codeengine-regions)"
 }
 
 variable "ibmcloud_api_key" {
     default = null
     description = "IBM Cloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
-}
-
-variable "region" {
-    default = null
-    description = "Region code (https://cloud.ibm.com/docs/codeengine?topic=codeengine-regions)"
 }
 
 variable "iaas_classic_api_key" {
@@ -27,13 +22,13 @@ variable "iaas_classic_username" {
 
 variable "ibmcloud_domain" {
     default = null
-    description = "IBM Cloud account Domain, example <My Company>.cloud"
+    description = "IBM Cloud account Domain, example `ibm.cloud`"
 
 }
 
 variable "os_reference_code" {
     default = null
-    description = "The Operating System Reference Code, for example CentOS_8_64 (see https://cloud.ibm.com/docs/ibm-cloud-provider-for-terraform)"
+    description = "The Operating System Reference Code, for example `CentOS_8_64` (see https://cloud.ibm.com/docs/ibm-cloud-provider-for-terraform)"
 
 }
 
@@ -50,7 +45,7 @@ variable "memory" {
 
 variable "disks" {
     default = null
-    description = "The numeric disk sizes in GBs for the instance's block device and disk image settings."
+    description = "The numeric disk sizes (in GBs) for the instance's block device and disk image settings."
 }
 
 variable "hostname" {
@@ -65,21 +60,20 @@ variable "datacenter" {
 
 variable "network_speed" {
     default = 100
-    description = "The connection speed (in Mbps) for the instance's network components. The default value is 100"
+    description = "The connection speed (in Mbps) for the instance's network components. The default value is `100`"
 }
-
 
 variable "hourly_billing" {
     default = true
-    description = "The billing type for the instance. When set to true, the computing instance is billed on hourly usage. Otherwise, the instance is billed monthly. The default value is true."
+    description = "The billing type for the instance. When set to `true`, the computing instance is billed on hourly usage. Otherwise, the instance is billed monthly. The default value is `true`."
 }
 
 variable "private_network_only" {
     default = false
-    description = "When set to true, a compute instance has only access to the private network. The default value is false."
+    description = "When set to `true`, a compute instance has only access to the private network. The default value is `false`."
 }
 
  variable "local_disk" {
     default = true
-    description = "The disk type for the instance. When set to true, the disks for the computing instance are provisioned on the host that the instance runs. Otherwise, SAN disks are provisioned. The default value is true."
+    description = "The disk type for the instance. When set to `true`, the disks for the computing instance are provisioned on the host that the instance runs. Otherwise, SAN disks are provisioned. The default value is `true`."
 }
