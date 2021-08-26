@@ -23,27 +23,27 @@ resource "ibm_compute_vm_instance" "ldap" {
   }
 
   provisioner "file" {
-    source      = "files/install.sh"
+    source      = "./files/install.sh"
     destination = "/tmp/install.sh"
   }
 
   provisioner "file" {
-    source      = "files/DB2_AWSE_Restricted_Activation_11.1.zip"
+    source      = "./files/DB2_AWSE_Restricted_Activation_11.1.zip"
     destination = "/tmp/DB2_AWSE_Restricted_Activation_11.1.zip"
   }
 
   provisioner "file" {
-    source      = "files/sds64-premium-feature-act-pkg.zip"
+    source      = "./files/sds64-premium-feature-act-pkg.zip"
     destination = "/tmp/sds64-premium-feature-act-pkg.zip"
   }
 
   provisioner "file" {
-    source      = "files/cp.ldif"
+    source      = "./files/cp.ldif"
     destination = "/tmp/cp.ldif"
   }
 
   provisioner "file" {
-    source      = "files/db2server-V11.1.rsp"
+    source      = "./files/db2server-V11.1.rsp"
     destination = "/tmp/db2server-V11.1.rsp"
   }
 
