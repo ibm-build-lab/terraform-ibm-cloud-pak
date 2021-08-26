@@ -89,7 +89,7 @@ A public and private key is created to access the Virtual Machine:
 
 ```console
 generated_key_rsa
-generated_key_rsa.piub
+generated_key_rsa.pub
 ```
 
 use `ssh` to access the server provding the key files.
