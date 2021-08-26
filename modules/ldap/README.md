@@ -9,41 +9,6 @@ If running these modules from your local terminal, you need to set the credentia
 
 Go [here](../../CREDENTIALS.md) for details.
 
-## Provisioning this module in a Terraform Script
-
-In your Terraform code define the `ibm` provisioner block with the `region`.
-
-```hcl
-provider "ibm" {
-  region     = "us-south"
-}
-```
-
-Then add the code to provision the module. Values below are examples:
-
-```bash
-module "ldap" {
-  source = "../../modules/ldap"
-  enable = true
-
-  // other parameters:
-  ibmcloud_api_key      = "**************"
-  iaas_classic_api_key  = "*******************"
-  iaas_classic_username = "john.doe@ibm.com"
-  os_reference_code     = "CentOS_8_64"
-  datacenter            = "dal10"
-  hostname              = "ldapvm"
-  ibmcloud_domain       = "ibm.cloud" 
-  cores                 = 2
-  memory                = 4096
-  network_speed         = 100
-  disks                 = [25]
-  hourly_billing        = false
-  local_disk            = false
-  private_network_only  = true
-}
-```
-
 ### Download required license files
 
 Download the following DB2 and IBM SDS license files:
@@ -64,6 +29,10 @@ Copy the files to the ./files folder
 
 Update the `./files/cp.ldif` file as needed to change the Directory Struture and user information
 
+## Provisioning this module in a Terraform Script
+
+See the example [here](../../examples/ldap) on how to provision this module.
+
 ## Input Variables
 
 | Name                    | Description                                                                                                                                                                                                 | Default | Required |
@@ -72,7 +41,7 @@ Update the `./files/cp.ldif` file as needed to change the Directory Struture and
 | `ibmcloud_api_key`      | IBM Cloud API key (See https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key). Needed to create SSH Key                                                   |         | Yes      |
 | `iaas_classic_api_key`  | IBM Classic Infrastucture API Key (see https://cloud.ibm.com/docs/account?topic=account-classic_keys). Needed to create SSH key                                               |         | Yes      |
 | `iaas_classic_username` | The IBM Cloud Classic Infrastructure username associated with the Classic Infrasture API key. Needed to create SSH key                                                      |         | Yes      |
-| `region`                | Region code (https://cloud.ibm.com/docs/codeengine?topic=codeengine-regions)                                                                                                                                |         | Yes      |
+| `region`                | Region code (https://cloud.ibm.com/docs/codeengine?topic=codeengine-regions) |         | Yes      |
 | `os_reference_code`     | The Operating System Reference Code, for example `CentOS_8_64` (see https://cloud.ibm.com/docs/ibm-cloud-provider-for-terraform)                                                                              |         | Yes      |
 | `datacenter`            | IBM Cloud data center in which you want to provision the instance.                                                                                                                                          |         | Yes      |
 | `hostname`              | Hostname of the virtual Server                                                                                                                                                                              |    "ldapvm"     | No      |

@@ -3,21 +3,21 @@
 
 ## Setup
 
-### 1. Download required license files from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `../../modules/ldap/files` folder
+1. Download required license files from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `../../modules/ldap/files` folder
 
-```console
-DB2:
-Part Number : CNB21ML
-Filename : DB2_AWSE_Restricted_Activation_11.1.zip
+    ```console
+    DB2:
+    Part Number : CNB21ML
+    Filename : DB2_AWSE_Restricted_Activation_11.1.zip
 
-IBM SDS:
-Part Number : CRV3IML
-Filename : sds64-premium-feature-act-pkg.zip
-```
+    IBM SDS:
+    Part Number : CRV3IML
+    Filename : sds64-premium-feature-act-pkg.zip
+    ```
 
-### 2. Update the ldif file
+ 2. Update the ldif file
 
-Update the `../../modules/files/cp.ldif` file as needed to change the Directory Structure and user information
+    Update the `../../modules/files/cp.ldif` file as needed to change the Directory Structure and user information.  For information on LDIF format, go [here](https://www.ibm.com/docs/en/i/7.4?topic=reference-ldap-data-interchange-format-ldif)
 
 ## Run using local Terraform Client
 
@@ -74,27 +74,28 @@ terraform apply --auto-approve
 Verify the output:
 
 ```console
-ibm_compute_vm_instance.cp4baldap (remote-exec): Start LDAP complete
-CLASSIC_IP_ADDRESS = "***.**.***.***"
+ldap_id = *********
+ldap_ip_address = xx.xx.xxx.xxx
 ```
 
 is displayed.
 
 | Name                 | Description                                                                                                                                |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `ldap_ip_address` | Note: The LDAP server should not be exposed in the Public interface using port 389. Configure the appropriate Security Groups required for the Server. For more information on how to manage Security Groups visit : https://cloud.ibm.com/docs/security-groups?topic=security-groups-managing-sg |
+| `ldap_id` | ID for the LDAP server
+| `ldap_ip_address` | IP address for LDAP server. Note: The LDAP server should not be exposed in the Public interface using port 389. Configure the appropriate Security Groups required for the Server. For more information on how to manage Security Groups visit : https://cloud.ibm.com/docs/security-groups?topic=security-groups-managing-sg |
 
 A public and private key is created to access the Virtual Machine:
 
 ```console
-- generated_key_rsa
-- generated_key_rsa.piub
+generated_key_rsa
+generated_key_rsa.pub
 ```
 
-use ssh to access the server provding the key files.
+use `ssh` to access the server provding the key files.
 
 ```bash
-ssh root@<CLASSIC_IP_ADDRESS> -k generated_key_rsa
+ssh root@<ldap_ip_address> -k generated_key_rsa
 ```
 
 For more information on accessing the Virtual Machine, visit (https://cloud.ibm.com/docs/account?topic=account-mngclassicinfra)
