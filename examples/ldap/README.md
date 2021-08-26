@@ -3,15 +3,15 @@
 
 ## Setup
 
-### 1. Download required license files from [IBM Internal Software Download](https://w3.ibm.com/w3publisher/software-downloads) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `../../modules/ldap/files` folder
+### 1. Download required license files from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `../../modules/ldap/files` folder
 
 ```console
 DB2:
-PartUmber : CNB21ML
+Part Number : CNB21ML
 Filename : DB2_AWSE_Restricted_Activation_11.1.zip
 
 IBM SDS:
-PartUmber : CRV3IML
+Part Number : CRV3IML
 Filename : sds64-premium-feature-act-pkg.zip
 ```
 
@@ -27,7 +27,7 @@ Set required values in a `terraform.tfvars` file.  Here are some examples:
 ```bash
   ibmcloud_api_key      = "**************"
   iaas_classic_api_key  = "*******************"
-  iaas_classic_username = "john.doe@ibm.com"
+  iaas_classic_username = "233432_john.doe@ibm.com"
   os_reference_code     = "CentOS_8_64"
   region                = "us-south"
   datacenter            = "dal10"
@@ -46,7 +46,7 @@ These parameters are:
 
 - `ibmcloud_api_key`        : IBM Cloud API key (See https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)
 - `iaas_classic_api_key`    : IBM Classic Infrastucture API Key (see https://cloud.ibm.com/docs/account?topic=account-classic_keys)
-- `iaas_classic_username`   : IBM Classic Infrastucture User Name (see https://cloud.ibm.com/docs/schematics?topic=schematics-create-tf-config)
+- `iaas_classic_username`   : IBM Classic Infrastucture User Name (see https://cloud.ibm.com/docs/schematics?topic=schematics-create-tf-config). To see your account user name, run the command `"ibmcloud sl user list"`
 - `region`                  : Region code (https://cloud.ibm.com/docs/codeengine?topic=codeengine-regions)
 - `os_reference_code`       : The Operating System Reference Code, for example `CentOS_8_64` (see https://cloud.ibm.com/docs/ibm-cloud-provider-for-terraform)
 - `datacenter`              : The datacenter to which the Virtual Machine will be deployed to, for example `dal10`. (see https://cloud.ibm.com/docs/schematics?topic=schematics-create-tf-config)
@@ -82,7 +82,7 @@ is displayed.
 
 | Name                 | Description                                                                                                                                |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `CLASSIC_IP_ADDRESS` | Note: The LDAP server should not be exposed in the Public interface using port 389. Configure the appropriate Security Groups required for the Server. For more information on how to manage Security Groups visit : https://cloud.ibm.com/docs/security-groups?topic=security-groups-managing-sg |
+| `ldap_ip_address` | Note: The LDAP server should not be exposed in the Public interface using port 389. Configure the appropriate Security Groups required for the Server. For more information on how to manage Security Groups visit : https://cloud.ibm.com/docs/security-groups?topic=security-groups-managing-sg |
 
 A public and private key is created to access the Virtual Machine:
 
