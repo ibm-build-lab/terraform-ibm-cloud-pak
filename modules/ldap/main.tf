@@ -66,7 +66,7 @@ resource "ibm_compute_vm_instance" "ldap" {
 }
 
 # Generate an SSH key/pair to be used to provision the classic VSI
-resource tls_private_key ssh {
+resource "tls_private_key" "ssh" {
   algorithm = "RSA"
   rsa_bits = 4096
 }
