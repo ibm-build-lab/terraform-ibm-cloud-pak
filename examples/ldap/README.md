@@ -74,14 +74,15 @@ terraform apply --auto-approve
 Verify the output:
 
 ```console
-ibm_compute_vm_instance.cp4baldap (remote-exec): Start LDAP complete
-CLASSIC_IP_ADDRESS = "***.**.***.***"
+ldap_id = *********
+ldap_ip_address = xx.xx.xxx.xxx
 ```
 
 is displayed.
 
 | Name                 | Description                                                                                                                                |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `ldap_id` | ID for the LDAP server
 | `ldap_ip_address` | Note: The LDAP server should not be exposed in the Public interface using port 389. Configure the appropriate Security Groups required for the Server. For more information on how to manage Security Groups visit : https://cloud.ibm.com/docs/security-groups?topic=security-groups-managing-sg |
 
 A public and private key is created to access the Virtual Machine:
