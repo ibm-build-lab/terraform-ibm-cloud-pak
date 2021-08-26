@@ -16,6 +16,9 @@ In your Terraform code define the `ibm` provisioner block with the `region`.
 ```hcl
 provider "ibm" {
   region     = "us-south"
+  ibmcloud_api_key      = var.ibmcloud_api_key
+  iaas_classic_api_key  = var.iaas_classic_api_key
+  iaas_classic_username = var.iaas_classic_username
 }
 ```
 
@@ -29,7 +32,7 @@ module "ldap" {
   // other parameters:
   ibmcloud_api_key      = "**************"
   iaas_classic_api_key  = "*******************"
-  iaas_classic_username = "john.doe@ibm.com"
+  iaas_classic_username = "243433_john.doe@ibm.com"
   os_reference_code     = "CentOS_8_64"
   datacenter            = "dal10"
   hostname              = "ldapvm"
@@ -71,7 +74,7 @@ Update the `./files/cp.ldif` file as needed to change the Directory Struture and
 | `enable`                | If set to `false` does not install IBM Secure Directory Server. Enabled by default                                                                                                                          | `true`  | No       |
 | `ibmcloud_api_key`      | IBM Cloud API key (See https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)                                                                                                         |         | Yes      |
 | `iaas_classic_api_key`  | IBM Classic Infrastucture API Key (see https://cloud.ibm.com/docs/account?topic=account-classic_keys)                                                                                                       |         | Yes      |
-| `iaas_classic_username` | The IBM Cloud Classic Infrastructure username associated with the Classic Infrasture API key                                                                                                               |         | Yes      |
+| `iaas_classic_username` | The IBM Cloud Classic Infrastructure username associated with the Classic Infrasture API key. Run `ibmcloud sl user list` to see full user name.                                                                                                          |         | Yes      |
 | `region`                | Region code (https://cloud.ibm.com/docs/codeengine?topic=codeengine-regions)                                                                                                                                |         | Yes      |
 | `os_reference_code`     | The Operating System Reference Code, for example `CentOS_8_64` (see https://cloud.ibm.com/docs/ibm-cloud-provider-for-terraform)                                                                              |         | Yes      |
 | `datacenter`            | IBM Cloud data center in which you want to provision the instance.                                                                                                                                          |         | Yes      |
