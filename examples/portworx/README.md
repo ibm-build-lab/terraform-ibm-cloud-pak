@@ -1,4 +1,4 @@
-# Example to provision Portworx Terraform Module
+# Example to provision Portworx Terraform Module (this module only supports VPC clusters)
 
 ## Run using IBM Cloud Schematics
 
