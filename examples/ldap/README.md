@@ -95,7 +95,7 @@ generated_key_rsa.pub
 use `ssh` to access the server provding the key files.
 
 ```bash
-ssh root@<CLASSIC_IP_ADDRESS> -k generated_key_rsa
+ssh root@<ldap_ip_address> -k generated_key_rsa
 ```
 
 For more information on accessing the Virtual Machine, visit (https://cloud.ibm.com/docs/account?topic=account-mngclassicinfra)
