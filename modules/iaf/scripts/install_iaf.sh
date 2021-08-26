@@ -1,7 +1,7 @@
 #!/bin/sh
 
 echo "Creating namespace ${IAF_NAMESPACE}"
-kubectl create namespace ${IAF_NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
+kubectl create namespace ${IAF_NAMESPACE}
 kubectl config set-context --current --namespace=${IAF_NAMESPACE}
 
 # Create the Operator catalog source

@@ -1,7 +1,3 @@
-provider "ibm" {
-  version          = "~> 1.12"
-}
-
 data "ibm_resource_group" "group" {
   name = var.resource_group_name
 }

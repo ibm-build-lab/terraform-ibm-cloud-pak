@@ -6,11 +6,13 @@
 data "ibm_resource_group" "group" {
   name = var.resource_group_name
 }
+
 data "ibm_container_vpc_cluster" "this" {
   count = var.enable ? 1 : 0
   name = var.cluster_id
   resource_group_id = data.ibm_resource_group.group.id
 }
+
 data "ibm_container_vpc_cluster_worker" "this" {
   count = var.enable ? var.worker_nodes : 0
 
