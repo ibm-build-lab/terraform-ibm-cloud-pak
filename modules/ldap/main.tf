@@ -84,7 +84,7 @@ resource "local_file" "ssh-public-key" {
 }
 
 resource "ibm_compute_ssh_key" "key" {
-  label      = "ldap-vm-to-migrate"
+  label      = var.ssh_key_label
   public_key = tls_private_key.ssh.public_key_openssh
-  notes = "created by terraform"
+  notes = "created by terraform for ldap"
 }
