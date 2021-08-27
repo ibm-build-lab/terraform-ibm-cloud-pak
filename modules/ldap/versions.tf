@@ -3,16 +3,8 @@
 #    required_providers {
 #       ibm = {
 #          source = "IBM-Cloud/ibm"
-#          version = "1.26.2"       
+#          version = "~>1.12"       
 #          }
 #     }
 # }
 
-terraform {
-   required_providers {
-      ibm = {
-         source = "IBM-Cloud/ibm"
-         version = "~>1.12"       
-         }
-    }
-}
