@@ -5,17 +5,23 @@ This Terraform Module installs **Cloud Pak for Security** on an Openshift (ROKS)
 **Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4s`
 
 - [Terraform Module to install Cloud Pak for Security](#terraform-module-to-install-cloud-pak-for-security)
-  - [Required command line tools](#setup-tools)
+  - [Required command line tools](#prerequisites)
+    - [LDAP](#ldap)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
   - [Provisioning this module in a Terraform Script](#provisioning-this-module-in-a-terraform-script)
     - [Setting up the OpenShift cluster](#setting-up-the-openshift-cluster)
     - [Using the CP4S Module](#using-the-cp4s-module)
   - [Input Variables](#input-variables)
+    - [Sample Input](#sample-input)
   - [Executing the Terraform Script](#executing-the-terraform-script)
 
-## Setup Tools
+## Prerequisites
 
 The cloud pak for security installer runs on your machine, for the installer go [here](https://www.ibm.com/docs/en/cloud-paks/cp-security/1.6.0?topic=tasks-installing-developer-tools) to be sure your command line tools are compatible.
+
+### LDAP
+
+Cloud Pak for Security requires a functioning LDAP to create instances.  This means that while the install can be completed without the LDAP, Cloud Pak for Security will require the configuration of one before using its features.  If you do not have an LDAP you can use [this](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/ldap) terraform module to create one.
 
 ## Set up access to IBM Cloud
 
@@ -101,6 +107,28 @@ module "cp4s" {
 **NOTE** The boolean input variable `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
 
 For an example of how to put all this together, refer to our [Cloud Pak for Security Terraform script](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform//cp4s).
+
+### Sample Input
+
+Instead of inputing the variables you can pass a test.auto.tfvars file.  The layout of the file will look like this below.
+
+```bash
+
+// Resource/Data Req to get cluster info
+region              = "<region>"
+resource_group_name = "<resource_group_name>"
+cluster_config_path    = "./kube/config"
+cluster_id          = "<cluster id>"
+// CP4aiops Module Req
+enable          = true
+// Entitled Registry parameters:
+entitled_registry_key        = "<entitlment key>"
+entitled_registry_user_email = "<email>"
+
+ldap_status = false
+ldap_user_id = "<ldap user>"
+
+```
 
 ## Executing the Terraform Script
 
