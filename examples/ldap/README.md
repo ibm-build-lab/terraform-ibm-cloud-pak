@@ -92,7 +92,7 @@ generated_key_rsa
 generated_key_rsa.pub
 ```
 
-use `ssh` to access the server provding the key files.
+use `ssh` to access the server providing the key files.
 
 ```bash
 ssh root@<ldap_ip_address> -k generated_key_rsa
