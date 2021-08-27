@@ -6,7 +6,7 @@ ibmcloud login -apikey ${IC_API_KEY}
 ibmcloud ks cluster config -c ${MCM_CLUSTER} --admin
 
 echo "Creating namespace ${MCM_NAMESPACE}"
-kubectl create namespace ${MCM_NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
+kubectl create namespace ${MCM_NAMESPACE}
 
 echo "Setting valid route to containers registry for IBM Cloud Pak Multicloud Management images"
 kubectl patch configs.imageregistry.operator.openshift.io/cluster --type merge -p '{"spec":{"defaultRoute":true}}'

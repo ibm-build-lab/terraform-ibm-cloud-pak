@@ -1,8 +1,7 @@
 // Requirements:
 
 provider "ibm" {
-  region     = var.region
-  version    = "~> 1.12"
+  region = var.region
 }
 
 data "ibm_resource_group" "group" {

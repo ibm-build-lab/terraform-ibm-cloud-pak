@@ -8,7 +8,7 @@ DOCKER_REGISTRY=${DOCKER_REGISTRY:-cp.icr.io}  # adjust this if needed
 
 # Create custom namespace
 echo "Creating namespace ${NAMESPACE}"
-kubectl create namespace "${NAMESPACE}" --dry-run=client -o yaml | kubectl apply -f -
+kubectl create namespace "${NAMESPACE}"
 
 create_secret() {
   secret_name=$1
