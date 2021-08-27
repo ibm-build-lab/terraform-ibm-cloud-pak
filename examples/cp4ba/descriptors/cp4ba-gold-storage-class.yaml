@@ -8,19 +8,20 @@
 # disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
 #
 ###############################################################################
-apiVersion: storage.k8s.io/v1beta1
 kind: StorageClass
+apiVersion: storage.k8s.io/v1
 metadata:
-  name: cp4ba-file-retain-gold-gid
+  name: cp4ba-ibmc-file-gold-gid
   labels:
-    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: EnsureExists
+    kubernetes.io/cluster-service: 'true'
 provisioner: ibm.io/ibmc-file
 parameters:
-  type: "Endurance"
-  iopsPerGB: "10"
-  sizeRange: "[20-4000]Gi"
-  billingType: "hourly"
-  classVersion: "2"
-  gidAllocate: "true"
-reclaimPolicy: Retain
+  billingType: hourly
+  classVersion: '2'
+  gidAllocate: 'true'
+  iopsPerGB: '10'
+  sizeRange: '[20-4000]Gi'
+  type: Endurance
+reclaimPolicy: Delete
 volumeBindingMode: Immediate

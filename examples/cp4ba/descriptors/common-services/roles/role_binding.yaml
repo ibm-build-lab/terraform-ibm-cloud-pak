@@ -16,6 +16,7 @@ subjects:
 - kind: Group
   name: system:serviceaccounts
   apiGroup: rbac.authorization.k8s.io
+  namespace: cp4ba # replaced
 roleRef:
   kind: ClusterRole
   name: operand-deployment-lifecycle-manager

@@ -53,13 +53,14 @@ resource "null_resource" "setting_platform" {
       USE_ENTITLEMENT               = local.use_entitlement
       ENTITLED_REGISTRY_KEY               = var.entitlement_key # file("${path.cwd}/../../entitlement.key")
       # Registry Images
-      DOCKER_SECRET_NAME            = var.docker_secret_name
+      ENTITLED_REGISTRY_KEY_SECRET_NAME = local.entitled_registry_key_secret_name
       DOCKER_SERVER                 = local.docker_server
       DOCKER_USERNAME               = local.docker_username
       DOCKER_REGISTRY_PASS               = local.docker_password
       DOCKER_USER_EMAIL                  = local.docker_email
       public_registry_server        = var.public_registry_server
       LOCAL_PUBLIC_REGISTRY_SERVER   = var.public_image_registry
+      machine  = local.machine
   //    local_registry_server         = var.registry_server
   //    local_registry_user           = var.registry_user
 

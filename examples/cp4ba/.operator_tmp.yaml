@@ -105,7 +105,8 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-            - name: OPERATOR_NAME
+            - name: ibm-cp4ba-operator # OPERATOR_NAME to BE REPLACED
+
               value: "ibm-cp4ba-operator"
             - name: WORKER_ICP4ACLUSTER_ICP4A_IBM_COM
               value: "10"

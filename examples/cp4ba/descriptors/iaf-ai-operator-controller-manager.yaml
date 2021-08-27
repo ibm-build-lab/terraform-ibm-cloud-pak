@@ -1,0 +1,276 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: '1'
+  name: iaf-ai-operator-controller-manager
+  generation: 2
+  managedFields:
+    - manager: olm
+      operation: Update
+      apiVersion: apps/v1
+    - manager: kube-controller-manager
+      operation: Update
+      apiVersion: apps/v1
+#  namespace: cp4ba
+  ownerReferences:
+    - apiVersion: operators.coreos.com/v1alpha1
+      kind: ClusterServiceVersion
+      name: ibm-automation-ai.v1.1.0
+      uid: 8fb8f4bc-ee64-4f6e-b10a-9b8caed90c12
+      controller: false
+      blockOwnerDeletion: false
+  labels:
+    olm.deployment-spec-hash: 85fdbf67c6
+    olm.owner: ibm-automation-ai.v1.1.0
+    olm.owner.kind: ClusterServiceVersion
+    olm.owner.namespace: cp4ba
+    operators.coreos.com/ibm-automation-ai.cp4ba: ''
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: iaf-ai-operator
+      app.kubernetes.io/instance: iaf-ai-operator
+      app.kubernetes.io/managed-by: olm
+      app.kubernetes.io/name: iaf-ai-operator
+      control-plane: controller-manager
+      name: iaf-ai-operator
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/component: iaf-ai-operator
+        app.kubernetes.io/instance: iaf-ai-operator
+        app.kubernetes.io/managed-by: olm
+        app.kubernetes.io/name: iaf-ai-operator
+        control-plane: controller-manager
+        name: iaf-ai-operator
+      annotations:
+        olm.skipRange: '>=1.0.2 <1.1.0'
+        operators.operatorframework.io/builder: operator-sdk-v1.2.0
+        operators.operatorframework.io/project_layout: go.kubebuilder.io/v2
+        certified: 'false'
+        olm.targetNamespaces: cp4ba
+        operatorframework.io/properties: >-
+          {"properties":[{"type":"olm.gvk","value":{"group":"ai.automation.ibm.com","kind":"AIDeployment","version":"v1alpha1"}},{"type":"olm.gvk","value":{"group":"ai.automation.ibm.com","kind":"AIDeployment","version":"v1beta1"}},{"type":"olm.gvk","value":{"group":"ai.automation.ibm.com","kind":"AIModel","version":"v1alpha1"}},{"type":"olm.gvk","value":{"group":"ai.automation.ibm.com","kind":"AIModel","version":"v1beta1"}},{"type":"olm.gvk","value":{"group":"ai.automation.ibm.com","kind":"AIRuntime","version":"v1alpha1"}},{"type":"olm.gvk","value":{"group":"ai.automation.ibm.com","kind":"AIRuntime","version":"v1beta1"}},{"type":"olm.gvk","value":{"group":"ai.automation.ibm.com","kind":"AITraining","version":"v1alpha1"}},{"type":"olm.gvk","value":{"group":"ai.automation.ibm.com","kind":"AITraining","version":"v1beta1"}},{"type":"olm.package","value":{"packageName":"ibm-automation-ai","version":"1.1.0"}}]}
+        repository: 'https://github.ibm.com/automation-base-pak/abp-ai-operator'
+        operators.operatorframework.io/operator-type: non-standalone
+        support: IBM
+        alm-examples: |-
+          [
+            {
+              "apiVersion": "ai.automation.ibm.com/v1beta1",
+              "kind": "AIDeployment",
+              "metadata": {
+                "annotations": {
+                  "com.ibm.automation.cartridge": "iaf-cartridge-instance"
+                },
+                "name": "sample-deployment"
+              },
+              "spec": {
+                "license": {
+                  "accept": true
+                },
+                "model": {
+                  "name": "model-sample",
+                  "version": "1.0.0"
+                },
+                "platform": "wmlserving",
+                "version": "1.1.0"
+              }
+            },
+            {
+              "apiVersion": "ai.automation.ibm.com/v1beta1",
+              "kind": "AIModel",
+              "metadata": {
+                "annotations": {
+                  "com.ibm.automation.cartridge": "iaf-cartridge-instance"
+                },
+                "name": "sample-model"
+              },
+              "spec": {
+                "description": "Sample AI Model for Anomaly Prediction",
+                "license": {
+                  "accept": true
+                },
+                "source": {
+                  "s3": {
+                    "secretName": "github-secret"
+                  }
+                },
+                "store": {
+                  "s3": {
+                    "path": "s3://iafai/models/anomaly-classifier",
+                    "secretName": "minio-secret"
+                  }
+                },
+                "type": "tensorflow",
+                "version": "1.1.0"
+              }
+            },
+            {
+              "apiVersion": "ai.automation.ibm.com/v1beta1",
+              "kind": "AIRuntime",
+              "metadata": {
+                "annotations": {
+                  "com.ibm.automation.cartridge": "iaf-cartridge-instance"
+                },
+                "name": "sample-airuntime"
+              },
+              "spec": {
+                "description": "Runtime defines wml components",
+                "license": {
+                  "accept": true
+                },
+                "version": "1.1.0",
+                "wmlserving": {},
+                "wmltraining": {}
+              }
+            },
+            {
+              "apiVersion": "ai.automation.ibm.com/v1beta1",
+              "kind": "AITraining",
+              "metadata": {
+                "annotations": {
+                  "com.ibm.automation.cartridge": "iaf-cartridge-instance"
+                },
+                "name": "aitraining-sample"
+              },
+              "spec": {
+                "description": "Sample AI Model for Anomaly Prediction",
+                "license": {
+                  "accept": true
+                },
+                "model": {
+                  "name": "sample-model",
+                  "version": "1.0.0"
+                },
+                "runtime": "tensorflow-runtime",
+                "version": "1.1.0"
+              }
+            }
+          ]
+        capabilities: Seamless Upgrades
+        olm.operatorNamespace: cp4ba
+        containerImage: >-
+          icr.io/cpopen/iaf-ai-operator@sha256:5685432df9c5739e68cbd389efd65ddbf192643a796c668dc0dec5700505f66c
+        createdAt: '2021-06-07T08:33:27+0000'
+        olmcahash: e5e9d2173ca79652e88d6899d49613b2f4f94846c06df6f6b9c7f8b44e2ce8ca
+        categories: Automation
+        description: An operator that provides platform for model training and serving
+        olm.operatorGroup: ibm-cp4ba-operator-catalog-group
+    spec:
+      restartPolicy: Always
+      serviceAccountName: iaf-ai-operator-serviceaccount
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 10
+      securityContext:
+        runAsNonRoot: true
+      containers:
+        - resources:
+            limits:
+              cpu: 100m
+              memory: 60Mi
+            requests:
+              cpu: 100m
+              memory: 40Mi
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 5555
+              scheme: HTTP
+            initialDelaySeconds: 180
+            timeoutSeconds: 10
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: /dev/termination-log
+          name: manager
+          command:
+            - /manager
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 5555
+              scheme: HTTP
+            initialDelaySeconds: 180
+            timeoutSeconds: 10
+            periodSeconds: 30
+            successThreshold: 1
+            failureThreshold: 3
+          env:
+            - name: OPERATOR_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: 'metadata.annotations[''olm.targetNamespaces'']'
+            - name: AI_PIPELINE_CTRL_IMAGES
+              value: >
+                1.0.0=cp.icr.io/cp/iaf-ai-pipeline-ctrl@sha256:8bbaef9eccc0fb303323c375a336016ce72dafb0d21533fdc109c41f453ad238
+            - name: AI_PIPELINE_STEP_IMAGES
+              value: >
+                1.0.0=cp.icr.io/cp/iaf-ai-pipeline-step@sha256:555ab7c23abe22f6d2b3a758d9f001a4192112d607b80801be1ac96e15051842
+          securityContext:
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+          ports:
+            - name: webhook-server
+              containerPort: 9443
+              protocol: TCP
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: cert
+              readOnly: true
+              mountPath: /tmp/k8s-webhook-server/serving-certs
+            - name: apiservice-cert
+              mountPath: /apiserver.local.config/certificates
+          terminationMessagePolicy: File
+          image: >-
+            icr.io/cpopen/iaf-ai-operator@sha256:5685432df9c5739e68cbd389efd65ddbf192643a796c668dc0dec5700505f66c
+          args:
+            - '--enable-leader-election'
+      serviceAccount: iaf-ai-operator-serviceaccount
+      volumes:
+        - name: cert
+          secret:
+            secretName: iaf-ai-operator-controller-manager-service-cert
+            defaultMode: 420
+        - name: apiservice-cert
+          secret:
+            secretName: iaf-ai-operator-controller-manager-service-cert
+            items:
+              - key: tls.crt
+                path: apiserver.crt
+              - key: tls.key
+                path: apiserver.key
+            defaultMode: 420
+      dnsPolicy: ClusterFirst
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 1
+  progressDeadlineSeconds: 600
+status:
+  observedGeneration: 2
+  replicas: 1
+  updatedReplicas: 1
+  readyReplicas: 1
+  availableReplicas: 1
+  conditions:
+    - type: Available
+      status: 'True'
+    - type: Progressing
+      status: 'True'

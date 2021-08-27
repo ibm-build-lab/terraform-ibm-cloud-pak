@@ -66,7 +66,7 @@ spec:
       containers:
         - name: operator
           # Replace this with the built image name
-          image: "cp.icr.io/cp/cp4ba/icp4a-operator:21.0.1"
+          image: "cp.icr.io/cp/cp4a/icp4a-operator:21.0.1"
           imagePullPolicy: "IfNotPresent"
           securityContext:
             allowPrivilegeEscalation: false

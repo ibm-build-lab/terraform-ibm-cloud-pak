@@ -32,7 +32,7 @@ LOG_FILE=${CUR_DIR}/prepare_install.log
 
 #PLATFORM_VERSION=""
 #PROJ_NAME=""
-DOCKER_RES_SECRET_NAME="admin.registrykey"
+ADMIN_REGISTRY_KEY_SECRET_NAME="admin.registrykey"
 REGISTRY_IN_FILE="cp.icr.io"
 OPERATOR_FILE=${PARENT_DIR}/descriptors/operator.yaml
 OPERATOR_FILE_TMP=$TEMP_FOLDER/.operator_tmp.yaml
@@ -99,45 +99,40 @@ function select_platform(){
 #    PLATFORM_SELECTED="ROKS"
 #    SCRIPT_MODE="OLM"
 
+    create_project
+    echo
     select_user
+    echo
     if [[ $LOCAL_PUBLIC_REGISTRY_SERVER == "" ]]
     then
         create_secret_entitlement_registry
     fi
+    echo
 }
 
 
-
 function create_secret_entitlement_registry(){
-  CREATE_SECRET_CMD=""
-#  echo "creating namespace ${PROJECT_NAME}"
-#  kubectl create namespace ${PROJECT_NAME} #--dry-run=client -o yaml |
-  kubectl apply -f -
+    echo -e "\x1B[1mCreating secret \"${ENTITLED_REGISTRY_KEY_SECRET_NAME}\" in ${PROJECT_NAME} for Entitlement Registry key ...\n\x1B[0m"
+    CREATE_SECRET_CMD=$(${CLI_CMD} create secret docker-registry "${ENTITLED_REGISTRY_KEY_SECRET_NAME}" -n "${PROJECT_NAME}" --docker-username="${DOCKER_USERNAME}" --docker-password="${ENTITLED_REGISTRY_KEY}" --docker-server="${DOCKER_SERVER}" --docker-email="${DOCKER_USER_EMAIL}")
+    sleep 30
 
-  create_secret() {
-      printf "\x1B[1mCreating secret %s ${DOCKER_SECRET_NAME} in ${PROJECT_NAME} for Entitlement Registry key ...\n\x1B[0m"
-      CREATE_SECRET_CMD="oc create secret docker-registry ${DOCKER_SECRET_NAME} --docker-server=${DOCKER_SERVER} --docker-username=${DOCKER_USERNAME} --docker-password=${DOCKER_REGISTRY_PASS} --docker-email=${DOCKER_USER_EMAIL} --namespace=${PROJECT_NAME}"
-  }
+    if [[ ${CREATE_SECRET_CMD} ]]; then
+        echo -e "\033[1;32m \"${ENTITLED_REGISTRY_KEY_SECRET_NAME}\" secret has been created\x1B[0m"
+    else
+        echo -e "\x1B[1m\"${ENTITLED_REGISTRY_KEY_SECRET_NAME}\" secret creation failed \x1B[0m"
+    fi
 
-  create_secret # ibm-entitlement-key default
-  #create_secret ibm-entitlement-key openshift-operators
-#  create_secret ibm-entitlement-key $NAMESPACE
+    echo
+    echo -e "\x1B[1mCreating secret \"${ADMIN_REGISTRY_KEY_SECRET_NAME}\" in ${PROJECT_NAME} for Entitlement Registry key ...\n\x1B[0m"
+    CREATE_SECRET_CMD=$(${CLI_CMD} create secret docker-registry "${ADMIN_REGISTRY_KEY_SECRET_NAME}" -n "${PROJECT_NAME}" --docker-username="${DOCKER_USERNAME}" --docker-password="${ENTITLED_REGISTRY_KEY}" --docker-server="${DOCKER_SERVER}" --docker-email="${DOCKER_USER_EMAIL}")
+    sleep 30
 
-  sleep 40
-
-  if ${CREATE_SECRET_CMD} ; then
-#    \033[0;32m
-      echo -e "\033[1;32m %s ${DOCKER_SECRET_NAME} secret is created\x1B[0m"
-  else
-      echo -e "\x1B[1mFailed\x1B[0m"
-  fi
-
-      # Create docker-registry secret for Entitlement Registry Key in target project
-#    printf "\x1B[1mCreating docker-registry secret for Entitlement Registry key in project $PROJECT_NAME ...\n\x1B[0m"
-#
-#    ${CLI_CMD} delete secret "$DOCKER_RES_SECRET_NAME" -n "${PROJECT_NAME}" >/dev/null 2>&1
-#    CREATE_SECRET_CMD="${CLI_CMD} create secret docker-registry $DOCKER_RES_SECRET_NAME --docker-server=$DOCKER_REG_SERVER --docker-username=$DOCKER_REG_USER --docker-password=$DOCKER_REG_KEY --docker-email=ecmtest@ibm.com -n $project_name"
-
+    if [[ ${CREATE_SECRET_CMD} ]]; then
+        echo -e "\033[1;32m \"${ADMIN_REGISTRY_KEY_SECRET_NAME}\" secret has been created\x1B[0m"
+    else
+        echo -e "\x1B[1m \"${ADMIN_REGISTRY_KEY_SECRET_NAME}\" secret creation failed\x1B[0m"
+    fi
+    echo
 }
 
 
@@ -184,10 +179,8 @@ function select_deployment_type(){
    elif [[ $DEPLOYMENT_TYPE == 2 ]]
    then
        DEPLOYMENT_TYPE="Enterprise"
-
    fi
 }
-
 
 
 function create_project() {
@@ -196,16 +189,20 @@ function create_project() {
        isProjExists=$(${CLI_CMD} get project "$PROJECT_NAME" --ignore-not-found | wc -l)  >/dev/null 2>&1
 
        if [ "$isProjExists" -ne 2 ] ; then
-           "${CLI_CMD}" new-project "${PROJECT_NAME}" >> "${LOG_FILE}"
+           create_ns=$("${CLI_CMD}" new-project "${PROJECT_NAME}" "${LOG_FILE}")
+           echo -e "\033[1;32m Creating \"${PROJECT_NAME}\" project ... \x1B[0m"
+           if [[ ${create_ns} ]]; then
+             echo -e "\033[1;32m \"${PROJECT_NAME}\" project is created ... \x1B[0m"
+           fi
            returnValue=$?
            if [ "$returnValue" == 1 ]; then
                echo -e "\x1B[1mInvalid project name, please enter a valid name...\x1B[0m"
                PROJECT_NAME=""
            else
-               printf "Using project %s ${PROJECT_NAME}..."
+               echo -e "\033[1;32m Using project ${PROJECT_NAME}... \x1B[0m"
            fi
        else
-           echo -e "\x1B[1mProject %s \"${PROJECT_NAME}\" already exists! Continue...\x1B[0m"
+           echo -e "\033[1;32mProject \"${PROJECT_NAME}\" already exists! Continue...\x1B[0m"
        fi
    elif [[ "$PLATFORM_SELECTED" == "other" ]]
    then
@@ -215,15 +212,16 @@ function create_project() {
            kubectl create namespace ${PROJECT_NAME} >> "${LOG_FILE}"
            returnValue=$?
            if [ "$returnValue" == 1 ]; then
-                echo -e "\x1B[1mInvalid namespace, please enter a valid name...\x1B[0m"
+                echo -e "\x1B[1m Invalid namespace, please enter a valid name...\x1B[0m"
                PROJECT_NAME=""
            else
-               echo -e "\x1B[1mUsing namespace ${PROJECT_NAME}...\x1B[0m"
+               echo -e "\033[1;32m Using namespace \"${PROJECT_NAME}\"...\x1B[0m"
            fi
        else
-           echo -e "\x1B[1mName space \"${PROJECT_NAME}\" already exists! Continue...\x1B[0m"
+           echo -e "\033[1;32m Name space \"${PROJECT_NAME}\" already exists! Continue...\x1B[0m"
        fi
    fi
+   echo
 }
 
 
@@ -260,7 +258,6 @@ function display_installationprompt(){
 ################### Selecting the user ######################
 function select_user(){
      echo
-     echo
      user_result=$(${CLI_CMD} get user 2>&1) #$(oc get user 2>&1)   # $(${CLI_CMD} get user 2>&1)
      user_substring="No resources found"
      if [[ $user_result == "$user_substring" ]];
@@ -273,7 +270,7 @@ function select_user(){
      echo
      userlist=$(${CLI_CMD} get user|awk '{if(NR>1){if(NR==2){ arr=$1; }else{ arr=arr" "$1; }} } END{ print arr }')   #$(oc get user|awk '{if(NR>1){if(NR==2){ arr=$1; }else{ arr=arr" "$1; }} } END{ print arr }') #
      COLUMNS=12
-     echo -e "\x1B[1mHere are the existing users on this cluster: %s ${userlist}\x1B[0m"
+     echo -e "\x1B[1mHere are the existing users on this cluster: ${userlist}\x1B[0m"
      options="$userlist"
 #     usernum=${#options[*]}
 
@@ -281,7 +278,8 @@ function select_user(){
      do
 #       if [[ -n "$opt" && "${options[@]}" && *"$USER_NAME_EMAIL"* =~ $opt ]]; then
 #        if [[ -n "$opt" && "*$USER_NAME_EMAIL*" =~ $opt ]]; then
-        if [[ $opt == "$USER_NAME_EMAIL" ]]; then
+        if [[ $opt == *"$USER_NAME_EMAIL"* ]]; then
+            echo "Using ${USER_NAME_EMAIL}"
 #           user_name="$USER_NAME_EMAIL"
            break
          else
@@ -323,12 +321,11 @@ function bind_scc() {
 
 function prepare_install() {
    echo
-   echo
 
 #     if [[ "$PLATFORM_SELECTED" == "OCP" || "$PLATFORM_SELECTED" == "ROKS" ]]; then
    "${CLI_CMD}" project "${PROJECT_NAME}" >> "${LOG_FILE}"
 #     fi
-   # sed -e "s/<NAMESPACE>/${project_name}/g" ${CLUSTER_ROLE_BINDING_FILE} > ${CLUSTER_ROLE_BINDING_FILE_TEMP}
+    sed -e "s/<NAMESPACE>/${PROJECT_NAME}/g" "${CLUSTER_ROLE_BINDING_FILE}" > "${CLUSTER_ROLE_BINDING_FILE_TEMP}"
    echo
    echo -ne "Creating the custom resource definition (CRD) and a service account that has the permissions to manage the resources..."
    ${CLI_CMD} apply -f "${CRD_FILE}" -n "${PROJECT_NAME}" --validate=false >/dev/null 2>&1
@@ -337,8 +334,15 @@ function prepare_install() {
 #      ${CLI_CMD} apply -f "${CLUSTER_ROLE_FILE} "--validate=false >> "${LOG_FILE}"
 #      ${CLI_CMD} apply -f "${CLUSTER_ROLE_BINDING_FILE}" --validate=false >> "${LOG_FILE}"
 #   fi
-   ${CLI_CMD} apply -f "${SA_FILE}" -n "${PROJECT_NAME}" --validate=false >> "${LOG_FILE}"
-   ${CLI_CMD} apply -f "${ROLE_FILE}" -n "${PROJECT_NAME}" --validate=false >> "${LOG_FILE}"
+   echo "Creating storage-classes ..."
+   print "\n"
+#   ${CLI_CMD} apply -f "${SA_FILE}" -n "${PROJECT_NAME}" --validate=false >> "${LOG_FILE}"
+   oc apply -f "${SA_FILE}" -n "${PROJECT_NAME}" --validate=false >> "${LOG_FILE}"
+
+   echo "Creating the cluster role ..."
+   print "\n"
+#   ${CLI_CMD} apply -f "${ROLE_FILE}" -n "${PROJECT_NAME}" --validate=false >> "${LOG_FILE}"
+   oc apply -f "${ROLE_FILE}" -n "${PROJECT_NAME}" --validate=false >> "${LOG_FILE}"
 
    echo -n "Creating ibm-cp4ba-operator role ..."
    while true ; do
@@ -378,7 +382,7 @@ function prepare_install() {
 
 
 function apply_cp4ba_operator(){
-   echo
+
    echo
 
    "${COPY_CMD}" -rf "${OPERATOR_FILE}" "${OPERATOR_FILE_TMP}"
@@ -388,22 +392,23 @@ function apply_cp4ba_operator(){
        echo -e "\x1B[1mInstalling the Cloud Pak for Business Automation operator...\x1B[0m"
       exit 0
    fi
+   SED_COMMAND=sed
    # set db2_license
    "${SED_COMMAND}" '/baw_license/{n;s/value:.*/value: accept/;}' "${OPERATOR_FILE_TMP}"
    # Set operator image pull secret
-   "${SED_COMMAND}" "s|admin.registrykey|$DOCKER_RES_SECRET_NAME|g" "${OPERATOR_FILE_TMP}"
+   "${SED_COMMAND}" "s|admin.registrykey|$ADMIN_REGISTRY_KEY_SECRET_NAME|g" "${OPERATOR_FILE_TMP}"
    # Set operator image registry
    new_operator="$REGISTRY_IN_FILE\/cp\/cp4ba"
 
    if [ "$USE_ENTITLEMENT" = "yes" ] ; then
-       "${SED_COMMAND}" "s/$REGISTRY_IN_FILE/$DOCKER_REG_SERVER/g" "${OPERATOR_FILE_TMP}"
+       "${SED_COMMAND}" "s/$REGISTRY_IN_FILE/$DOCKER_SERVER/g" "${OPERATOR_FILE_TMP}"
    else
        "${SED_COMMAND}" "s/$new_operator/$CONVERT_LOCAL_REGISTRY_SERVER/g" "${OPERATOR_FILE_TMP}"
    fi
 
-   INSTALL_OPERATOR_CMD=$("${CLI_CMD}" apply -f "${OPERATOR_FILE_TMP}" -n "$PROJECT_NAME")
+   INSTALL_OPERATOR_CMD=$("${CLI_CMD}" apply -f "${OPERATOR_FILE}" -n "$PROJECT_NAME") # "${OPERATOR_FILE_TMP}"
    sleep 5
-   if $INSTALL_OPERATOR_CMD ; then
+   if [[ $INSTALL_OPERATOR_CMD ]]; then
        echo -e "\x1B[1;34mDone\x1B[0m"
    else
        echo -e "\x1B[1;31mFailed\x1B[0m"
@@ -426,6 +431,24 @@ function apply_cp4ba_operator(){
        echo -e "\x1B[1;31mFailed\x1B[0m"
    fi
    printf "\n"
+}
+
+
+function copy_jdbc_driver(){
+    echo
+    # Get pod name
+    echo -e "\x1B[1mCopying the JDBC driver for the operator...\x1B[0m"
+    operator_podname=$(${CLI_CMD} get pod -n $PROJECT_NAME | grep ibm-cp4ba-operator | grep Running | awk '{print $1}')
+
+    # ${CLI_CMD} exec -it ${operator_podname} -- rm -rf /opt/ansible/share/jdbc
+    COPY_JDBC_CMD="${CLI_CMD} cp ${JDBC_DRIVER_DIR} ${operator_podname}:/opt/ansible/share/"
+
+    if $COPY_JDBC_CMD ; then
+        echo -e "\x1B[1;34mDone\x1B[0m"
+    else
+        echo -e "\x1B[1;31mFailed\x1B[0m"
+    fi
+    echo
 }
 
 
@@ -567,7 +590,6 @@ function check_existing_sc(){
 
 function validate_docker_podman_cli(){
     echo
-    echo
     echo "Checking docker podman"
 #   if [[ "$machine" == "Mac" || $PLATFORM_SELECTED == "other" ]];then
 #    if [[ $? -ne 0 ]]
@@ -596,68 +618,29 @@ function validate_docker_podman_cli(){
 #    which podman # &>/dev/null
 #    [[ $? -ne 0 ]] && echo -e "\x1B[1;31mUnable to locate podman, please install it first.\x1B[0m" && exit 1
 #   fi
+    echo
 }
 
 
 function get_entitlement_registry(){
    echo
-   echo
-    # For Entitlement Registry key
-    entitlement_key=$ENTITLED_REGISTRY_KEY
-#    ENTITLED_REGISTRY_KEY
-#    printf "\n"
-
-    if [[ $USE_ENTITLEMENT == "" ]];
-    then
-        printf "\n"
-        printf "\x1B[1;31mFollow the instructions on how to get your Entitlement Key: \n\x1B[0m"
-        printf "\x1B[1;31mhttps://www.ibm.com/support/knowledgecenter/en/SSYHZ8_21.0.x/com.ibm.dba.install/op_topics/tsk_images_enterp_entitled.html\n\x1B[0m"
-        printf "\n"
-    fi
-#    while true;
-#    do
-#        printf "\x1B[1mDo you have a Cloud Pak for Business Automation Entitlement Registry key (Yes/No, default: No): \x1B[0m"
-
-            # During dev, OLM uses stage image repo
-    if [[ "$RUNTIME_MODE" == "dev" ]];
-    then
-#        DOCKER_REG_SERVER="cp.stg.icr.io" # Error response from daemon: Get https://cp.stg.icr.io/v2/: unauthorized: The login credentials are not valid.
-        DOCKER_REG_SERVER="cp.icr.io"
-    else
-        DOCKER_REG_SERVER="cp.icr.io"
-    fi
-
-    if  [[ $ENTITLED_REGISTRY_KEY == iamapikey:* ]] ;
-    then
-        DOCKER_REG_USER="iamapikey"
-        DOCKER_REG_KEY="${ENTITLED_REGISTRY_KEY#*:}"
-    else
-        DOCKER_REG_USER="cp"
-        DOCKER_REG_KEY=$ENTITLED_REGISTRY_KEY
-
-    fi
-    entitlement_verify_passed=$ENTITLED_REGISTRY_KEY
-#                while [[ $entitlement_verify_passed == '' ]]
-#                do
-#                    printf "\n"
-#                    printf "\x1B[1mVerifying the Entitlement Registry key...\n\x1B[0m"
-
-#    machine="Mac"  # This needs to be fixed
-
-    if [[ "$machine" == "Mac" ]]; then
+   if [[ "$machine" == "Mac" ]]; then
         cli_command="docker"
-    else
+   else
         cli_command="podman"
-    fi
+   fi
 
-    if $cli_command login -u "$DOCKER_REG_USER" -p "$DOCKER_REG_KEY" "$DOCKER_REG_SERVER";
-    then
+   if $cli_command login -u "${DOCKER_USERNAME}" -p "${ENTITLED_REGISTRY_KEY}" "${DOCKER_SERVER}";
+   then
         printf 'Entitlement Registry key is valid.\n'
         entitlement_verify_passed="passed"
-    else
+   else
         printf '\x1B[1;31mThe Entitlement Registry key failed.\n\x1B[0m'
         printf '\x1B[1mEnter a valid Entitlement Registry key.\n\x1B[0m'
-    fi
+        printf "\x1B[1;31mOr follow the instructions on how to get your Entitlement Key: \n\x1B[0m"
+        printf "\x1B[1;31mhttps://www.ibm.com/support/knowledgecenter/en/SSYHZ8_21.0.x/com.ibm.dba.install/op_topics/tsk_images_enterp_entitled.html\n\x1B[0m"
+   fi
+   echo
 }
 
 
@@ -665,13 +648,12 @@ function get_entitlement_registry(){
 function get_storage_class_name(){
 
     echo
-    echo
 
     check_storage_class
 
     STORAGE_CLASS_NAME=${STORAGE_CLASSNAME}
-    SLOW_STORAGE_CLASS_NAME=${SC_FAST_FILE_STORAGE_CLASSNAME}
-    MEDIUM_STORAGE_CLASS_NAME=${SC_FAST_FILE_STORAGE_CLASSNAME}
+    SLOW_STORAGE_CLASS_NAME=${SC_SLOW_FILE_STORAGE_CLASSNAME}
+    MEDIUM_STORAGE_CLASS_NAME=${SC_MEDIUM_FILE_STORAGE_CLASSNAME}
     FAST_STORAGE_CLASS_NAME=${SC_FAST_FILE_STORAGE_CLASSNAME}
 }
 
@@ -680,8 +662,8 @@ function get_storage_class_name(){
 #    # Create docker-registry secret for Entitlement Registry Key in target project
 #    printf "\x1B[1mCreating docker-registry secret for Entitlement Registry key in project $PROJECT_NAME ...\n\x1B[0m"
 #
-#    ${CLI_CMD} delete secret "$DOCKER_RES_SECRET_NAME" -n "${PROJECT_NAME}" >/dev/null 2>&1
-#    CREATE_SECRET_CMD="${CLI_CMD} create secret docker-registry $DOCKER_RES_SECRET_NAME --docker-server=$DOCKER_REG_SERVER --docker-username=$DOCKER_REG_USER --docker-password=$DOCKER_REG_KEY --docker-email=ecmtest@ibm.com -n $project_name"
+#    ${CLI_CMD} delete secret "$ADMIN_REGISTRY_KEY_SECRET_NAME" -n "${PROJECT_NAME}" >/dev/null 2>&1
+#    CREATE_SECRET_CMD="${CLI_CMD} create secret docker-registry $ADMIN_REGISTRY_KEY_SECRET_NAME --docker-server=$DOCKER_REG_SERVER --docker-username=$DOCKER_REG_USER --docker-password=$DOCKER_REG_KEY --docker-email=ecmtest@ibm.com -n $project_name"
 #    if $CREATE_SECRET_CMD ; then
 #        echo -e "\x1B[1mDone\x1B[0m"
 #    else
@@ -689,53 +671,16 @@ function get_storage_class_name(){
 #    fi
 #}
 
-
-function copy_jdbc_driver(){
-    echo
-    echo
-    # Get pod name
-    echo -e "\x1B[1mCopying the JDBC driver for the operator...\x1B[0m"
-    operator_podname=$(${CLI_CMD} get pod -n $PROJECT_NAME | grep ibm-cp4ba-operator | grep Running | awk '{print $1}')
-
-    # ${CLI_CMD} exec -it ${operator_podname} -- rm -rf /opt/ansible/share/jdbc
-    COPY_JDBC_CMD="${CLI_CMD} cp ${JDBC_DRIVER_DIR} ${operator_podname}:/opt/ansible/share/"
-
-    if $COPY_JDBC_CMD ; then
-        echo -e "\x1B[1;34mDone\x1B[0m"
-    else
-        echo -e "\x1B[1;31mFailed\x1B[0m"
-    fi
-}
-
 function allocate_operator_pvc_olm_or_cncf(){
-
-    echo
-    echo
-    # For dynamic storage classname
-
-    printf "\n"
-    echo -e "\x1B[1mApplying the persistent volumes (PV) for the Cloud Pak operator by using the storage classname: ${FAST_STORAGE_CLASS_NAME}...\x1B[0m"
-#     CREATE_PV_CMD="kubectl apply -f ${OPERATOR_PV_FILE_TMP} -n $PROJECT_NAME"
-    CREATE_PV_CMD=$("${CLI_CMD}" apply -f "${OPERATOR_PV_FILE}" -n "$PROJECT_NAME")
-    if [[ $CREATE_PV_CMD ]]; then
-        echo -e "\x1B[1;34mDone\x1B[0m"
-    else
-        echo -e "\x1B[1;31mFailed\x1B[0m"
-    fi
-
-    echo -e "\x1B[1mApplying the persistent claim volumes (PVC) for the Cloud Pak operator by using the storage classname: ${FAST_STORAGE_CLASS_NAME}...\x1B[0m"
+    echo -e "\x1B[1mApplying the Persistent Volumes Claim (PVC) for the Cloud Pak operator by using the storage classname: ${SLOW_STORAGE_CLASS_NAME}...\x1B[0m"
     CREATE_PVC_CMD=$("${CLI_CMD}" apply -f "${OPERATOR_PVC_FILE}" -n "$PROJECT_NAME")   # "${CLI_CMD} apply -f ${OPERATOR_PVC_FILE_TMP} -n $PROJECT_NAME"
-    echo "############## Files PVC RuN ####################"
-
-#     CREATE_PV_CMD="kubectl apply -f ${OPERATOR_PV_FILE_TMP} -n $PROJECT_NAME"
 
     if [[ $CREATE_PVC_CMD ]]; then
-        echo -e "\x1B[1;34mDone\x1B[0m"
+        echo -e "\x1B[1;34mThe Persistent Volume Claims have been created.\x1B[0m"
     else
         echo -e "\x1B[1;31mFailed\x1B[0m"
     fi
-
-#    Check Operator Persistent Volume status every 5 seconds (max 10 minutes) until allocate.
+    #    Check Operator Persistent Volume status every 5 seconds (max 10 minutes) until allocate.
     ATTEMPTS=0
     TIMEOUT=60
     printf "\n"
@@ -751,14 +696,18 @@ function allocate_operator_pvc_olm_or_cncf(){
         fi
     done
     if [ $ATTEMPTS -lt $TIMEOUT ] ; then
-            echo -e "\x1B[1;34mDone\x1B[0m"
+        echo -e "\x1B[1;34m The Persistent Volume Claims are successfully bound Done\x1B[0m"
     fi
+    echo
 }
 
 function display_storage_classes() {
+#    echo "Storage classes are needed to run the deployment script. For the \"Demo\" deployment scenario, you may use one (1) storage class.  For an \"Enterprise\" deployment, the deployment script will ask for three (3) storage classes to meet the "slow", "medium", and "fast" storage for the configuration of CP4BA components.  If you don't have three (3) storage classes, you can use the same one for "slow", "medium", or fast.  Note that you can get the existing storage class(es) in the environment by running the following command: oc get storageclass. Take note of the storage classes that you want to use for deployment. "
     echo
-    echo "Storage classes are needed to run the deployment script. For the \"Demo\" deployment scenario, you may use one (1) storage class.  For an \"Enterprise\" deployment, the deployment script will ask for three (3) storage classes to meet the "slow", "medium", and "fast" storage for the configuration of CP4BA components.  If you don't have three (3) storage classes, you can use the same one for "slow", "medium", or fast.  Note that you can get the existing storage class(es) in the environment by running the following command: oc get storageclass. Take note of the storage classes that you want to use for deployment. "
-	${CLI_CMD} get storageclass
+    echo "Storage classes list:"
+    echo
+    ${CLI_CMD} get storageclass
+    echo
 }
 
 
@@ -771,8 +720,9 @@ function display_node_name() {
     elif  [[ $PLATFORM_VERSION == "4.4OrLater" ]];
     then
         echo "Below is the route host name for the environment, which is required as an input during the execution of the deployment script for the creation of routes in OCP. You can also get the host name by running the following command: oc get route console -n openshift-console -o yaml|grep routerCanonicalHostname. Take note of the host name. "
-        ${CLI_CMD} get route console -n openshift-console -o yaml|grep routerCanonicalHostname | head -1 | cut -d ' ' -f 6
+        ${CLI_CMD} get route console -n openshift-console -o yaml | grep routerCanonicalHostname | head -1 | cut -d ' ' -f 6
     fi
+    echo
 }
 
 
@@ -783,31 +733,28 @@ function create_scc() {
 }
 
 
-
-function check_storage_class() {
-    echo
-    echo
-    if [[ $PLATFORM_SELECTED == "ROKS" ]];
-    then
-        # echo ""
-        # echo "Applying no_root_squash for demo DB2 deployment on ROKS using CLI"
-        # oc get no -l node-role.kubernetes.io/worker --no-headers -o name | xargs -I {} --  oc debug {} -- chroot /host sh -c 'grep "^Domain = slnfsv4.coms" /etc/idmapd.conf || ( sed -i "s/.*Domain =.*/Domain = slnfsv4.com/g" /etc/idmapd.conf; nfsidmap -c; rpc.idmapd )' >> ${LOG_FILE}
-
-       create_storage_classes_roks
-    fi
-    display_storage_classes
-}
-
 function create_storage_classes_roks() {
-    echo
     echo
     echo -ne "\x1B[1mCreate storage classes for deployment... \x1B[0m"
     ${CLI_CMD} apply -f "${BRONZE_STORAGE_CLASS}" --validate=false >/dev/null 2>&1
     ${CLI_CMD} apply -f "${SILVER_STORAGE_CLASS}" --validate=false >/dev/null 2>&1
     ${CLI_CMD} apply -f "${GOLD_STORAGE_CLASS}" --validate=false >/dev/null 2>&1
-    echo -e "\x1B[1;34mDone \x1B[0m"
-
+    echo -e "\x1B[1;34mDone creating the storage classes. \x1B[0m"
+    echo
 }
+
+
+function check_storage_class() {
+    echo
+    if [[ $PLATFORM_SELECTED == "ROKS" ]];
+    then
+       create_storage_classes_roks
+    fi
+    echo
+    display_storage_classes
+    echo
+}
+
 
 function display_storage_classes_roks() {
     sc_bronze_name=cp4ba-file-retain-bronze-gid
@@ -816,6 +763,7 @@ function display_storage_classes_roks() {
     echo -e "\x1B[1;31m    $sc_bronze_name \x1B[0m"
     echo -e "\x1B[1;31m    $sc_silver_name \x1B[0m"
     echo -e "\x1B[1;31m    $sc_gold_name \x1B[0m"
+    echo
 }
 
 function check_platform_version(){
@@ -839,6 +787,7 @@ function check_platform_version(){
     else
         CS_VERSION="3.3"
     fi
+    echo
 }
 
 function prepare_common_service(){
@@ -1053,9 +1002,9 @@ function get_local_registry_server(){
         printf "\x1B[1mThis is required to pull container images and Kubernetes secret creation: \x1B[0m"
         builtin_dockercfg_secrect_name=$(${CLI_CMD} get secret | grep default-dockercfg | awk '{print $1}')
         if [ -z "$builtin_dockercfg_secrect_name" ]; then
-            DOCKER_RES_SECRET_NAME="admin.registrykey"
+            ADMIN_REGISTRY_KEY_SECRET_NAME="admin.registrykey"
         else
-            DOCKER_RES_SECRET_NAME=$builtin_dockercfg_secrect_name
+            ADMIN_REGISTRY_KEY_SECRET_NAME=$builtin_dockercfg_secrect_name
         fi
     fi
 
@@ -1224,12 +1173,12 @@ function create_secret_local_registry(){
     if [[ $LOCAL_REGISTRY_SERVER == docker-registry* || $LOCAL_REGISTRY_SERVER == image-registry.openshift-image-registry* ]] ;
     then
         builtin_dockercfg_secrect_name=$(${CLI_CMD} get secret | grep default-dockercfg | awk '{print $1}')
-        DOCKER_RES_SECRET_NAME=$builtin_dockercfg_secrect_name
-        # CREATE_SECRET_CMD="${CLI_CMD} create secret docker-registry $DOCKER_RES_SECRET_NAME --docker-server=$LOCAL_REGISTRY_SERVER --docker-username=$LOCAL_REGISTRY_USER --docker-password=$(${CLI_CMD} whoami -t) --docker-email=ecmtest@ibm.com"
+        ADMIN_REGISTRY_KEY_SECRET_NAME=$builtin_dockercfg_secrect_name
+        # CREATE_SECRET_CMD="${CLI_CMD} create secret docker-registry $ADMIN_REGISTRY_KEY_SECRET_NAME --docker-server=$LOCAL_REGISTRY_SERVER --docker-username=$LOCAL_REGISTRY_USER --docker-password=$(${CLI_CMD} whoami -t) --docker-email=ecmtest@ibm.com"
     else
-        ${CLI_CMD} delete secret "$DOCKER_RES_SECRET_NAME" -n $PROJECT_NAME >/dev/null 2>&1
+        ${CLI_CMD} delete secret "$ADMIN_REGISTRY_KEY_SECRET_NAME" -n $PROJECT_NAME >/dev/null 2>&1
 #        create_secret
-        CREATE_SECRET_CMD="${CLI_CMD} create secret docker-registry $DOCKER_SECRET_NAME --docker-server=$DOCKER_SERVER --docker-username=$DOCKER_USERNAME --docker-password=$DOCKER_REGISTRY_PASS --docker-email=ecmtest@ibm.com -n $PROJECT_NAME"
+        CREATE_SECRET_CMD="${CLI_CMD} create secret docker-registry $ENTITLED_REGISTRY_KEY_SECRET_NAME --docker-server=$DOCKER_SERVER --docker-username=$DOCKER_USERNAME --docker-password=$ENTITLED_REGISTRY_KEY --docker-email=ecmtest@ibm.com -n $PROJECT_NAME"
         if $CREATE_SECRET_CMD ; then
             echo -e "\x1B[1;34mDone\x1B[0m"
         else
@@ -1315,55 +1264,77 @@ fi
 #apply_cp4ba_operator
 
 select_platform # Uncomment
+#select_user  # Uncomment
+validate_cli ## Uncomment
+##create_secret_entitlement_registry  # Uncomment
+check_platform_version  # Uncomment
+#select_deployment_type  # needed, Uncomment later
+"${CLI_CMD}" project $PROJECT_NAME >/dev/null 2>&1
+#create_project  # Uncomment
+##
+##
+###        apply_cp4ba_operator
+validate_docker_podman_cli   # Uncomment
+get_entitlement_registry   # Uncomment
+get_storage_class_name   # Uncomment
+##create_secret_entitlement_registry   # Uncomment
+allocate_operator_pvc_olm_or_cncf    # Uncomment
+prepare_install
+prepare_olm_install
+apply_cp4ba_operator
+cp4ba_deployment   # Uncomment
 
-if [[ $PLATFORM_SELECTED == "OCP" || $PLATFORM_SELECTED == "ROKS" ]]; then
-#    echo "checking version"
-    select_user  # Uncomment
-    validate_cli ## Uncomment
-    create_secret_entitlement_registry  # Uncomment
-    check_platform_version  # Uncomment
-#fi
-    select_deployment_type  # Uncomment
-    "${CLI_CMD}" project $PROJECT_NAME >/dev/null 2>&1
-    create_project  # Uncomment
-    ##bind_scc
-    if [[ $SCRIPT_MODE == "OLM" ]];then
-    #     echo "*********** OLM *************"
+
+#
+#if [[ $PLATFORM_SELECTED == "OCP" || $PLATFORM_SELECTED == "ROKS" ]]; then
+##    echo "checking version"
+#    select_user  # Uncomment
+#    validate_cli ## Uncomment
+#    create_secret_entitlement_registry  # Uncomment
+#    check_platform_version  # Uncomment
+##fi
+#    select_deployment_type  # Uncomment
+#    "${CLI_CMD}" project $PROJECT_NAME >/dev/null 2>&1
+#    create_project  # Uncomment
+#    ##bind_scc
+#    if [[ $SCRIPT_MODE == "OLM" ]];then
+#    #     echo "*********** OLM *************"
+##        validate_docker_podman_cli
+##        get_entitlement_registry
+##        get_storage_class_name
+##        allocate_operator_pvc_olm_or_cncf
+##        prepare_olm_install
+#        prepare_install
+##        apply_cp4ba_operator
+#         validate_docker_podman_cli   # Uncomment
+#         get_entitlement_registry   # Uncomment
+#         get_storage_class_name   # Uncomment
+#         create_secret_entitlement_registry   # Uncomment
+#         allocate_operator_pvc_olm_or_cncf    # Uncomment
+#         cp4ba_deployment   # Uncomment
+#         prepare_olm_install
+#         apply_cp4ba_operator
+#
+#    else
 #        validate_docker_podman_cli
-#        get_entitlement_registry
+#        if [[ $PLATFORM_SELECTED == "other" ]]; then
+#            get_entitlement_registry
+#        fi
+#        if [[ $USE_ENTITLEMENT == "no" ]]; then
+#            verify_local_registry_password
+#        fi
 #        get_storage_class_name
+#        if [[ $USE_ENTITLEMENT == "yes" ]]; then
+#            create_secret_entitlement_registry
+#        fi
+#        if [[ $USE_ENTITLEMENT == "no" ]]; then
+#            create_secret_local_registry
+#        fi
 #        allocate_operator_pvc_olm_or_cncf
-#        prepare_olm_install
 #        prepare_install
 #        apply_cp4ba_operator
-         validate_docker_podman_cli   # Uncomment
-         get_entitlement_registry   # Uncomment
-         get_storage_class_name   # Uncomment
-         create_secret_entitlement_registry   # Uncomment
-         allocate_operator_pvc_olm_or_cncf    # Uncomment
-         cp4ba_deployment   # Uncomment
-         prepare_olm_install
-
-    else
-        validate_docker_podman_cli
-        if [[ $PLATFORM_SELECTED == "other" ]]; then
-            get_entitlement_registry
-        fi
-        if [[ $USE_ENTITLEMENT == "no" ]]; then
-            verify_local_registry_password
-        fi
-        get_storage_class_name
-        if [[ $USE_ENTITLEMENT == "yes" ]]; then
-            create_secret_entitlement_registry
-        fi
-        if [[ $USE_ENTITLEMENT == "no" ]]; then
-            create_secret_local_registry
-        fi
-        allocate_operator_pvc_olm_or_cncf
-        prepare_install
-        apply_cp4ba_operator
-    fi
-fi
+#    fi
+#fi
 
 #add_capabilities
 

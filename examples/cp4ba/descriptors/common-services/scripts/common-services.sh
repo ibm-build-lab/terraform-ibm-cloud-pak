@@ -22,7 +22,8 @@ else
     PARENT_DIR=$CUR_DIR
 fi
 
-COMMON_SERVICES_INSTALL_DIRECTORY_OCP311=${PARENT_DIR}/descriptors/common-services/scripts/
+COMMON_SERVICES_INSTALL_DIRECTORY_OCP311=${PARENT_DIR}# /descriptors/common-services/scripts/
+#COMMON_SERVICES_INSTALL_DIRECTORY_OCP311=${PARENT_DIR}/descriptors/common-services/scripts/
 
 
 function create_image_bot() {

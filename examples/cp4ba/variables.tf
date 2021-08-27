@@ -64,9 +64,9 @@ variable "docker_username" {
   description = "Docker username for creating the secret."
 }
 
-variable "docker_secret_name" {
-  description = "Enter the name of the docker registry's image."
-}
+//variable "docker_secret_name" {
+//  description = "Enter the name of the docker registry's image."
+//}
 
 //variable "local_registry_server" {}
 
@@ -74,8 +74,8 @@ variable "docker_secret_name" {
 locals {
 //  cp4ba_namespace              = "cp4ba"
 
-  docker_secret_name           = "docker-registry"
-  docker_server                = "cp.stg.icr.io"
+  entitled_registry_key_secret_name  = "ibm-entitlement-key"
+  docker_server                = "cp.icr.io"
   docker_username              = "cp"
   docker_password              = chomp(var.entitlement_key)
   docker_email                 = var.entitled_registry_user_email
@@ -87,14 +87,15 @@ locals {
   deployment_type              = "Enterprise" # 2 // 1: demo - 2: enterprise
   runtime_mode                 = "dev"
   platform_version             = "4.6" // roks version
+  machine                      = "Mac"
 
 //  entitled_registry_key        = chomp(var.entitlement_key)
   ibmcloud_api_key             = chomp(var.ibmcloud_api_key)
  }
 
 locals {
-  storage_class_name               = "cp4a-file-retain-gold-gid"
-  sc_slow_file_storage_classname   = "cp4a-file-retain-bronze-gid"
-  sc_medium_file_storage_classname = "cp4a-file-retain-silver-gid"
-  sc_fast_file_storage_classname   = "cp4a-file-retain-gold-gid"
+  storage_class_name               = "cp4ba-file-retain-gold-gid"
+  sc_slow_file_storage_classname   = "cp4ba-file-retain-bronze-gid"
+  sc_medium_file_storage_classname = "cp4ba-file-retain-silver-gid"
+  sc_fast_file_storage_classname   = "cp4ba-file-retain-gold-gid"
 }

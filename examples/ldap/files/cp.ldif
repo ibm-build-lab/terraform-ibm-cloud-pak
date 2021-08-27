@@ -1,0 +1,127 @@
+version: 1
+
+# CP
+dn: o=CP
+objectClass: organization
+objectClass: top
+o: CP
+
+# Units
+dn: ou=Users,o=CP
+objectClass: top
+objectClass: organizationalUnit
+ou: Users
+
+dn: ou=Groups,o=CP
+objectClass: top
+objectClass: organizationalUnit
+ou: Groups
+
+# Users
+dn: uid=cpadmin,ou=Users,o=CP
+objectClass: person
+objectClass: ePerson
+objectClass: top
+cn: cpadmin
+sn: cpadmin
+uid: cpadmin
+mail: cpadmin@cp.local
+userpassword:: UGFzc3cwcmQ=
+
+dn: uid=cpadmin1,ou=Users,o=CP
+objectClass: person
+objectClass: ePerson
+objectClass: top
+cn: cpadmin1
+sn: cpadmin1
+uid: cpadmin1
+mail: cpadmin1@cp.local
+userpassword:: UGFzc3cwcmQ=
+
+dn: uid=cpadmin2,ou=Users,o=CP
+objectClass: person
+objectClass: ePerson
+objectClass: top
+cn: cpadmin2
+sn: cpadmin2
+uid: cpadmin2
+mail: cpadmin2@cp.local
+userpassword:: UGFzc3cwcmQ=
+
+dn: uid=cpuser,ou=Users,o=CP
+objectClass: person
+objectClass: ePerson
+objectClass: top
+cn: cpuser
+sn: cpuser
+uid: cpuser
+mail: cpuser@cp.local
+userpassword:: UGFzc3cwcmQ=
+
+dn: uid=cpuser1,ou=Users,o=CP
+objectClass: person
+objectClass: ePerson
+objectClass: top
+cn: cpuser1
+sn: cpuser1
+uid: cpuser1
+mail: cpuser1@cp.local
+userpassword:: UGFzc3cwcmQ=
+
+dn: uid=cpuser2,ou=Users,o=CP
+objectClass: person
+objectClass: ePerson
+objectClass: top
+cn: cpuser2
+sn: cpuser2
+uid: cpuser2
+mail: cpuser2@cp.local
+userpassword:: UGFzc3cwcmQ=
+
+# Groups
+dn: cn=cpadmins,ou=Groups,o=CP
+objectClass: top
+objectClass: groupOfNames
+cn: cpadmins
+member: uid=cpadmin,ou=Users,o=CP
+member: uid=cpadmin1,ou=Users,o=CP
+member: uid=cpadmin2,ou=Users,o=CP
+
+dn: cn=cpusers,ou=Groups,o=CP
+objectClass: top
+objectClass: groupOfNames
+cn: cpusers
+member: uid=cpadmin,ou=Users,o=CP
+member: uid=cpadmin1,ou=Users,o=CP
+member: uid=cpadmin2,ou=Users,o=CP
+member: uid=cpuser,ou=Users,o=CP
+member: uid=cpuser1,ou=Users,o=CP
+member: uid=cpuser2,ou=Users,o=CP
+
+dn: cn=cpusers1,ou=Groups,o=CP
+objectClass: top
+objectClass: groupOfNames
+cn: cpusers1
+member: uid=cpuser,ou=Users,o=CP
+member: uid=cpuser1,ou=Users,o=CP
+member: uid=cpuser2,ou=Users,o=CP
+
+# FNCM Task Manager groups
+dn: cn=TaskAdmins,ou=Groups,o=CP
+objectClass: top
+objectClass: groupOfNames
+cn: TaskAdmins
+member: uid=cpadmin,ou=Users,o=CP
+
+dn: cn=TaskUsers,ou=Groups,o=CP
+objectClass: top
+objectClass: groupOfNames
+cn: TaskUsers
+member: uid=cpadmin,ou=Users,o=CP
+member: uid=cpuser,ou=Users,o=CP
+
+dn: cn=TaskAuditors,ou=Groups,o=CP
+objectClass: top
+objectClass: groupOfNames
+cn: TaskAuditors
+member: uid=cpadmin,ou=Users,o=CP

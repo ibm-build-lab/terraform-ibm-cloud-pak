@@ -15,6 +15,8 @@ CUR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 FINAL_CR_FOLDER=${CUR_DIR}/generated-cr
 PATTERN_ARR=()
 OPT_COMPONENT_ARR=()
+machine="Mac"
+
 function set_global_env_vars() {
     readonly unameOut="$(uname -s)"
     case "${unameOut}" in
@@ -42,7 +44,7 @@ if $CMD ; then
     echo -e "\x1B[1;31mPlease run cp4ba-deployment.sh script to deploy pattern firstly\x1B[0m"
     exit 1
   fi
-  echo "Heereee"
+#  echo "Heereee"
   echo "${pattern_file}"
   pattern_name=$(${YQ_CMD} -r "$pattern_file" spec.shared_configuration.sc_deployment_patterns)
   OIFS=$IFS
