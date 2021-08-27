@@ -3,7 +3,7 @@ resource "ibm_compute_vm_instance" "ldap" {
   count                = var.enable ? 1 : 0
   hostname             = var.hostname
   domain               = var.ibmcloud_domain
-  ssh_key_ids          = ["${ibm_compute_ssh_key.key.id}"]
+  ssh_key_ids          = [ibm_compute_ssh_key.key.id]
   os_reference_code    = var.os_reference_code
   datacenter           = var.datacenter
   network_speed        = var.network_speed
@@ -23,7 +23,7 @@ resource "ibm_compute_vm_instance" "ldap" {
   }
 
   provisioner "file" {
-    source      = "${path.module}/files/install.sh"
+    source      = "../../modules/ldap/files/install.sh"
     destination = "/tmp/install.sh"
   }
 
