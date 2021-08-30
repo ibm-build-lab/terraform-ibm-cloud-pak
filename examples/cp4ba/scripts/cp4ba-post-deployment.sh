@@ -16,15 +16,19 @@ FINAL_CR_FOLDER=${CUR_DIR}/generated-cr
 PATTERN_ARR=()
 OPT_COMPONENT_ARR=()
 machine="Mac"
+YQ_CMD="yq"
 
+## Error: ./cp4ba-post-deployment.sh: line 49:
+## /Users/joelgoddot/Pycharm/Hybrid-Cloud/terraform-ibm-cloud-pak/examples/cp4ba/scripts/helper/yq/yq_darwin_amd64: Permission denied
+## So, I am commenting out the "set_global_env_vars" function
 function set_global_env_vars() {
-    readonly unameOut="$(uname -s)"
-    case "${unameOut}" in
-        Linux*)     readonly machine="Linux";;
-        Darwin*)    readonly machine="Mac";;
-        *)          readonly machine="UNKNOWN:${unameOut}"
-    esac
-    machine="Linux" # will be removed
+#    readonly unameOut="$(uname -s)"
+#    case "${unameOut}" in
+#        Linux*)     readonly machine="Linux";;
+#        Darwin*)    readonly machine="Mac";;
+#        *)          readonly machine="UNKNOWN:${unameOut}"
+#    esac
+#    machine="Linux" # will be removed
     if [[ "$machine" == "Mac" ]]; then
         YQ_CMD=${CUR_DIR}/helper/yq/yq_darwin_amd64
     else
@@ -32,8 +36,10 @@ function set_global_env_vars() {
     fi
 }
 
-set_global_env_vars
+#set_global_env_vars
 
+
+#echo "YQ ${YQ_CMD}"
 CMD="find $FINAL_CR_FOLDER -maxdepth 1 -name \"ibm_cp4ba_cr_final.yaml\" -print"
 if $CMD ; then
   echo -e "\x1B[1mShowing the access information and User credentials\x1B[0m"
@@ -46,21 +52,27 @@ if $CMD ; then
   fi
 #  echo "Heereee"
   echo "${pattern_file}"
-  pattern_name=$(${YQ_CMD} -r "$pattern_file" spec.shared_configuration.sc_deployment_patterns)
+  pattern_name=$(${YQ_CMD} e ".spec.shared_configuration.sc_deployment_patterns" "${pattern_file}")
   OIFS=$IFS
   IFS=',' read -r -a PATTERN_ARR <<< "$pattern_name"
   IFS=$OIFS
 
   # metadata_name=$(grep -A1 'metadata:' $pattern_file | tail -n1); metadata_name=${metadata_name//*name: /}
-  metadata_name=$(${YQ_CMD} r "$pattern_file" metadata.name)
-  optional_components=$(${YQ_CMD} r "$pattern_file" spec.shared_configuration.sc_optional_components)
-  deployment_type=$(${YQ_CMD} r "$pattern_file" spec.shared_configuration.sc_deployment_type)
-  platform_type=$(${YQ_CMD} r "$pattern_file" spec.shared_configuration.sc_deployment_platform)
-  graphql_flag=$(${YQ_CMD} r "$pattern_file" spec.ecm_configuration.graphql.graphql_production_setting.enable_graph_iql)
+  metadata_name=$(${YQ_CMD} e ".metadata.name" "${pattern_file}")
+  optional_components=$(${YQ_CMD} e ".spec.shared_configuration.sc_optional_components" "${pattern_file}")
+  deployment_type=$(${YQ_CMD} e ".spec.shared_configuration.sc_deployment_type" "${pattern_file}")
+  platform_type=$(${YQ_CMD} e ".spec.shared_configuration.sc_deployment_platform" "${pattern_file}")
+  graphql_flag=$(${YQ_CMD} e ".spec.ecm_configuration.graphql.graphql_production_setting.enable_graph_iql" "${pattern_file}")
 
   OIFS=$IFS
   IFS=',' read -r -a OPT_COMPONENT_ARR <<< "$optional_components"
   IFS=$OIFS
+
+#  echo "metadata_name $metadata_name"
+#  echo "optional_components $optional_components"
+#  echo "deployment_type $deployment_type"
+#  echo "platform_type $platform_type"
+#  echo "graphql_flag $graphql_flag"
 
 else
   echo -e "\x1B[1;31mCan not find Custom Resource file \"ibm_cp4ba_cr_final.yaml\" under $FINAL_CR_FOLDER\x1B[0m"
@@ -84,7 +96,7 @@ function containsElement () {
 
 function check_ocp_version(){
     if [[ ${platform_type} == "ROKS" ]];then
-        temp_ver=`oc version | grep v[1-9]\.[1-9][1-9] | tail -n1`
+        temp_ver=$(oc version | grep v[1-9]\.[1-9][1-9] | tail -n1)
         if [[ $temp_ver == *"Kubernetes Version"* ]]; then
             currentver="${temp_ver:20:7}"
         else
@@ -109,8 +121,8 @@ function display_gitea_routes_credentails() {
       echo "User credentials:"
       echo "================="
       echo
-      echo -n "Default Gitea username: "; oc get secret ${metadata_name}-gitea-secret -o jsonpath='{ .data.gitea_user_name}' | base64 --decode; echo
-      echo -n "Default Gitea password: "; oc get secret ${metadata_name}-gitea-secret -o jsonpath='{ .data.gitea_user_password}' | base64 --decode; echo
+      echo -n "Default Gitea username: "; oc get secret "${metadata_name}"-gitea-secret -o jsonpath='{ .data.gitea_user_name}' | base64 --decode; echo
+      echo -n "Default Gitea password: "; oc get secret "${metadata_name}"-gitea-secret -o jsonpath='{ .data.gitea_user_password}' | base64 --decode; echo
     fi
 }
 
@@ -120,11 +132,11 @@ function display_content_routes_credentials() {
     else
       graphql_val=$(echo "$graphql_flag" | tr '[:upper:]' '[:lower:]')
     fi
-    isIngressEnabed=$(${YQ_CMD} r $pattern_file spec.shared_configuration.sc_ingress_enable)
+    isIngressEnabed=$(${YQ_CMD} e ".spec.shared_configuration.sc_ingress_enable" "${pattern_file}")
     printf "\n"
     echo -e "\x1B[1mYou can access ACCE and Navigator using the following URLs:\x1B[0m"
 
-    if [ "$isIngressEnabed" = "true" ]; then
+    if [ "${isIngressEnabed}" == "true" ]; then
       echo -e "https://$(oc get ingress --no-headers | grep fncm-ingress | awk -v temp=${INGRESS_COLUMN} {'print $temp'})/acce"
       if [[ "$graphql_val" == "true" ]]; then
         echo -e "https://$(oc get ingress --no-headers | grep fncm-ingress | awk -v temp=${INGRESS_COLUMN} {'print $temp'})/content-services-graphql"
@@ -162,7 +174,7 @@ function display_content_routes_credentials() {
 
 function display_workflow_workstreams_routes_credentials() {
   if [ "$workflowWorkstreamsDisplayed" == "false" ]; then
-    isIngressEnabed=$(${YQ_CMD} r $pattern_file spec.shared_configuration.sc_ingress_enable)
+    isIngressEnabed=$(${YQ_CMD} e ".spec.shared_configuration.sc_ingress_enable" "${pattern_file}")
     printf "\n"
     echo -e "\x1B[1mYou can access Process Federated Server to see federated workflow servers using the following URL:\x1B[0m"
     if [ "$isIngressEnabed" = "true" ]; then
@@ -227,7 +239,7 @@ function display_workflow_workstreams_routes_credentials() {
 }
 
 function display_application_routes_credentials() {
-    isIngressEnabed=$(${YQ_CMD} r $pattern_file spec.shared_configuration.sc_ingress_enable)
+    isIngressEnabed=$(${YQ_CMD} e ".spec.shared_configuration.sc_ingress_enable" "${pattern_file}")
     printf "\n"
     echo -e "\x1B[1mTo access Navigator, first go to the following URLs and accept the self-signed certificates:\x1B[0m"
     if [ "$isIngressEnabed" = "true" ]; then
@@ -255,7 +267,7 @@ function display_application_routes_credentials() {
       echo -e "https://$(oc get routes --no-headers | grep navigator-route | awk {'print $2'})/navigator"
     fi
     printf "\n"
-    bastudio_install=$(${YQ_CMD} r $pattern_file spec.bastudio_configuration)
+    bastudio_install=$(${YQ_CMD} e ".spec.bastudio_configuration" "${pattern_file}")
 
     for opt_comp in "${OPT_COMPONENT_ARR[@]}"; do
       if [[ "${opt_comp}" =~ "app_designer" || (-n "$bastudio_install") ]]; then
@@ -290,32 +302,32 @@ function display_application_routes_credentials() {
       echo "================="
       echo
       echo -n "Default administrator username: "; echo "cp4admin"
-      echo -n "Default administrator password: "; pwd=$(echo $(oc get secret ${metadata_name}-openldap-customldif -o yaml | grep ldap_user.ldif | cut -d ' ' -f4) | base64 --decode | grep "userpassword: " | head -n1); pwd=${pwd//*userpassword: /}; echo "$pwd"
+      echo -n "Default administrator password: "; pwd=$(echo $(oc get secret "${metadata_name}"-openldap-customldif -o yaml | grep ldap_user.ldif | cut -d ' ' -f4) | base64 --decode | grep "userpassword: " | head -n1); pwd=${pwd//*userpassword: /}; echo "$pwd"
     fi
  }
 
 
 function getODMUrl(){
   serviceName=$1
-  isIngressEnabed=$(${YQ_CMD} r $pattern_file spec.shared_configuration.sc_ingress_enable)
+  isIngressEnabed=$(${YQ_CMD} e ".spec.shared_configuration.sc_ingress_enable" "${pattern_file}")
   if [ "$serviceName" = "odm-decisioncenter" ] && [ "$isIngressEnabed" = "true" ]; then
-    path="$(oc get routes --no-headers | grep ${metadata_name}-${serviceName} | awk {'print $3'} | grep '/decisioncenter$' )"
-    echo "$(oc get routes --no-headers | grep ${metadata_name}-${serviceName} | grep '/decisioncenter '| awk {'print $2'})$path"
+    path="$(oc get routes --no-headers | grep "${metadata_name}"-"${serviceName}" | awk {'print $3'} | grep '/decisioncenter$' )"
+    echo "$(oc get routes --no-headers | grep "${metadata_name}"-"${serviceName}" | grep '/decisioncenter '| awk {'print $2'})$path"
   else
     path=''
     if [ "$isIngressEnabed" = "true" ]; then
-      path=$(oc get routes --no-headers | grep ${metadata_name}-${serviceName} | awk {'print $3'})
+      path=$(oc get routes --no-headers | grep "${metadata_name}"-"${serviceName}" | awk {'print $3'})
     fi
-    echo "$(oc get routes --no-headers | grep ${metadata_name}-${serviceName} | awk {'print $2'})$path"
+    echo "$(oc get routes --no-headers | grep "${metadata_name}"-"${serviceName}" | awk {'print $2'})$path"
   fi
 }
 
 function display_decisions_routes_credentials() {
 
     echo -e "\x1B[1mYou can access Operational Decision Manager using the following URLs:\x1B[0m"
-    isDsrEnabled=$(${YQ_CMD} r $pattern_file spec.odm_configuration.decisionServerRuntime.enabled)
-    isDrEnabled=$(${YQ_CMD} r $pattern_file spec.odm_configuration.decisionRunner.enabled)
-    if [ $(${YQ_CMD} r "$pattern_file" spec.odm_configuration.decisionCenter.enabled) == true ]; then
+    isDsrEnabled=$(${YQ_CMD} e ".spec.odm_configuration.decisionServerRuntime.enabled" "${pattern_file}")
+    isDrEnabled=$(${YQ_CMD} e ".spec.odm_configuration.decisionRunner.enabled" "${pattern_file}")
+    if [ $(${YQ_CMD} e ".spec.odm_configuration.decisionCenter.enabled" "${pattern_file}") == true ]; then
       echo -e "\x1B[1mTo access Decision Center console, first go to the following URLs and accept the self-signed certificates:\x1B[0m"
       echo -e "https://$(getODMUrl 'odm-decisioncenter')"
     fi
@@ -332,7 +344,7 @@ function display_decisions_routes_credentials() {
       echo -e "https://$(getODMUrl 'odm-decisionrunner')"
     fi
 
-    if [[ ! "$optional_components" =~ "ums" ]] || [ $deployment_type == "demo" ]; then
+    if [[ ! "$optional_components" =~ "ums" ]] || [ "$deployment_type" == "demo" ]; then
     echo
     echo "User credentials:"
     echo "================"
@@ -342,7 +354,7 @@ function display_decisions_routes_credentials() {
     fi
 }
 function display_decisions_ads_routes_credentials() {
-    isIngressEnabed=$(${YQ_CMD} r $pattern_file spec.shared_configuration.sc_ingress_enable)
+    isIngressEnabed=$(${YQ_CMD} e ".spec.shared_configuration.sc_ingress_enable" "${pattern_file}")
     printf "\n"
 
     for opt_comp in "${OPT_COMPONENT_ARR[@]}"; do
@@ -354,7 +366,7 @@ function display_decisions_ads_routes_credentials() {
           else
             echo -e "https://$(oc get routes --no-headers | grep bastudio-route | awk {'print $2'})/BAStudio"
           fi
-          if [ "$(${YQ_CMD} r $pattern_file spec.ads_configuration.decision_designer.embedded_build_and_run.enabled)" != "false" ]; then
+          if [ "$(${YQ_CMD} e ".spec.ads_configuration.decision_designer.embedded_build_and_run.enabled" "${pattern_file}")" != "false" ]; then
             echo -e "\x1B[1mYou can access ADS Embedded Runtime swagger URL (UMS authentication):\x1B[0m"
             if [ "$isIngressEnabed" = "true" ]; then
               echo -e "https://$(oc get ingress --no-headers | grep embedded-runtime-service | awk -v temp=${INGRESS_COLUMN} {'print $temp'})/api/swagger-ui"
@@ -413,7 +425,7 @@ function display_digitalworker_routes_credentials() {
     fi
     echo -e "\x1B[1mYou can access ADW Runtime URL:\x1B[0m"
 
-    echo -e "https://$(oc get routes --no-headers | grep ${metadata_name}-adw-runtime-route | awk {'print $2'})"
+    echo -e "https://$(oc get routes --no-headers | grep "${metadata_name}"-adw-runtime-route | awk {'print $2'})"
     echo
     if [[ ${deployment_type} == "demo" ]]; then
       echo "User credentials (for execution):"
@@ -426,13 +438,13 @@ function display_digitalworker_routes_credentials() {
 }
 
 function display_bai_routes_credentials() {
-    isIngressEnabed=$(${YQ_CMD} r $pattern_file spec.shared_configuration.sc_ingress_enable)
+    isIngressEnabed=$(${YQ_CMD} e ".spec.shared_configuration.sc_ingress_enable" "${pattern_file}")
 
     echo -e "\x1B[1mYou can access Business Performance Center using the following URL:\x1B[0m"
     if [ "$isIngressEnabed" = "true" ]; then
         echo -e "https://$(oc get ingress --no-headers | grep bai-business-performance-center-ingress | awk -v temp=${INGRESS_COLUMN} {'print $temp'})"
     else
-        echo -e "https://$(oc get routes --no-headers | grep ${metadata_name}-bai-business-performance-center-route | awk {'print $2'})"
+        echo -e "https://$(oc get routes --no-headers | grep "${metadata_name}"-bai-business-performance-center-route | awk {'print $2'})"
     fi
     if [[ ${deployment_type} == "demo" ]]; then
         echo "User credentials:"
@@ -442,7 +454,7 @@ function display_bai_routes_credentials() {
         echo -n "Default administrator password: "; pwd=$(echo $(oc get secret ${metadata_name}-openldap-customldif -o yaml | grep ldap_user.ldif | cut -d ' ' -f4) | base64 --decode | grep "userpassword: " | head -n1); pwd=${pwd//*userpassword: /}; echo "$pwd"
     fi
 
-    nav_installed=$(${YQ_CMD} r $pattern_file spec.navigator_configuration)
+    nav_installed=$(${YQ_CMD} e ".spec.navigator_configuration" "${pattern_file}")
     if [[ -n "${nav_installed}" ]]; then
       echo -e "\x1B[1mTo access Business Performance Center in Content Navigator, first go to the instance of Business Performance Center that is shown just above and accept the self-signed certificate.\x1B[0m"
       echo -e "\x1B[1mThen you can access Business Performance Center by using the following URL:\x1B[0m"
@@ -464,15 +476,15 @@ function display_bai_routes_credentials() {
     if [ "$isIngressEnabed" = "true" ]; then
         echo -e "https://$(oc get ingress --no-headers | grep bai-admin-ingress | awk -v temp=${INGRESS_COLUMN} {'print $temp'})"
     else
-        echo -e "https://$(oc get routes --no-headers | grep ${metadata_name}-bai-admin-route | awk {'print $2'})"
+        echo -e "https://$(oc get routes --no-headers | grep "${metadata_name}"-bai-admin-route | awk {'print $2'})"
     fi
     if [[ $deployment_type == "demo" ]]; then
       echo
       echo "User credentials:"
       echo "================="
       echo
-      echo -n "Default username: "; oc get secret ${metadata_name}-bai-secret-internal -o jsonpath='{ .data.admin-username}' | base64 --decode; echo
-      echo -n "Default password: "; oc get secret ${metadata_name}-bai-secret-internal -o jsonpath='{ .data.admin-password}' | base64 --decode; echo
+      echo -n "Default username: "; oc get secret "${metadata_name}"-bai-secret-internal -o jsonpath='{ .data.admin-username}' | base64 --decode; echo
+      echo -n "Default password: "; oc get secret "${metadata_name}"-bai-secret-internal -o jsonpath='{ .data.admin-password}' | base64 --decode; echo
       echo
     fi
 
@@ -480,20 +492,20 @@ function display_bai_routes_credentials() {
     if [ "$isIngressEnabed" = "true" ]; then
         echo -e "https://$(oc get ingress --no-headers | grep bai-management-ingress | awk -v temp=${INGRESS_COLUMN} {'print $temp'})"
     else
-        echo -e "https://$(oc get routes --no-headers | grep ${metadata_name}-bai-management-route | awk {'print $2'})"
+        echo -e "https://$(oc get routes --no-headers | grep "${metadata_name}"-bai-management-route | awk {'print $2'})"
     fi
     if [[ $deployment_type == "demo" ]]; then
       echo
       echo "User credentials:"
       echo "================="
       echo
-      echo -n "Default username: "; oc get secret ${metadata_name}-bai-secret-internal -o jsonpath='{ .data.management-username}' | base64 --decode; echo
-      echo -n "Default password: "; oc get secret ${metadata_name}-bai-secret-internal -o jsonpath='{ .data.management-password}' | base64 --decode; echo
+      echo -n "Default username: "; oc get secret "${metadata_name}"-bai-secret-internal -o jsonpath='{ .data.management-username}' | base64 --decode; echo
+      echo -n "Default password: "; oc get secret "${metadata_name}"-bai-secret-internal -o jsonpath='{ .data.management-password}' | base64 --decode; echo
     fi
 }
 
 function display_workflow_authoring_routes_credentials() {
-    isIngressEnabed=$(${YQ_CMD} r $pattern_file spec.shared_configuration.sc_ingress_enable)
+    isIngressEnabed=$(${YQ_CMD} e ".spec.shared_configuration.sc_ingress_enable" "${pattern_file}")
     printf "\n"
     echo -e "\x1B[1mYou can access Process Federated Server to see federated workflow servers using the following URL:\x1B[0m"
     if [ "$isIngressEnabed" = "true" ]; then
@@ -553,7 +565,7 @@ function display_workflow_authoring_routes_credentials() {
 }
 
 function display_document_processing_routes_credentials() {
-  isIngressEnabed=$(${YQ_CMD} r "$pattern_file" spec.shared_configuration.sc_ingress_enable)
+  isIngressEnabed=$(${YQ_CMD} e ".spec.shared_configuration.sc_ingress_enable" "${pattern_file}")
   printf "\n"
   echo -e "\x1B[1mYou can access Content Project Deployment Service using the following URLs:\x1B[0m"
 
@@ -587,12 +599,13 @@ function display_document_processing_routes_credentials() {
   done
   display_gitea_routes_credentails
   display_content_routes_credentials
+  echo "here inside"
 }
 
 function display_ier_routes_credentials() {
-    isIngressEnabed=$(${YQ_CMD} r "$pattern_file" spec.shared_configuration.sc_ingress_enable)
+    isIngressEnabed=$(${YQ_CMD} e ".spec.shared_configuration.sc_ingress_enable" "${pattern_file}")
     printf "\n"
-    echo -e "\x1B[1mYou can access IER using the following URL:\x1B[0m" 
+    echo -e "\x1B[1mYou can access IER using the following URL:\x1B[0m"
 
     if [ "$isIngressEnabed" = "true" ]; then
       echo -e "https://$(oc get ingress --no-headers | grep ier-ingress | awk -v temp=${INGRESS_COLUMN} {'print $temp'})/EnterpriseRecordsPlugin/IERApplicationPlugin.jar"
@@ -602,9 +615,9 @@ function display_ier_routes_credentials() {
 }
 
 function display_iccsap_routes_credentials() {
-    isIngressEnabed=$(${YQ_CMD} r "$pattern_file" spec.shared_configuration.sc_ingress_enable)
+    isIngressEnabed=$(${YQ_CMD} e ".spec.shared_configuration.sc_ingress_enable" "${pattern_file}")
     printf "\n"
-    echo -e "\x1B[1mYou can access ICCSAP using the following URL:\x1B[0m" 
+    echo -e "\x1B[1mYou can access ICCSAP using the following URL:\x1B[0m"
 
     if [ "$isIngressEnabed" = "true" ]; then
       echo -e "SSL Webport: https://$(oc get ingress --no-headers | grep iccsap-ingress | awk -v temp=${INGRESS_COLUMN} {'print $temp'})"
@@ -629,8 +642,11 @@ for item in "${PATTERN_ARR[@]}"; do
     while true; do
       for choice in "${choices[@]}";
       do
+#        echo "OPT_COMPONENT_ARR: ${OPT_COMPONENT_ARR}"
         if [[ "$choice" == "$item" ]]; then
             display_content_routes_credentials
+#            echo "OPT_COMPONENT_ARR: ${OPT_COMPONENT_ARR}"
+            echo "here inside loop"
             break
         elif [[ "workflow" == "$item" || "workstreams" == "$item" || "workflow-workstreams" == "$item"  ]];
         then
@@ -639,7 +655,7 @@ for item in "${PATTERN_ARR[@]}"; do
               if [[ " ${opt_comp} " = "baw_authoring" ]]; then
                   display_workflow_authoring_routes_credentials
               elif [[ " ${opt_comp} " == "document_processing_workflow" ]]; then
-                    display_workflow_workstreams_routes_credentials
+                  display_workflow_workstreams_routes_credentials
                   break
               elif [ "$choice" == "$item" ]; then
                   display_application_routes_credentials

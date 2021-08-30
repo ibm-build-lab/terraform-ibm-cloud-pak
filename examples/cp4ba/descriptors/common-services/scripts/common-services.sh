@@ -67,9 +67,9 @@ function upload() {
         docker load --input ../offline/$file/image.tar
         echo "Tag and push images for $file ..."
         for image in $(cat ../offline/$file/image.manifest); do
-          imageName=$(echo $image | awk -F "/" '{print $NF}')
+          imageName=$(echo "$image" | awk -F "/" '{print $NF}')
           docker tag $image "localhost:$LOCAL_PORT/ibm-common-services/$imageName" && docker push "localhost:$LOCAL_PORT/ibm-common-services/$imageName"
-          docker rmi "localhost:5000/ibm-common-services/$imageName" $image
+          docker rmi "localhost:5000/ibm-common-services/$imageName" "$image"
         done
       else
         echo "There is no image.tar file in the $file folder"
@@ -82,7 +82,7 @@ function wait_for_url_timed {
   url=$1
   max_wait=${2:-60*1000}
   wait=0.2
-  expire=$(($(time_now) + $max_wait))
+  expire=$(($(time_now) + "$max_wait"))
   set +e
   while [[ $(time_now) -lt $expire ]]; do
   out=$(curl --max-time 2 -fs $url 2>/dev/null)
@@ -90,7 +90,7 @@ function wait_for_url_timed {
     set -e
     echo ${out}
     ENDTIME=$(date +%s)
-    echo "Success accessing '$url' after $(($ENDTIME - $STARTTIME)) seconds"
+    echo "Success accessing '$url' after $(("$ENDTIME" - "$STARTTIME")) seconds"
     return 0
   fi
   sleep $wait
@@ -109,10 +109,10 @@ function offline_config() {
 }
 
 function install() {
-  oc apply -f ${COMMON_SERVICES_INSTALL_DIRECTORY_OCP311}\namespace.yaml
-  oc apply -f ${COMMON_SERVICES_INSTALL_DIRECTORY_OCP311}\rbac.yaml
-  oc apply -f ${COMMON_SERVICES_INSTALL_DIRECTORY_OCP311}\configmap.yaml
-  oc apply -f ${COMMON_SERVICES_INSTALL_DIRECTORY_OCP311}\install.yaml
+  oc apply -f "${COMMON_SERVICES_INSTALL_DIRECTORY_OCP311}"\namespace.yaml
+  oc apply -f "${COMMON_SERVICES_INSTALL_DIRECTORY_OCP311}"\rbac.yaml
+  oc apply -f "${COMMON_SERVICES_INSTALL_DIRECTORY_OCP311}"\configmap.yaml
+  oc apply -f "${COMMON_SERVICES_INSTALL_DIRECTORY_OCP311}"\install.yaml
   if [[ $ASYNC != "--async" ]]; then
     waiting_complete "deploy"
   fi
@@ -124,9 +124,9 @@ function uninstall() {
     waiting_complete "uninstall"
   fi
   oc delete job cs-operands-install cs-operands-uninstall -n $NAMESPACE
-  oc delete -f ${COMMON_SERVICES_INSTALL_DIRECTORY_OCP311}\rbac.yaml
-  oc delete -f ${COMMON_SERVICES_INSTALL_DIRECTORY_OCP311}\configmap.yaml
-  oc delete -f ${COMMON_SERVICES_INSTALL_DIRECTORY_OCP311}\namespace.yaml
+  oc delete -f "${COMMON_SERVICES_INSTALL_DIRECTORY_OCP311}"\rbac.yaml
+  oc delete -f "${COMMON_SERVICES_INSTALL_DIRECTORY_OCP311}"\configmap.yaml
+  oc delete -f "${COMMON_SERVICES_INSTALL_DIRECTORY_OCP311}"\namespace.yaml
   oc delete namespace ibm-common-services
   exit 0
 }

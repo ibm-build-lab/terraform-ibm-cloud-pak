@@ -1,0 +1,1182 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    olm.skipRange: '>=1.0.2 <1.1.0'
+    operators.operatorframework.io/builder: operator-sdk-v1.2.0
+    operators.operatorframework.io/project_layout: go.kubebuilder.io/v2
+    certified: 'false'
+    olm.targetNamespaces: cp4ba
+    operatorframework.io/properties: >-
+      {"properties":[{"type":"olm.gvk","value":{"group":"core.automation.ibm.com","kind":"AutomationUIConfig","version":"v1beta1"}},{"type":"olm.gvk","value":{"group":"core.automation.ibm.com","kind":"Cartridge","version":"v1beta1"}},{"type":"olm.package","value":{"packageName":"ibm-automation-core","version":"1.1.0"}}]}
+    support: IBM
+    alm-examples: |-
+      [
+        {
+          "apiVersion": "core.automation.ibm.com/v1beta1",
+          "kind": "AutomationUIConfig",
+          "metadata": {
+            "name": "automationuiconfig-sample"
+          },
+          "spec": {
+            "description": "Sample Automationuiconfig CR",
+            "license": {
+              "accept": false
+            },
+            "storage": {
+              "class": "\u003cYour_managed-nfs-storage\u003e"
+            },
+            "tls": {},
+            "version": "v1.0"
+          }
+        },
+        {
+          "apiVersion": "core.automation.ibm.com/v1beta1",
+          "kind": "Cartridge",
+          "metadata": {
+            "name": "cartridge-sample"
+          },
+          "spec": {
+            "description": "Sample cartridge CR",
+            "license": {
+              "accept": false
+            },
+            "version": "v1.0"
+          }
+        }
+      ]
+    capabilities: Seamless Upgrades
+    olm.operatorNamespace: cp4ba
+    containerImage: >-
+      icr.io/cpopen/iaf-core-operator@sha256:73f4a2940eb875b387ee0be936501a748163e2713c1c4b114c2517b26fe3767c
+    categories: Automation
+    description: Installs and manages IBM Common Services and UI
+    olm.operatorGroup: ibm-cp4ba-operator-catalog-group
+  selfLink: >-
+    /apis/operators.coreos.com/v1alpha1/namespaces/cp4ba/clusterserviceversions/ibm-automation-core.v1.1.0
+  resourceVersion: '2726357'
+  name: ibm-automation-core.v1.1.0
+  generation: 1
+  managedFields:
+    - apiVersion: operators.coreos.com/v1alpha1
+      fieldsType: FieldsV1
+      fieldsV1:
+      manager: catalog
+      operation: Update
+    - apiVersion: operators.coreos.com/v1alpha1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            'f:olm.operatorGroup': {}
+            'f:olm.operatorNamespace': {}
+            'f:olm.targetNamespaces': {}
+          'f:labels':
+            'f:olm.api.551bbbf0b5ba4c53': {}
+            'f:olm.api.d5bce463307a1f31': {}
+            'f:olm.api.e37512cb09475997': {}
+            'f:operators.coreos.com/ibm-automation-core.cp4ba': {}
+        'f:spec':
+          'f:install':
+            'f:spec':
+              'f:deployments': {}
+        'f:status':
+          'f:lastUpdateTime': {}
+          'f:requirementStatus': {}
+          'f:phase': {}
+          'f:certsRotateAt': {}
+          'f:certsLastUpdated': {}
+          'f:lastTransitionTime': {}
+          'f:conditions': {}
+          .: {}
+          'f:message': {}
+          'f:reason': {}
+      manager: olm
+      operation: Update
+      time: '2021-08-25T16:45:37Z'
+  namespace: cp4ba
+  labels:
+    automation.ibm.com/component: iaf
+    olm.api.551bbbf0b5ba4c53: provided
+    olm.api.d5bce463307a1f31: required
+    olm.api.e37512cb09475997: provided
+    operatorframework.io/arch.amd64: supported
+    operatorframework.io/os.linux: supported
+    operators.coreos.com/ibm-automation-core.cp4ba: ''
+spec:
+  customresourcedefinitions:
+    owned:
+      - description: |-
+          AutomationUIConfig is the Schema for the automationuiconfigs API
+           Documentation
+           For additional details regarding install parameters: https://ibm.biz/iaf4cloudpaks. License
+           By installing this product you accept the license terms http://ibm.biz/IAF-license.
+        displayName: Automation UIConfig
+        kind: AutomationUIConfig
+        name: automationuiconfigs.core.automation.ibm.com
+        resources:
+          - kind: ZenService
+            name: ''
+            version: v1
+          - kind: CertManager
+            name: operator.ibm.com
+            version: v1alpha1
+        specDescriptors:
+          - description: Describe about the AutomationUIConfigSpec
+            displayName: Description
+            path: description
+          - description: >-
+              By installing this component you accept the license terms
+              http://ibm.biz/IAF-license.
+            displayName: License
+            path: license
+          - description: Specifies the Storage config of the AutomationUIConfig
+            displayName: Storage
+            path: storage
+          - description: Specifies the tls config of the AutomationUIConfig
+            displayName: TLS
+            path: tls
+          - description: Specifies the version of the cartridge operand
+            displayName: Version
+            path: version
+          - description: Specfies if zen UI has to be enabled or not
+            displayName: Zen
+            path: zen
+          - description: Accept the license
+            displayName: Accept
+            path: license.accept
+            value:
+              - false
+            x-descriptors:
+              - 'urn:alm:descriptor:com.tectonic.ui:booleanSwitch'
+        statusDescriptors:
+          - displayName: Conditions
+            path: conditions
+        version: v1beta1
+      - description: |-
+          IBM Automation Foundation Core operator provides UI deployments
+           Documentation
+           For additional details regarding install parameters: https://ibm.biz/iaf4cloudpaks.
+           License
+           By installing this product you accept the license terms http://ibm.biz/IAF-license.
+        displayName: Cartridge
+        kind: Cartridge
+        name: cartridges.core.automation.ibm.com
+        resources:
+          - kind: ZenService
+            name: ''
+            version: v1
+        specDescriptors:
+          - description: Describe about the CartridgeSpec
+            displayName: Description
+            path: description
+          - description: >-
+              By installing this component you accept the license terms
+              http://ibm.biz/IAF-license.
+            displayName: License
+            path: license
+          - description: Specifies the version of the cartridge operand
+            displayName: Version
+            path: version
+          - description: Accept the license
+            displayName: Accept
+            path: license.accept
+            value:
+              - false
+            x-descriptors:
+              - 'urn:alm:descriptor:com.tectonic.ui:booleanSwitch'
+        statusDescriptors:
+          - displayName: Conditions
+            path: conditions
+        version: v1beta1
+    required:
+      - description: CommonService is the Schema for the commonservices API
+        displayName: CommonService
+        kind: CommonService
+        name: commonservices.operator.ibm.com
+        version: v3
+  apiservicedefinitions: {}
+  webhookdefinitions:
+    - generateName: vautomationuiconfig.kb.io
+      containerPort: 443
+      sideEffects: None
+      deploymentName: iaf-core-operator-controller-manager
+      targetPort: 9443
+      rules:
+        - apiGroups:
+            - core.automation.ibm.com
+          apiVersions:
+            - v1beta1
+          operations:
+            - CREATE
+            - UPDATE
+          resources:
+            - automationuiconfigs
+      type: ValidatingAdmissionWebhook
+      admissionReviewVersions:
+        - v1beta1
+      webhookPath: /validate-core-automation-ibm-com-v1beta1-automationuiconfig
+      failurePolicy: Fail
+    - generateName: vcartridge.kb.io
+      containerPort: 443
+      sideEffects: None
+      deploymentName: iaf-core-operator-controller-manager
+      targetPort: 9443
+      rules:
+        - apiGroups:
+            - core.automation.ibm.com
+          apiVersions:
+            - v1beta1
+          operations:
+            - CREATE
+            - UPDATE
+          resources:
+            - cartridges
+      type: ValidatingAdmissionWebhook
+      admissionReviewVersions:
+        - v1beta1
+      webhookPath: /validate-core-automation-ibm-com-v1beta1-cartridge
+      failurePolicy: Fail
+  keywords:
+    - iaf
+    - core
+  displayName: IBM Automation Foundation Core
+  provider:
+    name: IBM
+  maturity: alpha
+  installModes:
+    - supported: true
+      type: OwnNamespace
+    - supported: true
+      type: SingleNamespace
+    - supported: false
+      type: MultiNamespace
+    - supported: true
+      type: AllNamespaces
+  version: 1.1.0
+  icon:
+    - base64data: >-
+        PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgMzIgMzIiPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJmNjg5NWUyZS1lYzcwLTQ0ODItOTQ5NS1iZDQ2YWVkZDVmMTMiIHgxPSIxNSIgeTE9IjE2IiB4Mj0iMTUiIHkyPSI5IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMC4zIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1vcGFjaXR5PSIwIi8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJiMGRlMzBmNy1jNmU1LTQyZjYtYjUwMy1kMzM3OTBiYjhmNjMiIHgxPSIyNyIgeTE9IjI3IiB4Mj0iMjciIHkyPSIyMCIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAiIHN0b3Atb3BhY2l0eT0iMCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjAuNyIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxtYXNrIGlkPSJhZjJiNWZmZC1kZjFkLTRkNzQtYTlkNy1hNjkyNGNjODY5MzQiIHg9IjAiIHk9IjAiIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CiAgICAgIDxwYXRoIGQ9Ik0xMiwzMGE0LDQsMCwwLDEtNC00VjIwaDJ2NmEyLDIsMCwwLDAsNCwwVjZhNCw0LDAsMCwxLDgsMHY5SDIwVjZhMiwyLDAsMCwwLTQsMFYyNkE0LDQsMCwwLDEsMTIsMzBaIiBmaWxsPSIjZmZmIi8+CiAgICAgIDxwYXRoIGQ9Ik0xMCwxNUg4VjZBMiwyLDAsMCwwLDQsNnY2SDJWNmE0LDQsMCwwLDEsOCwwWiIgZmlsbD0iI2ZmZiIvPgogICAgICA8cGF0aCBkPSJNMjQsMzBhNCw0LDAsMCwxLTQtNFYyMGgydjZhMiwyLDAsMCwwLDQsMFYyMWgydjVBNCw0LDAsMCwxLDI0LDMwWiIgZmlsbD0iI2ZmZiIvPgogICAgICA8cGF0aCBkPSJNMTEsMTZIN1Y5aDRaTTIzLDlIMTl2N2g0WiIgZmlsbD0idXJsKCNmNjg5NWUyZS1lYzcwLTQ0ODItOTQ5NS1iZDQ2YWVkZDVmMTMpIi8+CiAgICAgIDxyZWN0IHg9IjI1IiB5PSIyMCIgd2lkdGg9IjQiIGhlaWdodD0iNyIgZmlsbD0idXJsKCNiMGRlMzBmNy1jNmU1LTQyZjYtYjUwMy1kMzM3OTBiYjhmNjMpIi8+CiAgICA8L21hc2s+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJmMGI4ZmQxLWQ5N2UtNGFlZS1iNjYzLTY0ZGQxNmE2ZmY1MiIgeTE9IjMyIiB4Mj0iMzIiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwLjEiIHN0b3AtY29sb3I9IiMwOGJkYmEiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIwLjkiIHN0b3AtY29sb3I9IiMwZjYyZmUiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxnIGlkPSJhNThiZjMwNy03YjRiLTRjZGMtODg2NS01MThhNWY3MGE4MmQiIGRhdGEtbmFtZT0iTGF5ZXIgMiI+CiAgICA8ZyBpZD0iZmE4NjhlNzItNzU2ZC00MTNlLThmNDUtYmQ0MjFiY2IyZDM3IiBkYXRhLW5hbWU9IkJ1aWxkIGljb24gaGVyZSI+CiAgICAgIDxnPgogICAgICAgIDxnIG1hc2s9InVybCgjYWYyYjVmZmQtZGYxZC00ZDc0LWE5ZDctYTY5MjRjYzg2OTM0KSI+CiAgICAgICAgICA8cmVjdCB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9InVybCgjYmYwYjhmZDEtZDk3ZS00YWVlLWI2NjMtNjRkZDE2YTZmZjUyKSIvPgogICAgICAgIDwvZz4KICAgICAgICA8cG9seWdvbiBwb2ludHM9IjI3LjE3IDE1IDE5IDE1IDE5IDE3IDI3LjE3IDE3IDI0LjU5IDE5LjU5IDI2IDIxIDMxIDE2IDI2IDExIDI0LjU5IDEyLjQxIDI3LjE3IDE1IiBmaWxsPSIjMDAxZDZjIi8+CiAgICAgICAgPHJlY3QgeD0iMiIgeT0iMTUiIHdpZHRoPSI5IiBoZWlnaHQ9IjIiIGZpbGw9IiMwMDFkNmMiLz4KICAgICAgPC9nPgogICAgPC9nPgogIDwvZz4KPC9zdmc+Cg==
+      mediatype: image/svg+xml
+  links:
+    - name: IBM Automation Foundation Core
+      url: 'https://ibm.biz/iaf4cloudpaks'
+  install:
+    spec:
+      clusterPermissions:
+        - rules:
+            - apiGroups:
+                - storage.k8s.io
+              resources:
+                - storageclasses
+              verbs:
+                - get
+                - list
+                - watch
+          serviceAccountName: iaf-core-operator-serviceaccount
+      deployments:
+        - name: iaf-core-operator-controller-manager
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app.kubernetes.io/component: iaf-core-operator
+                app.kubernetes.io/instance: iaf-core-operator
+                app.kubernetes.io/managed-by: olm
+                app.kubernetes.io/name: iaf-core-operator
+                control-plane: controller-manager
+                name: iaf-core-operator
+            strategy: {}
+            template:
+              metadata:
+                annotations:
+                  productChargedContainers: All
+                  productID: 099c1256276342309e808ebd6dfc0e59
+                  productMetric: FREE
+                  productName: IBM Automation Foundation
+                creationTimestamp: null
+                labels:
+                  app.kubernetes.io/component: iaf-core-operator
+                  app.kubernetes.io/instance: iaf-core-operator
+                  app.kubernetes.io/managed-by: olm
+                  app.kubernetes.io/name: iaf-core-operator
+                  control-plane: controller-manager
+                  name: iaf-core-operator
+              spec:
+                containers:
+                  - resources:
+                      limits:
+                        cpu: 200m
+                        memory: 300Mi
+                      requests:
+                        cpu: 150m
+                        memory: 200Mi
+                    readinessProbe:
+                      failureThreshold: 3
+                      httpGet:
+                        path: /readyz
+                        port: 5555
+                        scheme: HTTP
+                      initialDelaySeconds: 20
+                      periodSeconds: 30
+                      successThreshold: 1
+                      timeoutSeconds: 10
+                    name: manager
+                    command:
+                      - /manager
+                    livenessProbe:
+                      failureThreshold: 3
+                      httpGet:
+                        path: /healthz
+                        port: 5555
+                        scheme: HTTP
+                      initialDelaySeconds: 180
+                      periodSeconds: 30
+                      successThreshold: 1
+                      timeoutSeconds: 10
+                    env:
+                      - name: OPERATOR_NAMESPACE
+                        valueFrom:
+                          fieldRef:
+                            fieldPath: metadata.namespace
+                      - name: WATCH_NAMESPACE
+                        valueFrom:
+                          fieldRef:
+                            fieldPath: 'metadata.annotations[''olm.targetNamespaces'']'
+                      - name: HEALTH_IMAGES
+                        value: >
+                          1.1.0=cp.icr.io/cp/iaf-health-service@sha256:4f0229ea94f3b2420731a11e506b93063afba5e09029c202876533188db263dd
+                      - name: ZEN_JOB_IMAGES
+                        value: >
+                          1.1.0=cp.icr.io/cp/iaf-ui-customization@sha256:a642521e5325d364ff50b852c7255efbc371545195d65ea23637bcd2b45b2bb2
+                    securityContext:
+                      allowPrivilegeEscalation: false
+                      capabilities:
+                        drop:
+                          - ALL
+                      privileged: false
+                      readOnlyRootFilesystem: true
+                      runAsNonRoot: true
+                    ports:
+                      - containerPort: 9443
+                        name: webhook-server
+                        protocol: TCP
+                    imagePullPolicy: IfNotPresent
+                    volumeMounts:
+                      - mountPath: /tmp/k8s-webhook-server/serving-certs
+                        name: cert
+                        readOnly: true
+                    image: >-
+                      icr.io/cpopen/iaf-core-operator@sha256:73f4a2940eb875b387ee0be936501a748163e2713c1c4b114c2517b26fe3767c
+                    args:
+                      - '--enable-leader-election'
+                securityContext:
+                  runAsNonRoot: true
+                serviceAccountName: iaf-core-operator-serviceaccount
+                terminationGracePeriodSeconds: 10
+                volumes:
+                  - name: cert
+                    secret:
+                      defaultMode: 420
+                      secretName: iaf-core-operator-controller-manager-service-cert
+      permissions:
+        - rules:
+            - apiGroups:
+                - ''
+              resources:
+                - configmaps
+              verbs:
+                - get
+                - list
+                - watch
+                - create
+                - update
+                - patch
+                - delete
+            - apiGroups:
+                - ''
+              resources:
+                - configmaps/status
+              verbs:
+                - get
+                - update
+                - patch
+            - apiGroups:
+                - ''
+              resources:
+                - events
+              verbs:
+                - create
+                - patch
+            - apiGroups:
+                - apps
+              resources:
+                - deployments
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - apps
+              resources:
+                - deployments/finalizers
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - batch
+              resources:
+                - jobs
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - certmanager.k8s.io
+              resources:
+                - certificates
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - certmanager.k8s.io
+              resources:
+                - issuers
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - ''
+              resources:
+                - configmaps
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - ''
+              resources:
+                - configmaps/status
+              verbs:
+                - get
+                - patch
+                - update
+            - apiGroups:
+                - ''
+              resources:
+                - pods
+              verbs:
+                - create
+                - delete
+                - deletecollection
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - ''
+              resources:
+                - secrets
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - ''
+              resources:
+                - serviceaccounts
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - ''
+              resources:
+                - services
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - core.automation.ibm.com
+              resources:
+                - automationuiconfigs
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - core.automation.ibm.com
+              resources:
+                - automationuiconfigs/finalizers
+              verbs:
+                - update
+            - apiGroups:
+                - core.automation.ibm.com
+              resources:
+                - automationuiconfigs/status
+              verbs:
+                - get
+                - patch
+                - update
+            - apiGroups:
+                - core.automation.ibm.com
+              resources:
+                - cartridges
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - core.automation.ibm.com
+              resources:
+                - cartridges/finalizers
+              verbs:
+                - create
+                - delete
+                - get
+                - patch
+                - update
+            - apiGroups:
+                - core.automation.ibm.com
+              resources:
+                - cartridges/status
+              verbs:
+                - get
+                - patch
+                - update
+            - apiGroups:
+                - monitoring.coreos.com
+              resources:
+                - servicemonitors
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - networking.k8s.io
+              resources:
+                - networkpolicies
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - operator.ibm.com
+              resources:
+                - operandconfigs
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - operator.ibm.com
+              resources:
+                - operandregistries
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - operator.ibm.com
+              resources:
+                - operandrequests
+              verbs:
+                - create
+                - delete
+                - deletecollection
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - operators.coreos.com
+              resources:
+                - clusterserviceversions
+              verbs:
+                - create
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - operators.coreos.com
+              resources:
+                - subscriptions
+              verbs:
+                - create
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - operators.ibm.com
+              resources:
+                - switcheritems
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - rbac.authorization.k8s.io
+              resources:
+                - rolebindings
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - rbac.authorization.k8s.io
+              resources:
+                - roles
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - route.openshift.io
+              resources:
+                - routes
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - zen.cpd.ibm.com
+              resources:
+                - zenservices
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+          serviceAccountName: iaf-core-operator-serviceaccount
+    strategy: deployment
+  maintainers:
+    - email: support@ibm.com
+      name: IBM Support
+  description: >-
+    # Name
+
+
+    IBM&reg; Automation Foundation Core
+
+
+    # Introduction
+
+
+    ## Details
+
+    The IBM Automation Foundation Core Operator installs the Platform UI
+    Operator and its dependencies. With IBM Automation Foundation, a cluster
+    administrator can deploy and manage the IBM Automation Foundation Core
+    instance.
+
+
+    ## Prerequisites
+
+
+    Review the [System
+    requirements](https://www.ibm.com/support/knowledgecenter/cloudpaks_start/cloud-paks/plan/sys-reqs.html).
+
+
+    - Import the IBM Common Services catalog source. For more information, see
+    [Create
+    CatalogSource](https://github.com/IBM/ibm-common-service-operator/blob/master/docs/install.md#1create-catalogsource).
+
+    - Ensure that cluster access is enabled.
+
+
+    ## Supported platforms
+
+
+    Install Red Hat OpenShift Container Platform 4.6 or later. Supported on
+    Linux x86_64, Power and Z architectures.
+
+    ## Operator versions
+
+
+    1.0.2
+
+
+    ## Documentation
+
+
+    Find IBM Automation Foundation documentation in [Getting Started with IBM
+    Cloud Paks](https://ibm.biz/iaf4cloudpaks).
+
+
+    ## SecurityContextConstraints Requirements
+
+
+    The Automation Foundation Core Operator runs in the `restricted` security
+    context constraints.
+
+
+    ```yaml
+
+    apiVersion: security.openshift.io/v1
+
+    kind: SecurityContextConstraints
+
+    metadata:
+        name: restricted
+    allowHostDirVolumePlugin: false
+
+    allowHostIPC: false
+
+    allowHostNetwork: false
+
+    allowHostPID: false
+
+    allowHostPorts: false
+
+    allowPrivilegeEscalation: true
+
+    allowPrivilegedContainer: false
+
+    allowedCapabilities: null
+
+    defaultAddCapabilities: null
+
+    fsGroup:
+        type: MustRunAs
+    users: []
+
+    groups: []
+
+    priority: null
+
+    readOnlyRootFilesystem: false
+
+    requiredDropCapabilities:
+
+    - ALL
+
+    runAsUser:
+        type: MustRunAsRange
+    seLinuxContext:
+        type: MustRunAs
+    supplementalGroups:
+        type: RunAsAny
+    volumes:
+
+    - configMap
+
+    - downwardAPI
+
+    - emptyDir
+
+    - persistentVolumeClaim
+
+    - projected
+
+    - secret
+
+    ```
+
+
+    ## Resources Required
+
+    Review the [Resource
+    Requirements](https://www.ibm.com/support/knowledgecenter/en/cloudpaks_start/cloud-paks/plan/sys-reqs.html)
+    before you plan to install the IBM Automation Foundation.
+
+
+    ## Operator Scoping
+
+
+    The IBM&reg; Automation Foundation Core operator is namespace-scoped.
+
+
+    The operator has a validating webhook which is a cluster resource,
+
+    so must be created at cluster scope. This resource is not created by the
+    operator, it is created by OLM from the CSV.
+
+    There are no required cluster permissions for the operator related to this
+    resource.
+
+
+    The operator requires the ability to get / list / watch StorageClass
+    resources which are cluster scoped
+
+
+    ## Installing
+
+
+    Install this Operator by using Operator Lifecycle Manager (OLM) through the
+    Operator Hub in the OpenShift UI or by creating a `Subscription` to this
+    Operator.
+
+
+    ## Configuration
+
+
+    Extra configuration is not required for creating an instance of this
+    Operator.
+
+
+    ## Storage
+
+
+    The dependencies for this bundle require a `StorageClass` definition and
+    automatically create the persistent volumes as needed. For more information
+    on the definition of storage classes and settings, see [AutomationUIConfig
+    CR](https://www.ibm.com/support/knowledgecenter/cloudpaks_start/cloud-paks/custom-resources.html#automationuiconfig).
+
+
+    ## Limitations
+
+
+    - Validated on Red Hat OpenShift on IBM Cloud.
+status:
+  reason: InstallSucceeded
+  message: install strategy completed with no errors
+  lastUpdateTime: '2021-08-25T16:45:35Z'
+  requirementStatus:
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      message: CRD is present and Established condition is true
+      name: automationuiconfigs.core.automation.ibm.com
+      status: Present
+      uuid: 26577f5f-7e4f-4ec7-bca9-fdfb5c86536c
+      version: v1
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      message: CRD is present and Established condition is true
+      name: cartridges.core.automation.ibm.com
+      status: Present
+      uuid: f43f53c4-adf6-4741-b9b0-6f74b1624f2d
+      version: v1
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      message: CRD is present and Established condition is true
+      name: commonservices.operator.ibm.com
+      status: Present
+      uuid: 511031de-9a7a-46e0-8996-e6ea0ba48fa8
+      version: v1
+    - dependents:
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["get","list","watch","create","update","patch","delete"],"apiGroups":[""],"resources":["configmaps"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["get","update","patch"],"apiGroups":[""],"resources":["configmaps/status"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","patch"],"apiGroups":[""],"resources":["events"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":["apps"],"resources":["deployments"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":["apps"],"resources":["deployments/finalizers"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":["batch"],"resources":["jobs"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":["certmanager.k8s.io"],"resources":["certificates"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":["certmanager.k8s.io"],"resources":["issuers"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":[""],"resources":["configmaps"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["get","patch","update"],"apiGroups":[""],"resources":["configmaps/status"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","delete","deletecollection","get","list","patch","update","watch"],"apiGroups":[""],"resources":["pods"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":[""],"resources":["secrets"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":[""],"resources":["serviceaccounts"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":[""],"resources":["services"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":["core.automation.ibm.com"],"resources":["automationuiconfigs"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["update"],"apiGroups":["core.automation.ibm.com"],"resources":["automationuiconfigs/finalizers"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["get","patch","update"],"apiGroups":["core.automation.ibm.com"],"resources":["automationuiconfigs/status"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":["core.automation.ibm.com"],"resources":["cartridges"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","delete","get","patch","update"],"apiGroups":["core.automation.ibm.com"],"resources":["cartridges/finalizers"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["get","patch","update"],"apiGroups":["core.automation.ibm.com"],"resources":["cartridges/status"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":["monitoring.coreos.com"],"resources":["servicemonitors"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":["networking.k8s.io"],"resources":["networkpolicies"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":["operator.ibm.com"],"resources":["operandconfigs"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":["operator.ibm.com"],"resources":["operandregistries"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","delete","deletecollection","get","list","patch","update","watch"],"apiGroups":["operator.ibm.com"],"resources":["operandrequests"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","get","list","patch","update","watch"],"apiGroups":["operators.coreos.com"],"resources":["clusterserviceversions"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","get","list","patch","update","watch"],"apiGroups":["operators.coreos.com"],"resources":["subscriptions"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":["operators.ibm.com"],"resources":["switcheritems"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":["rbac.authorization.k8s.io"],"resources":["rolebindings"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":["rbac.authorization.k8s.io"],"resources":["roles"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":["route.openshift.io"],"resources":["routes"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":["zen.cpd.ibm.com"],"resources":["zenservices"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            cluster
+            rule:{"verbs":["get","list","watch"],"apiGroups":["storage.k8s.io"],"resources":["storageclasses"]}
+          status: Satisfied
+          version: v1
+      group: ''
+      kind: ServiceAccount
+      message: ''
+      name: iaf-core-operator-serviceaccount
+      status: Present
+      version: v1

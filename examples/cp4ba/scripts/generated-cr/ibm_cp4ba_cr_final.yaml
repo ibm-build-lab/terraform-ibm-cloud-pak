@@ -37,7 +37,7 @@ spec:
   ##  If you updating an existing ICP4A environment, you should merge the required values and configuration
   ##  sections from this template in the main ICP4A CR file already applied in the environment.
   ##
-  ######################################################################################################################
+  #####################################################################################################################
   shared_configuration:
     show_sensitive_log: true
     no_log: false
@@ -70,7 +70,7 @@ spec:
     ## For OCP, this is used to create route, you should input a valid hostname in the required field.
     sc_deployment_hostname_suffix: "{{ meta.namespace }}.cp4ba-vpc-jtest-cluster-c0b572361ba41c9eef42d4d51297b04b-0000.us-south.containers.appdomain.cloud"
     ## For ROKS, this is used to enable the creation of ingresses. The default value is "false", which routes will be created.
-    sc_ingress_enable: false
+    sc_ingress_enable: true
     ## For ROKS Ingress, provide TLS secret name for Ingress controller.
     sc_ingress_tls_secret_name: tls-secret-name # <Required>
     ## If the root certificate authority (CA) key of the external service is not signed by the operator root CA key, provide the TLS certificate of
@@ -500,9 +500,9 @@ spec:
     # type: Opaque
     #-----------------------------------------------------------------------
     # Designate an existing LDAP user for the Application Engine admin user.
-    # This user ID should be in the IBM Business Automation Navigator administrator role, as specified as appLoginUsername in the Navigator secret. 
-    # This user should also belong to the User Management Service (UMS) Teams admin group or the UMS Teams Administrators team. 
-    # If not, follow the instructions in "Completing post-deployment tasks for Business Automation Studio and Application Engine" in the IBM Knowledge Center to add it to the Navigator Administrator role and UMS team server admin group. 
+    # This user ID should be in the IBM Business Automation Navigator administrator role, as specified as appLoginUsername in the Navigator secret.
+    # This user should also belong to the User Management Service (UMS) Teams admin group or the UMS Teams Administrators team.
+    # If not, follow the instructions in "Completing post-deployment tasks for Business Automation Studio and Application Engine" in the IBM Knowledge Center to add it to the Navigator Administrator role and UMS team server admin group.
     admin_user: "joel.goddot@ibm.com" # <Required>"
     ## optional when the database type is Db2, must required when the database type is Oracle, PostgreSQL.
     use_custom_jdbc_drivers: false
@@ -560,7 +560,7 @@ spec:
       enable_ssl: true
       db_cert_secret_name: <Required>
     #-----------------------------------------------------------------------
-    # If you want better HA experience. 
+    # If you want better HA experience.
     # - Set the session.use_external_store to true
     # - Fill in your redis server information
     #-----------------------------------------------------------------------
@@ -609,8 +609,8 @@ spec:
       ##   dbUser: <DB_USER>
       ##   password: <DB_USER_PASSWORD>
       secret_name: "<Required>"
-      ## Oracle and PostgreSQL database connection string. 
-      ## If the database type is Oracle, provide the Oracle database connection string. For example, jdbc:oracle:thin:@//<oracle_server>:1521/orcl. 
+      ## Oracle and PostgreSQL database connection string.
+      ## If the database type is Oracle, provide the Oracle database connection string. For example, jdbc:oracle:thin:@//<oracle_server>:1521/orcl.
       ## If the database type is PostgreSQL, this parameter is optional. For example, jdbc:postgresql://<postgresql_server>:5432/<your_database>. This parameter is not required for PostgreSQL if you enter server_name, database_name, and port. If you do not need this parameter, remove it or comment it out.
       ## In all other cases, remove or comment out this parameter.
       jdbc_url: "<Required>"

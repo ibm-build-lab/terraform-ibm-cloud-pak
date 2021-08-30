@@ -1,0 +1,313 @@
+apiVersion: icp4a.ibm.com/v1
+kind: ICP4ACluster
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: >
+      {"apiVersion":"icp4a.ibm.com/v1","kind":"ICP4ACluster","metadata":{"annotations":{},"labels":{"app.kubernetes.io/instance":"ibm-dba","app.kubernetes.io/managed-by":"ibm-dba","app.kubernetes.io/name":"ibm-dba","release":"21.0.1"},"name":"icp4badeploy","namespace":"cp4ba"},"spec":{"appVersion":"21.0.1.1","application_engine_configuration":[{"admin_secret_name":"{{
+      meta.name
+      }}-workspace-aae-app-engine-admin-secret","admin_user":"joel.goddot@ibm.com","database":{"alternative_host":null,"alternative_port":null,"db_cert_secret_name":"\u003cRequired\u003e","enable_ssl":true,"host":"\u003cRequired\u003e","name":"\u003cRequired\u003e","port":"\u003cRequired\u003e","type":"db2"},"name":"workspace","redis":{"host":null,"port":"6379","tls_enabled":false},"session":{"use_external_store":false},"use_custom_jdbc_drivers":false}],"bai_configuration":{"admin":{"replicas":2},"bawadv":{"parallelism":2},"bpmn":{"parallelism":2},"business_performance_center":{"replicas":2},"content":{"parallelism":2},"event_forwarder":{"parallelism":2},"icm":{"parallelism":2},"ingestion":{"parallelism":2},"management":{"replicas":2},"odm":{"parallelism":2}},"baml_configuration":{"intelligent_task_prioritization":null,"workforce_insights":null},"baw_configuration":[{"admin_user":"\u003cRequired\u003e","capabilities":"workflow","case":{"connection_point_name_tos":"\u003cRequired\u003e","domain_name":"P8DOMAIN","network_shared_directory_pvc":"{{
+      navigator_configuration.datavolume.existing_pvc_for_icn_pluginstore |
+      default('icn-pluginstore', true)
+      }}","object_store_name_dos":"BAWINS1DOS","object_store_name_tos":"BAWINS1TOS"},"content_integration":{"domain_name":"P8DOMAIN","object_store_name":"BAWINS1DOCS"},"database":{"custom_jdbc_pvc":"\u003cRequired\u003e","database_name":"\u003cRequired\u003e","db_cert_secret_name":"\u003cRequired\u003e","enable_ssl":true,"hadr":{"standbydb_host":null,"standbydb_port":null},"jdbc_driver_files":"db2jcc4.jar
+      db2jcc_license_cisuz.jar
+      db2jcc_license_cu.jar","jdbc_url":"\u003cRequired\u003e","port":"\u003cRequired\u003e","secret_name":"\u003cRequired\u003e","server_name":"\u003cRequired\u003e","type":"\u003cRequired\u003e","use_custom_jdbc_drivers":false},"host_federated_portal":true,"name":"bawins1"}],"datasource_configuration":{"dc_gcd_datasource":{"database_name":"\u003cRequired\u003e","database_port":"\u003cRequired\u003e","database_servername":"\u003cRequired\u003e","database_ssl_secret_name":"\u003cRequired\u003e","dc_common_gcd_datasource_name":"FNGCDDS","dc_common_gcd_xa_datasource_name":"FNGCDDSXA","dc_database_type":"\u003cRequired\u003e","dc_hadr_max_retries_for_client_reroute":3,"dc_hadr_retry_interval_for_client_reroute":15,"dc_hadr_standby_port":"\u003cRequired\u003e","dc_hadr_standby_servername":"\u003cRequired\u003e","dc_hadr_validation_timeout":15,"dc_oracle_gcd_jdbc_url":"\u003cRequired\u003e"},"dc_icn_datasource":{"database_name":"\u003cRequired\u003e","database_port":"\u003cRequired\u003e","database_servername":"\u003cRequired\u003e","database_ssl_secret_name":"\u003cRequired\u003e","dc_common_icn_datasource_name":"ECMClientDS","dc_database_type":"\u003cRequired\u003e","dc_hadr_max_retries_for_client_reroute":3,"dc_hadr_retry_interval_for_client_reroute":15,"dc_hadr_standby_port":"\u003cRequired\u003e","dc_hadr_standby_servername":"\u003cRequired\u003e","dc_hadr_validation_timeout":15,"dc_oracle_icn_jdbc_url":"\u003cRequired\u003e"},"dc_os_datasources":[{"database_name":"\u003cRequired\u003e","database_port":"\u003cRequired\u003e","database_servername":"\u003cRequired\u003e","database_ssl_secret_name":"\u003cRequired\u003e","dc_common_os_datasource_name":"BAWINS1DOCS","dc_common_os_xa_datasource_name":"BAWINS1DOCSXA","dc_database_type":"\u003cRequired\u003e","dc_hadr_max_retries_for_client_reroute":3,"dc_hadr_retry_interval_for_client_reroute":15,"dc_hadr_standby_port":"\u003cRequired\u003e","dc_hadr_standby_servername":"\u003cRequired\u003e","dc_hadr_validation_timeout":15,"dc_oracle_os_jdbc_url":"\u003cRequired\u003e","dc_os_label":"\u003cRequired\u003e"},{"database_name":"\u003cRequired\u003e","database_port":"\u003cRequired\u003e","database_servername":"\u003cRequired\u003e","database_ssl_secret_name":"\u003cRequired\u003e","dc_common_os_datasource_name":"BAWINS1DOS","dc_common_os_xa_datasource_name":"BAWINS1DOSXA","dc_database_type":"\u003cRequired\u003e","dc_hadr_max_retries_for_client_reroute":3,"dc_hadr_retry_interval_for_client_reroute":15,"dc_hadr_standby_port":"\u003cRequired\u003e","dc_hadr_standby_servername":"\u003cRequired\u003e","dc_hadr_validation_timeout":15,"dc_oracle_os_jdbc_url":"\u003cRequired\u003e","dc_os_label":"\u003cRequired\u003e"},{"database_name":"\u003cRequired\u003e","database_port":"\u003cRequired\u003e","database_servername":"\u003cRequired\u003e","database_ssl_secret_name":"\u003cRequired\u003e","dc_common_os_datasource_name":"BAWINS1TOS","dc_common_os_xa_datasource_name":"BAWINS1TOSXA","dc_database_type":"\u003cRequired\u003e","dc_hadr_max_retries_for_client_reroute":3,"dc_hadr_retry_interval_for_client_reroute":15,"dc_hadr_standby_port":"\u003cRequired\u003e","dc_hadr_standby_servername":"\u003cRequired\u003e","dc_hadr_validation_timeout":15,"dc_oracle_os_jdbc_url":"\u003cRequired\u003e","dc_os_label":"\u003cRequired\u003e"},{"database_name":"\u003cRequired\u003e","database_port":"\u003cRequired\u003e","database_servername":"\u003cRequired\u003e","database_ssl_secret_name":"\u003cRequired\u003e","dc_common_os_datasource_name":"AEOS","dc_common_os_xa_datasource_name":"AEOSXA","dc_database_type":"\u003cRequired\u003e","dc_hadr_max_retries_for_client_reroute":3,"dc_hadr_retry_interval_for_client_reroute":15,"dc_hadr_standby_port":"\u003cRequired\u003e","dc_hadr_standby_servername":"\u003cRequired\u003e","dc_hadr_validation_timeout":15,"dc_oracle_os_jdbc_url":"\u003cRequired\u003e","dc_os_label":"\u003cRequired\u003e"}],"dc_ssl_enabled":true,"dc_ums_datasource":{"dc_ums_oauth_alternate_hosts":null,"dc_ums_oauth_alternate_ports":null,"dc_ums_oauth_driverfiles":null,"dc_ums_oauth_host":"\u003cRequired\u003e","dc_ums_oauth_name":"\u003cRequired\u003e","dc_ums_oauth_port":"\u003cRequired\u003e","dc_ums_oauth_schema":"OAuthDBSchema","dc_ums_oauth_ssl":true,"dc_ums_oauth_ssl_secret_name":"\u003cRequired\u003e","dc_ums_oauth_type":"\u003cRequired\u003e","dc_ums_teamserver_alternate_hosts":null,"dc_ums_teamserver_alternate_ports":null,"dc_ums_teamserver_driverfiles":null,"dc_ums_teamserver_host":"\u003cRequired\u003e","dc_ums_teamserver_name":"\u003cRequired\u003e","dc_ums_teamserver_port":"\u003cRequired\u003e","dc_ums_teamserver_ssl":true,"dc_ums_teamserver_ssl_secret_name":"\u003cRequired\u003e","dc_ums_teamserver_type":"\u003cRequired\u003e"}},"elasticsearch_configuration":{"privileged":false,"service_account":"\u003cRequired\u003e"},"ibm_license":"accept","initialize_configuration":{"ic_ldap_creation":{"ic_ldap_admin_user_name":["\u003cRequired\u003e"],"ic_ldap_admins_groups_name":["\u003cRequired\u003e"]},"ic_obj_store_creation":{"object_stores":[{"oc_cpe_obj_store_conn":{"dc_os_datasource_name":"BAWINS1DOCS","dc_os_xa_datasource_name":"BAWINS1DOCSXA"},"oc_cpe_obj_store_display_name":"BAWINS1DOCS","oc_cpe_obj_store_symb_name":"BAWINS1DOCS"},{"oc_cpe_obj_store_conn":{"dc_os_datasource_name":"BAWINS1DOS","dc_os_xa_datasource_name":"BAWINS1DOSXA"},"oc_cpe_obj_store_display_name":"BAWINS1DOS","oc_cpe_obj_store_symb_name":"BAWINS1DOS"},{"oc_cpe_obj_store_conn":{"dc_os_datasource_name":"BAWINS1TOS","dc_os_xa_datasource_name":"BAWINS1TOSXA"},"oc_cpe_obj_store_display_name":"BAWINS1TOS","oc_cpe_obj_store_enable_workflow":true,"oc_cpe_obj_store_symb_name":"BAWINS1TOS","oc_cpe_obj_store_workflow_admin_group":"\u003cRequired\u003e","oc_cpe_obj_store_workflow_config_group":"\u003cRequired\u003e","oc_cpe_obj_store_workflow_data_tbl_space":"\u003cRequired\u003e","oc_cpe_obj_store_workflow_pe_conn_point_name":"\u003cRequired\u003e"},{"oc_cpe_obj_store_conn":{"dc_os_datasource_name":"AEOS","dc_os_xa_datasource_name":"AEOSXA"},"oc_cpe_obj_store_display_name":"AEOS","oc_cpe_obj_store_symb_name":"AEOS"}]}},"ldap_configuration":{"ad":{"lc_ad_gc_host":"\u003cRequired\u003e","lc_ad_gc_port":"\u003cRequired\u003e","lc_group_filter":"(\u0026(cn=%v)(objectcategory=group))","lc_user_filter":"(\u0026(sAMAccountName=%v)(objectcategory=user))"},"lc_bind_secret":"ldap-bind-secret","lc_ldap_base_dn":"\u003cRequired\u003e","lc_ldap_group_base_dn":"\u003cRequired\u003e","lc_ldap_group_display_name_attr":"cn","lc_ldap_group_member_id_map":"\u003cRequired\u003e","lc_ldap_group_membership_search_filter":"\u003cRequired\u003e","lc_ldap_group_name_attribute":"*:cn","lc_ldap_port":"\u003cRequired\u003e","lc_ldap_server":"\u003cRequired\u003e","lc_ldap_ssl_enabled":true,"lc_ldap_ssl_secret_name":"\u003cRequired\u003e","lc_ldap_user_display_name_attr":"\u003cRequired\u003e","lc_ldap_user_name_attribute":"\u003cRequired\u003e","lc_selected_ldap_type":"Microsoft
+      Active
+      Directory"},"shared_configuration":{"encryption_key_secret":"ibm-iaws-shared-key-secret","image_pull_secrets":["admin.registrykey"],"no_log":false,"root_ca_secret":"icp4ba-root-ca","sc_content_initialization":true,"sc_content_verification":true,"sc_cpe_limited_storage":false,"sc_deployment_baw_license":"non-production","sc_deployment_fncm_license":"non-production","sc_deployment_hostname_suffix":"{{
+      meta.namespace
+      }}.cp4ba-vpc-jtest-cluster-c0b572361ba41c9eef42d4d51297b04b-0000.us-south.containers.appdomain.cloud","sc_deployment_license":"non-production","sc_deployment_patterns":"document_processing","sc_deployment_platform":"ROKS","sc_deployment_type":"enterprise","sc_image_repository":"cp.icr.io","sc_ingress_enable":false,"sc_ingress_tls_secret_name":"tls-secret-name","sc_optional_components":"ae_data_persistence,
+      document_processing_designer, bai,
+      cmis","show_sensitive_log":true,"storage_configuration":{"sc_fast_file_storage_classname":"cp4ba-file-retain-gold-gid","sc_medium_file_storage_classname":"cp4ba-file-retain-silver-gid","sc_slow_file_storage_classname":"cp4ba-file-retain-bronze-gid"},"trusted_certificate_list":["trustedCertificateList"]},"ums_configuration":null}}
+  resourceVersion: '4355513'
+  name: icp4badeploy
+  generation: 1
+  managedFields:
+    - apiVersion: icp4a.ibm.com/v1
+      fieldsType: FieldsV1
+      manager: kubectl-client-side-apply
+      operation: Apply
+    - apiVersion: icp4a.ibm.com/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:spec':
+          'f:application_engine_configuration': {}
+          'f:baw_configuration': {}
+        'f:status':
+          .: {}
+          'f:conditions': {}
+          'f:observedGeneration': {}
+      manager: Swagger-Codegen
+  namespace: cp4ba
+  labels:
+    app.kubernetes.io/instance: ibm-dba
+    app.kubernetes.io/managed-by: ibm-dba
+    app.kubernetes.io/name: ibm-dba
+    release: 21.0.1
+spec:
+  bai_configuration:
+    management:
+      replicas: 2
+    business_performance_center:
+      replicas: 2
+    ingestion:
+      parallelism: 2
+    event_forwarder:
+      parallelism: 2
+    bpmn:
+      parallelism: 2
+    admin:
+      replicas: 2
+    icm:
+      parallelism: 2
+    odm:
+      parallelism: 2
+    content:
+      parallelism: 2
+    bawadv:
+      parallelism: 2
+  initialize_configuration:
+    ic_ldap_creation:
+      ic_ldap_admin_user_name:
+        - <Required>
+      ic_ldap_admins_groups_name:
+        - <Required>
+    ic_obj_store_creation:
+      object_stores:
+        - oc_cpe_obj_store_conn:
+            dc_os_datasource_name: BAWINS1DOCS
+            dc_os_xa_datasource_name: BAWINS1DOCSXA
+          oc_cpe_obj_store_display_name: BAWINS1DOCS
+          oc_cpe_obj_store_symb_name: BAWINS1DOCS
+        - oc_cpe_obj_store_conn:
+            dc_os_datasource_name: BAWINS1DOS
+            dc_os_xa_datasource_name: BAWINS1DOSXA
+          oc_cpe_obj_store_display_name: BAWINS1DOS
+          oc_cpe_obj_store_symb_name: BAWINS1DOS
+        - oc_cpe_obj_store_conn:
+            dc_os_datasource_name: BAWINS1TOS
+            dc_os_xa_datasource_name: BAWINS1TOSXA
+          oc_cpe_obj_store_display_name: BAWINS1TOS
+          oc_cpe_obj_store_enable_workflow: true
+          oc_cpe_obj_store_symb_name: BAWINS1TOS
+          oc_cpe_obj_store_workflow_admin_group: <Required>
+          oc_cpe_obj_store_workflow_config_group: <Required>
+          oc_cpe_obj_store_workflow_data_tbl_space: <Required>
+          oc_cpe_obj_store_workflow_pe_conn_point_name: <Required>
+        - oc_cpe_obj_store_conn:
+            dc_os_datasource_name: AEOS
+            dc_os_xa_datasource_name: AEOSXA
+          oc_cpe_obj_store_display_name: AEOS
+          oc_cpe_obj_store_symb_name: AEOS
+  application_engine_configuration:
+    - admin_secret_name: '{{ meta.name }}-workspace-aae-app-engine-admin-secret'
+      admin_user: joel.goddot@ibm.com
+      database:
+        alternative_host: null
+        alternative_port: null
+        db_cert_secret_name: <Required>
+        enable_ssl: true
+        host: <Required>
+        name: <Required>
+        port: <Required>
+        type: db2
+      name: workspace
+      redis:
+        host: null
+        port: '6379'
+        tls_enabled: false
+      session:
+        use_external_store: false
+      use_custom_jdbc_drivers: false
+  baw_configuration:
+    - admin_user: <Required>
+      capabilities: workflow
+      case:
+        connection_point_name_tos: <Required>
+        domain_name: P8DOMAIN
+        network_shared_directory_pvc: >-
+          {{ navigator_configuration.datavolume.existing_pvc_for_icn_pluginstore
+          | default('icn-pluginstore', true) }}
+        object_store_name_dos: BAWINS1DOS
+        object_store_name_tos: BAWINS1TOS
+      content_integration:
+        domain_name: P8DOMAIN
+        object_store_name: BAWINS1DOCS
+      database:
+        db_cert_secret_name: <Required>
+        port: <Required>
+        jdbc_driver_files: db2jcc4.jar db2jcc_license_cisuz.jar db2jcc_license_cu.jar
+        custom_jdbc_pvc: <Required>
+        server_name: <Required>
+        hadr:
+          standbydb_host: null
+          standbydb_port: null
+        jdbc_url: <Required>
+        database_name: <Required>
+        enable_ssl: true
+        secret_name: <Required>
+        type: <Required>
+        use_custom_jdbc_drivers: false
+      host_federated_portal: true
+      name: bawins1
+  ums_configuration: null
+  elasticsearch_configuration:
+    privileged: false
+    service_account: <Required>
+  baml_configuration:
+    intelligent_task_prioritization: null
+    workforce_insights: null
+  ibm_license: accept
+  appVersion: 21.0.1.1
+  datasource_configuration:
+    dc_gcd_datasource:
+      database_ssl_secret_name: <Required>
+      dc_oracle_gcd_jdbc_url: <Required>
+      dc_hadr_retry_interval_for_client_reroute: 15
+      dc_hadr_max_retries_for_client_reroute: 3
+      database_port: <Required>
+      dc_hadr_standby_port: <Required>
+      database_name: <Required>
+      database_servername: <Required>
+      dc_hadr_validation_timeout: 15
+      dc_hadr_standby_servername: <Required>
+      dc_common_gcd_xa_datasource_name: FNGCDDSXA
+      dc_common_gcd_datasource_name: FNGCDDS
+      dc_database_type: <Required>
+    dc_icn_datasource:
+      database_ssl_secret_name: <Required>
+      dc_hadr_retry_interval_for_client_reroute: 15
+      dc_hadr_max_retries_for_client_reroute: 3
+      database_port: <Required>
+      dc_common_icn_datasource_name: ECMClientDS
+      dc_hadr_standby_port: <Required>
+      database_name: <Required>
+      database_servername: <Required>
+      dc_hadr_validation_timeout: 15
+      dc_oracle_icn_jdbc_url: <Required>
+      dc_hadr_standby_servername: <Required>
+      dc_database_type: <Required>
+    dc_os_datasources:
+      - database_ssl_secret_name: <Required>
+        dc_hadr_retry_interval_for_client_reroute: 15
+        dc_hadr_max_retries_for_client_reroute: 3
+        dc_oracle_os_jdbc_url: <Required>
+        database_port: <Required>
+        dc_hadr_standby_port: <Required>
+        database_name: <Required>
+        database_servername: <Required>
+        dc_hadr_validation_timeout: 15
+        dc_common_os_xa_datasource_name: BAWINS1DOCSXA
+        dc_hadr_standby_servername: <Required>
+        dc_os_label: <Required>
+        dc_common_os_datasource_name: BAWINS1DOCS
+        dc_database_type: <Required>
+      - database_ssl_secret_name: <Required>
+        dc_hadr_retry_interval_for_client_reroute: 15
+        dc_hadr_max_retries_for_client_reroute: 3
+        dc_oracle_os_jdbc_url: <Required>
+        database_port: <Required>
+        dc_hadr_standby_port: <Required>
+        database_name: <Required>
+        database_servername: <Required>
+        dc_hadr_validation_timeout: 15
+        dc_common_os_xa_datasource_name: BAWINS1DOSXA
+        dc_hadr_standby_servername: <Required>
+        dc_os_label: <Required>
+        dc_common_os_datasource_name: BAWINS1DOS
+        dc_database_type: <Required>
+      - database_ssl_secret_name: <Required>
+        dc_hadr_retry_interval_for_client_reroute: 15
+        dc_hadr_max_retries_for_client_reroute: 3
+        dc_oracle_os_jdbc_url: <Required>
+        database_port: <Required>
+        dc_hadr_standby_port: <Required>
+        database_name: <Required>
+        database_servername: <Required>
+        dc_hadr_validation_timeout: 15
+        dc_common_os_xa_datasource_name: BAWINS1TOSXA
+        dc_hadr_standby_servername: <Required>
+        dc_os_label: <Required>
+        dc_common_os_datasource_name: BAWINS1TOS
+        dc_database_type: <Required>
+      - database_ssl_secret_name: <Required>
+        dc_hadr_retry_interval_for_client_reroute: 15
+        dc_hadr_max_retries_for_client_reroute: 3
+        dc_oracle_os_jdbc_url: <Required>
+        database_port: <Required>
+        dc_hadr_standby_port: <Required>
+        database_name: <Required>
+        database_servername: <Required>
+        dc_hadr_validation_timeout: 15
+        dc_common_os_xa_datasource_name: AEOSXA
+        dc_hadr_standby_servername: <Required>
+        dc_os_label: <Required>
+        dc_common_os_datasource_name: AEOS
+        dc_database_type: <Required>
+    dc_ssl_enabled: true
+    dc_ums_datasource:
+      dc_ums_oauth_ssl: true
+      dc_ums_oauth_alternate_ports: null
+      dc_ums_teamserver_host: <Required>
+      dc_ums_oauth_driverfiles: null
+      dc_ums_teamserver_name: <Required>
+      dc_ums_oauth_type: <Required>
+      dc_ums_teamserver_alternate_hosts: null
+      dc_ums_teamserver_ssl_secret_name: <Required>
+      dc_ums_oauth_schema: OAuthDBSchema
+      dc_ums_oauth_port: <Required>
+      dc_ums_teamserver_ssl: true
+      dc_ums_teamserver_alternate_ports: null
+      dc_ums_teamserver_driverfiles: null
+      dc_ums_oauth_host: <Required>
+      dc_ums_teamserver_type: <Required>
+      dc_ums_oauth_name: <Required>
+      dc_ums_oauth_alternate_hosts: null
+      dc_ums_oauth_ssl_secret_name: <Required>
+      dc_ums_teamserver_port: <Required>
+  shared_configuration:
+    sc_cpe_limited_storage: false
+    sc_deployment_type: enterprise
+    sc_optional_components: 'ae_data_persistence, document_processing_designer, bai, cmis'
+    no_log: false
+    encryption_key_secret: ibm-iaws-shared-key-secret
+    image_pull_secrets:
+      - admin.registrykey
+    trusted_certificate_list:
+      - trustedCertificateList
+    sc_deployment_patterns: document_processing
+    sc_deployment_baw_license: non-production
+    sc_content_verification: true
+    storage_configuration:
+      sc_fast_file_storage_classname: cp4ba-ibmc-file-gold-gid
+      sc_medium_file_storage_classname: cp4ba-ibmc-file-medium-gid
+      sc_slow_file_storage_classname: cp4ba-ibmc-file-bronze-gid
+    sc_deployment_hostname_suffix: >-
+    root_ca_secret: icp4ba-root-ca
+    sc_content_initialization: true
+    sc_deployment_license: non-production
+    show_sensitive_log: true
+    sc_ingress_enable: false
+    sc_image_repository: cp.icr.io
+    sc_ingress_tls_secret_name: tls-secret-name
+    sc_deployment_platform: ROKS
+    sc_deployment_fncm_license: non-production
+  ldap_configuration:
+    ad:
+      lc_ad_gc_host: <Required>
+      lc_ad_gc_port: <Required>
+      lc_group_filter: (&(cn=%v)(objectcategory=group))
+      lc_user_filter: (&(sAMAccountName=%v)(objectcategory=user))
+    lc_ldap_user_display_name_attr: <Required>
+    lc_ldap_group_base_dn: <Required>
+    lc_ldap_base_dn: <Required>
+    lc_bind_secret: ldap-bind-secret
+    lc_ldap_user_name_attribute: <Required>
+    lc_ldap_group_member_id_map: <Required>
+    lc_ldap_port: <Required>
+    lc_ldap_server: <Required>
+    lc_ldap_group_membership_search_filter: <Required>
+    lc_selected_ldap_type: Microsoft Active Directory
+    lc_ldap_ssl_secret_name: <Required>
+    lc_ldap_group_name_attribute: '*:cn'
+    lc_ldap_group_display_name_attr: cn
+    lc_ldap_ssl_enabled: true
+  observedGeneration: '1'

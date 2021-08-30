@@ -41,7 +41,7 @@ OPERATOR_PVC_FILE=${PARENT_DIR}/descriptors/cp4ba-pvc.yaml
 OPERATOR_PV_FILE=${PARENT_DIR}/descriptors/cp4ba-pv.yaml
 
 TLS_SECRET_FILE="${PARENT_DIR}"/descriptors/tls_secret_template.yaml
-CP4BA_CR_FINAL_FILE="${PARENT_DIR}"/scripts/generated-cr/ibm_cp4ba_cr_final.yaml
+CP4BA_CR_FINAL_FILE="${PARENT_DIR}"/scripts/generated-cr/ibm_cp4a_cr_final.yaml
 #OPERATOR_PVC_FILE_TMP1=${TEMP_FOLDER}/.operator-shared-pvc_tmp1.yaml
 #OPERATOR_PVC_FILE_TMP=${TEMP_FOLDER}/.operator-shared-pvc_tmp.yaml
 #OPERATOR_PVC_FILE_TMP=${PARENT_DIR}/descriptors/cp4ba-pvc.yaml
@@ -401,9 +401,9 @@ function apply_cp4ba_operator(){
    new_operator="$REGISTRY_IN_FILE\/cp\/cp4ba"
 
    if [ "$USE_ENTITLEMENT" = "yes" ] ; then
-       "${SED_COMMAND}" "s/$REGISTRY_IN_FILE/$DOCKER_SERVER/g" "${OPERATOR_FILE_TMP}"
+       "${SED_COMMAND}" "s/$REGISTRY_IN_FILE/$DOCKER_SERVER/g" "${OPERATOR_FILE}" # "${OPERATOR_FILE_TMP}"
    else
-       "${SED_COMMAND}" "s/$new_operator/$CONVERT_LOCAL_REGISTRY_SERVER/g" "${OPERATOR_FILE_TMP}"
+       "${SED_COMMAND}" "s/$new_operator/$CONVERT_LOCAL_REGISTRY_SERVER/g" "${OPERATOR_FILE}" # "${OPERATOR_FILE_TMP}"
    fi
 
    INSTALL_OPERATOR_CMD=$("${CLI_CMD}" apply -f "${OPERATOR_FILE}" -n "$PROJECT_NAME") # "${OPERATOR_FILE_TMP}"
@@ -556,7 +556,7 @@ function prepare_olm_install() {
        ${CLI_CMD} adm policy add-role-to-user "$role_name_olm" "${USER_NAME_EMAIL}" >/dev/null 2>&1
        ${CLI_CMD} adm policy add-role-to-user "$role_name_olm" "${USER_NAME_EMAIL}" >> "${LOG_FILE}"
        if [[ "$DEPLOYMENT_TYPE" == "demo" ]];then
-           cluster_role_name_olm=$(${CLI_CMD} get clusterrole|grep ibm-cp4ba-operator.v|sort -t"t" -k1r|awk 'NR==1{print $1}')
+           cluster_role_name_olm=$(${CLI_CMD} get clusterrole | grep ibm-cp4ba-operator.v | sort -t"t" -k1r|awk 'NR==1{print $1}')
            if [[ -z $cluster_role_name_olm ]]; then
                echo "No cluster role found for CP4BA operator 2"
                exit 1

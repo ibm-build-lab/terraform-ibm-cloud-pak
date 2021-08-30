@@ -1,1 +1,9 @@
 
+Already on project "cp4ba" on server "https://c116-e.us-south.containers.cloud.ibm.com:30555".
+serviceaccount/ibm-cp4ba-operator unchanged
+role.rbac.authorization.k8s.io/ibm-cp4ba-operator configured
+rolebinding.rbac.authorization.k8s.io/ibm-cp4ba-operator unchanged
+Already on project "cp4ba" on server "https://c116-e.us-south.containers.cloud.ibm.com:30555".
+clusterrole.rbac.authorization.k8s.io/edit added: "joel.goddot@ibm.com"
+clusterrole.rbac.authorization.k8s.io/registry-editor added: "joel.goddot@ibm.com"
+clusterrole.rbac.authorization.k8s.io/ibm-cp4ba-operator added: "joel.goddot@ibm.com"

@@ -52,7 +52,7 @@ OPERATOR_PVC_FILE_BAK=$BAK_FOLDER/.cp4ba-pvc.yaml
 
 
 CP4BA_PATTERN_FILE_TMP=$TEMP_FOLDER/.ibm_cp4ba_cr_final_tmp.yaml
-CP4BA_PATTERN_FILE_BAK=$FINAL_CR_FOLDER/ibm_cp4ba_cr_final.yaml
+CP4BA_PATTERN_FILE_BAK=$FINAL_CR_FOLDER/ibm_cp4a_cr_final.yaml
 CP4BA_EXISTING_BAK=$TEMP_FOLDER/.ibm_cp4ba_cr_final_existing_bak.yaml
 CP4BA_EXISTING_TMP=$TEMP_FOLDER/.ibm_cp4ba_cr_final_existing_tmp.yaml
 

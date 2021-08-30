@@ -31,14 +31,8 @@ spec:
         app.kubernetes.io/name: ibm-dba
         release: 21.0.1
       annotations:
-        productID: "5737-I23"
         productName: "IBM Cloud Pak for Business Automation"
         productVersion: "21.0.1"
-        productChargedContainers: ""
-        productMetric: "VIRTUAL_PROCESSOR_CORE"
-        cloudpakId: "94a9c8c358bb43ba8fbdea62e7e166a5"
-        cloudpakName: "IBM Cloud Pak for Business Automation"
-        cloudpakVersion: "21.0.1"
     spec:
       hostNetwork: false
       hostPID: false
@@ -66,7 +60,7 @@ spec:
       containers:
         - name: operator
           # Replace this with the built image name
-          image: "=docker-registry" 
+          image: "admin.registrykey"
           imagePullPolicy: "IfNotPresent"
           securityContext:
             allowPrivilegeEscalation: false
