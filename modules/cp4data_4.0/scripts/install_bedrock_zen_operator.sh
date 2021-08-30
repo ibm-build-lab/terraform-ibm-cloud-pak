@@ -169,6 +169,9 @@ mkdir -p $HOME/bin
 tar -xvf cloudctl-linux-amd64.tar.gz -C $HOME/bin
 alias cloudctl="$HOME/bin/cloudctl-linux-amd64"
 
+echo '*** Seeing if cloudctl binary path works ***'
+cloudctl
+
 # tar -xvf cloudctl-linux-amd64.tar.gz
 # ln cloudctl-linux-amd64 /usr/local/bin/cloudctl
 
