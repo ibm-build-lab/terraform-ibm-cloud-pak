@@ -164,8 +164,13 @@ wget https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-linu
 wget https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-linux-amd64.tar.gz.sig
 # tar -xvf cloudctl-linux-amd64.tar.gz -C /usr/local/bin
 # mv /usr/local/bin/cloudctl-linux-amd64 /usr/local/bin/cloudctl
-tar -xvf cloudctl-linux-amd64.tar.gz
-ln cloudctl-linux-amd64 /usr/local/bin/cloudctl
+
+mkdir -p $HOME/bin
+tar -xvf cloudctl-linux-amd64.tar.gz -C $HOME/bin
+alias cloudctl="$HOME/bin/cloudctl-linux-amd64"
+
+# tar -xvf cloudctl-linux-amd64.tar.gz
+# ln cloudctl-linux-amd64 /usr/local/bin/cloudctl
 
 # to deal with schematics complaining about /usr/local/bin, moving to /tmp instead
 # tar -xvf cloudctl-linux-amd64.tar.gz -C /tmp
