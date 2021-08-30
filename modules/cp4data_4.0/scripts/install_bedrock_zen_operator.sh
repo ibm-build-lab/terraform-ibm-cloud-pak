@@ -10,10 +10,10 @@
 
 # attempt to fix norootsquash registry complaints in daemon set pods
 kubectl -n kube-system create secret docker-registry ibm-entitlement-key \
---docker-server=cp.icr.io \
---docker-username=cp \
---docker-password=${ENTITLEMENT_KEY} \
---docker-email=${ENTITLEMENT_USER}
+   --docker-server=cp.icr.io \
+   --docker-username=cp \
+   --docker-password=${ENTITLEMENT_KEY} \
+   --docker-email=${ENTITLEMENT_USER}
 
 
 cd ../files
@@ -164,10 +164,12 @@ wget https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-linu
 wget https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-linux-amd64.tar.gz.sig
 # tar -xvf cloudctl-linux-amd64.tar.gz -C /usr/local/bin
 # mv /usr/local/bin/cloudctl-linux-amd64 /usr/local/bin/cloudctl
+tar -xvf cloudctl-linux-amd64.tar.gz
+ln cloudctl-linux-amd64 /usr/local/bin/cloudctl
 
 # to deal with schematics complaining about /usr/local/bin, moving to /tmp instead
-tar -xvf cloudctl-linux-amd64.tar.gz -C /tmp
-mv /tmp/cloudctl-linux-amd64 /tmp/cloudctl
+# tar -xvf cloudctl-linux-amd64.tar.gz -C /tmp
+# mv /tmp/cloudctl-linux-amd64 /tmp/cloudctl
 
 # and point PATH
-export PATH="$PATH:/tmp"
+# export PATH="$PATH:/tmp"
