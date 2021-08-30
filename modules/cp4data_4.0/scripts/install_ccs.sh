@@ -19,7 +19,7 @@ cloudctl case launch --case ./${CASE_PACKAGE_NAME} \
 
 # checking status of ibm-cpc-ccs-operator
 
-./pod-status-check.sh ibm-cpd-ccs-operator ${OP_NAMESPACE} 
+# ./pod-status-check.sh ibm-cpd-ccs-operator ${OP_NAMESPACE} 
 
 # switch zen namespace
 
@@ -37,4 +37,4 @@ cd ../scripts
 
 # check the CCS cr status
 
-./check-cr-status.sh ccs ccs-cr ${NAMESPACE}  ccsStatus
+# ./check-cr-status.sh ccs ccs-cr ${NAMESPACE}  ccsStatus
