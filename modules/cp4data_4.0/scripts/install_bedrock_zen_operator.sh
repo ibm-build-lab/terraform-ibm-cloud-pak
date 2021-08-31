@@ -165,12 +165,14 @@ wget https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-linu
 # tar -xvf cloudctl-linux-amd64.tar.gz -C /usr/local/bin
 # mv /usr/local/bin/cloudctl-linux-amd64 /usr/local/bin/cloudctl
 
-mkdir -p $HOME/bin
-tar -xvf cloudctl-linux-amd64.tar.gz -C $HOME/bin
-alias cloudctl="$HOME/bin/cloudctl-linux-amd64"
+tar -xvf cloudctl-linux-amd64.tar.gz
+
+# mkdir -p $HOME/bin
+# tar -xvf cloudctl-linux-amd64.tar.gz -C $HOME/bin
+# alias cloudctl="$HOME/bin/cloudctl-linux-amd64"
 
 echo '*** Seeing if cloudctl binary path works ***'
-cloudctl
+./cloudctl-linux-amd64
 
 # tar -xvf cloudctl-linux-amd64.tar.gz
 # ln cloudctl-linux-amd64 /usr/local/bin/cloudctl
