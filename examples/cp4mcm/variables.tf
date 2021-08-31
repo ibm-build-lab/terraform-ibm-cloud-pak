@@ -8,7 +8,7 @@ variable "cluster_id" {
 }
 
 variable "on_vpc" {
-  type = boolean
+  type = bool
   default = false
   description = "Is cluster a VPC cluster"
 }
@@ -26,6 +26,7 @@ variable "entitled_registry_key" {
 
 variable "resource_group" {
   default     = "Default"
+  type        = string
   description = "resource group where the cluster is running"
 }
 
@@ -35,21 +36,25 @@ variable "install_infr_mgt_module" {
 }
 
 variable "install_monitoring_module" {
+  type = bool
   default     = false
   description = "Install Monitoring module"
 }
 
 variable "install_security_svcs_module" {
+  type = bool
   default     = false
   description = "Install Security Services module"
 }
 
 variable "install_operations_module" {
+  type = bool
   default     = false
   description = "Install Operations module"
 }
 
 variable "install_tech_prev_module" {
+  type = bool
   default     = false
   description = "Install Tech Preview module"
 }
