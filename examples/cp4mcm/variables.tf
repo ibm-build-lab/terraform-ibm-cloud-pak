@@ -8,6 +8,8 @@ variable "cluster_id" {
 }
 
 variable "on_vpc" {
+  type = boolean
+  default = false
   description = "Is cluster a VPC cluster"
 }
 
