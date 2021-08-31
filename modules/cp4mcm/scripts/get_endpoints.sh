@@ -5,10 +5,9 @@ NAMESPACE="ibm-common-services"
 # Get the KUBECONFIG variable from STDIN
 eval "$(jq -r '@sh "export KUBECONFIG=\(.kubeconfig)"')"
 
-credentials=$(kubectl get secret platform-auth-idp-credentials -n ibm-common-services -o jsonpath='{.data}')
-username=$(echo $credentials | jq -r .admin_username | base64 -d)
-password=$(echo $credentials | jq -r .admin_password | base64 -d)
 host=$(kubectl get route cp-console -n ${NAMESPACE} -o jsonpath='{.spec.host}')
+password=$(kubectl get secret -n ibm-common-services platform-auth-idp-credentials -o json | jq -r '.data.admin_password' | base64 -d)
+username=$(kubectl get secret -n ibm-common-services platform-auth-idp-credentials -o json | jq -r '.data.admin_username' | base64 -d)
 
 jq -n \
   --arg username "$username" \
