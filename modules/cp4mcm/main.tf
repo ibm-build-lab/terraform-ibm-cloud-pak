@@ -1,12 +1,10 @@
 locals {
   cs_catalogsource_content = templatefile("${path.module}/templates/CS_CatalogSource.yaml.tmpl", {
-    openshift_version_number = local.openshift_version_number
   })
   mgt_catalogsource_content = templatefile("${path.module}/templates/MGT_CatalogSource.yaml.tmpl", {
-    openshift_version_number = local.openshift_version_number
   })
   installation_content = templatefile("${path.module}/templates/Installation.yaml.tmpl", {
-    namespace                    = local.mcm_namespace,
+    namespace                    = var.namespace,
     on_vpc                       = var.on_vpc,
     install_infr_mgt_module      = var.install_infr_mgt_module,
     install_monitoring_module    = var.install_monitoring_module,
@@ -26,7 +24,7 @@ resource "null_resource" "install_cp4mcm" {
   count = var.enable ? 1 : 0
 
   triggers = {
-    docker_credentials_sha1 = sha1(join("", [local.entitled_registry_user, var.entitled_registry_key, var.entitled_registry_user_email, local.entitled_registry, local.mcm_namespace]))
+    docker_credentials_sha1 = sha1(join("", [local.entitled_registry_user, var.entitled_registry_key, var.entitled_registry_user_email, local.entitled_registry, var.namespace]))
     cs_catalogsource_sha1   = sha1(local.cs_catalogsource_content)
     cs_subscription_sha1    = sha1(local.cs_subscription_content)
     mgt_catalogsource_sha1  = sha1(local.mgt_catalogsource_content)
@@ -42,7 +40,7 @@ resource "null_resource" "install_cp4mcm" {
       KUBECONFIG                       = var.cluster_config_path
       IC_API_KEY                       = local.ibmcloud_api_key
       MCM_CLUSTER                      = var.cluster_name_id
-      MCM_NAMESPACE                    = local.mcm_namespace
+      MCM_NAMESPACE                    = var.namespace
       MCM_ENTITLED_REGISTRY_USER       = local.entitled_registry_user
       MCM_ENTITLED_REGISTRY_KEY        = local.entitled_registry_key
       MCM_ENTITLED_REGISTRY_USER_EMAIL = var.entitled_registry_user_email
@@ -72,19 +70,3 @@ data "external" "get_endpoints" {
     kubeconfig = var.cluster_config_path
   }
 }
-
-// TODO: It may be considered in a future version to pass the cluster ID and the
-// resource group to get the cluster configuration and store it in memory and in
-// a directory, either specified by the user or in the module local directory
-
-// variable "resource_group" {
-//   default     = "default"
-//   description = "List all available resource groups with: ibmcloud resource groups"
-// }
-// data "ibm_resource_group" "group" {
-//   name = var.resource_group
-// }
-// data "ibm_container_cluster_config" "cluster_config" {
-//   cluster_name_id   = var.cluster_id
-//   resource_group_id = data.ibm_resource_group.group.id
-// }
