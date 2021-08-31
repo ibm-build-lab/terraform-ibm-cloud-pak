@@ -1,105 +1,52 @@
-# Test CP4MCM Terraform Module
+# Using the Cloud Pak Sandbox Terraform module examples
 
-## 1. Set up access to IBM Cloud
+This folder contains examples using the Infrastructure as Code or Terraform modules located [here](../modules).  These examples will install Cloud Paks on an existing **Openshift** (ROKS) cluster on IBM Cloud. At this time the supported components are:
 
-If running this module from your local terminal, you need to set the credentials to access IBM Cloud.
+- ROKS stand alone cluster in either VPC or Classic
+- Portworx on VPC
+- LDAP on Classic
+- Automation Foundation (IAF)
+- Cloud Pak for Business Automation (CP4BA)
+- Cloud Pak for Data (CP4Data)
+- Cloud Pak for Integration (CP4Int)
+- Cloud Pak for Multi Cloud Management (CP4MCM)
+- Cloud Pak for Security
+- Cloud Pak for AIOps
 
-You can define the IBM Cloud credentials in the IBM provider block but it is recommended to pass them in as environment variables.
+## Run using IBM Cloud Schematics
 
-Go [here](../../CREDENTIALS.md) for details.
+For instructions to run these examples using IBM Schematics go [here](./Using_Schematics.md)
 
-**NOTE**: These credentials are not required if running this Terraform code within an **IBM Cloud Schematics** workspace. They are automatically set from your account.
+For more information on IBM Schematics, refer [here](https://cloud.ibm.com/docs/schematics?topic=schematics-get-started-terraform).
 
-## 2. Set Cloud Pak Entitlement Key
+**NOTE:** LDAP and CP4Security can not be run from Schematics due to manual steps required.
 
-This module also requires an Entitlement Key. Obtain it [here](https://myibm.ibm.com/products-services/containerlibrary) and store it in the file `entitlement.key` in the root of this repository. If you use that filename, the file won't be published to GitHub if you accidentally push to GitHub. 
+## Run using local Terraform Client
 
-## 4. Test Using Terraform client
+For instructions to run using the local Terraform Client on your local machine go [here](./Using_Terraform.md)
 
-Follow these instructions to test the Terraform Module manually using local Terraform client
+## Design
 
-Create the file `test.auto.tfvars` with the following input variables, these values are fake examples:
+This directory contains the Terraform HCL code to execute/apply by Terraform either locally or by remotely, by IBM Cloud Schematics. The code to provision each specific Cloud Pak is located in a separate subdirectory. They each have almost the same design, input and output parameters and very similar basic validation.
 
-```hcl
-infra                        = "classic"
-config_dir                   = ".kube/config"
-cluster_id                   = "<cluster_id>"
-entitled_registry_user_email = "John.Smith@ibm.com"
-resource_group               = "<resource_group>"
-```
+Each Cloud Pak subdirectory contains the following files:
 
-These parameters are:
+- `main.tf`: contains the code provision the Cloud Pak, you should start here to know what Terraform does. This uses two Terraform modules: the ROKS module and a Cloud Pak module. The ROKS module is used to provision an OpenShift cluster where the Cloud Pak will be installed. Then the Cloud Pak module is applied to install the Cloud Pak. To know more about these Terraform modules refer to the following section [Cloud Pak External Terraform Modules](#cloud-pak-external-terraform-modules).
+- `variables.tf`: contains all the input parameters. The input parameters are explained below but you can get additional information about them in the README of each Cloud Pak directory.
+- `outputs.tf`: contains all the output parameters. The output parameters are explained below but you can get additional information about them in the README of each Cloud Pak directory.
+- **Optional**`terraform.tfvars`: although the `variables.tf` defines the input variables and the default values, the `terraform.tfvars` also contains default values to access and modify. If you'd like to customize your resources try to modify the values in this file first.
 
-- `entitled_registry_user_email`: username or email address of the user owner of the entitlement key. There is no default value, so this variable is required.
-- `infra`: Infrastructure where the cluster is running. The possible values are: `classic` and `vpc`. The default value and only supported at this time is `classic`.
-- `resource_group`: Resource group where the cluster is running. Default value is `default`
-- `config_dir`: Directory to download the kubeconfig file. Default value is `./.kube/config`
-- `cluster_id`: Cluster ID of the OpenShift cluster where to install CP4MCM
+The Input and Output parameters, as well as basic validations and uninstall process can be found in the README of each component, refer to the following links below:
 
-Execute the following Terraform commands:
+- [ROKS](./roks/README.md)
+- [Portworx](./portworx/README.md)
+- [LDAP](./ldap/README.md)
+- [Automation Foundation](./iaf/README.md)
+- [Cloud Pak for Business Automation](./cp4ba/README.md)
+- [Cloud Pak for Data](./cp4data/README.md)
+- [Cloud Pak for Integration](./cp4int/README.md)
+- [Cloud Pak for Multi Cloud Management](./cp4mcm/README.md)
+- [Cloud Pak for Security](./cp4mcm/README.md)
+- [Cloud Pak for AIOps](./cp4mcm/README.md)
 
-```bash
-terraform init
-terraform plan
 
-terraform apply -auto-approve
-```
-
-One of the Test Scenarios is to verify the YAML files rendered to install MCM, these files are generated in the directory `rendered_files`. Go to this directory to validate they are generated correctly.
-
-## 5. Verify
-
-To verify installation on the Kubernetes cluster you need `kubectl`, then execute:
-
-```bash
-export KUBECONFIG=$(terraform output config_file_path)
-
-kubectl cluster-info
-
-# Namespace
-kubectl get namespaces $(terraform output namespace)
-
-# Secret
-kubectl get secrets -n $(terraform output namespace) ibm-management-pull-secret -o yaml
-
-# CatalogSource
-kubectl -n openshift-marketplace get catalogsource
-kubectl -n openshift-marketplace get catalogsource ibm-management-orchestrator
-kubectl -n openshift-marketplace get catalogsource opencloud-operators
-
-# Subscription
-kubectl -n openshift-operators get subscription ibm-common-service-operator-stable-v1-opencloud-operators-openshift-marketplace ibm-management-orchestrator operand-deployment-lifecycle-manager-app
-
-# Ingress
-kubectl -n openshift-ingress get route router-default
-
-# Installation
-kubectl -n $(terraform output namespace) get installations.orchestrator.management.ibm.com ibm-management
-```
-To test MCM console use the address from the `endpoint` output parameter with the `user` and `password` output parameters as credentials.
-
-```bash
-terraform output user
-terraform output password
-
-open "https://$(terraform output endpoint)"
-```
-
-or
-
-```bash
-# URL to MCM Console
-kubectl -n ibm-common-services get route cp-console  -o jsonpath='{.spec.host}'
-
-# MCM Credentials
-# User:
-kubectl -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_username}' | base64 -d
-# Password:
-kubectl -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d
-```
-
-## 6. Cleanup
-
-When the test is complete, execute: `terraform destroy` or `make clean`.
-
-There are some directories and files you may want to manually delete, these are: `rm -rf test.auto.tfvars terraform.tfstate* .terraform .kube rendered_files`
