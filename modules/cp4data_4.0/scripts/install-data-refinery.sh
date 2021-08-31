@@ -15,7 +15,7 @@ CASE_PACKAGE_NAME="ibm-datarefinery-1.0.0.tgz"
 
 # Checking if the data-refinery operator pods are ready and running. 
 # checking status of ibm-cpd-datarefinery-operator
-# ./pod-status-check.sh ibm-cpd-datarefinery-operator ${OP_NAMESPACE}
+./pod-status-check.sh ibm-cpd-datarefinery-operator ${OP_NAMESPACE}
 
 # switch to zen namespace
 oc project ${NAMESPACE}
