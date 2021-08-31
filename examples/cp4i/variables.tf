@@ -4,6 +4,8 @@ variable "cluster_id" {
 }
 
 variable "resource_group_name" {
+  default     = "Default"
+  type        = string
   description = "Resource group that the cluster is created in"
 }
 
