@@ -8,11 +8,6 @@ wget https://raw.githubusercontent.com/IBM/cloud-pak/master/repo/case/ibm-ccs-1.
 
 CASE_PACKAGE_NAME="ibm-ccs-1.0.0.tgz"
 
-wget https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-darwin-amd64.tar.gz
-wget https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-darwin-amd64.tar.gz.sig
-tar -xvf cloudctl-linux-amd64.tar.gz
-echo '*** ccs Seeing if cloudctl binary path works ***'
-
 
 ./cloudctl-linux-amd64 case launch --case ./${CASE_PACKAGE_NAME} \
     --tolerance 1 --namespace ${OP_NAMESPACE}         \
