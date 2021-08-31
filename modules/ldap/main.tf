@@ -14,12 +14,15 @@ resource "ibm_compute_vm_instance" "ldap" {
   disks                = var.disks
   local_disk           = var.local_disk
 
+}
+
+resource "null_resource" "ldap_files" {
   connection {
     type        = "ssh"
     user        = "root"
     private_key = tls_private_key.ssh.private_key_pem
     agent       = false
-    host        = ibm_compute_vm_instance.ldap[count.index].ipv4_address
+    host        = ibm_compute_vm_instance.ldap[0].ipv4_address
   }
 
   provisioner "file" {
