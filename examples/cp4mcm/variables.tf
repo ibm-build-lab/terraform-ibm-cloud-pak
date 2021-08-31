@@ -31,6 +31,7 @@ variable "resource_group" {
 }
 
 variable "install_infr_mgt_module" {
+  type = bool
   default     = false
   description = "Install Infrastructure Management module"
 }
