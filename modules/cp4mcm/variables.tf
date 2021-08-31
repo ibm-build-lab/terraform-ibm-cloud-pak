@@ -13,7 +13,6 @@ variable "cluster_name_id" {
 }
 
 variable "on_vpc" {
-  type = boolean
   default = false
   description = "Cluster type. VPC: `on_vpc=true`, Classic: `on_vpc=false`"
 }
