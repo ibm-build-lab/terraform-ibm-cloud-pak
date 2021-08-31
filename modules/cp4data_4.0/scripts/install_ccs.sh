@@ -9,7 +9,7 @@ wget https://raw.githubusercontent.com/IBM/cloud-pak/master/repo/case/ibm-ccs-1.
 CASE_PACKAGE_NAME="ibm-ccs-1.0.0.tgz"
 
 
-cloudctl case launch --case ./${CASE_PACKAGE_NAME} \
+./cloudctl-linux-amd64 case launch --case ./${CASE_PACKAGE_NAME} \
     --tolerance 1 --namespace ${OP_NAMESPACE}         \
     --action installOperator                        \
     --inventory ccsSetup                            
