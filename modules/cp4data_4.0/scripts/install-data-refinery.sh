@@ -15,7 +15,7 @@ CASE_PACKAGE_NAME="ibm-datarefinery-1.0.0.tgz"
 
 # Checking if the data-refinery operator pods are ready and running. 
 # checking status of ibm-cpd-datarefinery-operator
-sleep 5m
+sleep 10m
 # ./pod-status-check.sh ibm-cpd-datarefinery-operator ${OP_NAMESPACE}
 
 # switch to zen namespace
@@ -23,6 +23,10 @@ oc project ${NAMESPACE}
 
 echo '*** cd ../files'
 cd ../files
+
+# ****** sed command for classic goes here *******
+if [${ON_VPC} == false] ; then
+    sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" data-refinery-cr.yaml
 
 # Create data-refinery CR: 
 

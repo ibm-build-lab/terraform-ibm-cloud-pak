@@ -26,6 +26,7 @@ resource "null_resource" "bedrock_zen_operator" {
       # REGION = local.region
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
+      ON_VPC = var.on_vpc
     }
     
     working_dir = "${path.module}/scripts/"
@@ -47,6 +48,7 @@ resource "null_resource" "install_ccs" {
       # CLUSTER_NAME = "${var.unique_id}-cluster"
       KUBECONFIG = var.cluster_config_path
       OP_NAMESPACE = var.operator_namespace
+      ON_VPC = var.on_vpc
     }
     
     working_dir = "${path.module}/scripts/"
@@ -70,6 +72,7 @@ resource "null_resource" "install_data_refinery" {
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
+      ON_VPC = var.on_vpc
     }
     
     working_dir = "${path.module}/scripts/"

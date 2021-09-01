@@ -30,6 +30,10 @@ cd ../files
 
 # Create CCS CR: 
 
+# ****** sed command for classic goes here *******
+if [${ON_VPC} == false] ; then
+    sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" ccs-cr.yaml
+
 echo '*** executing **** oc create -f ccs-cr.yaml'
 result=$(oc create -f ccs-cr.yaml)
 echo $result
