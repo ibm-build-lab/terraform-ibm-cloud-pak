@@ -16,7 +16,7 @@ done
 
 # echo "Creating namespace ${NAMESPACE}"
 echo "creating namespace ${NAMESPACE}"
-kubectl create namespace ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
+kubectl create namespace ${NAMESPACE}
 
 echo "Deploying Catalog Option ${CATALOG_CONTENT}"
 kubectl apply -f -<<EOF
