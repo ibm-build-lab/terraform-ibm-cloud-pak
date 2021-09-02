@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# db2uoperator complained about missing module
+# see if this fixes this
+sudo pip install pyyaml
+pip show pyyaml
+
 
 ## Download the case package for data-refinery
 wget https://raw.githubusercontent.com/IBM/cloud-pak/master/repo/case/ibm-datarefinery-1.0.0.tgz
