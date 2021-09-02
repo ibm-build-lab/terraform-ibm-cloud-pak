@@ -25,8 +25,7 @@ echo '*** cd ../files'
 cd ../files
 
 # ****** sed command for classic goes here *******
-if [${ON_VPC} == false] ; then
-    sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" data-refinery-cr.yaml
+if [${ON_VPC} == false] then sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" data-refinery-cr.yaml
 
 # Create data-refinery CR: 
 
