@@ -139,6 +139,7 @@ sleep 30
 # ****** sed command for classic goes here *******
 if [[ ${ON_VPC} == false ]] ; then
     sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" zen-lite-cr.yaml
+fi
 
 # Create lite CR: 
 sed -i -e "s/CPD_NAMESPACE/${NAMESPACE}/g" zen-lite-cr.yaml
