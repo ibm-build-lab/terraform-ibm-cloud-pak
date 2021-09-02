@@ -19,8 +19,7 @@ CASE_PACKAGE_NAME="ibm-ccs-1.0.0.tgz"
 
 # checking status of ibm-cpc-ccs-operator
 
-# ./pod-status-check.sh ibm-cpd-ccs-operator ${OP_NAMESPACE}
-sleep 5m
+./pod-status-check.sh ibm-cpd-ccs-operator ${OP_NAMESPACE}
 
 # switch zen namespace
 
@@ -43,5 +42,4 @@ cd ../scripts
 
 # check the CCS cr status
 
-# ./check-cr-status.sh ccs ccs-cr ${NAMESPACE}  ccsStatus
-sleep 5m
+./check-cr-status.sh ccs ccs-cr ${NAMESPACE}  ccsStatus

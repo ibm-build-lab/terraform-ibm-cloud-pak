@@ -93,16 +93,16 @@ cd ../scripts
 
 # checking status of ibm-namespace-scope-operator
 
-# ./check-subscription-status.sh ibm-common-service-operator ${OP_NAMESPACE} state
-# ./pod-status-check.sh ibm-namespace-scope-operator ${OP_NAMESPACE}
+./check-subscription-status.sh ibm-common-service-operator ${OP_NAMESPACE} state
+./pod-status-check.sh ibm-namespace-scope-operator ${OP_NAMESPACE}
 
 # checking status of operand-deployment-lifecycle-manager
 
-# ./pod-status-check.sh operand-deployment-lifecycle-manager ${OP_NAMESPACE}
+./pod-status-check.sh operand-deployment-lifecycle-manager ${OP_NAMESPACE}
 
 # checking status of ibm-common-service-operator
 
-# ./pod-status-check.sh ibm-common-service-operator ${OP_NAMESPACE}
+./pod-status-check.sh ibm-common-service-operator ${OP_NAMESPACE}
 
 cd ../files
 
@@ -151,17 +151,16 @@ cd ../scripts
 
 # check if the zen operator pod is up and running.
 
-# ./pod-status-check.sh ibm-zen-operator ${OP_NAMESPACE}
-# ./pod-status-check.sh ibm-cert-manager-operator ${OP_NAMESPACE}
-sleep 5m
-# ./pod-status-check.sh cert-manager-cainjector ${OP_NAMESPACE}
-# ./pod-status-check.sh cert-manager-controller ${OP_NAMESPACE}
-# ./pod-status-check.sh cert-manager-webhook ${OP_NAMESPACE}
+./pod-status-check.sh ibm-zen-operator ${OP_NAMESPACE}
+./pod-status-check.sh ibm-cert-manager-operator ${OP_NAMESPACE}
+
+./pod-status-check.sh cert-manager-cainjector ${OP_NAMESPACE}
+./pod-status-check.sh cert-manager-controller ${OP_NAMESPACE}
+./pod-status-check.sh cert-manager-webhook ${OP_NAMESPACE}
 
 # check the lite cr status
 
-# ./check-cr-status.sh ibmcpd ibmcpd-cr ${NAMESPACE} controlPlaneStatus
-sleep 5m
+./check-cr-status.sh ibmcpd ibmcpd-cr ${NAMESPACE} controlPlaneStatus
 
 wget https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-linux-amd64.tar.gz
 wget https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-linux-amd64.tar.gz.sig
