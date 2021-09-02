@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# db2uoperator complained about missing module
+# see if this fixes this
+pip install pyyaml
+pip show pyyaml
 
 # Install ccs operator
 

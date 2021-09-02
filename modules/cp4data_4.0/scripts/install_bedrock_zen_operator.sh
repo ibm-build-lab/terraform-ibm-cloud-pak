@@ -185,3 +185,8 @@ echo '*** Seeing if cloudctl binary path works ***'
 
 # and point PATH
 # export PATH="$PATH:/tmp"
+
+# db2uoperator complained about missing module
+# see if this fixes this
+pip install pyyaml
+pip show pyyaml
