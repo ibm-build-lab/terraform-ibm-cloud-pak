@@ -2,7 +2,10 @@
 
 # db2uoperator complained about missing module
 # see if this fixes this
-sudo easy_install pip
+
+yum install python-pip
+pip --version
+
 pip install pyyaml
 pip show pyyaml
 
