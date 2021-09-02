@@ -9,14 +9,14 @@ wget https://raw.githubusercontent.com/IBM/cloud-pak/master/repo/case/ibm-dods-4
 
 CASE_PACKAGE_NAME="ibm-dods-4.0.0.tgz"
 
-cloudctl case launch --tolerance 1 \
+./cloudctl-linux-amd64 case launch --tolerance 1 \
     --case ${CASE_PACKAGE_NAME} \
     --namespace openshift-marketplace \
     --inventory dodsOperatorSetup \
     --action installCatalog 
 
 
-cloudctl case launch --tolerance 1 \
+./cloudctl-linux-amd64 case launch --tolerance 1 \
     --case ${CASE_PACKAGE_NAME} \
     --namespace ${OP_NAMESPACE} \
     --inventory dodsOperatorSetup \
@@ -29,11 +29,15 @@ cloudctl case launch --tolerance 1 \
 # switch to zen namespace
 oc project ${NAMESPACE}
 
+cd ../files
+
 # Create dods CR: 
 
 echo '*** executing **** oc create -f dods-cr.yaml'
 result=$(oc create -f dods-cr.yaml)
 echo $result
+
+cd ../scripts
 
 # check the CCS cr status
 ./check-cr-status.sh DODS dods-cr ${NAMESPACE} dodsStatus

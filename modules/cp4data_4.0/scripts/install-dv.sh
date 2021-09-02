@@ -14,7 +14,7 @@ oc project ${OP_NAMESPACE}
 
 ## Install Catalog 
 
-cloudctl case launch --case ${CASE_PACKAGE_NAME} \
+./cloudctl-linux-amd64 case launch --case ${CASE_PACKAGE_NAME} \
     --namespace openshift-marketplace \
     --action installCatalog \
     --inventory dv \
@@ -22,7 +22,7 @@ cloudctl case launch --case ${CASE_PACKAGE_NAME} \
 
 ## Install Operator
 
-cloudctl case launch --case ${CASE_PACKAGE_NAME} \
+./cloudctl-linux-amd64 case launch --case ${CASE_PACKAGE_NAME} \
     --namespace ${OP_NAMESPACE} \
     --action installOperator \
     --inventory dv \
@@ -38,7 +38,7 @@ oc project ${NAMESPACE}
 # # Install dv Customer Resource
 
 ## Install Customer Resources dv 
-cloudctl case launch --case ${CASE_PACKAGE_NAME} \
+./cloudctl-linux-amd64 case launch --case ${CASE_PACKAGE_NAME} \
     --namespace ${NAMESPACE} \
     --action applyCustomResources \
     --inventory dv \

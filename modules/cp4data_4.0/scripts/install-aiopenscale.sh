@@ -9,7 +9,7 @@ CASE_PACKAGE_NAME="ibm-watson-openscale-2.0.0.tgz"
 oc project ${OP_NAMESPACE}
 
 
-cloudctl case launch --case ./${CASE_PACKAGE_NAME} \
+./cloudctl-linux-amd64 case launch --case ./${CASE_PACKAGE_NAME} \
     --namespace ${OP_NAMESPACE}                                   \
     --tolerance 1
 
@@ -23,7 +23,12 @@ oc project ${NAMESPACE}
 
 cd ../files
 
-# Create wsl CR: 
+# Create wsl CR:
+
+# ****** sed command for classic goes here *******
+if [[ ${ON_VPC} == false ]] ; then
+    sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" openscale-cr.yaml
+fi
 
 result=$(oc create -f openscale-cr.yaml)
 echo $result

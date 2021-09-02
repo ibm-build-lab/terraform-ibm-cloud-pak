@@ -11,7 +11,7 @@ oc project ${OP_NAMESPACE}
 
 ## Install Catalog
 
-cloudctl case launch --action installCatalog \
+./cloudctl-linux-amd64 case launch --action installCatalog \
     --case ${CASE_PACKAGE_NAME} \
     --inventory db2whOperatorSetup \
     --namespace openshift-marketplace \
@@ -19,7 +19,7 @@ cloudctl case launch --action installCatalog \
 
 ## Install Operator
 
-cloudctl case launch --action installOperator \
+./cloudctl-linux-amd64 case launch --action installOperator \
     --case ${CASE_PACKAGE_NAME} \
     --inventory db2whOperatorSetup \
     --namespace ${OP_NAMESPACE} \
@@ -34,10 +34,14 @@ sleep 1m
 # switch to zen namespace	
 oc project ${NAMESPACE}
 
+cd ../files
+
 # Create db2wh CR: 	
 echo '*** executing **** oc create -f db2wh-cr.yaml'
 result=$(oc create -f db2wh-cr.yaml)
 echo $result
+
+cd ../scripts
 
 # check the CCS cr status	
 ./check-cr-status.sh db2whService db2wh-cr ${NAMESPACE} db2whStatus

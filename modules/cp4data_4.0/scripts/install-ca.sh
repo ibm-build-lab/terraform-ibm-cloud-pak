@@ -9,7 +9,7 @@ CASE_PACKAGE_NAME="ibm-cognos-analytics-prod-4.0.0.tgz"
 
 ## Install Catalog
 
-cloudctl case launch --action installCatalog \
+./cloudctl-linux-amd64 case launch --action installCatalog \
     --case ${CASE_PACKAGE_NAME} \
     --inventory ibmCaOperatorSetup \
     --namespace openshift-marketplace \
@@ -17,7 +17,7 @@ cloudctl case launch --action installCatalog \
 
 ## Install Operator
 
-cloudctl case launch --action installOperator \
+./cloudctl-linux-amd64 case launch --action installOperator \
     --case ${CASE_PACKAGE_NAME} \
     --inventory ibmCaOperatorSetup \
     --namespace ${OP_NAMESPACE} \
@@ -32,12 +32,21 @@ sleep 1m
 # switch to zen namespace	
 oc project ${NAMESPACE}
 
-# Create ca CR: 	
+cd ../files
+
+# Create ca CR:
+
+# ****** sed command for classic goes here *******
+if [[ ${ON_VPC} == false ]] ; then
+    sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" ca-cr.yaml
+fi
 
 sed -i -e "s/REPLACE_NAMESPACE/${NAMESPACE}/g" ca-cr.yaml
 echo '*** executing **** oc create -f ca-cr.yaml'
 result=$(oc create -f ca-cr.yaml)
 echo $result
+
+cd ../scripts
 
 # check the CCS cr status	
 ./check-cr-status.sh CAService ca-cr ${NAMESPACE} caAddonStatus

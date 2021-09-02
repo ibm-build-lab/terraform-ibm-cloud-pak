@@ -12,7 +12,7 @@ oc project ${OP_NAMESPACE}
 
 ## Install Catalog 
 
-cloudctl case launch --case ${CASE_PACKAGE_NAME} \
+./cloudctl-linux-amd64 case launch --case ${CASE_PACKAGE_NAME} \
     --namespace openshift-marketplace \
     --action installCatalog \
     --inventory db2aaserviceOperatorSetup \
@@ -20,7 +20,7 @@ cloudctl case launch --case ${CASE_PACKAGE_NAME} \
 
 ## Install Operator
 
-cloudctl case launch --case ${CASE_PACKAGE_NAME} \
+./cloudctl-linux-amd64 case launch --case ${CASE_PACKAGE_NAME} \
     --namespace ${OP_NAMESPACE} \
     --action installOperator \
     --inventory db2aaserviceOperatorSetup \
@@ -33,10 +33,14 @@ cloudctl case launch --case ${CASE_PACKAGE_NAME} \
 # switch to zen namespace
 oc project ${NAMESPACE}
 
+cd ../files
+
 # Install db2aaservice Customer Resource
 echo '*** executing **** oc create -f db2aaservice-cr.yaml'
 result=$(oc create -f db2aaservice-cr.yaml)
 echo $result
+
+cd ../scripts
 
 # check the db2aaservice cr status
 ./check-cr-status.sh Db2aaserviceService db2aaservice-cr ${NAMESPACE} db2aaserviceStatus

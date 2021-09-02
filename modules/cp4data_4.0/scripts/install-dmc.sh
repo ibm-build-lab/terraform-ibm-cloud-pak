@@ -11,7 +11,7 @@ oc project ${OP_NAMESPACE}
 
 ## Install Catalog 
 
-cloudctl case launch --action installCatalog \
+./cloudctl-linux-amd64 case launch --action installCatalog \
     --case ${CASE_PACKAGE_NAME} \
     --inventory dmcOperatorSetup \
     --namespace openshift-marketplace \
@@ -19,7 +19,7 @@ cloudctl case launch --action installCatalog \
 
 ## Install Operator
 
-cloudctl case launch  --action installOperator \
+./cloudctl-linux-amd64 case launch  --action installOperator \
     --case ${CASE_PACKAGE_NAME} \
     --inventory dmcOperatorSetup \
     --namespace ${OP_NAMESPACE} \
@@ -29,11 +29,21 @@ sleep 5m
 
 oc project ${NAMESPACE} 
 
-# Create dmc CR: 
+cd ../files
+
+# Create dmc CR:
+
+# ****** sed command for classic goes here *******
+if [[ ${ON_VPC} == false ]] ; then
+    sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" dmc-cr.yaml
+fi
+
 sed -i -e "s/CPD_NAMESPACE/${NAMESPACE}/g" dmc-cr.yaml
 echo '*** executing **** oc create -f dmc-cr.yaml'
 result=$(oc create -f dmc-cr.yaml)
 echo $result
+
+cd ../scripts
 
 # checking status of dmc-operator
 ./pod-status-check.sh ibm-dmc-controller ${OP_NAMESPACE}

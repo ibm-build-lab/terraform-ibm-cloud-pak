@@ -18,7 +18,7 @@ CASE_PACKAGE_NAME="ibm-wkc-4.0.0.tgz"
 
 ## Install Operator
 
-cloudctl case launch --case  ${CASE_PACKAGE_NAME} \
+./../cloudctl-linux-amd64 case launch --case  ${CASE_PACKAGE_NAME} \
     --tolerance 1 \
     --namespace ${OP_NAMESPACE} \
     --action installOperator \
@@ -34,6 +34,12 @@ oc project ${NAMESPACE}
 
 
 # # Install wkc Customer Resource
+
+# ****** sed command for classic goes here *******
+if [[ ${ON_VPC} == false ]] ; then
+    sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" wkc-cr.yaml #storage_class_name
+    sed -i -e "s/portworx/ibm/g" wkc-cr.yaml #storageVendor
+fi
 
 #sed -i -e "s/REPLACE_STORAGECLASS/${local.cpd-storageclass}/g" wkc-cr.yaml
 echo '*** executing **** oc create -f wkc-cr.yaml'
@@ -56,7 +62,7 @@ CASE_PACKAGE_NAME="ibm-iis-4.0.0.tgz"
 
 ## Install Operator
 
-cloudctl case launch --case  ${CASE_PACKAGE_NAME} \
+./../cloudctl-linux-amd64 case launch --case  ${CASE_PACKAGE_NAME} \
     --tolerance 1 \
     --namespace ${OP_NAMESPACE} \
     --action installOperator \
@@ -71,6 +77,13 @@ cloudctl case launch --case  ${CASE_PACKAGE_NAME} \
 oc project ${NAMESPACE}
 
 # # Install wkc Customer Resource
+
+# ****** sed command for classic goes here *******
+if [[ ${ON_VPC} == false ]] ; then
+    sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" wkc-iis-cr.yaml #storage_class_name
+    sed -i -e "s/portworx/ibm/g" wkc-iis-cr.yaml #StorageVendor
+fi
+
 sed -i -e "s/REPLACE_NAMESPACE/${NAMESPACE}/g" wkc-iis-cr.yaml
 echo '*** executing **** oc create -f wkc-iis-cr.yaml'
 result=$(oc create -f wkc-iis-cr.yaml)
@@ -84,6 +97,11 @@ echo $result
 oc project ${NAMESPACE}
 
 # # Install wkc Customer Resource
+
+# ****** sed command for classic goes here *******
+if [[ ${ON_VPC} == false ]] ; then
+    sed -i -e "s/portworx/ibm/g" wkc-ug-cr.yaml #storageVendor
+fi
 
 echo '*** executing **** oc create -f wkc-ug-cr.yaml'
 result=$(oc create -f wkc-ug-cr.yaml)

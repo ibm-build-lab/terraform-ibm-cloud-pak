@@ -14,7 +14,7 @@ export WML_OPERATOR_CATALOG_NAMESPACE=openshift-marketplace
 
 ## Install catalog 
 
-cloudctl case launch --case ${CASE_PACKAGE_NAME} \
+./cloudctl-linux-amd64 case launch --case ${CASE_PACKAGE_NAME} \
     --namespace ${WML_OPERATOR_CATALOG_NAMESPACE}  \
     --inventory  wmlOperatorSetup \
     --action installCatalog \
@@ -22,7 +22,7 @@ cloudctl case launch --case ${CASE_PACKAGE_NAME} \
 
 ## Install Operator
 
-cloudctl case launch --case ${CASE_PACKAGE_NAME} \
+./cloudctl-linux-amd64 case launch --case ${CASE_PACKAGE_NAME} \
     --namespace ${OP_NAMESPACE} \
     --inventory  wmlOperatorSetup \
     --action install \
@@ -41,6 +41,11 @@ oc project ${NAMESPACE}
 cd ../files
 
 # Create wml CR: 
+
+# ****** sed command for classic goes here *******
+if [[ ${ON_VPC} == false ]] ; then
+    sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" wml-cr.yaml
+fi
 
 echo '*** executing **** oc create -f wml-cr.yaml'
 result=$(oc create -f wml-cr.yaml)

@@ -12,7 +12,7 @@ oc project ${OP_NAMESPACE}
 
 ## Install Catalog 
 
-cloudctl case launch --case  ${CASE_PACKAGE_NAME} \
+./cloudctl-linux-amd64 case launch --case  ${CASE_PACKAGE_NAME} \
     --namespace openshift-marketplace \
     --inventory db2uOperatorSetup \
     --action installCatalog \
@@ -20,7 +20,7 @@ cloudctl case launch --case  ${CASE_PACKAGE_NAME} \
     
 ## Install Operator
 
-cloudctl case launch --case ${CASE_PACKAGE_NAME} \
+./cloudctl-linux-amd64 case launch --case ${CASE_PACKAGE_NAME} \
     --namespace ${OP_NAMESPACE} \
     --inventory db2uOperatorSetup \
     --action installOperator \

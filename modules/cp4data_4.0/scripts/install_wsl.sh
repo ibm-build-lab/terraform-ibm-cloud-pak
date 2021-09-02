@@ -8,13 +8,13 @@ CASE_PACKAGE_NAME="ibm-wsl-2.0.0.tgz"
 
 oc project ${OP_NAMESPACE}
 
-cloudctl  case launch --case ./${CASE_PACKAGE_NAME} \
+./cloudctl-linux-amd64  case launch --case ./${CASE_PACKAGE_NAME} \
     --tolerance 1 \
     --namespace openshift-marketplace \
     --action installCatalog \
     --inventory wslSetup 
 
-cloudctl case launch --case ./${CASE_PACKAGE_NAME} \
+./cloudctl-linux-amd64 case launch --case ./${CASE_PACKAGE_NAME} \
     --tolerance 1 \
     --namespace ${OP_NAMESPACE}         \
     --action installOperator \
@@ -31,7 +31,13 @@ oc project ${NAMESPACE}
 
 cd ../files
 
-# Create wsl CR: 
+# Create wsl CR:
+
+# ****** sed command for classic goes here *******
+if [[ ${ON_VPC} == false ]] ; then
+    sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" wsl-cr.yaml #storageClass
+    sed -i -e "s/portworx/ibm/g" wsl-cr.yaml #storageVendor
+fi
 
 result=$(oc create -f wsl-cr.yaml)
 echo $result

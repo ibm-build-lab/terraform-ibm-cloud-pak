@@ -15,7 +15,7 @@ CASE_PACKAGE_NAME="ibm-analyticsengine-4.0.0.tgz"
 oc project ${OP_NAMESPACE}
 ## Install Catalog 
 
-cloudctl case launch --case ${CASE_PACKAGE_NAME} \
+./cloudctl-linux-amd64 case launch --case ${CASE_PACKAGE_NAME} \
     --namespace ${OP_NAMESPACE}\
     --inventory analyticsengineOperatorSetup \
     --action installCatalog \
@@ -23,7 +23,7 @@ cloudctl case launch --case ${CASE_PACKAGE_NAME} \
 
 ## Install Operator
 
-cloudctl case launch --case ${CASE_PACKAGE_NAME} \
+./cloudctl-linux-amd64 case launch --case ${CASE_PACKAGE_NAME} \
     --namespace ${OP_NAMESPACE} \
     --inventory analyticsengineOperatorSetup \
     --action install \
@@ -37,11 +37,21 @@ cloudctl case launch --case ${CASE_PACKAGE_NAME} \
 
 oc project ${NAMESPACE}
 
-# Create spark CR: 
-sed -i -e "s/BUILD_NUMBER/4.0.0/g" ../files/spark-cr.yaml
+cd ../files
+
+# Create spark CR:
+
+# ****** sed command for classic goes here *******
+if [[ ${ON_VPC} == false ]] ; then
+    sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" spark-cr.yaml
+fi
+
+sed -i -e "s/BUILD_NUMBER/4.0.0/g" spark-cr.yaml
 echo '*** executing **** oc create -f spark-cr.yaml'
-result=$(oc create -f ../files/spark-cr.yaml)
+result=$(oc create -f spark-cr.yaml)
 echo $result
+
+cd ../scripts
 
 # check the spark cr status
 ./check-cr-status.sh AnalyticsEngine analyticsengine-cr ${NAMESPACE} analyticsengineStatus

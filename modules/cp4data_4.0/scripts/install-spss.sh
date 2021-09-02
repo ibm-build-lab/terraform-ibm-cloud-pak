@@ -8,12 +8,12 @@ wget https://raw.githubusercontent.com/IBM/cloud-pak/master/repo/case/ibm-spss-1
 # # Install spss operator using CLI (OLM)
 CASE_PACKAGE_NAME="ibm-spss-1.0.0.tgz"
 
-cloudctl case launch --tolerance 1 --case ./${CASE_PACKAGE_NAME} \
+./cloudctl-linux-amd64 case launch --tolerance 1 --case ./${CASE_PACKAGE_NAME} \
    --namespace ${OP_NAMESPACE}  \
    --inventory spssSetup  \
    --action installCatalog
 
-cloudctl case launch --tolerance 1 --case ./${CASE_PACKAGE_NAME} \
+./cloudctl-linux-amd64 case launch --tolerance 1 --case ./${CASE_PACKAGE_NAME} \
    --namespace ${OP_NAMESPACE}  \
    --action installOperator \
    --inventory spssSetup  
@@ -27,11 +27,21 @@ cloudctl case launch --tolerance 1 --case ./${CASE_PACKAGE_NAME} \
 # switch to zen namespace
 oc project ${NAMESPACE}
 
-# Create spss CR: 
+cd ../files
+
+# Create spss CR:
+
+# ****** sed command for classic goes here *******
+if [[ ${ON_VPC} == false ]] ; then
+    sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" spss-cr.yaml
+fi
+
 sed -i -e "s/REPLACE_NAMESPACE/${NAMESPACE}/g" spss-cr.yaml
 echo '*** executing **** oc create -f spss-cr.yaml'
 result=$(oc create -f spss-cr.yaml)
 echo $result
+
+cd ../scripts
 
 # check the CCS cr status
 ./check-cr-status.sh spss spss-cr ${NAMESPACE} spssmodelerStatus

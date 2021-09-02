@@ -12,11 +12,11 @@ oc project ${OP_NAMESPACE}
 
 ## Install Operator
 
-cloudctl case launch --action installOperator \
---case ${CASE_PACKAGE_NAME} \
---inventory datastageOperatorSetup \
---namespace ${OP_NAMESPACE} \
---tolerance 1
+./cloudctl-linux-amd64 case launch --action installOperator \
+    --case ${CASE_PACKAGE_NAME} \
+    --inventory datastageOperatorSetup \
+    --namespace ${OP_NAMESPACE} \
+    --tolerance 1
 
 sleep 1m
 # Checking if the ds operator pods are ready and running. 	
@@ -26,10 +26,14 @@ sleep 1m
 # switch to zen namespace	
 oc project ${NAMESPACE}
 
+cd ../files
+
 # Create ds CR: 	
 echo '*** executing **** oc create -f ds-cr.yaml'
 result=$(oc create -f ds-cr.yaml)
 echo $result
+
+cd ../scripts
 
 # check the CCS cr status	
 ./check-cr-status.sh DataStageService datastage-cr ${NAMESPACE} dsStatus
