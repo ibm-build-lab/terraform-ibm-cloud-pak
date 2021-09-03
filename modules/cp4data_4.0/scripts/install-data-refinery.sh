@@ -1,14 +1,5 @@
 #!/bin/bash
 
-# db2uoperator complained about missing module
-# see if this fixes this
-
-yum install python-pip
-pip --version
-
-pip install pyyaml
-pip show pyyaml
-
 
 ## Download the case package for data-refinery
 wget https://raw.githubusercontent.com/IBM/cloud-pak/master/repo/case/ibm-datarefinery-1.0.0.tgz
@@ -24,7 +15,8 @@ CASE_PACKAGE_NAME="ibm-datarefinery-1.0.0.tgz"
 
 # Checking if the data-refinery operator pods are ready and running. 
 # checking status of ibm-cpd-datarefinery-operator
-./pod-status-check.sh ibm-cpd-datarefinery-operator ${OP_NAMESPACE}
+# ./pod-status-check.sh ibm-cpd-datarefinery-operator ${OP_NAMESPACE}
+sleep 5m
 
 # switch to zen namespace
 oc project ${NAMESPACE}
@@ -47,4 +39,5 @@ echo '*** cd ../scripts'
 cd ../scripts
 
 # check the data-refinery cr status
-./check-cr-status.sh Datarefinery datarefinery-cr ${NAMESPACE} datarefineryStatus
+# ./check-cr-status.sh Datarefinery datarefinery-cr ${NAMESPACE} datarefineryStatus
+sleep 5m

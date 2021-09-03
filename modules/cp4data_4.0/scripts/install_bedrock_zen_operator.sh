@@ -174,7 +174,8 @@ tar -xvf cloudctl-linux-amd64.tar.gz
 # alias cloudctl="$HOME/bin/cloudctl-linux-amd64"
 
 echo '*** Seeing if cloudctl binary path works ***'
-./cloudctl-linux-amd64
+result=$(./cloudctl-linux-amd64)
+echo $result
 
 # tar -xvf cloudctl-linux-amd64.tar.gz
 # ln cloudctl-linux-amd64 /usr/local/bin/cloudctl
@@ -185,8 +186,19 @@ echo '*** Seeing if cloudctl binary path works ***'
 
 # and point PATH
 # export PATH="$PATH:/tmp"
+result=$(python --version)
+echo $result
 
 # db2uoperator complained about missing module
 # see if this fixes this
-pip install pyyaml
-pip show pyyaml
+result=$(yum install python-pip)
+echo $result
+
+result=$(pip --version)
+echo $result
+
+result=$(pip install pyyaml)
+echo $result
+
+result=$(pip show pyyaml)
+echo $result

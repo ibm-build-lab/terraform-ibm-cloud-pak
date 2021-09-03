@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# db2uoperator complained about missing module
-# see if this fixes this
-pip install pyyaml
-pip show pyyaml
 
 # Install ccs operator
 
@@ -23,7 +19,8 @@ CASE_PACKAGE_NAME="ibm-ccs-1.0.0.tgz"
 
 # checking status of ibm-cpc-ccs-operator
 
-./pod-status-check.sh ibm-cpd-ccs-operator ${OP_NAMESPACE}
+# ./pod-status-check.sh ibm-cpd-ccs-operator ${OP_NAMESPACE}
+sleep 5m
 
 # switch zen namespace
 
@@ -46,4 +43,5 @@ cd ../scripts
 
 # check the CCS cr status
 
-./check-cr-status.sh ccs ccs-cr ${NAMESPACE}  ccsStatus
+# ./check-cr-status.sh ccs ccs-cr ${NAMESPACE}  ccsStatus
+sleep 5m
