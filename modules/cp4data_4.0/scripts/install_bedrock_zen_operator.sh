@@ -89,6 +89,23 @@ sleep 60
 
 cd ../scripts
 
+result=$(python --version)
+echo $result
+
+# db2uoperator complained about missing module
+# see if this fixes this
+result=$(yum install python-pip)
+echo $result
+
+result=$(pip --version)
+echo $result
+
+result=$(pip install pyyaml)
+echo $result
+
+result=$(pip show pyyaml)
+echo $result
+
 # Checking if the bedrock operator pods are ready and running. 
 
 # checking status of ibm-namespace-scope-operator
