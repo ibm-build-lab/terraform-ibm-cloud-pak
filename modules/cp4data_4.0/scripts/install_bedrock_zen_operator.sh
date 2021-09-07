@@ -100,7 +100,13 @@ echo $result
 result=$(python -m pip install pyyaml)
 echo $result
 
+result=$(python pip install pyyaml)
+echo $result
+
 result=$(python3 -m pip install pyyaml)
+echo $result
+
+result=$(python3 pip install pyyaml)
 echo $result
 
 result=$(pip --version)
