@@ -97,7 +97,10 @@ echo $result
 
 # db2uoperator complained about missing module
 # see if this fixes this
-result=$(python install pip pyyaml)
+result=$(python -m pip install pyyaml)
+echo $result
+
+result=$(python3 -m pip install pyyaml)
 echo $result
 
 result=$(pip --version)
