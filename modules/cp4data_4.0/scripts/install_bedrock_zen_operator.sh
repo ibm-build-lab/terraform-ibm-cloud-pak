@@ -92,18 +92,21 @@ cd ../scripts
 result=$(python --version)
 echo $result
 
+result=$(pip3 --version)
+echo $result
+
 # db2uoperator complained about missing module
 # see if this fixes this
-result=$(yum install python-pip)
+result=$(python install pip pyyaml)
 echo $result
 
 result=$(pip --version)
 echo $result
 
-result=$(pip install pyyaml)
+result=$(pip3 install pyyaml)
 echo $result
 
-result=$(pip show pyyaml)
+result=$(pip3 show pyyaml)
 echo $result
 
 # Checking if the bedrock operator pods are ready and running. 
@@ -177,7 +180,7 @@ cd ../scripts
 
 # check the lite cr status
 
-./check-cr-status.sh ibmcpd ibmcpd-cr ${NAMESPACE} controlPlaneStatus
+# ./check-cr-status.sh ibmcpd ibmcpd-cr ${NAMESPACE} controlPlaneStatus
 
 wget https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-linux-amd64.tar.gz
 wget https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-linux-amd64.tar.gz.sig
@@ -203,19 +206,4 @@ echo $result
 
 # and point PATH
 # export PATH="$PATH:/tmp"
-result=$(python --version)
-echo $result
 
-# db2uoperator complained about missing module
-# see if this fixes this
-result=$(yum install python-pip)
-echo $result
-
-result=$(pip --version)
-echo $result
-
-result=$(pip install pyyaml)
-echo $result
-
-result=$(pip show pyyaml)
-echo $result
