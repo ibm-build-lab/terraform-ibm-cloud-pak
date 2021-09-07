@@ -89,35 +89,6 @@ sleep 60
 
 cd ../scripts
 
-result=$(python --version)
-echo $result
-
-result=$(pip3 --version)
-echo $result
-
-# db2uoperator complained about missing module
-# see if this fixes this
-result=$(python -m pip install pyyaml)
-echo $result
-
-result=$(python pip install pyyaml)
-echo $result
-
-result=$(python3 -m pip install pyyaml)
-echo $result
-
-result=$(python3 pip install pyyaml)
-echo $result
-
-result=$(pip --version)
-echo $result
-
-result=$(pip3 install pyyaml)
-echo $result
-
-result=$(pip3 show pyyaml)
-echo $result
-
 # Checking if the bedrock operator pods are ready and running. 
 
 # checking status of ibm-namespace-scope-operator
@@ -198,21 +169,13 @@ wget https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-linu
 
 tar -xvf cloudctl-linux-amd64.tar.gz
 
-# mkdir -p $HOME/bin
-# tar -xvf cloudctl-linux-amd64.tar.gz -C $HOME/bin
-# alias cloudctl="$HOME/bin/cloudctl-linux-amd64"
-
 echo '*** Seeing if cloudctl binary path works ***'
 result=$(./cloudctl-linux-amd64)
 echo $result
 
-# tar -xvf cloudctl-linux-amd64.tar.gz
-# ln cloudctl-linux-amd64 /usr/local/bin/cloudctl
-
 # to deal with schematics complaining about /usr/local/bin, moving to /tmp instead
 # tar -xvf cloudctl-linux-amd64.tar.gz -C /tmp
 # mv /tmp/cloudctl-linux-amd64 /tmp/cloudctl
-
 # and point PATH
 # export PATH="$PATH:/tmp"
 
