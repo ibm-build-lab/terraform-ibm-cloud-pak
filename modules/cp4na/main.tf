@@ -5,7 +5,7 @@ locals {
   common_services_catalog = file(join("/", [path.module, "files", "common-services.yaml"])) 
   redis_catalog = file(join("/", [path.module, "files", "redis-catalog.yaml"])) 
   service_account = file(join("/", [path.module, "files", "service-account.yaml"])) 
-  operator_group = file(join("/", [path.module, "files", "operator_group.yaml"])) 
+  operator_group = file(join("/", [path.module, "files", "operator-group.yaml"])) 
   subscription = file(join("/", [path.module, "files", "subscription.yaml"])) 
 
 }
