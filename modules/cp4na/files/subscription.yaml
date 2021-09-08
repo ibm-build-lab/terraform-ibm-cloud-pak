@@ -5,7 +5,7 @@ metadata:
     namespace: cp4na
 spec:
     channel: v2.1
-    installPlanApproval: Manual
+    installPlanApproval: Automatic
     name: ibm-tnc-orchestration-operator
     source: ibm-operator-catalog
     sourceNamespace: openshift-marketplace
