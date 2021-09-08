@@ -46,7 +46,8 @@ echo $result
 cd ../scripts
 
 # checking status of dmc-operator
-./pod-status-check.sh ibm-dmc-controller ${OP_NAMESPACE}
-
+# ./pod-status-check.sh ibm-dmc-controller ${OP_NAMESPACE}
+sleep 10m
 # check the mc cr status
-./check-cr-status.sh dmcaddon dmcaddon-cr ${NAMESPACE} dmcAddonStatus
+# ./check-cr-status.sh dmcaddon dmcaddon-cr ${NAMESPACE} dmcAddonStatus
+sleep 10m

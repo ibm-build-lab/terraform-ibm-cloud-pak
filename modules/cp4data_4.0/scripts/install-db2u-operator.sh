@@ -29,5 +29,6 @@ oc project ${OP_NAMESPACE}
 
 # Checking if the DB2U operator pods are ready and running. 
 # checking status of db2u-operator
-./pod-status-check.sh db2u-operator ${OP_NAMESPACE}
+# ./pod-status-check.sh db2u-operator ${OP_NAMESPACE}
+sleep 10m
 

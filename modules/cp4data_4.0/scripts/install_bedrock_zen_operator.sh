@@ -161,6 +161,7 @@ cd ../scripts
 # check the lite cr status
 
 # ./check-cr-status.sh ibmcpd ibmcpd-cr ${NAMESPACE} controlPlaneStatus
+sleep 10m
 
 wget https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-linux-amd64.tar.gz
 wget https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-linux-amd64.tar.gz.sig

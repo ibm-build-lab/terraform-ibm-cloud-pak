@@ -28,8 +28,8 @@ oc project ${OP_NAMESPACE}
 
 # Checking if the db2aaservice operator pods are ready and running. 
 # checking status of db2aaservice-operator
-./pod-status-check.sh ibm-db2aaservice-cp4d-operator-controller-manager ${OP_NAMESPACE}
-
+# ./pod-status-check.sh ibm-db2aaservice-cp4d-operator-controller-manager ${OP_NAMESPACE}
+sleep 10m
 # switch to zen namespace
 oc project ${NAMESPACE}
 
@@ -43,4 +43,5 @@ echo $result
 cd ../scripts
 
 # check the db2aaservice cr status
-./check-cr-status.sh Db2aaserviceService db2aaservice-cr ${NAMESPACE} db2aaserviceStatus
+# ./check-cr-status.sh Db2aaserviceService db2aaservice-cr ${NAMESPACE} db2aaserviceStatus
+sleep 10m
