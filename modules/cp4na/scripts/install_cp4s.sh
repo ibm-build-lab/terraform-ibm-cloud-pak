@@ -28,6 +28,10 @@ while [[ -z $(kubectl get route -n openshift-ingress router-default -o jsonpath=
   sleep $WAITING_TIME
 done
 
+# echo "Creating namespace ${NAMESPACE}"
+echo "creating namespace cp4na"
+kubectl create namespace ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
+
 echo "Deploying Catalog Option ${OPERATOR_CATALOG}"
 echo "${OPERATOR_CATALOG}" | oc apply -f -
 
@@ -37,9 +41,6 @@ echo "${COMMON_SERVICES_CATALOG}" | oc apply -f -
 echo "Deploying Catalog Option ${REDIS_CATALOG}"
 echo "${REDIS_CATALOG}" | oc apply -f -
 
-# echo "Creating namespace ${NAMESPACE}"
-echo "creating namespace cp4na"
-kubectl create namespace ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
 
 create_secret() {
   secret_name=$1
