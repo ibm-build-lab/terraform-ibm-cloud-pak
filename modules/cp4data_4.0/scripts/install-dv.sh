@@ -30,7 +30,8 @@ oc project ${OP_NAMESPACE}
 
 # Checking if the dv operator pods are ready and running. 
 
-./pod-status-check.sh ibm-dv-operator ${OP_NAMESPACE}
+# ./pod-status-check.sh ibm-dv-operator ${OP_NAMESPACE}
+sleep 10m
 
 # switch to zen namespace
 oc project ${NAMESPACE}
@@ -45,4 +46,5 @@ oc project ${NAMESPACE}
     --tolerance 1
 
 # check the dv cr status
-./check-cr-status.sh dvservice dv-service ${NAMESPACE} reconcileStatus
+# ./check-cr-status.sh dvservice dv-service ${NAMESPACE} reconcileStatus
+sleep 10m

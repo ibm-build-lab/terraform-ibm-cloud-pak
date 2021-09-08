@@ -23,8 +23,8 @@ oc project ${OP_NAMESPACE}
 
 # Checking if the wsl operator pods are ready and running. 
 
-./pod-status-check.sh ibm-cpd-ws-operator ${OP_NAMESPACE}
-
+# ./pod-status-check.sh ibm-cpd-ws-operator ${OP_NAMESPACE}
+sleep 10m
 # switch zen namespace
 
 oc project ${NAMESPACE}
@@ -46,4 +46,5 @@ cd ../scripts
 
 # check the CCS cr status
 
-./check-cr-status.sh ws ws-cr ${NAMESPACE} wsStatus
+# ./check-cr-status.sh ws ws-cr ${NAMESPACE} wsStatus
+sleep 10m

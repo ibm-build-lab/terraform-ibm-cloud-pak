@@ -22,7 +22,8 @@ CASE_PACKAGE_NAME="ibm-spss-1.0.0.tgz"
 
 # Checking if the spss operator pods are ready and running. 
 # checking status of ibm-cpd-spss-operator
-./pod-status-check.sh ibm-cpd-spss-operator ${OP_NAMESPACE}
+# ./pod-status-check.sh ibm-cpd-spss-operator ${OP_NAMESPACE}
+sleep 10m
 
 # switch to zen namespace
 oc project ${NAMESPACE}
@@ -44,4 +45,5 @@ echo $result
 cd ../scripts
 
 # check the CCS cr status
-./check-cr-status.sh spss spss-cr ${NAMESPACE} spssmodelerStatus
+# ./check-cr-status.sh spss spss-cr ${NAMESPACE} spssmodelerStatus
+sleep 10m

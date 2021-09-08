@@ -19,7 +19,8 @@ CASE_PACKAGE_NAME="ibm-cde-2.0.0.tgz"
 
 # Checking if the cde operator pods are ready and running. 
 # checking status of ibm-cde-operator
-./pod-status-check.sh ibm-cde-operator ${OP_NAMESPACE}
+# ./pod-status-check.sh ibm-cde-operator ${OP_NAMESPACE}
+sleep 10m
 
 # switch to zen namespace
 oc project ${NAMESPACE}
@@ -41,4 +42,5 @@ echo $result
 cd ../scripts
 
 # check the cde cr status
-./check-cr-status.sh CdeProxyService cde-cr ${NAMESPACE} cdeStatus
+# ./check-cr-status.sh CdeProxyService cde-cr ${NAMESPACE} cdeStatus
+sleep 10m

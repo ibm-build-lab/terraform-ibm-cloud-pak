@@ -30,7 +30,8 @@ sleep 1m
 
 # Checking if the db2oltp operator podb2oltp are ready and running. 	
 # checking status of db2oltp-operator	
-./pod-status-check.sh ibm-db2oltp-cp4d-operator ${OP_NAMESPACE}
+# ./pod-status-check.sh ibm-db2oltp-cp4d-operator ${OP_NAMESPACE}
+sleep 10m
 
 # switch to zen namespace	
 oc project ${NAMESPACE}
@@ -45,4 +46,5 @@ echo $result
 cd ../scripts
 
 # check the CCS cr status	
-./check-cr-status.sh Db2oltpService db2oltp-cr ${NAMESPACE} db2oltpStatus
+# ./check-cr-status.sh Db2oltpService db2oltp-cr ${NAMESPACE} db2oltpStatus
+sleep 10m

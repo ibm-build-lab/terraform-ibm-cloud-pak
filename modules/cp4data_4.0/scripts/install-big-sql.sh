@@ -27,7 +27,8 @@ oc project ${OP_NAMESPACE}
 
 # Checking if the bigsql operator pods are ready and running. 
 # checking status of ibm-bigsql-operator
-./pod-status-check.sh ibm-bigsql-operator ${OP_NAMESPACE}
+# ./pod-status-check.sh ibm-bigsql-operator ${OP_NAMESPACE}
+sleep 10m
 
 # switch to zen namespace
 oc project ${NAMESPACE}
@@ -40,4 +41,5 @@ oc project ${NAMESPACE}
     --tolerance 1
 
 # check the bigsql cr status
-./check-cr-status.sh bigsqlservice bigsql-service ${NAMESPACE} reconcileStatus
+# ./check-cr-status.sh bigsqlservice bigsql-service ${NAMESPACE} reconcileStatus
+sleep 10m

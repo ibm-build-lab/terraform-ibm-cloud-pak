@@ -24,7 +24,8 @@ CASE_PACKAGE_NAME="ibm-dods-4.0.0.tgz"
 
 # Checking if the dods operator pods are ready and running. 
 # checking status of ibm-cpd-dods-operator
-./pod-status-check.sh ibm-cpd-dods-operator ${OP_NAMESPACE}
+# ./pod-status-check.sh ibm-cpd-dods-operator ${OP_NAMESPACE}
+sleep 10m
 
 # switch to zen namespace
 oc project ${NAMESPACE}
@@ -40,4 +41,5 @@ echo $result
 cd ../scripts
 
 # check the CCS cr status
-./check-cr-status.sh DODS dods-cr ${NAMESPACE} dodsStatus
+# ./check-cr-status.sh DODS dods-cr ${NAMESPACE} dodsStatus
+sleep 10m

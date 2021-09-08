@@ -32,7 +32,8 @@ export WML_OPERATOR_CATALOG_NAMESPACE=openshift-marketplace
 
 # checking status of ibm-watson-wml-operator
 
-./pod-status-check.sh ibm-cpd-wml-operator ${OP_NAMESPACE}
+# ./pod-status-check.sh ibm-cpd-wml-operator ${OP_NAMESPACE}
+sleep 10m
 
 # switch zen namespace
 
@@ -55,4 +56,5 @@ cd ../scripts
 
 # check the WML cr status
 
-./check-cr-status.sh WmlBase wml-cr ${NAMESPACE} wmlStatus
+# ./check-cr-status.sh WmlBase wml-cr ${NAMESPACE} wmlStatus
+sleep 10m
