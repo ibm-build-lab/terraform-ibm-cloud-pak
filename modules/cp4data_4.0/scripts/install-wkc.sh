@@ -26,7 +26,8 @@ CASE_PACKAGE_NAME="ibm-wkc-4.0.0.tgz"
 
 # Checking if the wkc operator pods are ready and running. 
 
-./../pod-status-check.sh ibm-cpd-wkc-operator ${OP_NAMESPACE}
+# ./../pod-status-check.sh ibm-cpd-wkc-operator ${OP_NAMESPACE}
+sleep 10m
 
 # switch to zen namespace
 
@@ -47,7 +48,8 @@ result=$(oc create -f wkc-cr.yaml)
 echo $result
 
 # check the wkc cr status
-./../check-cr-status.sh wkc wkc-cr ${NAMESPACE} wkcStatus
+# ./../check-cr-status.sh wkc wkc-cr ${NAMESPACE} wkcStatus
+sleep 10m
 
 ## IIS cr installation 
 
@@ -70,7 +72,8 @@ CASE_PACKAGE_NAME="ibm-iis-4.0.0.tgz"
 
 # Checking if the wkc iis operator pods are ready and running. 
 # checking status of ibm-cpd-iis-operator
-./../pod-status-check.sh ibm-cpd-iis-operator ${OP_NAMESPACE}
+# ./../pod-status-check.sh ibm-cpd-iis-operator ${OP_NAMESPACE}
+sleep 10m
 
 # switch to zen namespace
 
@@ -90,7 +93,8 @@ result=$(oc create -f wkc-iis-cr.yaml)
 echo $result
 
 # check the wkc cr status
-./../check-cr-status.sh iis iis-cr ${NAMESPACE} iisStatus
+# ./../check-cr-status.sh iis iis-cr ${NAMESPACE} iisStatus
+sleep 10m
 
 # switch to zen namespace
 
@@ -108,4 +112,5 @@ result=$(oc create -f wkc-ug-cr.yaml)
 echo $result
 
 # check the wkc cr status
-./../check-cr-status.sh ug ug-cr ${NAMESPACE} ugStatus
+# ./../check-cr-status.sh ug ug-cr ${NAMESPACE} ugStatus
+sleep 10m

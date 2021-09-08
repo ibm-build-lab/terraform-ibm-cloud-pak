@@ -1,5 +1,18 @@
 #!/bin/bash
 
+echo '*** Seeing if cloudctl binary path works ***'
+result=$(./cloudctl-linux-amd64)
+echo $result
+
+wget https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-linux-amd64.tar.gz
+wget https://github.com/IBM/cloud-pak-cli/releases/latest/download/cloudctl-linux-amd64.tar.gz.sig
+
+tar -xvf cloudctl-linux-amd64.tar.gz
+
+echo '*** Seeing if cloudctl binary path works ***'
+result=$(./cloudctl-linux-amd64)
+echo $result
+
 wget https://raw.githubusercontent.com/IBM/cloud-pak/master/repo/case/ibm-wsl-2.0.0.tgz
 
 # Install wsl operator using CLI (OLM)
