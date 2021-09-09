@@ -46,6 +46,7 @@ cd ../files
 # ****** sed command for classic goes here *******
 if [[ ${ON_VPC} == false ]] ; then
     sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" wml-cr.yaml
+    sed -i -e "/storageVendor/d" wml-cr.yaml #storageVendor
 fi
 
 echo '*** executing **** oc create -f wml-cr.yaml'

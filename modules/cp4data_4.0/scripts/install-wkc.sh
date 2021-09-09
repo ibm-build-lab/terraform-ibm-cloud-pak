@@ -39,7 +39,7 @@ oc project ${NAMESPACE}
 # ****** sed command for classic goes here *******
 if [[ ${ON_VPC} == false ]] ; then
     sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" wkc-cr.yaml #storage_class_name
-    sed -i -e "s/portworx/ibm/g" wkc-cr.yaml #storageVendor
+    sed -i -e "/storageVendor/d" wkc-cr.yaml #storageVendor
 fi
 
 #sed -i -e "s/REPLACE_STORAGECLASS/${local.cpd-storageclass}/g" wkc-cr.yaml
@@ -84,7 +84,7 @@ oc project ${NAMESPACE}
 # ****** sed command for classic goes here *******
 if [[ ${ON_VPC} == false ]] ; then
     sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" wkc-iis-cr.yaml #storage_class_name
-    sed -i -e "s/portworx/ibm/g" wkc-iis-cr.yaml #StorageVendor
+    sed -i -e "/storageVendor/d" wkc-iis-cr.yaml #StorageVendor
 fi
 
 sed -i -e "s/REPLACE_NAMESPACE/${NAMESPACE}/g" wkc-iis-cr.yaml
@@ -104,7 +104,7 @@ oc project ${NAMESPACE}
 
 # ****** sed command for classic goes here *******
 if [[ ${ON_VPC} == false ]] ; then
-    sed -i -e "s/portworx/ibm/g" wkc-ug-cr.yaml #storageVendor
+    sed -i -e "/storageVendor/d" wkc-ug-cr.yaml #storageVendor
 fi
 
 echo '*** executing **** oc create -f wkc-ug-cr.yaml'

@@ -5,9 +5,10 @@
 
 wget https://raw.githubusercontent.com/IBM/cloud-pak/master/repo/case/ibm-analyticsengine-4.0.0.tgz
 
+# come back to this as to why
 # # Install spark operator using CLI (OLM)
-"cat > install-spark-operator.sh <<EOL\n${file("../cpd4_module/install-spark-operator.sh")}\nEOL",
-"sudo chmod +x install-spark.sh",
+# "cat > install-spark-operator.sh <<EOL\n${file("../cpd4_module/install-spark-operator.sh")}\nEOL",
+# "sudo chmod +x install-spark.sh",
 
 CASE_PACKAGE_NAME="ibm-analyticsengine-4.0.0.tgz"
 

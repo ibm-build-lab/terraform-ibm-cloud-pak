@@ -1,6 +1,6 @@
 #!/bin/bash
-
-"cat > spss-cr.yaml <<EOL\n${file("../cpd4_module/spss-cr.yaml")}\nEOL",
+# don't know what this line below was but it didn't work
+# "cat > spss-cr.yaml <<EOL\n${file("../cpd4_module/spss-cr.yaml")}\nEOL",
 
 # Case package. 
 wget https://raw.githubusercontent.com/IBM/cloud-pak/master/repo/case/ibm-spss-1.0.0.tgz
