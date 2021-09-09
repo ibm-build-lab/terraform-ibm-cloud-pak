@@ -30,7 +30,7 @@ done
 
 # echo "Creating namespace ${NAMESPACE}"
 echo "creating namespace cp4na"
-kubectl create namespace ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
+kubectl create namespace cp4na --dry-run=client -o yaml | kubectl apply -f -
 
 echo "Deploying Catalog Option ${OPERATOR_CATALOG}"
 echo "${OPERATOR_CATALOG}" | oc apply -f -
