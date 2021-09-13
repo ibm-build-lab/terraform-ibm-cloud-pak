@@ -6,6 +6,8 @@ locals {
   installation_content = templatefile("${path.module}/templates/Installation.yaml.tmpl", {
     namespace                    = var.namespace,
     on_vpc                       = var.on_vpc,
+    region                       = var.region,
+    zone                         = var.zone,
     install_infr_mgt_module      = var.install_infr_mgt_module,
     install_monitoring_module    = var.install_monitoring_module,
     install_security_svcs_module = var.install_security_svcs_module,

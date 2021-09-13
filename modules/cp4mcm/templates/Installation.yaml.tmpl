@@ -60,8 +60,8 @@ spec:
               storageClassName: ibmc-file-gold
               useDynamicProvisioning: true
           roks: true
-          roksRegion: us-south
-          roksZone: dal10
+          roksRegion: ${ region }
+          roksZone: ${ zone }
     - enabled: true
       name: ibm-management-service-library
     enabled: ${ install_infr_mgt_module }

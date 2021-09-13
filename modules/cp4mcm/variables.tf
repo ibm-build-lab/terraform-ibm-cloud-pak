@@ -17,6 +17,16 @@ variable "on_vpc" {
   description = "Cluster type. VPC: `on_vpc=true`, Classic: `on_vpc=false`"
 }
 
+variable "region" {
+  default     = "us-south"
+  description = "Region the Openshift cluster is provisioned on. List all available regions with: `ibmcloud regions`"
+}
+
+variable "zone" {
+  default     = "dal10"
+  description = "Zone in the region the Openshift cluster is provisioned on. List all available zones with: `ibmcloud ks zone ls --provider <classic | vpc-gen2>`"
+}
+
 variable "ibmcloud_api_key" {
   description = "IBMCloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
 }

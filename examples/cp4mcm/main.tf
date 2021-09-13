@@ -26,6 +26,8 @@ module "cp4mcm" {
   source = "../../modules/cp4mcm"
   enable = true
   on_vpc = var.on_vpc
+  region = var.region
+  zone   = var.zone
   ibmcloud_api_key = var.ibmcloud_api_key
 
   // ROKS cluster parameters:

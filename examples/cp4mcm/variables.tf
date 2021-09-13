@@ -13,6 +13,16 @@ variable "on_vpc" {
   description = "Is cluster a VPC cluster"
 }
 
+variable "region" {
+  default     = "us-south"
+  description = "Region the Openshift cluster is provisioned on. List all available regions with: `ibmcloud regions`"
+}
+
+variable "zone" {
+  default     = "dal10"
+  description = "Zone in the region the Openshift cluster is provisioned on. List all available zones with: `ibmcloud ks zone ls --provider <classic | vpc-gen2>`"
+}
+
 variable "entitled_registry_user_email" {
   type = string
   description = "Email address of the owner of the Entitled Registry Key"
@@ -22,7 +32,6 @@ variable "entitled_registry_key" {
   type        = string
   description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
 }
-
 
 variable "resource_group" {
   default     = "Default"
