@@ -45,42 +45,6 @@ variable "entitled_registry_user_email" {
 
 // Modules available to install on CP4D
 
-# variable "bedrock_zen_operator" {
-#   default = false
-#   type = bool
-#   description = "Install Bedrock Zen Operator. Only for Cloud Pak for Data v4.0"
-# }
-
-variable "install_ccs" {
-  default = false
-  type = bool
-  description = "Install CCS module. Only for Cloud Pak for Data v4.0"
-}
-
-variable "install_data_refinery" {
-  default = false
-  type = bool
-  description = "Install Data Refinery module. Only for Cloud Pak for Data v4.0"
-}
-
-variable "install_db2u_operator" {
-  default = false
-  type = bool
-  description = "Install DB2U Operator. Only for Cloud Pak for Data v4.0"
-}
-
-variable "install_dmc" {
-  default = false
-  type = bool
-  description = "Install DMC module. Only for Cloud Pak for Data v4.0"
-}
-
-variable "install_db2aaservice" {
-  default = false
-  type = bool
-  description = "Install DB2aaService module. Only for Cloud Pak for Data v4.0"
-}
-
 variable "install_wsl" {
   default = false
   type = bool
@@ -163,6 +127,12 @@ variable "install_big_sql" {
   default = false
   type = bool
   description = "Install Big SQL module. Only for Cloud Pak for Data v4.0"
+}
+
+variable "install_wsruntime" {
+  default = false
+  type = bool
+  description = "Install WS Runtime."
 }
 
 locals {

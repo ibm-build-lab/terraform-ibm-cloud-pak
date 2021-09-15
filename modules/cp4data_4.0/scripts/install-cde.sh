@@ -1,20 +1,17 @@
 #!/bin/bash
 
-
-# Case package.
-wget https://raw.githubusercontent.com/IBM/cloud-pak/master/repo/case/ibm-cde-2.0.0.tgz
-
-CASE_PACKAGE_NAME="ibm-cde-2.0.0.tgz"
-
 ## Install Operator
 
-./cloudctl-linux-amd64 case launch \
-  --case ${CASE_PACKAGE_NAME} \
-  --namespace ${OP_NAMESPACE} \
-  --tolerance=1 \
-  --action installOperator \
-  --inventory cdeOperatorSetup
+cd ../files
 
+sed -i -e s#OPERATOR_NAMESPACE#${OP_NAMESPACE}#g cde-sub.yaml
+
+echo '*** executing **** oc create -f cde-sub.yaml'
+result=$(oc create -f cde-sub.yaml)
+echo $result
+sleep 1m
+
+cd ../scripts
 
 
 # Checking if the cde operator pods are ready and running. 

@@ -1,29 +1,19 @@
 #!/bin/bash
 
-# Case package. 
-## bigsql case package 
-wget https://raw.githubusercontent.com/IBM/cloud-pak/master/repo/case/ibm-bigsql-case-7.2.0.tgz
 
-# # Install bigsql operator using CLI (OLM)
-CASE_PACKAGE_NAME="ibm-bigsql-case-7.2.0.tgz"
-
+# Install bigsql operator 
 oc project ${OP_NAMESPACE}
 
-## Install Catalog 
+cd ../files
 
-./cloudctl-linux-amd64 case launch --case ${CASE_PACKAGE_NAME} \
-    --namespace openshift-marketplace \
-    --action installCatalog \
-    --inventory bigsql \
-    --tolerance 1
+sed -i -e s#OPERATOR_NAMESPACE#${OP_NAMESPACE}#g big-sql-sub.yaml
 
-## Install Operator
+echo '*** executing **** oc create -f big-sql-sub.yaml'
+result=$(oc create -f big-sql-sub.yaml)
+echo $result
+sleep 1m
 
-./cloudctl-linux-amd64 case launch --case ${CASE_PACKAGE_NAME} \
-    --namespace ${OP_NAMESPACE} \
-    --action installOperator \
-    --inventory bigsql \
-    --tolerance 1 
+cd ../scripts
 
 # Checking if the bigsql operator pods are ready and running. 
 # checking status of ibm-bigsql-operator
@@ -34,11 +24,11 @@ sleep 10m
 oc project ${NAMESPACE}
 
 ## Install Custom Resource bigsql 
-./cloudctl-linux-amd64 case launch --case ${CASE_PACKAGE_NAME} \
-    --namespace ${NAMESPACE} \
-    --action applyCustomResources \
-    --inventory bigsql \
-    --tolerance 1
+
+sed -i -e s#REPLACE_NAMESPACE#${NAMESPACE}#g big-sql-cr.yaml
+echo '*** executing **** oc create -f big-sql-cr.yaml'
+result=$(oc create -f big-sql-cr.yaml)
+echo $result
 
 # check the bigsql cr status
 # ./check-cr-status.sh bigsqlservice bigsql-service ${NAMESPACE} reconcileStatus

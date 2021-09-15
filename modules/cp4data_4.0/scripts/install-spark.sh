@@ -1,34 +1,20 @@
 #!/bin/bash
 
 
-# Case package. 
 
-wget https://raw.githubusercontent.com/IBM/cloud-pak/master/repo/case/ibm-analyticsengine-4.0.0.tgz
-
-# come back to this as to why
-# # Install spark operator using CLI (OLM)
-# "cat > install-spark-operator.sh <<EOL\n${file("../cpd4_module/install-spark-operator.sh")}\nEOL",
-# "sudo chmod +x install-spark.sh",
-
-CASE_PACKAGE_NAME="ibm-analyticsengine-4.0.0.tgz"
-
-
-oc project ${OP_NAMESPACE}
-## Install Catalog 
-
-./cloudctl-linux-amd64 case launch --case ${CASE_PACKAGE_NAME} \
-    --namespace ${OP_NAMESPACE}\
-    --inventory analyticsengineOperatorSetup \
-    --action installCatalog \
-    --tolerance 1
 
 ## Install Operator
 
-./cloudctl-linux-amd64 case launch --case ${CASE_PACKAGE_NAME} \
-    --namespace ${OP_NAMESPACE} \
-    --inventory analyticsengineOperatorSetup \
-    --action install \
-    --tolerance=1
+cd ../files
+
+sed -i -e s#OPERATOR_NAMESPACE#${OP_NAMESPACE}#g spark-sub.yaml
+
+echo '*** executing **** oc create -f spark-sub.yaml'
+result=$(oc create -f spark-sub.yaml)
+echo $result
+sleep 1m
+
+cd ../scripts
 
 # Checking if the spark operator pods are ready and running. 
 # checking status of ibm-cpd-ae-operator

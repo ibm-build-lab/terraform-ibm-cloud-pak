@@ -1,19 +1,17 @@
 #!/bin/bash
 
-wget https://raw.githubusercontent.com/IBM/cloud-pak/master/repo/case/ibm-watson-openscale-2.0.0.tgz
+sed -i -e s#OPERATOR_NAMESPACE#${OP_NAMESPACE}#g wos-sub.yaml
 
-# Install WOS operator using CLI (OLM)
+cd ../files
 
-CASE_PACKAGE_NAME="ibm-watson-openscale-2.0.0.tgz"
-
-oc project ${OP_NAMESPACE}
-
-
-./cloudctl-linux-amd64 case launch --case ./${CASE_PACKAGE_NAME} \
-    --namespace ${OP_NAMESPACE}                                   \
-    --tolerance 1
+echo '*** executing **** oc create -f wos-sub.yaml'
+result=$(oc create -f wos-sub.yaml)
+echo $result
+sleep 1m
 
 # Checking if the wos operator pods are ready and running. 
+
+cd ../scripts
 
 # ./pod-status-check.sh ibm-cpd-wos-operator ${OP_NAMESPACE}
 sleep 10m
@@ -24,19 +22,21 @@ oc project ${NAMESPACE}
 
 cd ../files
 
-# Create wsl CR:
+# Create WOS CR:
 
 # ****** sed command for classic goes here *******
 if [[ ${ON_VPC} == false ]] ; then
-    sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" openscale-cr.yaml
+    sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" wos-cr.yaml
 fi
 
-result=$(oc create -f openscale-cr.yaml)
+sed -i -e s#CPD_NAMESPACE#${NAMESPACE}#g wos-cr.yaml
+
+result=$(oc create -f wos-cr.yaml)
 echo $result
 
 cd ../scripts
 
-# check the CCS cr status
+# check the WOS CR status
 
 # ./check-cr-status.sh WOService aiopenscale ${NAMESPACE} wosStatus
 sleep 10m

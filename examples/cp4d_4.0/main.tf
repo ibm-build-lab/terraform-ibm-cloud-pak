@@ -70,11 +70,7 @@ module "cp4data" {
 
 
   // Parameters to install submodules
-  install_ccs = var.install_ccs
-  install_data_refinery = var.install_data_refinery
-  install_db2u_operator = var.install_db2u_operator
-  install_dmc = var.install_dmc
-  install_db2aaservice = var.install_db2aaservice
+
   install_wsl = var.install_wsl
   install_aiopenscale = var.install_aiopenscale
   install_wml = var.install_wml
@@ -89,4 +85,5 @@ module "cp4data" {
   install_db2oltp = var.install_db2oltp
   install_db2wh = var.install_db2wh
   install_big_sql = var.install_big_sql
+  install_wsruntime = var.wsruntime
 }

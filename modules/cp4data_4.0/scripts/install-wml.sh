@@ -1,34 +1,19 @@
 #!/bin/bash
 
-# Case package. 
+# Install wml operator 
 
-wget https://raw.githubusercontent.com/IBM/cloud-pak/master/repo/case/ibm-wml-cpd-4.0.0.tgz
+cd ../files
 
-# # Install wml operator using CLI (OLM)
+sed -i -e s#OPERATOR_NAMESPACE#${OP_NAMESPACE}#g wml-sub.yaml
 
-
-CASE_PACKAGE_NAME="ibm-wml-cpd-4.0.0.tgz"
-
-export WML_OPERATOR_CATALOG_NAMESPACE=openshift-marketplace
-
-
-## Install catalog 
-
-./cloudctl-linux-amd64 case launch --case ${CASE_PACKAGE_NAME} \
-    --namespace ${WML_OPERATOR_CATALOG_NAMESPACE}  \
-    --inventory  wmlOperatorSetup \
-    --action installCatalog \
-    --tolerance 1
-
-## Install Operator
-
-./cloudctl-linux-amd64 case launch --case ${CASE_PACKAGE_NAME} \
-    --namespace ${OP_NAMESPACE} \
-    --inventory  wmlOperatorSetup \
-    --action install \
-    --tolerance=1
+echo '*** executing **** oc create -f wml-sub.yaml'
+result=$(oc create -f wml-sub.yaml)
+echo $result
+sleep 1m
 
 # Checking if the wml operator pods are ready and running. 
+
+cd ../scripts
 
 # checking status of ibm-watson-wml-operator
 
@@ -49,6 +34,7 @@ if [[ ${ON_VPC} == false ]] ; then
     sed -i -e "/storageVendor/d" wml-cr.yaml #storageVendor
 fi
 
+sed -i -e s#CPD_NAMESPACE#${NAMESPACE}#g wml-cr.yaml
 echo '*** executing **** oc create -f wml-cr.yaml'
 result=$(oc create -f wml-cr.yaml)
 echo $result

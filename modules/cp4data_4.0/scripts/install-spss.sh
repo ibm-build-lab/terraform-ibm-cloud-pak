@@ -1,24 +1,19 @@
 #!/bin/bash
-# don't know what this line below was but it didn't work
-# "cat > spss-cr.yaml <<EOL\n${file("../cpd4_module/spss-cr.yaml")}\nEOL",
 
-# Case package. 
-wget https://raw.githubusercontent.com/IBM/cloud-pak/master/repo/case/ibm-spss-1.0.0.tgz
 
-# # Install spss operator using CLI (OLM)
-CASE_PACKAGE_NAME="ibm-spss-1.0.0.tgz"
 
-./cloudctl-linux-amd64 case launch --tolerance 1 --case ./${CASE_PACKAGE_NAME} \
-   --namespace ${OP_NAMESPACE}  \
-   --inventory spssSetup  \
-   --action installCatalog
+# # Install spss operator 
 
-./cloudctl-linux-amd64 case launch --tolerance 1 --case ./${CASE_PACKAGE_NAME} \
-   --namespace ${OP_NAMESPACE}  \
-   --action installOperator \
-   --inventory spssSetup  
-   # --args "--registry cp.icr.io"
+cd ../files
 
+sed -i -e s#OPERATOR_NAMESPACE#${OP_NAMESPACE}#g spss-sub.yaml
+
+echo '*** executing **** oc create -f spss-sub.yaml'
+result=$(oc create -f spss-sub.yaml)
+echo $result
+sleep 1m
+
+cd ../scripts
 
 # Checking if the spss operator pods are ready and running. 
 # checking status of ibm-cpd-spss-operator

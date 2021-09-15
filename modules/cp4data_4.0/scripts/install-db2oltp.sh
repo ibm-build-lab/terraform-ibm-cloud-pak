@@ -1,32 +1,18 @@
 #!/bin/bash
 
-
-# Case package for db2oltp
-wget https://raw.githubusercontent.com/IBM/cloud-pak/master/repo/case/ibm-db2oltp-4.0.0.tgz
-
-
-# Install db2oltp operator using CLI (OLM)	
-CASE_PACKAGE_NAME="ibm-db2oltp-4.0.0.tgz"
-
+# Install db2oltp operator 
 oc project ${OP_NAMESPACE}
 
-## Install Catalog 
+cd ../files
 
-./cloudctl-linux-amd64 case launch --action installCatalog \
-    --case ${CASE_PACKAGE_NAME} \
-    --inventory db2oltpOperatorSetup \
-    --namespace openshift-marketplace \
-    --tolerance 1
+sed -i -e s#OPERATOR_NAMESPACE#${OP_NAMESPACE}#g db2oltp-sub.yaml
 
-## Install Operator
+echo '*** executing **** oc create -f db2oltp-sub.yaml'
+result=$(oc create -f db2oltp-sub.yaml)
+echo $result
+sleep 1m
 
-./cloudctl-linux-amd64 case launch  --action installOperator \
-    --case ${CASE_PACKAGE_NAME} \
-    --inventory db2oltpOperatorSetup \
-    --namespace ${OP_NAMESPACE} \
-    --tolerance 1
-    
-sleep 1m 
+cd ../scripts
 
 # Checking if the db2oltp operator podb2oltp are ready and running. 	
 # checking status of db2oltp-operator	
