@@ -86,4 +86,5 @@ module "cp4data" {
   install_db2wh = var.install_db2wh
   install_big_sql = var.install_big_sql
   install_wsruntime = var.install_wsruntime
+  
 }
