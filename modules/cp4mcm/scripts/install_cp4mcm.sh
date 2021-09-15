@@ -87,3 +87,7 @@ echo "Waiting for MCM endpoint to be ready. NOTE: you will see an error until en
 while ! kubectl get route cp-console --namespace ibm-common-services; do
   sleep ${MCM_WAIT_SEC};
 done
+
+echo "Cloud Pak for MCM has been installed with the default configuration for all requested modules."
+echo "For advanced configuration, please refer to https://www.ibm.com/docs/en/cloud-paks/cp-management/2.3.x?topic=installation-configuration."
+echo "For Post Installation tasks, refer to https://www.ibm.com/docs/en/cloud-paks/cp-management/2.3.x?topic=installation-post-tasks."
