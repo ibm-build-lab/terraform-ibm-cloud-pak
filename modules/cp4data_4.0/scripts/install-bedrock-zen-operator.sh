@@ -82,7 +82,7 @@ sleep 1m
 oc patch NamespaceScope common-service -n ibm-common-services --type=merge --patch='{"spec": {"csvInjector": {"enable": true} } }'
 
 
-sed -i -e s#OPERATOR_NAMESPACE#${OP_NAMESPACE}#g cpd-operator-sub.yaml
+sed -i -e "s/OPERATOR_NAMESPACE/${OP_NAMESPACE}/g" cpd-operator-sub.yaml
 echo '*** executing **** oc create -f cpd-operator-sub.yaml'
 result=$(oc create -f cpd-operator-sub.yaml)
 echo $result

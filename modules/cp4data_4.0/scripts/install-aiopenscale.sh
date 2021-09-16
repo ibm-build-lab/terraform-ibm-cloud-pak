@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sed -i -e s#OPERATOR_NAMESPACE#${OP_NAMESPACE}#g wos-sub.yaml
+sed -i -e "s/OPERATOR_NAMESPACE/${OP_NAMESPACE}/g" wos-sub.yaml
 
 cd ../files
 

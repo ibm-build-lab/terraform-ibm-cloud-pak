@@ -6,7 +6,7 @@ oc project ${OP_NAMESPACE}
 
 cd ../files
 
-sed -i -e s#OPERATOR_NAMESPACE#${OP_NAMESPACE}#g dv-sub.yaml
+sed -i -e "s/OPERATOR_NAMESPACE/${OP_NAMESPACE}/g" dv-sub.yaml
 
 echo '*** executing **** oc create -f dv-sub.yaml'
 result=$(oc create -f dv-sub.yaml)

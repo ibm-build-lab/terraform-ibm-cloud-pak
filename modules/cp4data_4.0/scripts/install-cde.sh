@@ -4,7 +4,7 @@
 
 cd ../files
 
-sed -i -e s#OPERATOR_NAMESPACE#${OP_NAMESPACE}#g cde-sub.yaml
+sed -i -e "s/OPERATOR_NAMESPACE/${OP_NAMESPACE}/g" cde-sub.yaml
 
 echo '*** executing **** oc create -f cde-sub.yaml'
 result=$(oc create -f cde-sub.yaml)

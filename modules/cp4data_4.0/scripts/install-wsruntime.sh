@@ -4,7 +4,7 @@
 
 cd ../files
 
-sed -i -e s#OPERATOR_NAMESPACE#${OP_NAMESPACE}#g wsruntime-sub.yaml
+sed -i -e "s/OPERATOR_NAMESPACE/${OP_NAMESPACE}/g" wsruntime-sub.yaml
 
 echo '*** executing **** oc create -f wsruntime-sub.yaml'
 result=$(oc create -f wsruntime-sub.yaml)

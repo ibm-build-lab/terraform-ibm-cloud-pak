@@ -6,7 +6,7 @@ oc project ${OP_NAMESPACE}
 
 cd ../files
 
-sed -i -e s#OPERATOR_NAMESPACE#${OP_NAMESPACE}#g big-sql-sub.yaml
+sed -i -e "s/OPERATOR_NAMESPACE/${OP_NAMESPACE}/g" big-sql-sub.yaml
 
 echo '*** executing **** oc create -f big-sql-sub.yaml'
 result=$(oc create -f big-sql-sub.yaml)

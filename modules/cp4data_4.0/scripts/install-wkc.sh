@@ -8,7 +8,7 @@ cd wkc-files
 ## Install WKC Operator
 oc project ${OP_NAMESPACE}
 
-sed -i -e s#OPERATOR_NAMESPACE#${OP_NAMESPACE}#g wkc-sub.yaml
+sed -i -e "s/OPERATOR_NAMESPACE/${OP_NAMESPACE}/g" wkc-sub.yaml
 
 echo '*** executing **** oc create -f wkc-sub.yaml'
 result=$(oc create -f wkc-sub.yaml)

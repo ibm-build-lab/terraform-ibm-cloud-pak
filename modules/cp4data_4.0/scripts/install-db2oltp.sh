@@ -5,7 +5,7 @@ oc project ${OP_NAMESPACE}
 
 cd ../files
 
-sed -i -e s#OPERATOR_NAMESPACE#${OP_NAMESPACE}#g db2oltp-sub.yaml
+sed -i -e "s/OPERATOR_NAMESPACE/${OP_NAMESPACE}/g" db2oltp-sub.yaml
 
 echo '*** executing **** oc create -f db2oltp-sub.yaml'
 result=$(oc create -f db2oltp-sub.yaml)

@@ -7,7 +7,7 @@
 
 cd ../files
 
-sed -i -e s#OPERATOR_NAMESPACE#${OP_NAMESPACE}#g spark-sub.yaml
+sed -i -e "s/OPERATOR_NAMESPACE/${OP_NAMESPACE}/g" spark-sub.yaml
 
 echo '*** executing **** oc create -f spark-sub.yaml'
 result=$(oc create -f spark-sub.yaml)
