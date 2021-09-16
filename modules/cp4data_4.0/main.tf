@@ -478,6 +478,6 @@ resource "null_resource" "install_wsruntime" {
     null_resource.install_ds,
     null_resource.install_db2oltp,
     null_resource.install_db2wh,
-    null_resource.install_bigsql,
+    null_resource.install_big_sql,
   ]
 }
