@@ -1,14 +1,11 @@
 #!/bin/bash
 
 
-
-
 ## Install Operator
 
 cd ../files
 
 sed -i -e "s/OPERATOR_NAMESPACE/${OP_NAMESPACE}/g" spark-sub.yaml
-
 echo '*** executing **** oc create -f spark-sub.yaml'
 result=$(oc create -f spark-sub.yaml)
 echo $result
@@ -34,7 +31,7 @@ if [[ ${ON_VPC} == false ]] ; then
     sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" spark-cr.yaml
 fi
 
-sed -i -e "s/BUILD_NUMBER/4.0.0/g" spark-cr.yaml
+sed -i -e "s/REPLACE_NAMESPACE/${NAMESPACE}/g" spark-cr.yaml
 echo '*** executing **** oc create -f spark-cr.yaml'
 result=$(oc create -f spark-cr.yaml)
 echo $result

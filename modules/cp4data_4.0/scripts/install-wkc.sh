@@ -9,7 +9,6 @@ cd wkc-files
 oc project ${OP_NAMESPACE}
 
 sed -i -e "s/OPERATOR_NAMESPACE/${OP_NAMESPACE}/g" wkc-sub.yaml
-
 echo '*** executing **** oc create -f wkc-sub.yaml'
 result=$(oc create -f wkc-sub.yaml)
 echo $result
@@ -37,6 +36,7 @@ if [[ ${ON_VPC} == false ]] ; then
     sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" wkc-cr.yaml #storageClass
 fi
 
+sed -i -e "s/REPLACE_NAMESPACE/${NAMESPACE}/g" wkc-cr.yaml
 echo '*** executing **** oc create -f wkc-cr.yaml'
 result=$(oc create -f wkc-cr.yaml)
 echo $result

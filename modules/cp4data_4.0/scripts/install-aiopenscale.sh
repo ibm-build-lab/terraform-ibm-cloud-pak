@@ -1,12 +1,13 @@
 #!/bin/bash
 
-sed -i -e "s/OPERATOR_NAMESPACE/${OP_NAMESPACE}/g" wos-sub.yaml
 
 cd ../files
 
+sed -i -e "s/OPERATOR_NAMESPACE/${OP_NAMESPACE}/g" wos-sub.yaml
 echo '*** executing **** oc create -f wos-sub.yaml'
 result=$(oc create -f wos-sub.yaml)
 echo $result
+
 sleep 1m
 
 # Checking if the wos operator pods are ready and running. 
@@ -29,8 +30,8 @@ if [[ ${ON_VPC} == false ]] ; then
     sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" wos-cr.yaml
 fi
 
-sed -i -e s#CPD_NAMESPACE#${NAMESPACE}#g wos-cr.yaml
-
+sed -i -e "s/CPD_NAMESPACE/${NAMESPACE}/g" wos-cr.yaml
+echo '*** executing **** oc create -f wos-cr.yaml'
 result=$(oc create -f wos-cr.yaml)
 echo $result
 

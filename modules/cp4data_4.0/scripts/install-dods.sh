@@ -7,10 +7,10 @@
 cd ../files
 
 sed -i -e "s/OPERATOR_NAMESPACE/${OP_NAMESPACE}/g" dods-sub.yaml
-
 echo '*** executing **** oc create -f dods-sub.yaml'
 result=$(oc create -f dods-sub.yaml)
 echo $result
+
 sleep 1m
 
 cd ../scripts
@@ -27,6 +27,7 @@ cd ../files
 
 # Create dods CR: 
 
+sed -i -e "s/REPLACE_NAMESPACE/${NAMESPACE}/g" dods-cr.yaml
 echo '*** executing **** oc create -f dods-cr.yaml'
 result=$(oc create -f dods-cr.yaml)
 echo $result

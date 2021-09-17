@@ -6,10 +6,10 @@ oc project ${OP_NAMESPACE}
 cd ../files
 
 sed -i -e "s/OPERATOR_NAMESPACE/${OP_NAMESPACE}/g" db2oltp-sub.yaml
-
 echo '*** executing **** oc create -f db2oltp-sub.yaml'
 result=$(oc create -f db2oltp-sub.yaml)
 echo $result
+
 sleep 1m
 
 cd ../scripts
@@ -25,6 +25,7 @@ oc project ${NAMESPACE}
 cd ../files
 
 # Create db2oltp CR: 	
+sed -i -e "s/REPLACE_NAMESPACE/${NAMESPACE}/g" db2oltp-cr.yaml
 echo '*** executing **** oc create -f db2oltp-cr.yaml'
 result=$(oc create -f db2oltp-cr.yaml)
 echo $result

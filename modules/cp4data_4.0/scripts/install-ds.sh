@@ -8,8 +8,8 @@ oc patch zenservice lite-cr --type merge --patch '{"spec":{"image_digests": {"ic
 cd ../files
 
 oc project ${OP_NAMESPACE}
-sed -i -e "s/OPERATOR_NAMESPACE/${OP_NAMESPACE}/g" ds-sub.yaml
 
+sed -i -e "s/OPERATOR_NAMESPACE/${OP_NAMESPACE}/g" ds-sub.yaml
 echo '*** executing **** oc create -f ds-sub.yaml'
 result=$(oc create -f ds-sub.yaml)
 echo $result
@@ -28,6 +28,7 @@ oc project ${NAMESPACE}
 cd ../files
 
 # Create ds CR: 	
+sed -i -e "s/REPLACE_NAMESPACE/${NAMESPACE}/g" ds-cr.yaml
 echo '*** executing **** oc create -f ds-cr.yaml'
 result=$(oc create -f ds-cr.yaml)
 echo $result
