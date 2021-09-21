@@ -66,8 +66,9 @@ module "cp4data" {
   // IBM Cloud API Key
   ibmcloud_api_key          = var.ibmcloud_api_key
 
-  # bedrock_zen_operator = var.bedrock_zen_operator
-
+  region = var.region
+  resource_group_name = var.resource_group_name
+  cluster_id = var.cluster_id
 
   // Parameters to install submodules
 
