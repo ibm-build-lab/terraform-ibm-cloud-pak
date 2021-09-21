@@ -11,11 +11,11 @@ resource "null_resource" "bedrock_zen_operator" {
     environment = {
       ENTITLEMENT_USER = var.entitled_registry_user_email
       ENTITLEMENT_KEY = var.entitled_registry_key
-      # CLUSTER_NAME = "${var.unique_id}-cluster"
+      CLUSTER_NAME = var.cluster_id
       KUBECONFIG = var.cluster_config_path
       IBMCLOUD_APIKEY = var.ibmcloud_api_key
-      # IBMCLOUD_RG_NAME = local.resource_group_name
-      # REGION = local.region
+      IBMCLOUD_RG_NAME = var.resource_group_name
+      REGION = var.region
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC = var.on_vpc
@@ -37,7 +37,7 @@ resource "null_resource" "install_wsl" {
   
   provisioner "local-exec" {
     environment = {
-      # CLUSTER_NAME = "${var.unique_id}-cluster"
+      CLUSTER_NAME = var.cluster_id
       KUBECONFIG = var.cluster_config_path
       OP_NAMESPACE = var.operator_namespace
       ON_VPC = var.on_vpc
@@ -60,7 +60,7 @@ resource "null_resource" "install_aiopenscale" {
   
   provisioner "local-exec" {
     environment = {
-      # CLUSTER_NAME = "${var.unique_id}-cluster"
+      CLUSTER_NAME = var.cluster_id
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
@@ -84,7 +84,7 @@ resource "null_resource" "install_wml" {
   
   provisioner "local-exec" {
     environment = {
-      # CLUSTER_NAME = "${var.unique_id}-cluster"
+      CLUSTER_NAME = var.cluster_id
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
@@ -109,7 +109,7 @@ resource "null_resource" "install_wkc" {
   
   provisioner "local-exec" {
     environment = {
-      # CLUSTER_NAME = "${var.unique_id}-cluster"
+      CLUSTER_NAME = var.cluster_id
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
@@ -135,7 +135,7 @@ resource "null_resource" "install_dv" {
   
   provisioner "local-exec" {
     environment = {
-      # CLUSTER_NAME = "${var.unique_id}-cluster"
+      CLUSTER_NAME = var.cluster_id
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
@@ -162,7 +162,7 @@ resource "null_resource" "install_spss" {
   
   provisioner "local-exec" {
     environment = {
-      # CLUSTER_NAME = "${var.unique_id}-cluster"
+      CLUSTER_NAME = var.cluster_id
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
@@ -190,7 +190,7 @@ resource "null_resource" "install_cde" {
   
   provisioner "local-exec" {
     environment = {
-      # CLUSTER_NAME = "${var.unique_id}-cluster"
+      CLUSTER_NAME = var.cluster_id
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
@@ -219,7 +219,7 @@ resource "null_resource" "install_spark" {
   
   provisioner "local-exec" {
     environment = {
-      # CLUSTER_NAME = "${var.unique_id}-cluster"
+      CLUSTER_NAME = var.cluster_id
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
@@ -249,7 +249,7 @@ resource "null_resource" "install_dods" {
   
   provisioner "local-exec" {
     environment = {
-      # CLUSTER_NAME = "${var.unique_id}-cluster"
+      CLUSTER_NAME = var.cluster_id
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
@@ -280,7 +280,7 @@ resource "null_resource" "install_ca" {
   
   provisioner "local-exec" {
     environment = {
-      # CLUSTER_NAME = "${var.unique_id}-cluster"
+      CLUSTER_NAME = var.cluster_id
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
@@ -312,7 +312,7 @@ resource "null_resource" "install_ds" {
   
   provisioner "local-exec" {
     environment = {
-      # CLUSTER_NAME = "${var.unique_id}-cluster"
+      CLUSTER_NAME = var.cluster_id
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
@@ -345,7 +345,7 @@ resource "null_resource" "install_db2oltp" {
   
   provisioner "local-exec" {
     environment = {
-      # CLUSTER_NAME = "${var.unique_id}-cluster"
+      CLUSTER_NAME = var.cluster_id
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
@@ -379,7 +379,7 @@ resource "null_resource" "install_db2wh" {
   
   provisioner "local-exec" {
     environment = {
-      # CLUSTER_NAME = "${var.unique_id}-cluster"
+      CLUSTER_NAME = var.cluster_id
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
@@ -414,7 +414,7 @@ resource "null_resource" "install_big_sql" {
   
   provisioner "local-exec" {
     environment = {
-      # CLUSTER_NAME = "${var.unique_id}-cluster"
+      CLUSTER_NAME = var.cluster_id
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
@@ -450,7 +450,7 @@ resource "null_resource" "install_wsruntime" {
   
   provisioner "local-exec" {
     environment = {
-      # CLUSTER_NAME = "${var.unique_id}-cluster"
+      CLUSTER_NAME = var.cluster_id
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace

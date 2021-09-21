@@ -4,16 +4,16 @@
 # Setup global_pull secret 
 ./setup-global-pull-secret-bedrock.sh ${ENTITLEMENT_USER} ${ENTITLEMENT_KEY}
 
-# ibmcloud login --apikey ${IBMCLOUD_APIKEY} -g ${IBMCLOUD_RG_NAME} -r ${REGION}
+ibmcloud login --apikey ${IBMCLOUD_APIKEY} -g ${IBMCLOUD_RG_NAME} -r ${REGION}
 
-# ./roks-update.sh ${CLUSTER_NAME}
+./roks-update.sh ${CLUSTER_NAME}
 
 # attempt to fix norootsquash registry complaints in daemon set pods
-kubectl -n kube-system create secret docker-registry ibm-entitlement-key \
-   --docker-server=cp.icr.io \
-   --docker-username=cp \
-   --docker-password=${ENTITLEMENT_KEY} \
-   --docker-email=${ENTITLEMENT_USER}
+# kubectl -n kube-system create secret docker-registry ibm-entitlement-key \
+#    --docker-server=cp.icr.io \
+#    --docker-username=cp \
+#    --docker-password=${ENTITLEMENT_KEY} \
+#    --docker-email=${ENTITLEMENT_USER}
 
 
 cd ../files

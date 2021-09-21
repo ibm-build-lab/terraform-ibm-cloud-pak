@@ -1,4 +1,7 @@
-variable "operator_namespace" {}
+variable "operator_namespace" {
+  description = "Needs to be ibm-common-services."
+  default = "ibm-common-services"
+}
 
 variable "cluster_id" {
   description = "ROKS cluster id. Use the ROKS terraform module or other way to create it"
@@ -10,10 +13,12 @@ variable "ibmcloud_api_key" {
 
 variable "region" {
   description = "Region of the cluster"
+  default = "us-south"
 }
 
 variable "resource_group_name" {
   description = "Resource group that the cluster is created in"
+  default = "cloud-pak-sandbox-ibm"
 }
 
 variable "on_vpc" {
@@ -31,6 +36,7 @@ variable "accept_cpd_license" {
 variable "worker_node_flavor" {
   type        = string
   description = "Flavor used to determine worker node hardware"
+  default     = "b3c.16x64"
 }
 
 variable "entitled_registry_key" {
@@ -40,7 +46,8 @@ variable "entitled_registry_key" {
 
 variable "entitled_registry_user_email" {
   type        = string
-  description = "Docker email address"
+  description = "CPD Registry Username default is cp for bedrock script setup."
+  default     = "cp"
 }
 
 // Modules available to install on CP4D

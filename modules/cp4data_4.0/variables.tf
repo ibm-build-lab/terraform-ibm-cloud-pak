@@ -1,8 +1,26 @@
 # variable "region" {}
-variable "ibmcloud_api_key" {}
+# variable "ibmcloud_api_key" {}
 # variable "resource_group_name" {}
-variable "operator_namespace" {}
 
+variable "operator_namespace" {
+  description = "Needs to be ibm-common-services."
+}
+
+variable "cluster_id" {
+  description = "ROKS cluster id. Use the ROKS terraform module or other way to create it"
+}
+
+variable "ibmcloud_api_key" {
+  description = "IBMCloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
+}
+
+variable "region" {
+  description = "Region of the cluster"
+}
+
+variable "resource_group_name" {
+  description = "Resource group that the cluster is created in"
+}
 
 variable "enable" {
   default     = true
@@ -34,7 +52,9 @@ variable "entitled_registry_key" {
 }
 
 variable "entitled_registry_user_email" {
-  description = "Docker email address"
+  type        = string
+  description = "CPD Registry Username default is cp for bedrock script setup."
+  default     = "cp"
 }
 
 variable "accept_cpd_license" {
