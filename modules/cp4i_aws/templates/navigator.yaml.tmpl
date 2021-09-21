@@ -1,0 +1,13 @@
+apiVersion: integration.ibm.com/v1beta1
+kind: PlatformNavigator
+metadata:
+    name: cp4i-navigator
+spec:
+    license:
+        accept: true
+        license: L-RJON-BZFQU2
+    mqDashboard: true
+    replicas: 3
+    version: 2021.2.1
+    storage:
+        class: ${ storageclass }
