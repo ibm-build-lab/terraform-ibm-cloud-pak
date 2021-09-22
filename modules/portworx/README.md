@@ -1,4 +1,4 @@
-# Terraform Module to install Portworx
+# Terraform Module to install Portworx on a VPC cluster
 
 This Terraform Module installs the **Portworx Service** on an Openshift (ROKS) cluster on IBM Cloud.
 

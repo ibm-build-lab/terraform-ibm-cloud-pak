@@ -3,18 +3,23 @@
 This folder contains examples using the Infrastructure as Code or Terraform modules located [here](../modules).  These examples will install Cloud Paks on an existing **Openshift** (ROKS) cluster on IBM Cloud. At this time the supported components are:
 
 - ROKS stand alone cluster in either VPC or Classic
+- Portworx on VPC
+- LDAP on Classic
 - Automation Foundation (IAF)
-- Cloud Pak for Automation (CP4Auto)
+- Cloud Pak for Business Automation (CP4BA)
 - Cloud Pak for Data (CP4Data)
 - Cloud Pak for Integration (CP4Int)
 - Cloud Pak for Multi Cloud Management (CP4MCM)
 - Cloud Pak for Security
+- Cloud Pak for AIOps
 
 ## Run using IBM Cloud Schematics
 
 For instructions to run these examples using IBM Schematics go [here](./Using_Schematics.md)
 
 For more information on IBM Schematics, refer [here](https://cloud.ibm.com/docs/schematics?topic=schematics-get-started-terraform).
+
+**NOTE:** LDAP and CP4Security can not be run from Schematics due to manual steps required.
 
 ## Run using local Terraform Client
 
@@ -29,16 +34,19 @@ Each Cloud Pak subdirectory contains the following files:
 - `main.tf`: contains the code provision the Cloud Pak, you should start here to know what Terraform does. This uses two Terraform modules: the ROKS module and a Cloud Pak module. The ROKS module is used to provision an OpenShift cluster where the Cloud Pak will be installed. Then the Cloud Pak module is applied to install the Cloud Pak. To know more about these Terraform modules refer to the following section [Cloud Pak External Terraform Modules](#cloud-pak-external-terraform-modules).
 - `variables.tf`: contains all the input parameters. The input parameters are explained below but you can get additional information about them in the README of each Cloud Pak directory.
 - `outputs.tf`: contains all the output parameters. The output parameters are explained below but you can get additional information about them in the README of each Cloud Pak directory.
-- `terraform.tfvars`: although the `variables.tf` defines the input variables and the default values, the `terraform.tfvars` also contains default values to access and modify. If you'd like to customize your resources try to modify the values in this file first.
+- **Optional**`terraform.tfvars`: although the `variables.tf` defines the input variables and the default values, the `terraform.tfvars` also contains default values to access and modify. If you'd like to customize your resources try to modify the values in this file first.
 
 The Input and Output parameters, as well as basic validations and uninstall process can be found in the README of each component, refer to the following links below:
 
 - [ROKS](./roks/README.md)
+- [Portworx](./portworx/README.md)
+- [LDAP](./ldap/README.md)
 - [Automation Foundation](./iaf/README.md)
-- [Cloud Pak for Applications](./cp4app/README.md)
-- [Cloud Pak for Automation](./cp4auto/README.md)
+- [Cloud Pak for Business Automation](./cp4ba/README.md)
 - [Cloud Pak for Data](./cp4data/README.md)
 - [Cloud Pak for Integration](./cp4int/README.md)
 - [Cloud Pak for Multi Cloud Management](./cp4mcm/README.md)
+- [Cloud Pak for Security](./cp4mcm/README.md)
+- [Cloud Pak for AIOps](./cp4mcm/README.md)
 
 

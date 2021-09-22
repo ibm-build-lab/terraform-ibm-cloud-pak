@@ -1,4 +1,4 @@
-# Example to provision Portworx Terraform Module
+# Example to provision Portworx Terraform Module (this module only supports VPC clusters)
 
 ## Run using IBM Cloud Schematics
 
@@ -49,7 +49,7 @@ These parameters are:
 - `etcd_username`: Username of etcd. Only used if `create_external_etcd` is set to `true`
 - `etcd_password`: Password of etcd. Only used if `create_external_etcd` is set to `true`
 
-Execute the following Terraform commands:
+Execute the following Terraform commands (note, this module is only supported on TF 0.12 at this time):
 
 ```bash
 terraform init

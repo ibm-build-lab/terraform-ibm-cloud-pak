@@ -20,12 +20,13 @@ kubectl create secret docker-registry ibm-management-pull-secret \
   --namespace=${MCM_NAMESPACE} \
   --dry-run=client -o yaml | kubectl apply -f -
 
-echo "Creating the Common Services Operator CatalogSource resource"
+echo "Creating the Common Services Operator CatalogSource resource ${MCM_CS_CATALOGSOURCE_CONTENT}"
 kubectl apply -f -<<EOF
 ${MCM_CS_CATALOGSOURCE_CONTENT}
 EOF
 
 echo "Creating the Common Services Subscription"
+cat ${MCM_CS_SUBSCRIPTION_FILE}
 kubectl apply -f ${MCM_CS_SUBSCRIPTION_FILE}
 
 kubectl get CommonService common-service -n ibm-common-services > /dev/null 2>&1
@@ -45,28 +46,27 @@ do
 done
 
 echo "Modifying CommonService CustomResource"
+cat ${MCM_COMMONSERVICE_FILE}
 kubectl apply -f ${MCM_COMMONSERVICE_FILE}
 
-echo "Creating the IBM Management Orchestrator"
+echo "Creating the IBM Management Orchestrator ${MCM_MGT_CATALOGSOURCE_CONTENT}"
 kubectl apply -f -<<EOF
 ${MCM_MGT_CATALOGSOURCE_CONTENT}
 EOF
 
 echo "Creating subscription for IBM Management Orchestrator, which creates other subscriptions"
+cat ${MCM_MGT_SUBSCRIPTION_FILE}
 kubectl apply -f ${MCM_MGT_SUBSCRIPTION_FILE}
 
 sleep ${MCM_WAIT_SEC};
 sleep ${MCM_WAIT_SEC};
 
-echo "Creating the MCM installation"
+echo "Creating the MCM installation ${MCM_INSTALLATION_CONTENT}"
 kubectl apply -f -<<EOF
 ${MCM_INSTALLATION_CONTENT}
 EOF
 
-echo "Waiting for MCM credentials to be ready"
-#while ! kubectl get secret platform-auth-idp-credentials --namespace ibm-common-services; do
-#  sleep ${MCM_WAIT_SEC};
-#done
+echo "Waiting for MCM credentials to be ready. NOTE: you will see an error until credentials are successfully retrieved."
 kubectl get secret platform-auth-idp-credentials --namespace ibm-common-services
 result=$?
 counter=0
@@ -83,7 +83,11 @@ do
     result=$?
 done
 
-echo "Waiting for MCM endpoint to be ready"
+echo "Waiting for MCM endpoint to be ready. NOTE: you will see an error until endpoint is successfully retrieved."
 while ! kubectl get route cp-console --namespace ibm-common-services; do
   sleep ${MCM_WAIT_SEC};
 done
+
+echo "Cloud Pak for MCM has been installed with the default configuration for all requested modules."
+echo "For advanced configuration, please refer to https://www.ibm.com/docs/en/cloud-paks/cp-management/2.3.x?topic=installation-configuration."
+echo "For post installation tasks, please refer to https://www.ibm.com/docs/en/cloud-paks/cp-management/2.3.x?topic=installation-post-tasks."
