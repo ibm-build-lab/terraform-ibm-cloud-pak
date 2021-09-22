@@ -1,0 +1,734 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    olm.skipRange: '>=3.3.0 <3.11.0'
+    operators.operatorframework.io/builder: operator-sdk-v1.10.0+git
+    operators.operatorframework.io/project_layout: go.kubebuilder.io/v3
+    olm.targetNamespaces: cp4ba
+    operatorframework.io/properties: >-
+      {"properties":[{"type":"olm.gvk","value":{"group":"operator.ibm.com","kind":"CommonService","version":"v3"}},{"type":"olm.package","value":{"packageName":"ibm-common-service-operator","version":"3.11.0"}}]}
+    repository: 'https://github.com/IBM/ibm-common-service-operator'
+    support: IBM
+    alm-examples: |-
+      [
+        {
+          "apiVersion": "operator.ibm.com/v3",
+          "kind": "CommonService",
+          "metadata": {
+            "labels": {
+              "app.kubernetes.io/instance": "ibm-common-service-operator",
+              "app.kubernetes.io/managed-by": "ibm-common-service-operator",
+              "app.kubernetes.io/name": "ibm-common-service-operator"
+            },
+            "name": "example-commonservice"
+          },
+          "spec": {
+            "size": "starterset"
+          }
+        }
+      ]
+    operatorVersion: 3.11.0
+    capabilities: Seamless Upgrades
+    olm.operatorNamespace: cp4ba
+    containerImage: 'quay.io/opencloudio/common-service-operator:latest'
+#    createdAt: '2020-10-19T21:38:33Z'
+    description: The IBM Common Service Operator is used to deploy IBM Common Services
+    olm.operatorGroup: cp4a-97wzh
+    operatorChannel: v3
+  selfLink: >-
+    /apis/operators.coreos.com/v1alpha1/namespaces/cp4a/clusterserviceversions/ibm-common-service-operator.v3.11.0
+  resourceVersion: '2940540'
+  name: ibm-common-service-operator.v3.11.0
+#  uid: be5ff65f-c63d-4bb5-adee-81118db68685
+#  creationTimestamp: '2021-09-17T17:50:51Z'
+  generation: 1
+  managedFields:
+    - apiVersion: operators.coreos.com/v1alpha1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            'f:operatorVersion': {}
+            'f:createdAt': {}
+            'f:alm-examples': {}
+            'f:description': {}
+            'f:capabilities': {}
+            'f:operatorChannel': {}
+            'f:olm.skipRange': {}
+            .: {}
+            'f:containerImage': {}
+            'f:operators.operatorframework.io/project_layout': {}
+            'f:operatorframework.io/properties': {}
+            'f:operators.operatorframework.io/builder': {}
+            'f:support': {}
+            'f:repository': {}
+          'f:labels':
+            .: {}
+            'f:operatorframework.io/arch.amd64': {}
+            'f:operatorframework.io/arch.ppc64le': {}
+            'f:operatorframework.io/arch.s390x': {}
+            'f:operatorframework.io/os.linux': {}
+        'f:spec':
+          'f:version': {}
+          'f:maturity': {}
+          'f:provider':
+            .: {}
+            'f:name': {}
+          'f:links': {}
+          'f:install':
+            .: {}
+            'f:spec':
+              .: {}
+              'f:clusterPermissions': {}
+              'f:deployments': {}
+              'f:permissions': {}
+            'f:strategy': {}
+          'f:maintainers': {}
+          'f:description': {}
+          'f:installModes': {}
+          'f:minKubeVersion': {}
+          'f:icon': {}
+          'f:customresourcedefinitions':
+            .: {}
+            'f:owned': {}
+          .: {}
+          'f:apiservicedefinitions': {}
+          'f:replaces': {}
+          'f:displayName': {}
+          'f:keywords': {}
+      manager: catalog
+      operation: Update
+#      time: '2021-09-17T17:50:51Z'
+    - apiVersion: operators.coreos.com/v1alpha1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            'f:olm.operatorGroup': {}
+            'f:olm.operatorNamespace': {}
+            'f:olm.targetNamespaces': {}
+          'f:labels':
+            'f:olm.api.d5bce463307a1f31': {}
+            'f:operators.coreos.com/ibm-common-service-operator.cp4a': {}
+        'f:status':
+          .: {}
+          'f:conditions': {}
+          'f:lastTransitionTime': {}
+          'f:lastUpdateTime': {}
+          'f:message': {}
+          'f:phase': {}
+          'f:reason': {}
+          'f:requirementStatus': {}
+      manager: olm
+      operation: Update
+#      time: '2021-09-17T17:51:25Z'
+  namespace: cp4ba
+  labels:
+    olm.api.d5bce463307a1f31: provided
+    operatorframework.io/arch.amd64: supported
+    operatorframework.io/arch.ppc64le: supported
+    operatorframework.io/arch.s390x: supported
+    operatorframework.io/os.linux: supported
+    operators.coreos.com/ibm-common-service-operator.cp4a: ''
+spec:
+  customresourcedefinitions:
+    owned:
+      - description: >-
+          CommonService is the Schema for the commonservices API. Documentation
+          For additional details regarding install parameters check
+          https://ibm.biz/icpfs39install. License By installing this product you
+          accept the license terms https://ibm.biz/icpfs39license
+        displayName: CommonService
+        kind: CommonService
+        name: commonservices.operator.ibm.com
+        specDescriptors:
+          - description: >-
+              The size of deployment profile for IBM Cloud Pak foundational
+              services
+            displayName: Size
+            path: size
+            x-descriptors:
+              - 'urn:alm:descriptor:com.tectonic.ui:select:starterset'
+              - 'urn:alm:descriptor:com.tectonic.ui:select:small'
+              - 'urn:alm:descriptor:com.tectonic.ui:select:medium'
+              - 'urn:alm:descriptor:com.tectonic.ui:select:large'
+        version: v3
+  apiservicedefinitions: {}
+  keywords:
+    - IBM
+    - Cloud
+  displayName: IBM Cloud Pak foundational services
+  provider:
+    name: IBM
+  maturity: alpha
+  installModes:
+    - supported: true
+      type: OwnNamespace
+    - supported: true
+      type: SingleNamespace
+    - supported: false
+      type: MultiNamespace
+    - supported: true
+      type: AllNamespaces
+  version: 3.11.0
+  icon:
+    - base64data: >-
+        iVBORw0KGgoAAAANSUhEUgAAAK8AAACvCAMAAAC8TH5HAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAB1UExURQAAAJGS77CC4pCS75yM64uV8pSQ7puA85OV87OB4auF5Hyd+H2c936b9n6b94Ca9n+b9n+b9n+b9qOJ56SI55yM6qSI536b96aH5q2D45mN64OZ9ZWQ7oyU8XWg+6uG5oqg/p6L6m+k/ZuY+3mr/6qQ9LqM80D8C0oAAAAbdFJOUwA67R4KKxMBBP6ak6vZgVtJxG5ot+hQ7YDVkwC2C58AAAuSSURBVHja7ZyJerK8EoCDCSTKjoiIS13of/+XeGYm4NLKrvj1OYxt7aa8TiazJZGxSSaZZJJJJvmcSCn/Eq7Cz79DLJk0rb+kXdM9nz0m/4p2mZufz3lAZvEn1HsGye2J9128h7/Gezj8Nd7D3+I9/xu8SjWHrS76bfN8A+NsYxjowCvbPN+QSGB6kWi6QHteyQLPfx+wYsH2eHSthgu05lXMy/PceRcwxtnjdnts4mjLq5hBceVdcVsya71FMeov0JIXMuQwR+DoXX5EMgf0uz2GrDYbb8mrmE+4Z/NdvDCApN+jX3uFdrySqfW70wzFbFLwWtVNkXa8ONlIvfx9Dk0xSyvYq0NpxasYJ9o8emcUVCw6EjGvuUpLXgfVm9cP1fAZp1yyCKeGBf8pB96g9jUZ57c6s1vIIAUfjXqY9eFg1yiuKJnOECzeW+TJm0+rxRGGWfcP7/dld8bZwqcp/dJqIs9hrJIJ/JD2abV5j1StfJn1/pofo/Kx0ae1KfAO7/Vld7anfVpf28M5kKPDc9kYLRW4RDhIwYV/PozVUAF39Qre3BmrvsM04nisjHHyJlUjZEOefuBj8UIA81zHfGJ84BYeHAP9LKseP1r5LNnvOlHeXJgqRZbUPzT97PHvBVb48VCX09W54du2u3ZJwjD0It/gqmCue/yoolm4b7tQjmohh7cGAWzHC8x/qOFOZmBG4bbERDkQrVYyiGP7iPwPLGrgsAofYbePonEJ2CHxAuvjxEjLvfUj7J1BaP0irY3i888SA63l3alWgwKjbXueZztOSBoucOE33huIZdsWHChXRds72O069PyHhSEBDiOynbAEBiGreCGJKoa5zT8GVBzt4QNgXc+wbq4YvW+hSMkDYNa4EYihWqlYtmouSsYTo4XvgWezHKDcI+7xuPbMMp7JH0GEfhZGRMDIG5FRtLG1IGCNvTp/d9nFZhMx/DXYH/cgSBv6SscM+Tyf0P450Lw+iCmbOGAMonOeO/XlMyTjgAsfmWAN9Y53RFy0hDAovXBDSBFBVAIHDdUJ2lre3J6AVG9Hcln5NQyKCUcrd390g5/BtjpNR2KNGwTVpRDSmk6et6jwCv0ScVhpxopxl3DBIjzVjrYk5gVuEPAaw7UP+aFV+0ex5Aq8y/hTYhiE/UXjhibrlBUisUm8hmHwqujuH3IqQLA/0dT+Af8Q34hT8du3QXlR4nrdkxhJ0554nwAXhpvj+hLUo2u/zWoJM1aXy70ZP8e97APWJ+WGbN1AXNP8tedAasM96PLu4Ik2jhpHZLkqgdGM5TNjuKzNnhkiUmneH8CSCe9wpXV429HDlCu7GcV9JwemWoEbWr3rGZx2iMs5F4+T3S1p89DoYGvkUeLCKC67m+uBsVwVuGpI+QVohGtZ6rHrU+Cu/UaP/ps4KY3iWhlipwNwd4Arh1WLCIy4lpA/2yiF4XZ9ehgMuaRgt7r6FMWiC9DuL64YWtyCrQKuEOLe1iJsG+eO2W8eo+POdrvVtdULrgG0Dbg76xW1uCDcm5GCguzDAeNlz0qPqgfzGunJeAl4aOug6KYQ7l2WhI7DZEMqZ7L5a1uBZWTQF3/QVHvmUosOBX0ZVkbfkgNtDYCbDcDVsIKbQYCJBCY/gak7FHQh+bqiX7LwsnuYfr1gqUTCUsPWgsWdF1H2I1/ZoYBMSLs3o3/blyke+FRiEPE9c1Huq9dpV60GWQNmvybSIrCnee0SGIlDJzJfVzwrttTq7bfkUNCSzV71a19pScNOGHrmi9pWV/Uue6lXYpEcBFfgslSOPG0MBTASc/YK3455PEqvyYY5r0G4AeH6gWHqSCyVxQ2s9ksJw9B/ATBYVUy8fdRL6ZhhlPo1HpIyHelM38OmCuA6oWvzwTah69DTbiW6qxdMCdPdAIGLbrC8lyIimxHRgrhQcA+cdoqluxXc0u7qhcTGNBAYeKkB9CTASfJjVuTo7mvoRsO676Ci+LRanVbd91YgLggp2GI1/kpRq7MAXnuDjBhC8Qpkl3UepwIXgblseDQq2XBcUK8bru0hGgbni7ynzrMNs1xOuJDmNQMAsfAI2B0CjOaAvKuuK2aES8C8XU8Sn98H9SKw12/SwfwVzNyArOLOL1lxEpO37/lKFujlpW3UfTSZwpxaQCkXb+JVd3OAAg1xrQ4vFGzC0MDrbuvLSGtRiSVYuonjeNU5MxMWAVudZzct1azdLmUXzGZLV7BCySxG6Zrq4MsFXqv79A7WiLu1OwwLFgElr7VA3LQjLtZnCCx7+KNo7a4BuG3lhRmKWXQ0LME40Gbxsqt6BQH3arExZ+viCl67Ib1rGHFLQPIQL7JFnHTjRfUCb68whR1mXM3dttpjcWvIAS6uNCRxlmVxxypeCVJw3wjl0/LzmrfaVG4kBgFT6ge57wJ4M7OTfmlNS4j+McpB4G2rTfBGkhAwp2UcWfB2cw/FFogBKQvxrhtTLMnMZYJiFG4eeLM0zVLRg3dIzmJvAbfRgiXjS81rXfeBLIE3TTuVQneZeH8Fb4HXFQ0rcGKJcsNFXsRdduYdViSQBQNy0LCilaSIu+R3TeqP8KKLQAXXzjgw3hR5l3erFvoldOOVr9Cv5eK6v1tzXch0UZfLNGEPvGQi3fU7tMi1m45PgCtb4Nin974Lftmd9yUtJZ94q/NgUG9KvA9rWOjgwKATMTqv3mpcbcDgQxaLRbpYyp+89/5tLMF98GTAVZsP4LfpAuXRYnALBwof+0AxejR0EVVpO4ARbvpz96D1GV7FvNoJB4lNDLiQOKofIQSTicQcnzeq5ZUsxTpi8ctQJeVrJmNj8wbEWxHhYNxjXff8UiT1vww1Oq9R59Dgz1gGb5Kff5a62jA/4tD222Ml75J4zd+8uglmfcQB76s2nktsM2w2z8p2yamWG90eTNrd9ly/ALnAtlP8LO5a1FdSo9sv7h3cVvGqGHkXT9Sr+3ZcjO4faNNYUMErkHf2tIeuqBNhjc0bHXEDoVHBa20qeRm1liw1Mq9H29z68Ard+hs7f0BzWD/3S8g7q+TV3RohR8VVLqq34pgR2G8NL9O8alx3Rrvy7Cr3q2LkXTyPClrBY55JgPqCthFGVbxsgbxxRd2jxKCGTS/zpelW0beD8pB4NxVhVw7t2HSvj0m9lfUx5A/zzWw2q0yPHzYHjWEOuDXvWLnhAtL1Gah3XrWsImkL/WjAkoX7au+r00bQ7my+qFr4ekETpFvyUGsOKOAgZrNNZaE2InCx9XF/qVmFQwNGBVevs42n31K9+5oqFxw0GURc22UayXjBenHrY1Z7UJ/FpOCkRsFjWe+SNsLuef2xCm0QMfvwe60pxnGf5v7iNTR/xWZWb8GjWcOFgBtK3FLBM+uTCpatd5aigue1Pngs4yVcp8VphmT+YYuQGIhxm/Fu37w+j0mPBk4+BIy4ett8q52lGJTneJsbHwHGwx/FQYp2Q6wtogCWH8DNLtdt0S1Pi6RICx8JG1nFCluOV9yWLgrrjAI4HfVQNtYu5emw9ri0EyZGWpCNORYxvVuAGZeHgLIuEVZB5UnAqGLryfsLvDx31Gfa6czSSW+D7XRFVZgEyizlRfEm3yJFSaiM+HQ5Ee5ll3SNVgCczkvi+SJ5c+PMMtIV0BLu6RL32P8Lry8pcVHJcZoYlniDcCNJ49Xp+/uk5QK20PP0kLWYP8qsg2zuvl/VyAlQS1bQ7SnjfQ814O7WeF4jX/P/5l//fT2V77svePeNd/gFNam/FN/eZPd9io0B/ojOwMWVsA8/wO1RZvc/nOgTbqfi7okAfDbUe+KDjcVsPq9X81eJPK/g/So476kfWUG1S6vjmcIqYpGkGwT7r4t8FfffdIP7ajmdNlnC2Qto2fWNtixjudRr4a+VLF0uTa4vJF8XKuXbg/Hr33TjffKn3gp/kkkmmWSSSSaZZJJJJplkkkkmmWSS/yf5H6HANgUotAMHAAAAAElFTkSuQmCC
+      mediatype: image/png
+  minKubeVersion: 1.19.0
+  links:
+    - name: IBM Common Service Operator
+      url: 'https://github.com/IBM/ibm-common-service-operator'
+  install:
+    spec:
+      clusterPermissions:
+        - rules:
+            - apiGroups:
+                - ''
+              resources:
+                - namespaces
+              verbs:
+                - create
+                - get
+                - list
+                - watch
+                - update
+            - apiGroups:
+                - operators.coreos.com
+              resources:
+                - subscriptions
+                - operatorgroups
+              verbs:
+                - list
+                - get
+                - create
+                - update
+                - watch
+            - apiGroups:
+                - operators.coreos.com
+              resources:
+                - catalogsources
+              verbs:
+                - get
+            - apiGroups:
+                - operators.coreos.com
+              resources:
+                - subscriptions
+                - clusterserviceversions
+              verbs:
+                - delete
+                - get
+                - list
+            - apiGroups:
+                - operator.ibm.com
+              resources:
+                - commonservices
+                - commonservices/status
+              verbs:
+                - get
+                - list
+                - watch
+                - update
+            - apiGroups:
+                - apiextensions.k8s.io
+              resources:
+                - customresourcedefinitions
+              verbs:
+                - create
+                - get
+                - update
+            - apiGroups:
+                - rbac.authorization.k8s.io
+              resources:
+                - clusterroles
+                - roles
+                - clusterrolebindings
+                - rolebindings
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - update
+                - watch
+                - escalate
+                - bind
+            - apiGroups:
+                - ''
+              resourceNames:
+                - common-service-maps
+                - ibm-common-services-status
+                - odlm-scope
+                - namespace-scope
+              resources:
+                - configmaps
+              verbs:
+                - delete
+                - update
+            - apiGroups:
+                - ''
+              resources:
+                - configmaps
+              verbs:
+                - create
+                - get
+                - list
+                - watch
+            - apiGroups:
+                - ''
+              resources:
+                - serviceaccounts
+              verbs:
+                - create
+                - get
+                - update
+            - apiGroups:
+                - apps
+              resources:
+                - deployments
+              verbs:
+                - create
+                - get
+            - apiGroups:
+                - apps
+              resourceNames:
+                - ibm-common-service-webhook
+                - secretshare
+              resources:
+                - deployments
+              verbs:
+                - update
+            - apiGroups:
+                - pkg.ibm.crossplane.io
+              resources:
+                - locks
+                - configurations
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - ibmcpcs.ibm.com
+              resources:
+                - secretshares
+                - secretshares/status
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+            - apiGroups:
+                - operator.ibm.com
+              resources:
+                - podpresets
+                - podpresets/status
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+          serviceAccountName: ibm-common-service-operator
+      deployments:
+        - name: ibm-common-service-operator
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                name: ibm-common-service-operator
+            strategy: {}
+            template:
+              metadata:
+                annotations:
+                  productID: 068a62892a1e4db39641342e592daa25
+                  productMetric: FREE
+                  productName: IBM Cloud Platform Common Services
+                creationTimestamp: null
+                labels:
+                  app.kubernetes.io/instance: ibm-common-service-operator
+                  app.kubernetes.io/managed-by: ibm-common-service-operator
+                  app.kubernetes.io/name: ibm-common-service-operator
+                  name: ibm-common-service-operator
+              spec:
+                affinity:
+                  nodeAffinity:
+                    requiredDuringSchedulingIgnoredDuringExecution:
+                      nodeSelectorTerms:
+                        - matchExpressions:
+                            - key: kubernetes.io/arch
+                              operator: In
+                              values:
+                                - amd64
+                                - ppc64le
+                                - s390x
+                containers:
+                  - resources:
+                      limits:
+                        cpu: 500m
+                        memory: 512Mi
+                      requests:
+                        cpu: 100m
+                        memory: 200Mi
+                    readinessProbe:
+                      failureThreshold: 10
+                      httpGet:
+                        path: /readyz
+                        port: 8081
+                      initialDelaySeconds: 3
+                      periodSeconds: 20
+                      timeoutSeconds: 3
+                    name: ibm-common-service-operator
+                    command:
+                      - /manager
+                    livenessProbe:
+                      failureThreshold: 10
+                      httpGet:
+                        path: /healthz
+                        port: 8081
+                      initialDelaySeconds: 120
+                      periodSeconds: 60
+                      timeoutSeconds: 10
+                    env:
+                      - name: OPERATOR_NAME
+                        value: ibm-common-service-operator
+                      - name: IBM_CS_WEBHOOK_IMAGE
+                        value: >-
+                          quay.io/opencloudio/ibm-cs-webhook@sha256:2aa54b912aa82480d66ec273f13edb3e84d3683893bf27c382610e9a3ba734f2
+                      - name: IBM_SECRETSHARE_OPERATOR_IMAGE
+                        value: >-
+                          quay.io/opencloudio/ibm-secretshare-operator@sha256:8c42a3ac8a7b7fd519ef8b4d1b86a0825f6799a89cae0334bd5e01db41f72f85
+                    securityContext:
+                      allowPrivilegeEscalation: false
+                      capabilities:
+                        drop:
+                          - ALL
+                      privileged: false
+                      readOnlyRootFilesystem: true
+                      runAsNonRoot: true
+                    imagePullPolicy: Always
+                    image: >-
+                      quay.io/opencloudio/common-service-operator@sha256:7d0437113b5467a17b88c1a0e6dafbc67cfd716c63a00662a72651231dc636e1
+                serviceAccountName: ibm-common-service-operator
+                terminationGracePeriodSeconds: 10
+      permissions:
+        - rules:
+            - apiGroups:
+                - '*'
+              resources:
+                - '*'
+              verbs:
+                - create
+                - delete
+                - get
+                - list
+                - patch
+                - update
+                - watch
+          serviceAccountName: ibm-common-service-operator
+    strategy: deployment
+  maintainers:
+    - email: support@ibm.com
+      name: IBM Support
+  description: >-
+    # Introduction
+
+
+    The `IBM Cloud Pak foundational services` is a bridge to connect IBM Cloud
+    Paks and Operand Deployment Lifecycle Manager (ODLM) with IBM Cloud Pak
+    foundational services. You can also install the `IBM Cloud Pak foundational
+    services` in stand-alone mode.
+
+
+    When you install this operator, the operator completes the following tasks:
+
+      - Installs ODLM in all namespaces mode
+      - Creates the `ibm-common-services` namespace
+      - Creates the Common Services `OperandRegistry` and `OperandConfig` in the `ibm-common-services` namespace
+
+    # Details
+
+    For more information about installing this operator and other Common
+    Services operators, see [Installer
+    documentation](http://ibm.biz/cpcs_opinstall). If you are using this
+    operator as part of an IBM Cloud Pak, see the documentation for that IBM
+    Cloud Pak to learn more about how to install and use the operator service.
+    For more information about IBM Cloud Paks, see [IBM Cloud Paks that use
+    Common Services](http://ibm.biz/cpcs_cloudpaks).
+
+
+    For more information about the available IBM Cloud Pak foundational
+    services, see the [IBM Knowledge Center](http://ibm.biz/cpcsdocs).
+
+
+    ## Supported platforms
+
+
+    Red Hat OpenShift Container Platform 4.5 or newer installed on one of the
+    following platforms:
+
+     - Linux x86_64
+     - Linux on Power (ppc64le)
+     - Linux on IBM Z and LinuxONE
+
+    ## Operator versions
+
+     - 3.11.0
+
+    ## Prerequisites
+
+
+    Before you install this operator, you need to first install the operator
+    prerequisites:
+
+
+    - For the list of prerequisites for installing the operator, see the IBM
+    Knowledge Center [Preparing to install services
+    documentation](http://ibm.biz/cpcs_opinstprereq).
+
+
+    ### Resources Required
+
+
+    #### Minimum scheduling capacity
+
+
+    | Software                   | Memory (MB) | CPU (cores) | Disk (GB) |
+    Nodes  |
+
+    | -------------------------- | ----------- | ----------- | --------- |
+    ------ |
+
+    | ibm common service operator | 200          | 0.2        | 1          |
+    worker |
+
+    | **Total**                  | 200         | 0.2         | 1
+    |        |
+
+
+    ## Documentation
+
+
+    - If you are using the operator as part of an IBM Cloud Pak, see the
+    documentation for that IBM Cloud Pak. For a list of IBM Cloud Paks, see [IBM
+    Cloud Paks that use IBM Cloud Pak foundational
+    services](http://ibm.biz/cpcs_cloudpaks).
+
+    - If you are using the operator in stand-alone mode or with an IBM
+    Containerized Software, see the IBM Cloud Pak foundational services
+    Knowledge Center [Installer documentation](http://ibm.biz/cpcs_opinstall).
+
+
+    ## Installing
+
+
+    For installation, see the [IBM Cloud Platform Common Services
+    documentation](http://ibm.biz/cpcsdocs).
+
+
+    ## Configuration
+
+
+    For configuration, see the [IBM Cloud Platform Common Services
+    documentation](http://ibm.biz/cpcsdocs).
+
+
+    ### SecurityContextConstraints Requirements
+
+
+    The IBM Common Service Operator supports running with the OpenShift
+    Container Platform 4.3 default restricted Security Context Constraints
+    (SCCs) and IBM Cloud Pak Security Context Constraints (SCCs).
+
+
+    For more information about the OpenShift Container Platform Security Context
+    Constraints, see [Managing Security Context
+    Constraints](https://docs.openshift.com/container-platform/4.3/authentication/managing-security-context-constraints.html).
+
+
+    For more information about the IBM Cloud Pak Security Context Constraints,
+    see [Managing Security Context Constraints](https://ibm.biz/cpkspec-scc).
+
+
+    ### Limitations
+
+
+    No
+  replaces: ibm-common-service-operator.v3.10.0
+status:
+  conditions:
+    - lastTransitionTime: '2021-09-17T17:50:56Z'
+      lastUpdateTime: '2021-09-17T17:50:56Z'
+      message: requirements not yet checked
+      phase: Pending
+      reason: RequirementsUnknown
+    - lastTransitionTime: '2021-09-17T17:50:57Z'
+      lastUpdateTime: '2021-09-17T17:50:57Z'
+      message: 'all requirements found, attempting install'
+      phase: InstallReady
+      reason: AllRequirementsMet
+    - lastTransitionTime: '2021-09-17T17:50:59Z'
+      lastUpdateTime: '2021-09-17T17:50:59Z'
+      message: waiting for install components to report healthy
+      phase: Installing
+      reason: InstallSucceeded
+    - lastTransitionTime: '2021-09-17T17:50:59Z'
+      lastUpdateTime: '2021-09-17T17:51:02Z'
+      message: >-
+        installing: waiting for deployment ibm-common-service-operator to become
+        ready: deployment "ibm-common-service-operator" not available:
+        Deployment does not have minimum availability.
+      phase: Installing
+      reason: InstallWaiting
+    - lastTransitionTime: '2021-09-17T17:51:25Z'
+      lastUpdateTime: '2021-09-17T17:51:25Z'
+      message: install strategy completed with no errors
+      phase: Succeeded
+      reason: InstallSucceeded
+  lastTransitionTime: '2021-09-17T17:51:25Z'
+  lastUpdateTime: '2021-09-17T17:51:25Z'
+  message: install strategy completed with no errors
+  phase: Succeeded
+  reason: InstallSucceeded
+  requirementStatus:
+    - group: operators.coreos.com
+      kind: ClusterServiceVersion
+      message: CSV minKubeVersion (1.19.0) less than server version (v1.19.0+4c3480d)
+      name: ibm-common-service-operator.v3.11.0
+      status: Present
+      version: v1alpha1
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+      message: CRD is present and Established condition is true
+      name: commonservices.operator.ibm.com
+      status: Present
+      uuid: b10023af-5d1d-4508-8f35-8c213480c952
+      version: v1
+    - dependents:
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            namespaced
+            rule:{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":["*"],"resources":["*"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            cluster
+            rule:{"verbs":["create","get","list","watch","update"],"apiGroups":[""],"resources":["namespaces"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            cluster
+            rule:{"verbs":["list","get","create","update","watch"],"apiGroups":["operators.coreos.com"],"resources":["subscriptions","operatorgroups"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            cluster
+            rule:{"verbs":["get"],"apiGroups":["operators.coreos.com"],"resources":["catalogsources"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            cluster
+            rule:{"verbs":["delete","get","list"],"apiGroups":["operators.coreos.com"],"resources":["subscriptions","clusterserviceversions"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            cluster
+            rule:{"verbs":["get","list","watch","update"],"apiGroups":["operator.ibm.com"],"resources":["commonservices","commonservices/status"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            cluster
+            rule:{"verbs":["create","get","update"],"apiGroups":["apiextensions.k8s.io"],"resources":["customresourcedefinitions"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            cluster
+            rule:{"verbs":["create","delete","get","list","update","watch","escalate","bind"],"apiGroups":["rbac.authorization.k8s.io"],"resources":["clusterroles","roles","clusterrolebindings","rolebindings"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            cluster
+            rule:{"verbs":["delete","update"],"apiGroups":[""],"resources":["configmaps"],"resourceNames":["common-service-maps","ibm-common-services-status","odlm-scope","namespace-scope"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            cluster
+            rule:{"verbs":["create","get","list","watch"],"apiGroups":[""],"resources":["configmaps"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            cluster
+            rule:{"verbs":["create","get","update"],"apiGroups":[""],"resources":["serviceaccounts"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            cluster
+            rule:{"verbs":["create","get"],"apiGroups":["apps"],"resources":["deployments"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            cluster
+            rule:{"verbs":["update"],"apiGroups":["apps"],"resources":["deployments"],"resourceNames":["ibm-common-service-webhook","secretshare"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            cluster
+            rule:{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":["pkg.ibm.crossplane.io"],"resources":["locks","configurations"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            cluster
+            rule:{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":["ibmcpcs.ibm.com"],"resources":["secretshares","secretshares/status"]}
+          status: Satisfied
+          version: v1
+        - group: rbac.authorization.k8s.io
+          kind: PolicyRule
+          message: >-
+            cluster
+            rule:{"verbs":["create","delete","get","list","patch","update","watch"],"apiGroups":["operator.ibm.com"],"resources":["podpresets","podpresets/status"]}
+          status: Satisfied
+          version: v1
+      group: ''
+      kind: ServiceAccount
+      message: ''
+      name: ibm-common-service-operator
+      status: Present
+      version: v1

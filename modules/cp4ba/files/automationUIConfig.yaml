@@ -1,0 +1,12 @@
+apiVersion: core.automation.ibm.com/v1beta1
+kind: AutomationUIConfig
+metadata:
+  name:  iaf-system
+spec:
+  description: automation-ui-config for CP4BA Cartridge
+  license:
+    accept: true
+  version: 1.0.0
+  tls: {}
+  storage:
+    class: ibmc-file-gold-gid

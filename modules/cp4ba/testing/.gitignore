@@ -1,0 +1,34 @@
+# Credentials or sensitive information files used by Terraform to ignore
+credentials*.sh
+*.key
+credentials.tfvars
+.terraform_key.json
+.terraform.tfvars
+terraform.tfvars
+
+# Output files from Terraform and modules to ignore
+**/.kube
+**/.cp4app_data
+
+# Local .terraform directories
+**/.terraform
+
+# Terraform & Schematics files
+*.tfstate*
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.temp/
+/workspace
+dist/
+workspace.json
+my_variables.tfvars
+.terraform.d/
+
+# macOS files
+.DS_Store
+
+## Temporary files to ignore
+**/.helm
