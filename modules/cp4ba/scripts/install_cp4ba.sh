@@ -292,6 +292,10 @@ function prepare_deployment_file(){
     cp "${IBM_CP4BA_CR_FINAL_FILE_TMPL}" "${IBM_CP4BA_CR_FINAL_FILE}"
     # Adding admin user (email)
     sed -i.bak "s|admin_user|$USER_NAME_EMAIL|g" "${IBM_CP4BA_CR_FINAL_FILE}"
+    sed -i.bak "s|spec.baw_configuration.database.port|$DB2_PORT_NUMBER|g" "${IBM_CP4BA_CR_FINAL_FILE}"
+    sed -i.bak "s|spec.baw_configuration.database.database_name|$DB2_HOST_NAME|g" "${IBM_CP4BA_CR_FINAL_FILE}"
+    sed -i.bak "s|spec.baw_configuration.database.server_name|$DB2_HOST_IP|g" "${IBM_CP4BA_CR_FINAL_FILE}"
+    database_name
 
 #    sed -i.bak "s|db2HostName|$db2HostName|g" "${IBM_CP4BA_CR_FINAL_FILE}"
 #    sed -i.bak "s|db2HostIp|$db2HostIp|g" "${IBM_CP4BA_CR_FINAL_FILE}"

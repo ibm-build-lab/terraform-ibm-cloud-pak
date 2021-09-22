@@ -134,4 +134,11 @@ module "cp4ba" {
       SC_SLOW_FILE_STORAGE_CLASSNAME   = var.sc_slow_file_storage_classname
       SC_MEDIUM_FILE_STORAGE_CLASSNAME = var.sc_medium_file_storage_classname
       SC_FAST_FILE_STORAGE_CLASSNAME   = var.sc_fast_file_storage_classname
+
+      # ----- DB2 Settings -----
+      DB2_PORT_NUMBER         = var.db2_port_number
+      DB2_HOST_NAME           = var.db2_host_name
+      DB2_HOST_IP             = var.db2_host_ip
+      DB2_ADMIN_USERNAME      = var.db2_admin_username
+      DB2_ADMIN_USER_PASSWORD = var.db2_admin_user_password
 }

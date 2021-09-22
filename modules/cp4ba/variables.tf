@@ -114,7 +114,7 @@ variable "db2_admin_user_password" {
   default = "passw0rd"
 }
 
-variable "db2_admin_user_name" {
+variable "db2_admin_username" {
   default = "db2inst1"
 }
 

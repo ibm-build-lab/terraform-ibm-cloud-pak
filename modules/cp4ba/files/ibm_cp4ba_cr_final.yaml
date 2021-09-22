@@ -556,7 +556,7 @@ spec:
         ## Secret name for storing the database TLS certificate when an SSL connection is enabled. Required only when enable_ssl is true
         db_cert_secret_name: "<Required>"
         ## Workflow Server database type. Possible values are: db2, oracle, postgresql
-        type: "<Required>"
+        type: "db2"
         ## Workflow Server database server name. This parameter is required.
         server_name: "<Required>"
         ## Workflow Server database name. This parameter is required.
@@ -572,7 +572,7 @@ spec:
         ## data:
         ##   dbUser: <DB_USER>
         ##   password: <DB_USER_PASSWORD>
-        secret_name: "<Required>"
+        secret_name: "ibm-db2-secret"
         ## Oracle and PostgreSQL database connection string.
         ## If the database type is Oracle, provide the Oracle database connection string. For example, jdbc:oracle:thin:@//<oracle_server>:1521/orcl.
         ## If the database type is PostgreSQL, this parameter is optional. For example, jdbc:postgresql://<postgresql_server>:5432/<your_database>. This parameter is not required for PostgreSQL if you enter server_name, database_name, and port. If you do not need this parameter, remove it or comment it out.
