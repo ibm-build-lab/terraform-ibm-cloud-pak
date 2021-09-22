@@ -1,0 +1,9 @@
+apiVersion: core.automation.ibm.com/v1beta1
+kind: Cartridge
+metadata:
+  name: icp4ba
+spec:
+  description: cartridge for all CP4BA
+  license:
+    accept: true
+  version: 1.0.0

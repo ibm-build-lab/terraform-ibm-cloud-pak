@@ -1,7 +1,7 @@
 //locals {
 //  catalogsource_content = templatefile("../templates/CatalogSource.yaml")
 //
-//  AutomationBase = templatefile("../templates/AutomationBase.yaml", {
+//  AutomationBase = templatefile("../templates/automation_base.yaml", {
 //    namespace                = "cp4ba",
 //  })
 //
@@ -17,7 +17,7 @@
 //
 //resource "local_file" "AutomationBase" {
 //  content  = local.AutomationBase
-//  filename = "${path.modules}/rendered_files/AutomationBase.yaml"
+//  filename = "${path.modules}/rendered_files/automation_base.yaml"
 //}
 //
 //resource "local_file" "Subscription" {

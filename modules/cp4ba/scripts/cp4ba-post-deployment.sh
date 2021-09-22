@@ -11,8 +11,9 @@
 #
 ###############################################################################
 CUR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PARENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 
-FINAL_CR_FOLDER=${CUR_DIR}/generated-cr
+FINAL_CR_FOLDER=${PARENT_DIR}/files
 PATTERN_ARR=()
 OPT_COMPONENT_ARR=()
 function set_global_env_vars() {
@@ -45,7 +46,7 @@ if $CMD ; then
 
   pattern_name=$(${YQ_CMD} r $pattern_file spec.shared_configuration.sc_deployment_patterns)
   OIFS=$IFS
-  IFS=',' read -r -a PATTERN_ARR <<< "$pattern_name"
+#  IFS=',' read -r -a PATTERN_ARR <<< "$pattern_name"
   IFS=$OIFS
 
   # metadata_name=$(grep -A1 'metadata:' $pattern_file | tail -n1); metadata_name=${metadata_name//*name: /}
@@ -56,7 +57,7 @@ if $CMD ; then
   graphql_flag=$(${YQ_CMD} r $pattern_file spec.ecm_configuration.graphql.graphql_production_setting.enable_graph_iql)
 
   OIFS=$IFS
-  IFS=',' read -r -a OPT_COMPONENT_ARR <<< "$optional_components"
+#  IFS=',' read -r -a OPT_COMPONENT_ARR <<< "$optional_components"
   IFS=$OIFS
 
 else
