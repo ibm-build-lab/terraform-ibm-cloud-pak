@@ -71,7 +71,7 @@ resource "null_resource" "prereqs_checkpoint" {
   depends_on = [
     var.portworx_is_ready,
     null_resource.setkernelparams,
-    # null_resource.set_norootsquash,
+    null_resource.set_norootsquash,
     null_resource.create_registry_route,
     null_resource.annotate_registry_route,
   ]
