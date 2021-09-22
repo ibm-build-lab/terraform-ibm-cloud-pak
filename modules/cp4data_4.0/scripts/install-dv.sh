@@ -27,7 +27,7 @@ oc project ${NAMESPACE}
 
 cd ../files
 
-sed -i -e s#REPLACE_NAMESPACE#${NAMESPACE}#g dv-cr.yaml
+sed -i -e "s/REPLACE_NAMESPACE/${NAMESPACE}/g" dv-cr.yaml
 echo '*** executing **** oc create -f dv-cr.yaml'
 result=$(oc create -f dv-cr.yaml)
 echo $result
