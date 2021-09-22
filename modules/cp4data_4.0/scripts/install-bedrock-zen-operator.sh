@@ -6,7 +6,11 @@
 
 ibmcloud login --apikey ${IBMCLOUD_APIKEY} -g ${IBMCLOUD_RG_NAME} -r ${REGION}
 
+if ${ON_VPC}; then
 ./roks-update.sh ${CLUSTER_NAME}
+else
+./roks-reboot.sh ${CLUSTER_NAME}
+fi
 
 # attempt to fix norootsquash registry complaints in daemon set pods
 # kubectl -n kube-system create secret docker-registry ibm-entitlement-key \
