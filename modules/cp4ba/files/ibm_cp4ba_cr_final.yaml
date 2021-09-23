@@ -292,33 +292,6 @@ spec:
         dc_hadr_validation_timeout: 15
         dc_oracle_os_jdbc_url: ''
         dc_os_label: os
-  shared_configuration:
-    show_sensitive_log: true
-    trusted_certificate_list: ["trustedCertificateList"]
-    sc_deployment_baw_license: non-production
-    sc_content_verification: false
-    external_tls_certificate_secret: ''
-    storage_configuration:
-      sc_dynamic_storage_classname: ''
-      ibmc-file-gold-gid:
-      sc_medium_file_storage_classname: ''
-      sc_slow_file_storage_classname: ''
-    sc_image_repository: cp.icr.io
-    root_ca_secret: icp4a-root-ca
-    sc_content_initialization: false
-    sc_deployment_license: non-production
-    sc_ingress_enable: true
-    sc_ingress_tls_secret_name: ''
-    sc_deployment_platform: ROKS
-    sc_deployment_patterns: "document_processing"
-    sc_deployment_hostname_suffix: ''
-    sc_deployment_fncm_license: non-production
-    sc_optional_components: "ae_data_persistence, document_processing_designer, bai, cmis"
-    sc_deployment_type: "enterprise"
-    encryption_key_secret: 'ibm-iaws-shared-key-secret'
-    sc_cpe_limited_storage: false
-    image_pull_secrets:
-    - admin.registrykey
   olm_demo_option_content:
     cmis: false
     css: false
@@ -539,7 +512,7 @@ spec:
         # You should add redis server CA certificate in tls_trust_list or trusted_certificate_list
         tls_enabled: false
   ########################################################################
-  ########   IBM Business Automation Workflow configuration     ########
+  ########   IBM Business Automation Workflow configuration       ########
   ########################################################################
   baw_configuration:
     - name: bawins1 ## The baw_configuration is a list. You can deploy multiple instances of Workflow Server and assign different configurations for each instance.

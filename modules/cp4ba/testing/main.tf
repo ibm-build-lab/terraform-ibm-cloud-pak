@@ -4,7 +4,6 @@ provider "ibm" {
   ibmcloud_api_key = var.ibmcloud_api_key
 }
 
-
 data "ibm_resource_group" "group" {
   name = var.resource_group
 }
@@ -28,7 +27,6 @@ data "ibm_container_cluster_config" "cluster_config" {
   network           = false
 }
 
-
 locals {
   pvc_file                              = "${path.module}/files/operator-shared-pvc.yaml"
   pvc_file_content                      = file(local.pvc_file)
@@ -42,7 +40,6 @@ locals {
   cp4ba_subscription_file_content       = file(local.cp4ba_subscription_file)
 }
 
-
 module "cp4ba" {
   source = "./.."
 
@@ -53,11 +50,7 @@ module "cp4ba" {
       IBMCLOUD_API_KEY = var.ibmcloud_api_key
 
       # ---- Platform ----
-      PLATFORM_SELECTED             = local.platform_options
-      PLATFORM_VERSION              = local.platform_version
       CP4BA_PROJECT_NAME            = var.cp4ba_project_name
-      DEPLOYMENT_TYPE               = local.deployment_type
-      RUNTIME_MODE                  = local.runtime_mode
       USER_NAME_EMAIL               = var.entitled_registry_user_email
       USE_ENTITLEMENT               = local.use_entitlement
       ENTITLED_REGISTRY_KEY         = var.entitlement_key
@@ -66,8 +59,6 @@ module "cp4ba" {
       DOCKER_SERVER                 = local.docker_server
       DOCKER_USERNAME               = local.docker_username
       DOCKER_USER_EMAIL             = local.docker_email
-      public_registry_server        = var.public_registry_server
-      LOCAL_PUBLIC_REGISTRY_SERVER  = var.public_image_registry
 
       # ------- FILES ASSIGNMENTS --------
       OPERATOR_PVC_FILE                = local.pvc_file
@@ -80,13 +71,10 @@ module "cp4ba" {
       CP4BA_USERS_GROUP                = local.cp4ba_users_group
       CP4BA_UMS_ADMIN_NAME             = local.cp4ba_ums_admin_name
       CP4BA_UMS_ADMIN_GROUP            = local.cp4ba_ums_admin_group
-      CP4BA_OCP_HOSTNAME               = var.cp4ba_ocp_hostname
-      CP4BA_TLS_SECRET_NAME            = var.cp4ba_tls_secret_name
       CP4BA_ADMIN_PASSWORD             = var.cp4ba_admin_password
       CP4BA_UMS_ADMIN_PASSWORD         = var.cp4ba_ums_admin_password
 
       # ---- Storage Classes ----
-      STORAGE_CLASSNAME                = var.storage_class_name
       SC_SLOW_FILE_STORAGE_CLASSNAME   = var.sc_slow_file_storage_classname
       SC_MEDIUM_FILE_STORAGE_CLASSNAME = var.sc_medium_file_storage_classname
       SC_FAST_FILE_STORAGE_CLASSNAME   = var.sc_fast_file_storage_classname

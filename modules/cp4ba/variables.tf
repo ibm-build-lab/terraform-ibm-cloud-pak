@@ -12,13 +12,8 @@ variable "entitled_registry_user_email" {
   description = "Email address of the user owner of the Entitled Registry Key"
 }
 
-//variable "cluster_config_path" {}
-
 variable "iaas_classic_api_key" {}
 variable "iaas_classic_username" {}
-variable "ssh_public_key_file" {}
-variable "ssh_private_key_file" {}
-variable "classic_datacenter" {}
 
 variable "kube_config_path" {
   default     = ".kube/config"
@@ -27,7 +22,7 @@ variable "kube_config_path" {
 }
 
 variable "resource_group" {
-//  name       = "cloud-pak-sandbox-ibm"
+  default     = "cloud-pak-sandbox-ibm"
   description = "Resource group name where the cluster will be hosted."
 }
 
@@ -40,38 +35,6 @@ variable "entitlement_key" {
   description = "Do you have a Cloud Pak for Business Automation Entitlement Registry key? If not, Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
 }
 
-variable "public_image_registry" {
-  description = "Have you pushed the images to the local registry using 'loadimages.sh' (CP4BA images)? If not, Please pull the images to the local images to proceed."
-}
-
-variable "public_registry_server" {
-  description = "public image registry or route for docker/podman login validation: \n (e.g., default-route-openshift-image-registry.apps.<hostname>). This is required for docker/podman login validation: "
-}
-
-variable "registry_user" {
-  description = "Enter the user name for your docker registry: "
-}
-
-variable "docker_password" {
-  description = "Enter the password for your docker registry: "
-}
-
-variable "region" {
-  description = "Region where the cluster is created"
-}
-
-variable "docker_username" {
-  description = "Docker username for creating the secret."
-}
-
-# OCP hostname, see output of script cp4a-clusteradmin-setup.sh
-variable "cp4ba_ocp_hostname" {}
-
-# TLS secret name - see also secret name in project ibm-cert-store
-#   If this secret is not available, leave empty (but remove the value 'REQUIRED') - then self-signed certificates will be used at the routes
-variable "cp4ba_tls_secret_name" {}
-
-# Password for CP4BA Admin User (cp4baAdminName name see below), for example passw0rd - see ldif file you applied to LDAP
 variable "cp4ba_admin_password" {}
 
 # Password for UMS Admin User (cp4baUmsAdminName name see below), for example passw0rd
@@ -89,10 +52,6 @@ variable "cp4ba_project_name" {
 }
 
 # -------- STORAGE-CLASSES ---------
-variable "storage_class_name" {
-  description = "Storage-Class"
-  default = "ibmc-file-retain-gold-gid"
-}
 
 variable "sc_slow_file_storage_classname" {
   default = "ibmc-file-bronze-gid"
@@ -124,9 +83,6 @@ variable "db2_host_ip" {}
 
 variable "db2_port_number" {}
 
-
-
-
 locals {
   //  cp4ba_namespace              = "cp4ba"
   entitled_registry_key_secret_name  = "ibm-entitlement-key"
@@ -135,12 +91,6 @@ locals {
   docker_email                 = var.entitled_registry_user_email
   enable_cluster               = var.cluster_name_or_id == "" || var.cluster_name_or_id == null
   use_entitlement              = "yes"
-  //  project_name                 = "cp4ba"
-  platform_options             = "ROKS" #1 // 1: roks - 2: ocp - 3: private cloud
-  deployment_type              = "Enterprise" # 2 // 1: demo - 2: enterprise
-  runtime_mode                 = "dev"
-  platform_version             = "4.6" // roks version
-  machine                      = "Mac"
   ibmcloud_api_key             = chomp(var.ibmcloud_api_key)
 }
 
@@ -175,7 +125,6 @@ locals {
   ldap_tds_user_filter = "(\\&(cn=%v)(objectclass=person))"
   ldap_tds_group_filter = "(\\&(cn=%v)(\\|(objectclass=groupofnames)(objectclass=groupofuniquenames)(objectclass=groupofurls)))"
 }
-
 
 # --- HA Settings ---
 locals {
