@@ -18,17 +18,11 @@ IBM_CP4BA_CR_FINAL_FILE=${PARENT_DIR}/files/ibm_cp4ba_cr_final.yaml
 k8s_CMD=kubectl
 OC_CMD=oc
 
-#cp "${OPERATOR_PVC_TEMPLATE}" "${OPERATOR_PVC_FILE_CP}"
-
-# Create project or namespace where cp4ba will be installed
 function create_project(){
     echo
-#    result=$(${OC_CMD} projects | grep "${PROJECT_NAME}")
-#    if [[ -ne $result ]];
-#    then
     echo "Creating \" ${CP4BA_PROJECT_NAME}\" project ... "
     ${OC_CMD} new-project "${CP4BA_PROJECT_NAME}"
-#    fi
+    echo
 }
 
 
@@ -60,7 +54,8 @@ function create_secrets() {
     fi
 
     echo -e "\x1B[1mCreating secret \"ibm-db2-secret\" in ${CP4BA_PROJECT_NAME} for DB2...\n\x1B[0m"
-    CREATE_SECRET_RESULT=$(${k8s_CMD} create secret docker-registry ibm-db2-secret -n "${CP4BA_PROJECT_NAME}" --docker-username="${DOCKER_USERNAME}" --docker-password="${ENTITLED_REGISTRY_KEY}" --docker-server="${DOCKER_SERVER}" --docker-email="${DOCKER_USER_EMAIL}")
+#    CREATE_SECRET_RESULT=$(${k8s_CMD} create secret docker-registry ibm-db2-secret -n "${CP4BA_PROJECT_NAME}" --docker-username="${DOCKER_USERNAME}" --docker-password="${ENTITLED_REGISTRY_KEY}" --docker-server="${DOCKER_SERVER}" --docker-email="${DOCKER_USER_EMAIL}")
+    CREATE_SECRET_RESULT=$(${k8s_CMD} create secret generic my-ldap-tds-secret --from-literal=ldapUsername="${LDAP_ADMIN_NAME}" --from-literal=ldapPassword="${LDAP_ADMIN_PASSWORD}")
     sleep 5
 
     if [[ ${CREATE_SECRET_RESULT} ]]; then
@@ -84,9 +79,6 @@ function create_secrets() {
 }
 
 function allocate_operator_pvc(){
-#    sed -i.tmp "s|REPLACE_PROJECT_NAME|$PROJECT_NAME|g" "${OPERATOR_PVC_FILE_CP}"
-#    sed -i.tmp "s|REPLACE_STORAGE_CLASS|$SLOW_STORAGE_CLASS_NAME|g" "${OPERATOR_PVC_FILE_CP}"
-
     echo -e "\x1B[1mApplying the Persistent Volumes Claim (PVC) for the Cloud Pak operator by using the storage classname: ${SLOW_STORAGE_CLASS_NAME}...\x1B[0m"
 
     CREATE_PVC_RESULT=$(kubectl -n "${CP4BA_PROJECT_NAME}" apply -f "${OPERATOR_PVC_FILE}")
@@ -108,7 +100,7 @@ function allocate_operator_pvc(){
         sleep 10
         if [ $ATTEMPTS -eq $TIMEOUT ] ; then
             echo -e "\x1B[1;31mFailed to allocate the persistent volumes!\x1B[0m"
-            echo -e "\x1B[1;31mRun the following command to check the claim ${CLI_CMD} describe pvc operator-shared-pvc'\x1B[0m"
+            echo -e "\x1B[1;31mRun the following command to check the claim ${OC_CMD} describe pvc operator-shared-pvc'\x1B[0m"
             exit 1
         fi
     done
@@ -126,7 +118,7 @@ function allocate_operator_pvc(){
         sleep 10
         if [ $ATTEMPTS -eq $TIMEOUT ] ; then
             echo -e "\x1B[1;31mFailed to allocate the persistent volumes!\x1B[0m"
-            echo -e "\x1B[1;31mRun the following command to check the claim ${CLI_CMD} describe pvc operator-shared-pvc'\x1B[0m"
+            echo -e "\x1B[1;31mRun the following command to check the claim ${OC_CMD} describe pvc operator-shared-pvc'\x1B[0m"
             exit 1
         fi
     done
@@ -137,53 +129,8 @@ function allocate_operator_pvc(){
 }
 
 
-# Adding priviledges to the projects
-function add_priviledges() {
-    ${OC_CMD} project "${CP4BA_PROJECT_NAME}"
-    ${OC_CMD} adm policy add-scc-to-group ibm-anyuid-scc system:authenticated
-    ${OC_CMD} adm policy add-scc-to-user ibm-privileged-scc system:authenticated
-
-    echo "Creating ibm-cp4a-operator role ..."
-    cmd_result=$(${OC_CMD} apply -f "${ROLE_FILE}" -n "${CP4BA_PROJECT_NAME}")
-    if [[ ${cmd_result} ]];
-    then
-      echo "CP4BA ibm-cp4a-operator role is created."
-    fi
-
-    echo "Creating ibm-cp4a-operator rolebinding ..."
-    cmd_result=$(${OC_CMD} apply -f "${ROLE_BINDING_FILE}" -n "${CP4BA_PROJECT_NAME}")
-    if [[ ${cmd_result} ]];
-    then
-      echo "CP4BA ibm-cp4a-operator rolebinding is created."
-    fi
-
-    echo "Creating ibm-cp4a-operator service account ..."
-    cmd_result=$(${OC_CMD} apply -f "${SERVICE_ACCOUNT_FILE}" -n "${CP4BA_PROJECT_NAME}")
-    if [[ ${cmd_result} ]];
-    then
-      echo "CP4BA ibm-cp4a-operator service account is created."
-    fi
-    echo
-}
-
-
 # Deploying the Common-Service
 function deploy_common_service() {
-   # I will need this later
-#  ````
-#  apiVersion: operator.ibm.com/v3
-#kind: CommonService
-#metadata:
-#  name: example-commonservice
-#  labels:
-#    app.kubernetes.io/instance: ibm-common-service-operator
-#    app.kubernetes.io/managed-by: ibm-common-service-operator
-#    app.kubernetes.io/name: ibm-common-service-operator
-#  namespace: cp4ba
-#spec:
-#  size: starterset
-#  ````
-  ############################################################
 
     echo "Creating \"common-service\" project ..."
     ${OC_CMD} new-project common-service
@@ -243,11 +190,7 @@ function create_operator() {
    echo -e "\x1B[1mWaiting for the Cloud Pak operator to be ready. This might take a few minutes... \x1B[0m"
    ATTEMPTS=0
    ROLLOUT_STATUS_CMD=$("${OC_CMD}" rollout status deployment/ibm-cp4a-operator -n "${CP4BA_PROJECT_NAME}")
-#   until ${ROLLOUT_STATUS_CMD} || [ "${ATTEMPTS}" -eq 30 ]; do
-#       ${ROLLOUT_STATUS_CMD}
-#       ATTEMPTS=$(${ATTEMPTS} + 1)
-#       sleep 5
-#   done
+
    sleep 30
    if ${ROLLOUT_STATUS_CMD} ; then
        echo -e "\x1B[1;34mDone. \"ibm-cp4a-operator\" is ready for use.\x1B[0m"
@@ -260,18 +203,19 @@ function create_operator() {
 
 function copy_jdbc_driver(){
     echo
+#    JDBC Driver download link; https://www.ibm.com/support/pages/node/387577
     # Get pod name
     echo -e "\x1B[1mCopying the JDBC driver for the operator...\x1B[0m"
     operator_podname=$(${OC_CMD} get pod -n "${CP4BA_PROJECT_NAME}" | grep ibm-cp4a-operator | grep Running | awk '{print $1}')
 
-    # ${CLI_CMD} exec -it ${operator_podname} -- rm -rf /opt/ansible/share/jdbc
+    # ${OC_CMD} exec -it ${operator_podname} -- rm -rf /opt/ansible/share/jdbc
     COPY_JDBC_CMD="${OC_CMD} cp ${JDBC_DRIVER_DIR} ${operator_podname}:/opt/ansible/share/"
 
     echo "Copying jdbc for Db2 from Db2 container to local disk..."
     ${OC_CMD} project "${DB2_PROJECT_NAME}"
     rm ./jdbc/db2/*
-    ${OC_CMD} cp c-db2ucluster-db2u-0:/opt/ibm/db2/V11.5.0.0/java/db2jcc4.jar ./jdbc/db2/db2jcc4.jar
-    ${OC_CMD} cp c-db2ucluster-db2u-0:/opt/ibm/db2/V11.5.0.0/java/db2jcc_license_cu.jar ./jdbc/db2/db2jcc_license_cu.jar
+    COPY_JDBC_CMD="${OC_CMD} cp ${JDBC_DRIVER_DIR} ${operator_podname}:/opt/ansible/share/"
+
     ${OC_CMD} project "${CP4BA_PROJECT_NAME}"
 
     if ${COPY_JDBC_CMD} ; then
@@ -290,74 +234,12 @@ function prepare_deployment_file(){
     echo "Preparing the CR YAML for deployment..."
 
     cp "${IBM_CP4BA_CR_FINAL_FILE_TMPL}" "${IBM_CP4BA_CR_FINAL_FILE}"
-    # Adding admin user (email)
     sed -i.bak "s|admin_user|$USER_NAME_EMAIL|g" "${IBM_CP4BA_CR_FINAL_FILE}"
     sed -i.bak "s|spec.baw_configuration.database.port|$DB2_PORT_NUMBER|g" "${IBM_CP4BA_CR_FINAL_FILE}"
     sed -i.bak "s|spec.baw_configuration.database.database_name|$DB2_HOST_NAME|g" "${IBM_CP4BA_CR_FINAL_FILE}"
     sed -i.bak "s|spec.baw_configuration.database.server_name|$DB2_HOST_IP|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-    database_name
-
-#    sed -i.bak "s|db2HostName|$db2HostName|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|db2HostIp|$db2HostIp|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|db2PortNumber|$db2PortNumber|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|db2UmsdbName|$db2UmsdbName|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|db2IcndbName|$db2IcndbName|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|db2Devos1Name|$db2Devos1Name|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|db2AeosName|$db2AeosName|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|db2BawDocsName|$db2BawDocsName|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|db2BawDosName|$db2BawDosName|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|db2BawTosName|$db2BawTosName|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|db2BawDbName|$db2BawDbName|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|db2AppdbName|$db2AppdbName|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|db2AedbName|$db2AedbName|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|db2BasdbName|$db2BasdbName|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|db2GcddbName|$db2GcddbName|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|db2CaBasedbName|$db2CaBasedbName|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|db2CaTendbName|$db2CaTendbName|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-
-#    sed -i.bak "s|ic_ldap_admin_user_name|$ldapName|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|lc_selected_ldap_type|$ldapType|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|lc_ldap_server|$ldapServer|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|lc_ldap_port|$ldapPort|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|lc_ldap_base_dn|$ldapBaseDn|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|lc_ldap_user_name_attribute|$ldapUserNameAttribute|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|lc_ldap_user_display_name_attr|$ldapUserDisplayNameAttr|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|lc_ldap_group_base_dn|$ldapGroupBaseDn|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|lc_ldap_group_name_attribute|$ldapGroupNameAttribute|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|lc_ldap_group_display_name_attr|$ldapGroupDisplayNameAttr|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|lc_ldap_group_membership_search_filter|$ldapGroupMembershipSearchFilter|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|lc_ldap_group_member_id_map|$ldapGroupMemberIdMap|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|lc_ad_gc_host|$ldapAdGcHost|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|lc_ad_gc_port|$ldapAdGcPort|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|lc_user_filter|$ldapAdUserFilter|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|lc_group_filter|$ldapAdGroupFilter|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|lc_user_filter|$ldapTdsUserFilter|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|lc_group_filter|$ldapTdsGroupFilter|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-
-#    sed -i.bak "s|cp4baUmsAdminGroup|${CP4BA_UMS_ADMIN_GROUP}|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|sc_deployment_platform|$cp4baDeploymentPlatform|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|cp4baOcpHostname|${CP4BA_OCP_HOSTNAME}|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|sc_slow_file_storage_classname|$SC_SLOW_FILE_STORAGE_CLASSNAME|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|sc_medium_file_storage_classname|$SC_MEDIUM_FILE_STORAGE_CLASSNAME|g" "${IBM_CP4BA_CR_FINAL_FILE}"
     sed -i.bak "s|sc_fast_file_storage_classname|$SC_FAST_FILE_STORAGE_CLASSNAME|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|cp4baReplicaCount|$cp4baReplicaCount|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|cp4baBaiJobParallelism|$cp4baBaiJobParallelism|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|cp4baAdminName|${CP4BA_ADMIN_NAME}|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|cp4baAdminPassword|${CP4BA_ADMIN_PASSWORD}|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|cp4baAdminGroup|${CP4BA_ADMIN_GROUP}|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|cp4baUsersGroup|${CP4BA_USERS_GROUP}|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    CP4BA_ADMIN_NAME = local.cp4ba_admin_name
-#      CP4BA_ADMIN_GROUP = local.cp4ba_admin_group
-#      CP4BA_USERS_GROUP = local.cp4ba_users_group
-#      CP4BA_UMS_ADMIN_NAME = local.cp4ba_ums_admin_name
-#      CP4BA_UMS_ADMIN_GROUP = local.cp4ba_ums_admin_group
-#      CP4BA_OCP_HOSTNAME = var.cp4ba_ocp_hostname
-#      CP4BA_TLS_SECRET_NAME = var.cp4ba_tls_secret_name
-#      CP4BA_ADMIN_PASSWORD = var.cp4ba_admin_password
-#      CP4BA_UMS_ADMIN_PASSWORD = var.cp4ba_ums_admin_password
-#
-#    sed -i.bak "s|bawLibertyCustomXml|$bawLibertyCustomXml|g" "${IBM_CP4BA_CR_FINAL_FILE}"
-#    sed -i.bak "s|sc_ingress_tls_secret_name|${CP4BA_TLS_SECRET_NAME|g" "${IBM_CP4BA_CR_FINAL_FILE}"
+
 }
 
 
@@ -365,17 +247,10 @@ function prepare_deployment_file(){
 
 function cp4ba_deployment() {
     echo "Creating tls secret key ..."
-    ${CLI_CMD} apply -f "${TLS_SECRET_FILE}" -n "${CP4BA_PROJECT_NAME}"
-
-    echo "Creating the AutomationUIConfig & Cartridge deployment..."
-    ${CLI_CMD} apply -f "${AUTOMATION_UI_CONFIG_FILE}" -n "${CP4BA_PROJECT_NAME}"
-    ${CLI_CMD} apply -f "${CARTRIDGE_FILE}" -n "${CP4BA_PROJECT_NAME}"
-    echo "Done."
-
-    ${CLI_CMD} apply -f "${PARENT_DIR}"/files/t_icp4badeploy.yaml
+    ${OC_CMD} apply -f "${TLS_SECRET_FILE}" -n "${CP4BA_PROJECT_NAME}"
 
     echo "Deploying Cloud Pak for Business Automation Capabilities ..."
-    ${CLI_CMD} apply -f "${IBM_CP4BA_CR_FINAL_FILE}" -n "${CP4BA_PROJECT_NAME}"
+    ${OC_CMD} apply -f "${IBM_CP4BA_CR_FINAL_FILE}" -n "${CP4BA_PROJECT_NAME}"
 
     ${OC_CMD} project "${CP4BA_PROJECT_NAME}"
 
@@ -436,12 +311,6 @@ function cp4ba_deployment() {
       fi
     done
 
-#    #  Ts go here
-#    oc apply -f "${PARENT_DIR}"/files/t_automation_foundation.yaml
-#    oc apply -f "${PARENT_DIR}"/files/t_automation_foundation_core.yaml
-#    oc apply -f "${PARENT_DIR}"/files/t_common_services.yaml
-#    oc apply -f "${PARENT_DIR}"/files/t_cp4ba_install.yaml
-
 }
 
 # Calling all the functions
@@ -451,11 +320,7 @@ create_secrets
 sleep 5
 allocate_operator_pvc
 sleep 5
-deploy_common_service
-sleep 5
 copy_jdbc_driver
-sleep 5
-add_priviledges
 sleep 5
 prepare_deployment_file
 sleep 5

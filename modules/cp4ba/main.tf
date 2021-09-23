@@ -131,6 +131,10 @@ resource "null_resource" "installing_cp4ba" {
       DB2_HOST_IP             = var.db2_host_ip
       DB2_ADMIN_USERNAME      = var.db2_admin_username
       DB2_ADMIN_USER_PASSWORD = var.db2_admin_user_password
+
+      # ----- LDAP Settings -----
+      LDAP_ADMIN_NAME         = local.ldap_admin_name
+      LDAP_ADMIN_PASSWORD     = var.ldap_admin_password
     }
   }
 

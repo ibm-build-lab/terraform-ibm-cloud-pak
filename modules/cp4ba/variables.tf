@@ -176,6 +176,7 @@ locals {
   ldap_tds_group_filter = "(\\&(cn=%v)(\\|(objectclass=groupofnames)(objectclass=groupofuniquenames)(objectclass=groupofurls)))"
 }
 
+
 # --- HA Settings ---
 locals {
   cp4ba_replica_count = 1
