@@ -102,3 +102,5 @@ module "cp4ba" {
       LDAP_ADMIN_NAME         = local.ldap_admin_name
       LDAP_ADMIN_PASSWORD     = var.ldap_admin_password
 }
+
+
