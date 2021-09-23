@@ -481,3 +481,35 @@ resource "null_resource" "install_wsruntime" {
     null_resource.install_big_sql,
   ]
 }
+
+data "external" "get_endpoints" {
+  count = var.enable ? 1 : 0
+
+  depends_on = [
+    var.portworx_is_ready,
+    null_resource.prereqs_checkpoint,
+    null_resource.bedrock_zen_operator,
+    null_resource.install_wsl,
+    null_resource.install_aiopenscale,
+    null_resource.install_wml,
+    null_resource.install_wkc,
+    null_resource.install_dv,
+    null_resource.install_spss,
+    null_resource.install_cde,
+    null_resource.install_spark,
+    null_resource.install_dods,
+    null_resource.install_ca,
+    null_resource.install_ds,
+    null_resource.install_db2oltp,
+    null_resource.install_db2wh,
+    null_resource.install_big_sql,
+    null_resource.install_wsruntime,
+  ]
+
+  program = ["/bin/bash", "${path.module}/scripts/get_endpoints.sh"]
+
+  query = {
+    kubeconfig = var.cluster_config_path
+    namespace  = var.cpd_project_name
+  }
+}

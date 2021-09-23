@@ -1,14 +1,11 @@
 output "cpd_url" {
-  description = "Access your Cloud Pak for Data deployment at this URL."
-  value       = "$(oc get routes -n zen)"
+  value = module.cp4data.endpoint
 }
 
 output "cpd_user" {
-  description = "Username for your Cloud Pak for Data deployment."
-  value       = "admin"
+  value = module.cp4data.user
 }
 
-output "cpd_pass" {
-  description = "Password for your Cloud Pak for Data deployment."
-  value       = "$(oc extract secret/admin-user-details --keys=initial_admin_password --to=- -n zen)"
+output "cpd_password" {
+  value = module.cp4data.password
 }

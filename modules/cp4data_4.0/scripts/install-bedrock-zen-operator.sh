@@ -6,19 +6,19 @@
 
 ibmcloud login --apikey ${IBMCLOUD_APIKEY} -g ${IBMCLOUD_RG_NAME} -r ${REGION}
 
+# only call roks-update on vpc
 if ${ON_VPC}; then
 ./roks-update.sh ${CLUSTER_NAME}
-else
+else # classic
 ./roks-reboot.sh ${CLUSTER_NAME}
-fi
 
 # attempt to fix norootsquash registry complaints in daemon set pods
-# kubectl -n kube-system create secret docker-registry ibm-entitlement-key \
-#    --docker-server=cp.icr.io \
-#    --docker-username=cp \
-#    --docker-password=${ENTITLEMENT_KEY} \
-#    --docker-email=${ENTITLEMENT_USER}
-
+kubectl -n kube-system create secret docker-registry ibm-entitlement-key \
+   --docker-server=cp.icr.io \
+   --docker-username=cp \
+   --docker-password=${ENTITLEMENT_KEY} \
+   --docker-email=${ENTITLEMENT_USER}
+fi
 
 cd ../files
 
