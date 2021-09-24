@@ -2,7 +2,7 @@
 
 This Terraform Module installs **Cloud Pak for Data** on an Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4data`
+**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/cp4data_4.0`
 
 - [Terraform Module to install Cloud Pak for Data](#terraform-module-to-install-cloud-pak-for-data)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
@@ -68,7 +68,7 @@ Output:
 
 ### Installing the CP4Data Module
 
-Use a `module` block assigning `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4data`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Data.
+Use a `module` block assigning `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/cp4data_4.0`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Data.
 
 ```hcl
 module "cp4data" {
@@ -95,19 +95,21 @@ module "cp4data" {
   cpd_project_name = var.cpd_project_name
 
   // Parameters to install submodules
-  install_watson_knowledge_catalog = var.install_watson_knowledge_catalog
-  install_watson_studio            = var.install_watson_studio
-  install_watson_machine_learning  = var.install_watson_machine_learning
-  install_watson_open_scale        = var.install_watson_open_scale
-  install_data_virtualization      = var.install_data_virtualization
-  install_streams                  = var.install_streams
-  install_analytics_dashboard      = var.install_analytics_dashboard
-  install_spark                    = var.install_spark
-  install_db2_warehouse            = var.install_db2_warehouse
-  install_db2_data_gate            = var.install_db2_data_gate
-  install_big_sql                  = var.install_big_sql
-  install_rstudio                  = var.install_rstudio
-  install_db2_data_management      = var.install_db2_data_management
+  install_wsl         = var.install_wsl
+  install_aiopenscale = var.install_aiopenscale
+  install_wml         = var.install_wml
+  install_wkc         = var.install_wkc
+  install_dv          = var.install_dv
+  install_spss        = var.install_spss
+  install_cde         = var.install_cde
+  install_spark       = var.install_spark
+  install_dods        = var.install_dods
+  install_ca          = var.install_ca
+  install_ds          = var.install_ds
+  install_db2oltp     = var.install_db2oltp
+  install_db2wh       = var.install_db2wh
+  install_big_sql     = var.install_big_sql
+  install_wsruntime   = var.install_wsruntime
 }
 ```
 
@@ -126,19 +128,21 @@ module "cp4data" {
 | `entitled_registry_user_email`     | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key                                                                                                                 |                             | Yes      |
 | `worker_node_flavor`          | Flavor used to determine worker node hardware for the cluster |  | Yes       |
 | `accept_cpd_license`          | If set to `true`, you accept all cpd license agreements including additional modules installed. By default, it's `false` | `false` | Yes       |
-| `install_watson_knowledge_catalog` | Install Watson Knowledge Catalog module. By default it's not installed.                                                                                                                                                    | `false`                     | No       |
-| `install_watson_studio`            | Install Watson Studio module. By default it's not installed.                                                                                                                                                               | `false`                     | No       |
-| `install_watson_machine_learning`  | Install Watson Machine Learning module. By default it's not installed.                                                                                                                                                     | `false`                     | No       |
-| `install_watson_open_scale`        | Install Watson Open Scale module. By default it's not installed.                                                                                                                                                           | `false`                     | No       |
-| `install_data_virtualization`      | Install Data Virtualization module. By default it's not installed.                                                                                                                                                         | `false`                     | No       |
-| `install_streams`                  | Install Streams module. By default it's not installed.                                                                                                                                                                     | `false`                     | No       |
-| `install_analytics_dashboard`      | Install Analytics Dashboard module. By default it's not installed.                                                                                                                                                         | `false`                     | No       |
-| `install_spark`                    | Install Analytics Engine powered by Apache Spark module. By default it's not installed.                                                                                                                                    | `false`                     | No       |
-| `install_db2_warehouse`            | Install DB2 Warehouse module. By default it's not installed.                                                                                                                                                               | `false`                     | No       |
-| `install_db2_data_gate`            | Install DB2 Data_Gate module. By default it's not installed.                                                                                                                                                               | `false`                     | No       |
-| `install_big_sql`                  | Install Big SQL module. By default it's not installed.                                                                                                                                                                     | `false`                     | No       |
-| `install_rstudio`                  | Install RStudio module. By default it's not installed.                                                                                                                                                                     | `false`                     | No       |
-| `install_db2_data_management`      | Install DB2 Data Management module. By default it's not installed.                                                                                                                                                         | `false`                     | No       |
+| `install_wsl` | Install Watson Studio module. By default it's not installed.                                                                                                                                                    | `false`                     | No       |
+| `install_aiopenscale` | Install  Watson AI OpenScale module. By default it's not installed.                                                                                                                                                    | `false`                     | No       |
+| `install_wml` | Install Watson Machine Learning module. By default it's not installed.                                                                                                                                                    | `false`                     | No       |
+| `install_wkc`            | Install Watson Knowledge Catalog module. By default it's not installed.                                                                                                                                                               | `false`                     | No       |
+| `install_dv`  | Install Data Virtualization module. By default it's not installed.                                                                                                                                                     | `false`                     | No       |
+| `install_spss`        | Install SPSS Modeler module. By default it's not installed.                                                                                                                                                           | `false`                     | No       |
+| `install_cde`      | Install Cognos Dashboard Engine module. By default it's not installed.                                                                                                                                                         | `false`                     | No       |
+| `install_spark`                  | Install Analytics Engine powered by Apache Spark module. By default it's not installed.                                                                                                                                                                     | `false`                     | No       |
+| `install_dods`      | Install Decision Optimization module. By default it's not installed.                                                                                                                                                         | `false`                     | No       |
+| `install_ca`                    | Install Cognos Analytics module. By default it's not installed.                                                                                                                                    | `false`                     | No       |
+| `install_ds`            | Install DataStage module. By default it's not installed.                                                                                                                                                               | `false`                     | No       |
+| `install_db2oltp`            | Install Db2oltp module. By default it's not installed.                                                                                                                                                               | `false`                     | No       |
+| `install_db2wh`                  | Install Db2 Warehouse module. By default it's not installed.                                                                                                                                                                     | `false`                     | No       |
+| `install_big_sql`                  | Install Db2 Big SQL module. By default it's not installed.                                                                                                                                                                     | `false`                     | No       |
+| `install_wsruntime`      | Install Jupyter Python 3.7 Runtime Addon. By default it's not installed.                                                                                                                                                         | `false`                     | No       |
 
 **NOTE** The boolean input variable `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
 
