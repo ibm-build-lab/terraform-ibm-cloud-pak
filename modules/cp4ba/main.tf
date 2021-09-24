@@ -12,6 +12,7 @@ locals {
 }
 
 resource "null_resource" "installing_cp4ba" {
+  count = var.enable ? 1 : 0
 
   triggers = {
     PVC_FILE_sha1                         = sha1(local.pvc_file_content)
