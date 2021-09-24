@@ -61,26 +61,34 @@ variable "sc_fast_file_storage_classname" {
 }
 
 # -------- DB2 Variables ---------
-variable "db2_admin_user_password" {
-  default = "passw0rd"
+variable "db2_admin" {
+  default = "cpadmin"
+  description = "Admin user name defined in LDAP"
 }
 
-variable "db2_admin_username" {
+variable "db2_user" {
   default = "db2inst1"
+  description = "User name defined in LDAP"
 }
 
-variable "db2_host_ip" {}
+variable "db2_password" {
+  default = "passw0rd"
+  description = "Password defined in LDAP"
+}
 
-variable "db2_port_number" {}
+variable "db2_host_ip" {
+  default     = ""
+  description = "IP address for DB2 instance"
+}
+
+variable "db2_port_number" {
+  default     = ""
+  description = "Port for DB2 instance"
+}
 
 locals {
-  //  cp4ba_namespace              = "cp4ba"
-  entitled_registry_key_secret_name  = "ibm-entitlement-key"
   docker_server                = "cp.icr.io"
   docker_username              = "cp"
-  docker_email                 = var.entitled_registry_user_email
-  enable_cluster               = var.cluster_name_or_id == "" || var.cluster_name_or_id == null
-  use_entitlement              = "yes"
   ibmcloud_api_key             = chomp(var.ibmcloud_api_key)
 }
 
