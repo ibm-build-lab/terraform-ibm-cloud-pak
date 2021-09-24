@@ -48,11 +48,11 @@ module "cp4ba" {
   DOCKER_USER_EMAIL             = local.docker_email
 
   # ------- FILES ASSIGNMENTS --------
-  OPERATOR_PVC_FILE                = local.pvc_file
-  CATALOG_SOURCE_FILE              = local.catalog_source_file
-  IBM_CP4BA_CRD_FILE               = local.ibm_cp4ba_crd_file
-  IBM_CP4BA_CR_FINAL_TMPL_FILE     = local.ibm_cp4ba_cr_final_tmpl_file
-  CP4BA_SUBSCRIPTION_FILE          = local.cp4ba_subscription_file
+//  OPERATOR_PVC_FILE                = local.pvc_file
+//  CATALOG_SOURCE_FILE              = local.catalog_source_file
+//  IBM_CP4BA_CRD_FILE               = local.ibm_cp4ba_crd_file
+//  IBM_CP4BA_CR_FINAL_TMPL_FILE     = local.ibm_cp4ba_cr_final_tmpl_file
+//  CP4BA_SUBSCRIPTION_FILE          = local.cp4ba_subscription_file
   CP4BA_ADMIN_NAME                 = local.cp4ba_admin_name
   CP4BA_ADMIN_GROUP                = local.cp4ba_admin_group
   CP4BA_USERS_GROUP                = local.cp4ba_users_group
