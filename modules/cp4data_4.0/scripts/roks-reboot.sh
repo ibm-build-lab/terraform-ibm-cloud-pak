@@ -50,7 +50,7 @@ function reboot {
     if ${ON_VPC}; then
         ibmcloud oc worker reboot -s -f --cluster ${cluster} ${reboot_worker_flag} ${worker}
     else
-        ibmcloud oc worker reload --cluster ${cluster} ${reboot_worker_flag} ${worker}
+        ibmcloud oc worker reload -f --cluster ${cluster} ${reboot_worker_flag} ${worker}
     fi
     # wait up to 15 min for node to get back to Ready state
     shutdown=false
