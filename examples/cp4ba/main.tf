@@ -27,19 +27,6 @@ data "ibm_container_cluster_config" "cluster_config" {
   network           = false
 }
 
-locals {
-  pvc_file                              = "${path.module}/files/operator-shared-pvc.yaml"
-  pvc_file_content                      = file(local.pvc_file)
-  catalog_source_file                   = "${path.module}/files/catalog_source.yaml"
-  catalog_source_file_content           = file(local.catalog_source_file)
-  ibm_cp4ba_crd_file                    = "${path.module}/files/ibm_cp4ba_crd.yaml"
-  ibm_cp4ba_crd_file_content            = file(local.ibm_cp4ba_crd_file)
-  ibm_cp4ba_cr_final_tmpl_file          = "${path.module}/files/ibm_cp4ba_cr_final_tmpl.yaml"
-  ibm_cp4ba_cr_final_tmpl_file_content  = file(local.ibm_cp4ba_cr_final_tmpl_file)
-  cp4ba_subscription_file               = "${path.module}/files/cp4ba_subscription.yaml"
-  cp4ba_subscription_file_content       = file(local.cp4ba_subscription_file)
-}
-
 module "cp4ba" {
   source = "../../modules/cp4ba"
 
