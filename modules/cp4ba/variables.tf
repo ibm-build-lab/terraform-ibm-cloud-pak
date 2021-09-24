@@ -26,9 +26,9 @@ variable "resource_group" {
   description = "Resource group name where the cluster will be hosted."
 }
 
-variable "registry_server" {
-  description = "Enter the public image registry or route (e.g., default-route-openshift-image-registry.apps.<hostname>).\nThis is required for docker/podman login validation:"
-}
+//variable "registry_server" {
+//  description = "Enter the public image registry or route (e.g., default-route-openshift-image-registry.apps.<hostname>).\nThis is required for docker/podman login validation:"
+//}
 
 variable "entitlement_key" {
   type        = string
