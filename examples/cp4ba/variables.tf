@@ -39,10 +39,10 @@ variable "entitlement_key" {
   description = "Do you have a Cloud Pak for Business Automation Entitlement Registry key? If not, Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
 }
 
-variable "cp4ba_admin_password" {}
+//variable "cp4ba_admin_password" {}
 
 # Password for UMS Admin User (cp4baUmsAdminName name see below), for example passw0rd
-variable "cp4ba_ums_admin_password" {}
+//variable "cp4ba_ums_admin_password" {}
 
 # Password for LDAP Admin User (ldapAdminName name see below), for example passw0rd - use the password that you specified when setting up LDAP
 variable "ldap_admin_password" {}

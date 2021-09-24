@@ -71,8 +71,8 @@ module "cp4ba" {
   CP4BA_USERS_GROUP                = local.cp4ba_users_group
   CP4BA_UMS_ADMIN_NAME             = local.cp4ba_ums_admin_name
   CP4BA_UMS_ADMIN_GROUP            = local.cp4ba_ums_admin_group
-  CP4BA_ADMIN_PASSWORD             = var.cp4ba_admin_password
-  CP4BA_UMS_ADMIN_PASSWORD         = var.cp4ba_ums_admin_password
+//  CP4BA_ADMIN_PASSWORD             = var.cp4ba_admin_password
+//  CP4BA_UMS_ADMIN_PASSWORD         = var.cp4ba_ums_admin_password
 
   # ---- Storage Classes ----
   SC_SLOW_FILE_STORAGE_CLASSNAME   = var.sc_slow_file_storage_classname
