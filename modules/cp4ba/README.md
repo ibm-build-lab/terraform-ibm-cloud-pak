@@ -1,21 +1,8 @@
-<<<<<<< Updated upstream
-Placeholder for new CP4BA 
-=======
-# Terraform Module to install Cloud Pak for Automation
+# Terraform Module to install Cloud Pak for Business Automation
 
-This Terraform Module installs **Cloud Pak for Automation** on an Openshift (ROKS) cluster on IBM Cloud.
+This Terraform Module installs **Cloud Pak for Business Automation** on an Openshift (ROKS) cluster on IBM Cloud.
 
 **Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4ba`
-
-- [Terraform Module to install Cloud Pak for Automation](#terraform-module-to-install-cloud-pak-for-automation)
-  - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
-  - [Provisioning this module in a Terraform Script](#provisioning-this-module-in-a-terraform-script)
-    - [Setting up the OpenShift cluster](#setting-up-the-openshift-cluster)
-    - [Provisioning the CP4BAuto Module](#provisioning-the-cp4ba-module)
-  - [Input Variables](#input-variables)
-  - [Executing the Terraform Script](#executing-the-terraform-script)
-  - [Accessing the Cloud Pak Console](#accessing-the-cloud-pak-console)
-  - [Clean up](#clean-up)
 
 ## Set up access to IBM Cloud
 
@@ -25,11 +12,10 @@ Go [here](../CREDENTIALS.md) for details.
 
 ## Provisioning this module in a Terraform Script
 
-In your Terraform script define the `ibm` provisioner block with the `region` and the `generation`, which is **1** for **Classic** and **2** for **VPC Gen 2**.
+In your Terraform script define the `ibm` provisioner block with the `region`.
 
 ```hcl
 provider "ibm" {
-  generation = 1
   region     = "us-south"
 }
 ```
@@ -69,17 +55,16 @@ Output:
 
 `ibm_container_cluster_config` used as input for the `cp4ba` module
 
-### Provisioning the CP4ba Module
+### Provisioning the CP4BA Module
 
 Use a `module` block assigning the `source` parameter to the location of this module `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4ba`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Automation.
 
 ```hcl
 module "cp4ba" {
-  source          = "./.."
+  source          = "../../modules/cp4ba"
   enable          = true
 
   // ROKS cluster parameters:
-  openshift_version   = var.roks_version
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
 
   // Entitled Registry parameters:
@@ -92,8 +77,7 @@ module "cp4ba" {
 
 | Name                               | Description                                                                                                                                                                                                                | Default                     | Required |
 | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | -------- |
-| `enable`                           | If set to `false` does not install the cloud pak on the given cluster. By default it's enabled                                                                                                                        | `true`                      | No       |
-| `openshift_version`                | Openshift version installed in the cluster                                                                                                                                                                                 | `4.5`                       | No       |
+| `enable`                           | If set to `false` does not install the cloud pak on the given cluster. By default it's enabled                                                                                                                       | `true`                      | No       |
 | `entitled_registry_key`            | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
 | `entitled_registry_user_email`     | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key                                                                                                                 |                             | Yes      |
 
@@ -139,4 +123,3 @@ When you finish using the cluster, release the resources by executing the follow
 ```bash
 terraform destroy
 ```
->>>>>>> Stashed changes
