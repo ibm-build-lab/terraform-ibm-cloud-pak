@@ -70,6 +70,8 @@ Update the /files/cp.ldif.
 | `private_network_only`  | When set to true, a compute instance has only access to the private network. The default value is false.                                                                                                    | `false` | Yes      |
 | `local_disk`            | The disk type for the instance. When set to true, the disks for the computing instance are provisioned on the host that the instance runs. Otherwise, SAN disks are provisioned. The default value is true. | `true`  | Yes      |
 | `datacenter`            | IBM Cloud data center in which you want to provision the instance.                                                                                                                                          |         | Yes      |
+| `ldapBindDN`            | LDAP Bind DN (https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-connector-ldap-cp4d)                                                                                                           | `true`  | Yes      |
+| `ldapBindDNPassword`    | LDAP Bind DN password (https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-connector-ldap-cp4d)                                                                                                  |         | Yes      |
 
 ### Executing the Terraform Script
 

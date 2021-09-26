@@ -38,6 +38,8 @@ ibmcloud_domain       = "<my company>.cloud"
 cores                 = "2"
 memory                = "4096"
 disks                 = [25]
+ldapBindDN            = "cn=root"
+ldapBindDNPassword    = "Passw0rd"
 ```
 
 These parameters are:
@@ -53,7 +55,8 @@ These parameters are:
 - `cores`                   : Virtual Server CPU Cores.
 - `memory`                  : Virtual Server Memory
 - `disks`                   : Boot disk size
-
+- `ldapBindDN`              : LDAP Bind DN
+- `ldapBindDNPassword`      : LDAP Bind DN password
 
 
 ### Execute the example
