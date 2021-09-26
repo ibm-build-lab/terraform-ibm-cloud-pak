@@ -13,7 +13,7 @@
 CUR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PARENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 
-IBM_CP4BA_CR_FINAL_FILE=${PARENT_DIR}/files/ibm_cp4ba_cr_final.yaml
+#IBM_CP4BA_CR_FINAL_FILE=${PARENT_DIR}/files/ibm_cp4ba_cr_final.yaml
 
 K8S_CMD=kubectl
 OC_CMD=oc
