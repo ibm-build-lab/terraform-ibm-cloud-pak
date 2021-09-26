@@ -1,6 +1,3 @@
-<<<<<<< Updated upstream
-Placeholder for new CP4BA 
-=======
 # Terraform Module to install Cloud Pak for Automation
 
 This Terraform Module installs **Cloud Pak for Automation** on an Openshift (ROKS) cluster on IBM Cloud.
@@ -139,4 +136,3 @@ When you finish using the cluster, release the resources by executing the follow
 ```bash
 terraform destroy
 ```
->>>>>>> Stashed changes
