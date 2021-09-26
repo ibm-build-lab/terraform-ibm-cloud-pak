@@ -44,7 +44,7 @@ resource "null_resource" "installing_cp4ba" {
       # ---- Cluster ----
       CLUSTER_NAME_OR_ID     = var.cluster_name_or_id
       # ---- IBM Cloud API Key ----
-      IBMCLOUD_API_KEY = var.ibmcloud_api_key
+      #IBMCLOUD_API_KEY = var.ibmcloud_api_key
 
       # ---- Platform ----
       CP4BA_PROJECT_NAME            = var.cp4ba_project_name
