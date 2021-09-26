@@ -3,9 +3,9 @@ variable "enable" {
   description = "If set to true installs Cloud-Pak for Integration on the given cluster"
 }
 
-variable "ibmcloud_api_key" {
-  description = "IBM Cloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
-}
+# variable "ibmcloud_api_key" {
+#   description = "IBM Cloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
+# }
 
 variable "cluster_name_or_id" {
   default     = ""
@@ -33,31 +33,24 @@ variable "entitled_registry_user_email" {
   description = "Email address of the user owner of the Entitled Registry Key"
 }
 
-# use the id and password that you specified when setting up LDAP
-variable "ldap_admin_user" {}
-variable "ldap_admin_password" {}
-variable "ldap_server_ip" {}
-
 variable "cp4ba_project_name" {
   default = "cp4ba"
   description = "Project name or namespace where Cloud Pak for Business Automation will be installed."
 }
 
-# -------- STORAGE-CLASSES ---------
-
-variable "sc_slow_file_storage_classname" {
-  default = "ibmc-file-bronze-gid"
-  description = "Slow Storage Class"
+# Use the id and password that you specified when setting up LDAP
+variable "ldap_admin" {
+  default = "cn=root"
+  description = "LDAP Admin user name"
+}
+variable "ldap_admin" {
+  default = "Passw0rd"
+  description = "LDAP Admin password"
 }
 
-variable "sc_medium_file_storage_classname" {
-  default = "ibmc-file-silver-gid"
-  description = "Medium Storage Class"
-}
-
-variable "sc_fast_file_storage_classname" {
-  default = "ibmc-file-gold-gid"
-  description = "Fast Storage-Class"
+variable "ldap_server_ip" {
+  default = ""
+  description = "LDAP server IP address"
 }
 
 # -------- DB2 Variables ---------
@@ -81,15 +74,32 @@ variable "db2_host_ip" {
   description = "IP address for DB2 instance"
 }
 
-variable "db2_port_number" {
+variable "db2_host_port" {
   default     = ""
   description = "Port for DB2 instance"
 }
 
+# -------- STORAGE-CLASSES ---------
+
+# variable "sc_slow_file_storage_classname" {
+#   default = "ibmc-file-bronze-gid"
+#   description = "Slow Storage Class"
+# }
+
+# variable "sc_medium_file_storage_classname" {
+#   default = "ibmc-file-silver-gid"
+#   description = "Medium Storage Class"
+# }
+
+# variable "sc_fast_file_storage_classname" {
+#   default = "ibmc-file-gold-gid"
+#   description = "Fast Storage-Class"
+# }
+
 locals {
   docker_server                = "cp.icr.io"
   docker_username              = "cp"
-  ibmcloud_api_key             = chomp(var.ibmcloud_api_key)
+  # ibmcloud_api_key             = chomp(var.ibmcloud_api_key)
 }
 
 
