@@ -21,14 +21,9 @@ results() {
   exit 0
 }
 
-# route=$(oc get route -n zen cpd -o jsonpath={.spec.host} && echo)
 # route=$(oc get route -n ${NAMESPACE} cpd -o jsonpath='{.spec.host}' && echo)
-route=$(oc get route -n zen cpd -o json | jq -r .spec.host)
-# pass=$(oc -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d && echo)
-# pass=$(oc -n zen get secret admin-user-details -o jsonpath='{.data.initial_admin_password}' | base64 -d && echo)
-pass=$(oc -n zen get secret admin-user-details -o jsonpath='{.data.initial_admin_password}' | base64 -d && echo)
-# pass=$(oc extract secret/admin-user-details --keys=initial_admin_password --to=- -n ${NAMESPACE})
-# user=$(oc -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_username}' | base64 -d && echo)
+route=$(oc get route -n ${NAMESPACE} cpd -o json | jq -r .spec.host)
+pass=$(oc -n ${NAMESPACE} get secret admin-user-details -o jsonpath='{.data.initial_admin_password}' | base64 -d && echo)
 user="admin"
 
 results "${route}" "${pass}" "${user}"
