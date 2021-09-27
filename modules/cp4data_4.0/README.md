@@ -163,20 +163,19 @@ terraform apply
 After execution has completed, access the cluster using `kubectl` or `oc`:
 
 ```bash
-ibmcloud oc cluster config -c <cluster-name> --admin
-kubectl get route -n ibm-common-services cp-console -o jsonpath=‘{.spec.host}’ && echo
+oc get route -n ${NAMESPACE} cpd -o jsonpath='{.spec.host}' && echo
 ```
 
 To get default login id:
 
 ```bash
-kubectl -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_username}\' | base64 -d && echo
+username = "admin"
 ```
 
 To get default Password:
 
 ```bash
-kubectl -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d && echo
+oc -n ${NAMESPACE} get secret admin-user-details -o jsonpath='{.data.initial_admin_password}' | base64 -d && echo
 ```
 
 ## Clean up
@@ -189,7 +188,7 @@ terraform destroy
 
 ## Troubleshooting
 
-- Once `module.cpd_install.null_resource.install_cpd` completes. You can check the logs to find out more information about the installation of Cloud Pak for Data.
+- Once `module.cp4data.null_resource.bedrock_zen_operator` completes. You can check the logs to find out more information about the installation of Cloud Pak for Data.
 
 ```bash
 cpd-meta-operator: oc -n cpd-meta-ops logs -f deploy/ibm-cp-data-operator
