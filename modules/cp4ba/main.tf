@@ -1,5 +1,5 @@
 locals {
-  pvc_file                              = "${path.module}/files/cp4ba_pvc.yaml"
+  pvc_file                              = "${path.module}/files/operator-shared-pvc.yaml"
   pvc_file_content                      = file(local.pvc_file)
   catalog_source_file                   = "${path.module}/files/catalog_source.yaml"
   catalog_source_file_content           = file(local.catalog_source_file)
@@ -42,7 +42,7 @@ resource "null_resource" "installing_cp4ba" {
 
     environment = {
       # ---- Cluster ----
-      CLUSTER_NAME_OR_ID     = var.cluster_name_or_id
+      KUBECONFIG                    = var.cluster_config_path
       # ---- IBM Cloud API Key ----
       #IBMCLOUD_API_KEY = var.ibmcloud_api_key
 

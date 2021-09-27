@@ -72,6 +72,6 @@ variable "db2_host_port" {
 }
 
 locals {
-  kube_config_path = "./.kube/config"
+  cluster_config_path = "./.kube/config"
   namespace        = "cp4ba"
 }

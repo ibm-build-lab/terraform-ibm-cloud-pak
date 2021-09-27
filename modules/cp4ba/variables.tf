@@ -12,10 +12,10 @@ variable "cluster_name_or_id" {
   description = "Enter your cluster id or name to install the Cloud Pak. Leave blank to provision a new Openshift cluster."
 }
 
-variable "kube_config_path" {
+variable "cluster_config_path" {
   default     = ".kube/config"
   type        = string
-  description = "Path to the Kubernetes configuration file to access your cluster"
+  description = "Path to the cluster configuration file to access your cluster"
 }
 
 variable "resource_group" {
