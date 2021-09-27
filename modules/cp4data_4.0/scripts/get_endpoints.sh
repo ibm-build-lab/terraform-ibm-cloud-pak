@@ -22,7 +22,7 @@ results() {
 }
 
 #route=$(oc get route -n zen cpd -o jsonpath={.spec.host} && echo)
-route=$(oc get route -n ${NAMESPACE} cpd -o jsonpath={.spec.host} && echo)
+route=$(oc get route -n ${NAMESPACE} cpd -o jsonpath='{.spec.host}' && echo)
 # pass=$(oc -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d && echo)
 # pass=$(oc -n zen get secret admin-user-details -o jsonpath='{.data.initial_admin_password}' | base64 -d && echo)
 pass=$(oc -n ${NAMESPACE} get secret admin-user-details -o jsonpath='{.data.initial_admin_password}' | base64 -d && echo)
