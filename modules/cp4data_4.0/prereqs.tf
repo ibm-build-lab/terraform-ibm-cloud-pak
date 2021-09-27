@@ -3,7 +3,7 @@
 #############################
 locals {
   setkernelparams_file = local.worker_node_memory < 128 ? "setkernelparams.yaml" : "setkernelparams_128gbRAM.yaml"
-  set_norootsquash_file = "norootsquash.yaml"
+  # set_norootsquash_file = "norootsquash.yaml"
   worker_node_memory = tonumber(regex("[0-9]+$", var.worker_node_flavor))
 }
 
@@ -24,18 +24,18 @@ resource "null_resource" "setkernelparams" {
 # Setup NoRootSquash
 #############################
 
-resource "null_resource" "set_norootsquash" {
-    depends_on = [var.portworx_is_ready]
-
-    provisioner "local-exec" {
-      environment = {
-        KUBECONFIG = var.cluster_config_path
-      }
-      working_dir = "${path.module}/files/"
-      interpreter = ["/bin/bash", "-c"]
-      command = "oc apply -n kube-system -f ${local.set_norootsquash_file}"
-  }
-}
+# resource "null_resource" "set_norootsquash" {
+#     depends_on = [var.portworx_is_ready]
+# 
+#     provisioner "local-exec" {
+#       environment = {
+#         KUBECONFIG = var.cluster_config_path
+#       }
+#       working_dir = "${path.module}/files/"
+#       interpreter = ["/bin/bash", "-c"]
+#       command = "oc apply -n kube-system -f ${local.set_norootsquash_file}"
+#   }
+# }
 
 ###########################################
 # Create and annotate image registry route
@@ -71,7 +71,7 @@ resource "null_resource" "prereqs_checkpoint" {
   depends_on = [
     var.portworx_is_ready,
     null_resource.setkernelparams,
-    null_resource.set_norootsquash,
+    # null_resource.set_norootsquash,
     null_resource.create_registry_route,
     null_resource.annotate_registry_route,
   ]

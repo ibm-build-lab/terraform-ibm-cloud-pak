@@ -11,12 +11,11 @@ if ${ON_VPC}; then
 ./roks-update.sh ${CLUSTER_NAME}
 else # classic
 # attempt to fix norootsquash registry complaints in daemon set pods
-kubectl -n kube-system create secret docker-registry ibm-entitlement-key \
-   --docker-server=cp.icr.io \
-   --docker-username=cp \
-   --docker-password=${ENTITLEMENT_KEY} \
-   --docker-email=${ENTITLEMENT_USER}
-
+# kubectl -n kube-system create secret docker-registry ibm-entitlement-key \
+#    --docker-server=cp.icr.io \
+#    --docker-username=cp \
+#    --docker-password=${ENTITLEMENT_KEY} \
+#    --docker-email=${ENTITLEMENT_USER}
 ./roks-reboot.sh ${CLUSTER_NAME}
 fi
 
