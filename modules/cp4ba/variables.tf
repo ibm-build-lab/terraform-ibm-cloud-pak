@@ -43,7 +43,7 @@ variable "ldap_admin" {
   default = "cn=root"
   description = "LDAP Admin user name"
 }
-variable "ldap_admin" {
+variable "ldap_password" {
   default = "Passw0rd"
   description = "LDAP Admin password"
 }

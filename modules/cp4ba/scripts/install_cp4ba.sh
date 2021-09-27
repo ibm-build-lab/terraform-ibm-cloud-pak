@@ -18,16 +18,16 @@ PARENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 K8S_CMD=kubectl
 OC_CMD=oc
 
-function create_project(){
+#function create_project(){
     echo
     echo "Creating \" ${CP4BA_PROJECT_NAME}\" project ... "
     ${K8S_CMD} create namespace "${CP4BA_PROJECT_NAME}"
     echo
-}
+#}
 
 
 # Create the secrets
-function create_secrets() {
+#function create_secrets() {
     echo -e "\x1B[1mCreating secret \"admin.registrykey\" in ${CP4BA_PROJECT_NAME} for CP4BA ...\n\x1B[0m"
     CREATE_SECRET_RESULT=$(${K8S_CMD} create secret docker-registry admin.registrykey -n "${CP4BA_PROJECT_NAME}" --docker-username="${DOCKER_USERNAME}" --docker-password="${ENTITLED_REGISTRY_KEY}" --docker-server="${DOCKER_SERVER}" --docker-email="${ENTITLED_REGISTRY_EMAIL}")
     sleep 5
@@ -75,19 +75,19 @@ function create_secrets() {
 #        tls.key: icp4baTlsSecret
 #  ````
 
-    echo
-
+echo
+echo -e "\x1B[1mCreating remaining secrets...\n\x1B[0m"
+echo ${SECRETS_CONTENT}
 kubectl apply -n ${CP4BA_PROJECT_NAME} -f -<<EOF
 ${SECRETS_CONTENT}
 EOF
 
-}
+#}
 
-function allocate_operator_pvc(){
-    echo -e "\x1B[1mApplying the Persistent Volumes Claim (PVC) for the Cloud Pak operator by using the storage classname: ${SLOW_STORAGE_CLASS_NAME}...\x1B[0m"
-
-    CREATE_PVC_RESULT=$(kubectl -n "${CP4BA_PROJECT_NAME}" apply -f "${OPERATOR_PVC_FILE}")
-
+#function allocate_operator_pvc(){
+    echo -e "\x1B[1mCreating the Persistent Volumes Claim (PVC)...\x1B[0m"
+    cat ${OPERATOR_PVC_FILE}
+    CREATE_PVC_RESULT=$(kubectl -n ${CP4BA_PROJECT_NAME} apply -f ${OPERATOR_PVC_FILE})
 
     if [[ $CREATE_PVC_RESULT ]]; then
         echo -e "\x1B[1;34mThe Persistent Volume Claims have been created.\x1B[0m"
@@ -104,13 +104,12 @@ function allocate_operator_pvc(){
         echo -e "......"
         sleep 10
         if [ $ATTEMPTS -eq $TIMEOUT ] ; then
-            echo -e "\x1B[1;31mFailed to allocate the persistent volumes!\x1B[0m"
-            echo -e "\x1B[1;31mRun the following command to check the claim '${K8S_CMD} describe pvc cp4a-shared-log-pvc'\x1B[0m"
+            echo -e "\x1B[1;31mFailed: Run the following command to check the claim '${K8S_CMD} describe pvc cp4a-shared-log-pvc'\x1B[0m"
             exit 1
         fi
     done
     if [ $ATTEMPTS -lt $TIMEOUT ] ; then
-        echo -e "\x1B[1;34m The Persistent Volume Claim is successfully bound Done\x1B[0m"
+        echo -e "\x1B[1;34m The Persistent Volume Claim is successfully bound\x1B[0m"
     fi
     echo
 
@@ -122,20 +121,19 @@ function allocate_operator_pvc(){
         echo -e "......"
         sleep 10
         if [ $ATTEMPTS -eq $TIMEOUT ] ; then
-            echo -e "\x1B[1;31mFailed to allocate the persistent volumes!\x1B[0m"
-            echo -e "\x1B[1;31mRun the following command to check the claim '${K8S_CMD} describe pvc operator-shared-pvc'\x1B[0m"
+            echo -e "\x1B[1;31mFailed: Run the following command to check the claim '${K8S_CMD} describe pvc operator-shared-pvc'\x1B[0m"
             exit 1
         fi
     done
     if [ $ATTEMPTS -lt $TIMEOUT ] ; then
-        echo -e "\x1B[1;34m The Persistent Volume Claim is successfully bound Done\x1B[0m"
+        echo -e "\x1B[1;34m The Persistent Volume Claim is successfully bound\x1B[0m"
     fi
     echo
-}
+#}
 
 
 # Deploying the Common-Service
-function deploy_common_service() {
+#function deploy_common_service() {
 
     # echo "Creating \"common-service\" project ..."
     # ${K8S_CMD} create namespace common-service
@@ -176,11 +174,11 @@ function deploy_common_service() {
     # sleep 2
 
     # echo
-}
+#}
 
 
 # Create Operator
-function create_operator() {
+#function create_operator() {
 #    INSTALL_OPERATOR_CMD=$("${K8S_CMD}" apply -f "${OPERATOR_FILE}" -n "${CP4BA_PROJECT_NAME}" --validate=false)
 
 #    sleep 5
@@ -205,14 +203,18 @@ function create_operator() {
 #    printf "\n"
 
     # Add the CatalogSource resources to Operator Hub
-    kubectl apply -f files/catalog_source.yaml
+    echo -e "\x1B[1mCreating the Catalog Source...\x1B[0m"
+    cat ${CATALOG_SOURCE_FILE}
+    kubectl apply -f ${CATALOG_SOURCE_FILE}
 
     # Create subscription to Business Automation Operator
-    kubectl apply -f files/cp4ba_subscription.yaml
-}
+    echo -e "\x1B[1mCreating the Subscription...\x1B[0m"
+    cat ${CP4BA_SUBSCRIPTION_FILE}
+    kubectl apply -f ${CP4BA_SUBSCRIPTION_FILE}
+#}
 
 
-function copy_jdbc_driver(){
+#function copy_jdbc_driver(){
 #     echo
 # #    JDBC Driver download link; https://www.ibm.com/support/pages/node/387577
 #     # Get pod name
@@ -228,7 +230,7 @@ function copy_jdbc_driver(){
 #     COPY_JDBC_CMD="${OC_CMD} cp ${JDBC_DRIVER_DIR} ${operator_podname}:/opt/ansible/share/"
 
 #     ${OC_CMD} project "${CP4BA_PROJECT_NAME}"
-
+    echo -e "\x1B[1mCopying JDBC License Files...\x1B[0m"
     podname=$(oc get pod | grep ibm-cp4a-operator | awk '{print $1}')
     COPY_JDBC_CMD="${K8S_CMD} cp ./files/jdbc ${CP4BA_PROJECT_NAME}/$podname:/opt/ansible/share
     if ${COPY_JDBC_CMD} ; then
@@ -237,11 +239,11 @@ function copy_jdbc_driver(){
         echo -e "\x1B[1;31mFailed\x1B[0m"
     fi
     echo
-}
+#}
 
 
 # deploy CP4BA
-function prepare_deployment_file(){
+#function prepare_deployment_file(){
 
     # echo
     # echo "Preparing the CR YAML for deployment..."
@@ -253,12 +255,12 @@ function prepare_deployment_file(){
     # sed -i.bak "s|spec.baw_configuration.database.server_name|$DB2_HOST_IP|g" "${IBM_CP4BA_CR_FINAL_FILE}"
     # sed -i.bak "s|sc_fast_file_storage_classname|$SC_FAST_FILE_STORAGE_CLASSNAME|g" "${IBM_CP4BA_CR_FINAL_FILE}"
 
-}
+#}
 
 
 # Apply CP4BA
 
-function cp4ba_deployment() {
+#function cp4ba_deployment() {
     # echo "Creating tls secret key ..."
     # ${OC_CMD} apply -f "${TLS_SECRET_FILE}" -n "${CP4BA_PROJECT_NAME}"
 
@@ -305,14 +307,15 @@ function cp4ba_deployment() {
     #     break
     #   fi
     # done
-
+echo -e "\x1B[1mCreating the Deployment...\x1B[0m"
+echo ${CP4BA_DEPLOYMENT_CONTENT}
 kubectl apply -n ${CP4BA_PROJECT_NAME} -f -<<EOF
 ${CP4BA_DEPLOYMENT_CONTENT}
 EOF
     for ((retry=0;retry<=${maxRetry};retry++)); do
       echo "Waiting for CP4BA operator pod initialization"
 
-      isReady=$(${OC_CMD} get pod -n "${CP4BA_PROJECT_NAME}" --no-headers | grep ibm-cp4a-operator | grep "Running")
+      isReady=$(${K8S_CMD} get pod -n "${CP4BA_PROJECT_NAME}" --no-headers | grep ibm-cp4a-operator | grep "Running")
       if [[ -z $isReady ]]; then
         if [[ $retry -eq ${maxRetry} ]]; then
           echo "Timeout Waiting for CP4BA operator to start"
@@ -327,21 +330,21 @@ EOF
       fi
     done
 
-}
+#}
 
 # Calling all the functions
-create_project
-sleep 5
-create_secrets
-sleep 5
-allocate_operator_pvc
-sleep 5
-copy_jdbc_driver
-sleep 5
-# prepare_deployment_file
+# create_project
 # sleep 5
+# create_secrets
+# sleep 5
+# allocate_operator_pvc
+# sleep 5
+# copy_jdbc_driver
+# sleep 5
+# # prepare_deployment_file
+# # sleep 5
 # create_operator
 # sleep 5
-cp4ba_deployment
-sleep 5
+# cp4ba_deployment
+# sleep 5
 
