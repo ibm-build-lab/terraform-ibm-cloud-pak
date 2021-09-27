@@ -100,7 +100,7 @@ echo ""
 # Create subscription to Business Automation Operator
 echo -e "\x1B[1mCreating the Subscription...\x1B[0m"
 cat ${CP4BA_SUBSCRIPTION_FILE}
-kubectl apply -f ${CP4BA_SUBSCRIPTION_FILE}
+kubectl apply -n ${CP4BA_PROJECT_NAME} -f ${CP4BA_SUBSCRIPTION_FILE}
 
 echo -e "\x1B[1mCopying JDBC License Files...\x1B[0m"
 #podname=$(oc get pod -n ${CP4BA_PROJECT_NAME} | grep ibm-cp4a-operator | awk '{print $1}')
