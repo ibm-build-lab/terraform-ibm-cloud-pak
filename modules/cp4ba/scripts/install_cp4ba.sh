@@ -93,28 +93,38 @@ echo
 # Add the CatalogSource resources to Operator Hub
 echo -e "\x1B[1mCreating the Catalog Source...\x1B[0m"
 cat ${CATALOG_SOURCE_FILE}
-kubectl apply -f ${CATALOG_SOURCE_FILE}
-
+${K8S_CMD} apply -f ${CATALOG_SOURCE_FILE}
+sleep 5
 echo ""
 echo ""
 # Create subscription to Business Automation Operator
 echo -e "\x1B[1mCreating the Subscription...\x1B[0m"
 cat ${CP4BA_SUBSCRIPTION_FILE}
-kubectl apply -n ${CP4BA_PROJECT_NAME} -f ${CP4BA_SUBSCRIPTION_FILE}
+${K8S_CMD} apply -n ${CP4BA_PROJECT_NAME} -f ${CP4BA_SUBSCRIPTION_FILE}
+
+${K8S_CMD} get pods -n ${CP4BA_PROJECT_NAME} | grep ibm-cp4a-operator
+result=$?
+counter=0
+while [[ "${result}" -ne 0 ]]
+do
+    if [[ $counter -gt 20 ]]; then
+        echo "The CP4BA Operator was not created within five minutes; please attempt to install the product again."
+        exit 1
+    fi
+    counter=$((counter + 1))
+    echo "Waiting for CP4BA operator pod to provision"
+    sleep 30;
+    ${K8S_CMD} get pods -n ${CP4BA_PROJECT_NAME} | grep ibm-cp4a-operator
+    result=$?
+done
 
 echo -e "\x1B[1mCopying JDBC License Files...\x1B[0m"
-#podname=$(oc get pod -n ${CP4BA_PROJECT_NAME} | grep ibm-cp4a-operator | awk '{print $1}')
-# COPY_JDBC_CMD="${K8S_CMD} cp ./files/jdbc ${CP4BA_PROJECT_NAME}/$podname:/opt/ansible/share
-# if ${COPY_JDBC_CMD} ; then
-#     echo -e "\x1B[1;34mDone. JDBC driver was successfully copied. \x1B[0m"
-# else
-#     echo -e "\x1B[1;31mFailed\x1B[0m"
-# fi
-# echo
+podname=$(${K8S_CMD} get pods -n ${CP4BA_PROJECT_NAME} | grep ibm-cp4a-operator | awk '{print $1}')
+${K8S_CMD} cp ${CUR_DIR}/files/jdbc ${CP4BA_PROJECT_NAME}/$podname:/opt/ansible/share
 
 # Create Deployment
 echo -e "\x1B[1mCreating the Deployment \n${CP4BA_DEPLOYMENT_CONTENT}...\x1B[0m"
-# kubectl apply -n ${CP4BA_PROJECT_NAME} -f -<<EOF
+# ${K8S_CMD} apply -n ${CP4BA_PROJECT_NAME} -f -<<EOF
 # ${CP4BA_DEPLOYMENT_CONTENT}
 # EOF
 #     for ((retry=0;retry<=${maxRetry};retry++)); do
@@ -123,7 +133,7 @@ echo -e "\x1B[1mCreating the Deployment \n${CP4BA_DEPLOYMENT_CONTENT}...\x1B[0m"
 #       isReady=$(${K8S_CMD} get pod -n "${CP4BA_PROJECT_NAME}" --no-headers | grep ibm-cp4a-operator | grep "Running")
 #       if [[ -z $isReady ]]; then
 #         if [[ $retry -eq ${maxRetry} ]]; then
-#           echo "Timeout Waiting for CP4BA operator to start"
+#           echo "Timeout Waiting for CP4BA deployment to create"
 #           exit 1
 #         else
 #           sleep 5
