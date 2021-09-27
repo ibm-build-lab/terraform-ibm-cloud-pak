@@ -1,7 +1,7 @@
 provider "ibm" {
   region           = var.region
   version          = "~> 1.12"
-  # ibmcloud_api_key = var.ibmcloud_api_key
+  ibmcloud_api_key = var.ibmcloud_api_key
 }
 
 data "ibm_resource_group" "group" {
@@ -37,11 +37,11 @@ module "cp4ba" {
 
   # ---- Platform ----
   cp4ba_project_name      = "cp4ba"
-  entitled_registry_user  = var.entitled_registry_user_email
+  entitled_registry_user  = var.entitled_registry_user
   entitlement_key         = var.entitlement_key
 
   # ----- DB2 Settings -----
-  db2_host_ip             = var.db2_host_ip
+  db2_host_name           = var.db2_host_name
   db2_host_port           = var.db2_host_port
   db2_admin               = var.db2_admin
   db2_user                = var.db2_user

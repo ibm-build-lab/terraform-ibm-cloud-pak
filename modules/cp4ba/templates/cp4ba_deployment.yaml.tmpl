@@ -75,7 +75,7 @@ spec:
     admin_user: '${ db2_admin }'
     database:
       port: '${ db2_host_port }'
-      host: '${ db2_host_ip }'
+      host: '${ db2_host_name }'
       name: BASDB
       ssl_enabled: true
       certificate_secret_name: icp4adeploy-bas-admin-secret
@@ -116,13 +116,13 @@ spec:
       database_ip: ''
       database_name: BASECA
       dc_hadr_standby_ip: ''
-      database_servername: '${ db2_host_ip }'
+      database_servername: '${ db2_host_name }'
       dc_hadr_validation_timeout: 15
       dc_hadr_standby_servername: ''
       dc_database_type: db2
     dc_ums_datasource:
       dc_ums_oauth_ssl: true
-      dc_ums_teamserver_host: '${ db2_host_ip }'
+      dc_ums_teamserver_host: '${ db2_host_name }'
       dc_ums_teamserver_name: ''
       dc_ums_oauth_type: db2
       dc_ums_teamserver_alternate_hosts: ''
@@ -132,14 +132,14 @@ spec:
       dc_ums_teamserver_ssl: true
       dc_ums_teamserver_alternate_ports: ''
       dc_ums_teamserver_driverfiles: UMSDB
-      dc_ums_oauth_host: '${ db2_host_ip }'
+      dc_ums_oauth_host: '${ db2_host_name }'
       dc_ums_teamserver_type: db2
       dc_ums_oauth_name: UMSDB
       dc_ums_oauth_ssl_secret_name: ibm-dba-ums-secret
       dc_ums_teamserver_port: '${ db2_host_port }'
     database_precheck: true
     dc_odm_datasource:
-      database_servername: '${ db2_host_ip }'
+      database_servername: '${ db2_host_name }'
       dc_common_database_instance_secret: ''
       dc_common_database_name: 
       dc_common_database_port: '${ db2_host_port }'
@@ -155,7 +155,7 @@ spec:
       dc_common_icn_datasource_name: ECMClientDS
       dc_hadr_standby_port: ''
       database_name: ICNDB
-      database_servername: '${ db2_host_ip }'
+      database_servername: '${ db2_host_name }'
       dc_hadr_validation_timeout: 15
       dc_oracle_icn_jdbc_url: ''
       dc_hadr_standby_servername: ''
@@ -163,7 +163,7 @@ spec:
     olm_dc_os_adp_datasources:
       - database_name: DEVOS1
         database_port: '${ db2_host_port }'
-        database_servername: '${ db2_host_ip }'
+        database_servername: '${ db2_host_name }'
         database_ssl_secret_name: ibm-fncm-secret
         dc_common_os_datasource_name: DEVOS1DS
         dc_common_os_xa_datasource_name: DEVOS1DSXA
@@ -178,7 +178,7 @@ spec:
     olm_dc_os_workflow_datasources:
       - database_name: DEVOS1
         database_port: '${ db2_host_port }'
-        database_servername: '${ db2_host_ip }'
+        database_servername: '${ db2_host_name }'
         database_ssl_secret_name: ibm-bawaut-server-db-secret
         dc_common_os_datasource_name: BAWDOCS
         dc_common_os_xa_datasource_name: BAWDOCSXA
@@ -212,7 +212,7 @@ spec:
       database_port: '${ db2_host_port }'
       dc_hadr_standby_port: ''
       database_name: GCDDB
-      database_servername: '${ db2_host_ip }'
+      database_servername: '${ db2_host_name }'
       dc_hadr_validation_timeout: 15
       dc_hadr_standby_servername: ''
       dc_common_gcd_xa_datasource_name: FNGCDDSXA
@@ -221,7 +221,7 @@ spec:
     olm_dc_os_ae_datasources:
       - database_name: DEVOS1
         database_port: '${ db2_host_port }'
-        database_servername: '${ db2_host_ip }'
+        database_servername: '${ db2_host_name }'
         database_ssl_secret_name: playback-server-admin-secret
         dc_common_os_datasource_name: AEOS
         dc_common_os_xa_datasource_name: AEOSXA
@@ -236,7 +236,7 @@ spec:
     olm_dc_os_content_datasources:
       - database_name: DEVOS1
         database_port: '${ db2_host_port }'
-        database_servername: '${ db2_host_ip }'
+        database_servername: '${ db2_host_name }'
         database_ssl_secret_name: ibm-fncm-secret
         dc_common_os_datasource_name: FNOS1DS
         dc_common_os_xa_datasource_name: FNOS1DSXA

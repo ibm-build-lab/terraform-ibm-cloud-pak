@@ -1,5 +1,5 @@
 locals {
-  pvc_file                              = "${path.module}/files/cp4ba-pvc.yaml"
+  pvc_file                              = "${path.module}/files/cp4ba_pvc.yaml"
   pvc_file_content                      = file(local.pvc_file)
   catalog_source_file                   = "${path.module}/files/catalog_source.yaml"
   catalog_source_file_content           = file(local.catalog_source_file)
@@ -12,7 +12,7 @@ locals {
   cp4ba_deployment_content = templatefile("${path.module}/templates/cp4ba_deployment.yaml.tmpl", {
     ldap_host_ip     = var.ldap_host_ip,
     db2_admin        = var.db2_admin,
-    db2_host_ip      = var.db2_host_ip,
+    db2_host_name    = var.db2_host_name,
     db2_host_port    = var.db2_host_port
   })
   secrets_content = templatefile("${path.module}/templates/secrets.yaml.tmpl", {
@@ -38,7 +38,7 @@ resource "null_resource" "installing_cp4ba" {
   }
 
   provisioner "local-exec" {
-    command = "/bin/bash ./scripts/install_cp4ba.sh"
+    command = "${path.module}/scripts/install_cp4ba.sh"
 
     environment = {
       # ---- Cluster ----
@@ -50,7 +50,7 @@ resource "null_resource" "installing_cp4ba" {
       CP4BA_PROJECT_NAME            = var.cp4ba_project_name
 
       # ---- Registry Images ----
-      ENTITLED_REGISTRY_EMAIL       = var.entitled_registry_user_email
+      ENTITLED_REGISTRY_EMAIL       = var.entitled_registry_user
       ENTITLED_REGISTRY_KEY         = var.entitlement_key
       DOCKER_SERVER                 = local.docker_server
       DOCKER_USERNAME               = local.docker_username

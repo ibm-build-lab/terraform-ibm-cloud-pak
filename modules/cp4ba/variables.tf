@@ -28,7 +28,7 @@ variable "entitlement_key" {
   description = "Do you have a Cloud Pak for Business Automation Entitlement Registry key? If not, Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
 }
 
-variable "entitled_registry_user_email" {
+variable "entitled_registry_user" {
   type = string
   description = "Email address of the user owner of the Entitled Registry Key"
 }
@@ -48,7 +48,7 @@ variable "ldap_password" {
   description = "LDAP Admin password"
 }
 
-variable "ldap_server_ip" {
+variable "ldap_host_ip" {
   default = ""
   description = "LDAP server IP address"
 }
@@ -69,9 +69,9 @@ variable "db2_password" {
   description = "Password defined in LDAP"
 }
 
-variable "db2_host_ip" {
+variable "db2_host_name" {
   default     = ""
-  description = "IP address for DB2 instance"
+  description = "Host name of DB2 instance"
 }
 
 variable "db2_host_port" {
