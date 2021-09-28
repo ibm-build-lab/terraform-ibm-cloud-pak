@@ -78,7 +78,6 @@ variable "db2_host_port" {
 locals {
   docker_server                = "cp.icr.io"
   docker_username              = "cp"
-  # ibmcloud_api_key             = chomp(var.ibmcloud_api_key)
 }
 
 
