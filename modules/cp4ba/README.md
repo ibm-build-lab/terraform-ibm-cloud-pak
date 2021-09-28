@@ -125,8 +125,10 @@ When the deployment is successful, a ConfigMap is created in the CP4BA namespace
 
 The contents of the ConfigMap depends on the components that are included. Each component has one or more URLs, and if needed a username and password. Each component has one or more URLs.
 
+```
 <component1> URL: <RouteUrlToAccessComponent1>  
 <component2> URL: <RouteUrlToAccessComponent2> 
+```
 
 You can find the URL for the Zen UI by clicking **Network > Routes** and looking for the name cpd, or by running the following command.
 
