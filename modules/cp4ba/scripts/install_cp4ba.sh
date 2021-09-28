@@ -99,7 +99,7 @@ sleep 5
 echo ""
 echo ""
 # Create subscription to Business Automation Operator
-echo -e "\x1B[1mCreating the Subscription...\n${CP4BA_SUBSCRIPTION_FILE}\n\x1B[0m"
+echo -e "\x1B[1mCreating the Subscription...\n${CP4BA_SUBSCRIPTION_CONTENT}\n\x1B[0m"
 kubectl apply -f -<<EOF
 ${CP4BA_SUBSCRIPTION_CONTENT}
 EOF
