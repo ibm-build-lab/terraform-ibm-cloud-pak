@@ -30,8 +30,6 @@ resource "null_resource" "installing_cp4ba" {
     CP4BA_SUBSCRIPTION_FILE_sha1          = sha1(local.cp4ba_subscription_content)
     CP4BA_DEPLOYMENT_sha1                 = sha1(local.cp4ba_deployment_content)
     SECRET_sha1                           = sha1(local.secrets_content)
-    # IBM_CP4BA_CRD_FILE_sha1               = sha1(local.ibm_cp4ba_crd_file_content)
-    # IBM_CP4BA_CR_FINAL_TMPL_FILE_sha1     = sha1(local.ibm_cp4ba_cr_final_tmpl_file_content)
   }
 
   provisioner "local-exec" {
@@ -40,9 +38,7 @@ resource "null_resource" "installing_cp4ba" {
     environment = {
       # ---- Cluster ----
       KUBECONFIG                    = var.cluster_config_path
-      # ---- IBM Cloud API Key ----
-      #IBMCLOUD_API_KEY = var.ibmcloud_api_key
-
+ 
       # ---- Platform ----
       CP4BA_PROJECT_NAME            = var.cp4ba_project_name
 
