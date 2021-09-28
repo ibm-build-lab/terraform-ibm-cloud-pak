@@ -12,11 +12,11 @@ Go [here](../CREDENTIALS.md) for details.
 
 ## Provisioning this module in a Terraform Script
 
-In your Terraform script define the `ibm` provisioner block with the `region`.
+In your Terraform script define the `ibm` provisioner block with the `version`.
 
 ```hcl
 provider "ibm" {
-  region     = "us-south"
+  version          = "~> 1.12"
 }
 ```
 
