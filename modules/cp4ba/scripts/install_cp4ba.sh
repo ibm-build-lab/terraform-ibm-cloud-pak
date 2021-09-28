@@ -104,7 +104,7 @@ kubectl apply -f -<<EOF
 ${CP4BA_SUBSCRIPTION_CONTENT}
 EOF
 echo "Sleeping for 5 minutes"
-sleep 300
+#sleep 300
 
 ${K8S_CMD} get pods -n ${CP4BA_PROJECT_NAME} | grep ibm-cp4a-operator
 result=$?
@@ -149,6 +149,5 @@ echo -e "\x1B[1mCreating the Deployment \n${CP4BA_DEPLOYMENT_CONTENT}...\x1B[0m"
 ${K8S_CMD} apply -n ${CP4BA_PROJECT_NAME} -f -<<EOF
 ${CP4BA_DEPLOYMENT_CONTENT}
 EOF
-
 
 
