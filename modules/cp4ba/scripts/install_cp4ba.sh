@@ -124,6 +124,7 @@ ${K8S_CMD} cp ${CUR_DIR}/files/jdbc ${CP4BA_PROJECT_NAME}/$podname:/opt/ansible/
 
 # Create Deployment
 echo -e "\x1B[1mCreating the Deployment \n${CP4BA_DEPLOYMENT_CONTENT}...\x1B[0m"
+echo
 # ${K8S_CMD} apply -n ${CP4BA_PROJECT_NAME} -f -<<EOF
 # ${CP4BA_DEPLOYMENT_CONTENT}
 # EOF

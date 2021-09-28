@@ -64,3 +64,18 @@ resource "null_resource" "installing_cp4ba" {
     }
   }
 }
+
+data "external" "get_endpoints" {
+  count = var.enable ? 1 : 0
+
+  depends_on = [
+    null_resource.installing_cp4ba
+  ]
+
+  program = ["/bin/bash", "${path.module}/scripts/get_endpoints.sh"]
+
+  query = {
+    kubeconfig = var.cluster_config_path
+    namespace  = var.cp4ba_project_name
+  }
+}
