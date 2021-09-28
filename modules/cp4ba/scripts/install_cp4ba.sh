@@ -40,7 +40,8 @@ if [[ ${CREATE_SECRET_RESULT} ]]; then
 fi
 echo
 
-echo -e "\x1B[1mCreating remaining secrets \n${SECRETS_CONTENT}...\n\x1B[0m"
+# echo -e "\x1B[1mCreating remaining secrets \n${SECRETS_CONTENT}...\n\x1B[0m"
+echo -e "\x1B[1mCreating remaining secrets...\n\x1B[0m"
 kubectl apply -n ${CP4BA_PROJECT_NAME} -f -<<EOF
 ${SECRETS_CONTENT}
 EOF
@@ -98,9 +99,12 @@ sleep 5
 echo ""
 echo ""
 # Create subscription to Business Automation Operator
-echo -e "\x1B[1mCreating the Subscription...\x1B[0m"
-cat ${CP4BA_SUBSCRIPTION_FILE}
-${K8S_CMD} apply -n ${CP4BA_PROJECT_NAME} -f ${CP4BA_SUBSCRIPTION_FILE}
+echo -e "\x1B[1mCreating the Subscription...\n${CP4BA_SUBSCRIPTION_FILE}\n\x1B[0m"
+kubectl apply -f -<<EOF
+${CP4BA_SUBSCRIPTION_CONTENT}
+EOF
+echo "Sleeping for 5 minutes"
+sleep 300
 
 ${K8S_CMD} get pods -n ${CP4BA_PROJECT_NAME} | grep ibm-cp4a-operator
 result=$?
@@ -108,7 +112,7 @@ counter=0
 while [[ "${result}" -ne 0 ]]
 do
     if [[ $counter -gt 20 ]]; then
-        echo "The CP4BA Operator was not created within five minutes; please attempt to install the product again."
+        echo "The CP4BA Operator was not created within ten minutes; please attempt to install the product again."
         exit 1
     fi
     counter=$((counter + 1))
@@ -118,30 +122,33 @@ do
     result=$?
 done
 
+# for ((retry=0;retry<=${maxRetry};retry++)); do
+# echo "Waiting for CP4BA operator pod initialization"
+# isReady=$(${K8S_CMD} get pod -n "${CP4BA_PROJECT_NAME}" --no-headers | grep ibm-cp4a-operator | grep "Running")
+# if [[ -z $isReady ]]; then
+# if [[ $retry -eq ${maxRetry} ]]; then
+#     echo "Timeout Waiting for CP4BA deployment to create"
+#     exit 1
+# else
+#     sleep 5
+#     continue
+# fi
+# else
+# echo "CP4BA operator is running $isReady"
+# break
+# fi
+# done
+
+
 echo -e "\x1B[1mCopying JDBC License Files...\x1B[0m"
 podname=$(${K8S_CMD} get pods -n ${CP4BA_PROJECT_NAME} | grep ibm-cp4a-operator | awk '{print $1}')
 ${K8S_CMD} cp ${CUR_DIR}/files/jdbc ${CP4BA_PROJECT_NAME}/$podname:/opt/ansible/share
 
 # Create Deployment
 echo -e "\x1B[1mCreating the Deployment \n${CP4BA_DEPLOYMENT_CONTENT}...\x1B[0m"
-# ${K8S_CMD} apply -n ${CP4BA_PROJECT_NAME} -f -<<EOF
-# ${CP4BA_DEPLOYMENT_CONTENT}
-# EOF
-#     for ((retry=0;retry<=${maxRetry};retry++)); do
-#       echo "Waiting for CP4BA operator pod initialization"
+${K8S_CMD} apply -n ${CP4BA_PROJECT_NAME} -f -<<EOF
+${CP4BA_DEPLOYMENT_CONTENT}
+EOF
 
-#       isReady=$(${K8S_CMD} get pod -n "${CP4BA_PROJECT_NAME}" --no-headers | grep ibm-cp4a-operator | grep "Running")
-#       if [[ -z $isReady ]]; then
-#         if [[ $retry -eq ${maxRetry} ]]; then
-#           echo "Timeout Waiting for CP4BA deployment to create"
-#           exit 1
-#         else
-#           sleep 5
-#           continue
-#         fi
-#       else
-#         echo "CP4BA operator is running $isReady"
-#         break
-#       fi
-#     done
+
 

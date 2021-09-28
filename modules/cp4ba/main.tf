@@ -3,12 +3,9 @@ locals {
   pvc_file_content                      = file(local.pvc_file)
   catalog_source_file                   = "${path.module}/files/catalog_source.yaml"
   catalog_source_file_content           = file(local.catalog_source_file)
-  # ibm_cp4ba_crd_file                    = "${path.module}/files/ibm_cp4ba_crd.yaml"
-  # ibm_cp4ba_crd_file_content            = file(local.ibm_cp4ba_crd_file)
-  # ibm_cp4ba_cr_final_tmpl_file          = "${path.module}/files/ibm_cp4ba_cr_final_tmpl.yaml"
-  # ibm_cp4ba_cr_final_tmpl_file_content  = file(local.ibm_cp4ba_cr_final_tmpl_file)
-  cp4ba_subscription_file               = "${path.module}/files/cp4ba_subscription.yaml"
-  cp4ba_subscription_file_content       = file(local.cp4ba_subscription_file)
+  cp4ba_subscription_content = templatefile("${path.module}/templates/cp4ba_subscription.yaml.tmpl", {
+    namespace        = var.cp4ba_project_name,
+  })
   cp4ba_deployment_content = templatefile("${path.module}/templates/cp4ba_deployment.yaml.tmpl", {
     ldap_host_ip     = var.ldap_host_ip,
     db2_admin        = var.db2_admin,
@@ -30,7 +27,7 @@ resource "null_resource" "installing_cp4ba" {
   triggers = {
     PVC_FILE_sha1                         = sha1(local.pvc_file_content)
     CATALOG_SOURCE_FILE_sha1              = sha1(local.catalog_source_file_content)
-    CP4BA_SUBSCRIPTION_FILE_sha1          = sha1(local.cp4ba_subscription_file_content)
+    CP4BA_SUBSCRIPTION_FILE_sha1          = sha1(local.cp4ba_subscription_content)
     CP4BA_DEPLOYMENT_sha1                 = sha1(local.cp4ba_deployment_content)
     SECRET_sha1                           = sha1(local.secrets_content)
     # IBM_CP4BA_CRD_FILE_sha1               = sha1(local.ibm_cp4ba_crd_file_content)
@@ -58,7 +55,7 @@ resource "null_resource" "installing_cp4ba" {
       # ------- FILES ASSIGNMENTS --------
       OPERATOR_PVC_FILE                = local.pvc_file
       CATALOG_SOURCE_FILE              = local.catalog_source_file
-      CP4BA_SUBSCRIPTION_FILE          = local.cp4ba_subscription_file
+      CP4BA_SUBSCRIPTION_CONTENT       = local.cp4ba_subscription_content
       CP4BA_DEPLOYMENT_CONTENT         = local.cp4ba_deployment_content
       SECRETS_CONTENT                  = local.secrets_content
     }
