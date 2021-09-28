@@ -61,15 +61,28 @@ Use a `module` block assigning the `source` parameter to the location of this mo
 
 ```hcl
 module "cp4ba" {
-  source          = "../../modules/cp4ba"
-  enable          = true
+  source = "../../modules/cp4ba"
+  enable = true
 
-  // ROKS cluster parameters:
+  # ---- Cluster ----
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
 
-  // Entitled Registry parameters:
-  entitled_registry_key        = var.entitled_registry_key
-  entitled_registry_user_email = var.entitled_registry_user_email
+  # ---- Cloud Pak ----
+  cp4ba_project_name      = "cp4ba"
+  entitled_registry_user  = var.entitled_registry_user
+  entitlement_key         = var.entitlement_key
+
+  # ----- DB2 Settings -----
+  db2_host_name           = var.db2_host_name
+  db2_host_port           = var.db2_host_port
+  db2_admin               = var.db2_admin
+  db2_user                = var.db2_user
+  db2_password            = var.db2_password
+
+  # ----- LDAP Settings -----
+  ldap_admin              = var.ldap_admin
+  ldap_password           = var.ldap_password
+  ldap_host_ip            = var.ldap_host_ip
 }
 ```
 
@@ -77,9 +90,16 @@ module "cp4ba" {
 
 | Name                               | Description                                                                                                                                                                                                                | Default                     | Required |
 | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | -------- |
-| `enable`                           | If set to `false` does not install the cloud pak on the given cluster. By default it's enabled                                                                                                                       | `true`                      | No       |
+| `enable`                           | If set to `false` does not install the cloud pak on the given cluster. By default it's enabled   | `true`                      | No       |
+| `cluster_config_path`              | Path to the Kubernetes configuration file to access your cluster | `./.kube/config`                      | No       |
+| `cp4ba_project_name`               | Namespace to install for Cloud Pak for Integration | `cp4ba`                      | No       |
 | `entitled_registry_key`            | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
 | `entitled_registry_user_email`     | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key                                                                                                                 |                             | Yes      |
+| `db2_host_name`                    | DB2 Host Name           |                             | Yes      |   
+| `db2_host_port`                    | DB2 Host Port           |                             | Yes      |   
+| `ldap_admin`                       | LDAP Host IP           |                             | Yes      |   
+| `ldap_password`                    | LDAP Password           |                             | Yes      |   
+| `ldap_host_ip`                    | LDAP Host IP           |                             | Yes      | 
 
 **NOTE** The boolean input parameter `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
 
