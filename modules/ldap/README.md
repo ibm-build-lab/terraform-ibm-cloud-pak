@@ -13,15 +13,15 @@ Go [here](../../CREDENTIALS.md) for details.
 
 Download required license files from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `./files` folder
 
-    ```console
-    DB2:
-    Part Number : CNB21ML
-    Filename : DB2_AWSE_Restricted_Activation_11.1.zip
+```console
+DB2:
+Part Number : CNB21ML
+Filename : DB2_AWSE_Restricted_Activation_11.1.zip
 
-    IBM SDS:
-    Part Number : CRV3IML
-    Filename : sds64-premium-feature-act-pkg.zip
-    ```
+IBM SDS:
+Part Number : CRV3IML
+Filename : sds64-premium-feature-act-pkg.zip
+```
 
 ### Update the ldif file
 
