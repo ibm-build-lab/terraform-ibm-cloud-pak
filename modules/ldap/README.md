@@ -11,23 +11,21 @@ Go [here](../../CREDENTIALS.md) for details.
 
 ### Download required license files
 
-Download the following DB2 and IBM SDS license files:
+Download required license files from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `./files` folder
 
 ```console
 DB2:
-PartUmber : CNB21ML
+Part Number : CNB21ML
 Filename : DB2_AWSE_Restricted_Activation_11.1.zip
 
 IBM SDS:
-PartUmber : CRV3IML
+Part Number : CRV3IML
 Filename : sds64-premium-feature-act-pkg.zip
 ```
 
-Copy the files to the ./files folder
-
 ### Update the ldif file
 
-Update the `./files/cp.ldif` file as needed to change the Directory Struture and user information
+Update the `./files/cp.ldif` file as needed to change the Directory Struture and user information. For information on LDIF format, go [here](https://www.ibm.com/docs/en/i/7.4?topic=reference-ldap-data-interchange-format-ldif)
 
 ## Provisioning this module in a Terraform Script
 
