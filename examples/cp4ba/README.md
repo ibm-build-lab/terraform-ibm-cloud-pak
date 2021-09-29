@@ -110,23 +110,38 @@ terraform apply
 
 ## Accessing the Cloud Pak Console
 
-After around _20 to 30 minutes_ you can access the cluster using `kubectl` or `oc`. To get the console URL, open a Cloud Shell and issue the following commands:
+## Accessing the Cloud Pak Console
 
-```bash
-ibmcloud oc cluster config -c <cluster-name> --admin
-kubectl get route -n ibm-common-services cp-console -o jsonpath=‘{.spec.host}’ && echo
+Check to make sure that the icp4ba cartridge in the IBM Automation Foundation Core is ready. For more information about IBM Automation Foundation, see [What is IBM Automation foundation](https://www.ibm.com/support/knowledgecenter/en/cloudpaks_start/cloud-paks/about/overview-cp.html)?
+
+To view the status of the `icp4ba` cartridge in the OCP Admin console, click **Operators > Installed Operators > IBM Automation Foundation Core**. Click the Cartridge tab, click `icp4ba`, and then scroll to the Conditions section.
+
+When the deployment is successful, a ConfigMap is created in the CP4BA namespace (project) to provide the cluster-specific details to access the services and applications. The ConfigMap name is prefixed with the deployment name (default is icp4adeploy). You can search for the routes with a filter on `cp4ba-access-info`.
+
+The contents of the ConfigMap depends on the components that are included. Each component has one or more URLs, and if needed a username and password. Each component has one or more URLs.
+
+```
+<component1> URL: <RouteUrlToAccessComponent1>  
+<component2> URL: <RouteUrlToAccessComponent2> 
 ```
 
-To get default login id:
+You can find the URL for the Zen UI by clicking **Network > Routes** and looking for the name cpd, or by running the following command.
 
-```bash
-kubectl -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_username}\' | base64 -d && echo
+```console
+oc get route |grep "^cpd"
+  ```
+  
+You can get the default username by running the following command:
+
+```console
+oc -n ibm-common-services get secret platform-auth-idp-credentials \
+   -o jsonpath='{.data.admin_username}' | base64 -d && echo
 ```
+You get the password by running the following command:
+```console
 
-To get default Password:
-
-```bash
-kubectl -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d && echo
+oc -n ibm-common-services get secret platform-auth-idp-credentials \
+   -o jsonpath='{.data.admin_password}' | base64 -d
 ```
 
 ## Clean up
