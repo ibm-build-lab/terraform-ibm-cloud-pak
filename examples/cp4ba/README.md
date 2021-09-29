@@ -1,104 +1,60 @@
-# Terraform Module to install Cloud Pak for Automation
+# Example to provision CP4BA Terraform Module
 
-This Terraform Module installs **Cloud Pak for Automation** on an Openshift (ROKS) cluster on IBM Cloud.
+## Run using IBM Cloud Schematics
 
-**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4ba`
+For instructions to run these examples using IBM Schematics go [here](../Using_Schematics.md)
 
-## Set up access to IBM Cloud
+For more information on IBM Schematics, refer [here](https://cloud.ibm.com/docs/schematics?topic=schematics-get-started-terraform).
 
-If executing these modules from your local terminal, you need to set the credentials to access IBM Cloud.
+## Run using local Terraform Client
 
-Go [here](../CREDENTIALS.md) for details.
+For instructions to run using the local Terraform Client on your local machine go [here](../Using_Terraform.md). 
 
-## Provisioning this module in a Terraform Script
-
-In your Terraform script define the `ibm` provisioner block with the `region` and the `generation`, which is **1** for **Classic** and **2** for **VPC Gen 2**.
+Set the desired values in the `terraform.tfvars` file. These are examples:
 
 ```hcl
-provider "ibm" {
-  generation = 1
-  region     = "us-south"
-}
+cluster_name_or_id = "********************"
+resource_group = "cloud-pak-sandbox-ibm"
+entitlement_key = "*********************"
+entitled_registry_user = "john.doe@ibm.com"
+ldap_admin = "cn=root"
+ldap_password = "Passw0rd"
+ldap_host_ip = "xx.xx.xxx.xxx"
+db2_admin = "cpadmin"
+db2_user = "db2inst1"
+db2_password = "Passw0rd"
+db2_host_name = "db2testhost.us-south.containers.appdomain.cloud"
+db2_host_port = "30788"
 ```
 
-### Setting up the OpenShift cluster
+These parameters are:
 
-NOTE: an OpenShift cluster is required to install the Cloud Pak. This can be an existing cluster or can be provisioned using our `roks` Terraform module.
+- `cluster_name_or_id`: Name or ID of the cluster to install cloud pak on
+- `resource_group_name`: Resource group that the cluster is provisioned in
+- `entitlement_key`: Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable
+- `entitled_registry_user`: IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key
+- ldap_admin: LDAP root user name
+- ldap_password: LDAP password
+- ldap_host_ip: "xx.xx.xxx.xxx"
+- db2_admin: DB2 admin user name as set up in LDAP
+- db2_user: DB2 user name as set up in LDAP
+- db2_password: DB2 user password as set up in LDAP
+- db2_host_name: DB2 Host name
+- db2_host_port: DB2 Host Port
 
-To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/roks) for the code to add to your Terraform script. The recommended size for an OpenShift 4.5+ cluster on IBM Cloud Classic contains `4` workers of flavor `b3c.16x64`, however read the [Cloud Pak for Automation documentation](https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation) to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
+### Execute the example
 
-Add the following code to get the OpenShift cluster (new or existing) configuration:
-
-```hcl
-data "ibm_resource_group" "group" {
-  name = var.resource_group
-}
-
-data "ibm_container_cluster_config" "cluster_config" {
-  cluster_name_id   = var.cluster_name_id
-  resource_group_id = data.ibm_resource_group.group.id
-  download          = true
-  config_dir        = "./kube/config"     // Create this directory in advance
-  admin             = false
-  network           = false
-}
-```
-
-**NOTE**: Create the `./kube/config` directory if it doesn't exist.
-
-Input:
-
-- `cluster_name_id`: either the cluster name or ID.
-
-- `ibm_resource_group`:  resource group where the cluster is running
-
-Output:
-
-`ibm_container_cluster_config` used as input for the `cp4ba` module
-
-### Provisioning the CP4ba Module
-
-Use a `module` block assigning the `source` parameter to the location of this module `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4ba`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Automation.
-
-```hcl
-module "cp4ba" {
-  source          = "./.."
-  enable          = true
-
-  // ROKS cluster parameters:
-  openshift_version   = var.roks_version
-  cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
-
-  // Entitled Registry parameters:
-  entitled_registry_key        = var.entitled_registry_key
-  entitled_registry_user_email = var.entitled_registry_user_email
-}
-```
-
-## Input Variables
-
-| Name                               | Description                                                                                                                                                                                                                | Default                     | Required |
-| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | -------- |
-| `enable`                           | If set to `false` does not install the cloud pak on the given cluster. By default it's enabled                                                                                                                        | `true`                      | No       |
-| `openshift_version`                | Openshift version installed in the cluster                                                                                                                                                                                 | `4.5`                       | No       |
-| `entitled_registry_key`            | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
-| `entitled_registry_user_email`     | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key                                                                                                                 |                             | Yes      |
-
-**NOTE** The boolean input parameter `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
-
-For an example of how to put all this together, refer to our [Cloud Pak for Automation Terraform script](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform/cp4ba).
-
-## Executing the Terraform Script
-
-Execute the following commands to install the Cloud Pak:
+Execute the following Terraform commands:
 
 ```bash
 terraform init
 terraform plan
-terraform apply
+terraform apply -auto-approve
 ```
 
-## Accessing the Cloud Pak Console
+### Verify
+
+To verify installation on the Kubernetes cluster, go to the Openshift console and go to the `Installed Operators` tab. Choose your `namespace` and click on `IBM Cloud Pak for Business Automation
 
 ## Accessing the Cloud Pak Console
 
@@ -133,11 +89,10 @@ You get the password by running the following command:
 oc -n ibm-common-services get secret platform-auth-idp-credentials \
    -o jsonpath='{.data.admin_password}' | base64 -d
 ```
+## Cleanup
 
-## Clean up
+Go into the console and delete the platform navigator from the verify section. Delete all installed operators and lastly delete the project.
 
-When you finish using the cluster, release the resources by executing the following command:
+Finally, execute: `terraform destroy`.
 
-```bash
-terraform destroy
-```
+There are some directories and files you may want to manually delete, these are: `rm -rf terraform.tfstate* .terraform .kube`
