@@ -4,16 +4,6 @@ This Terraform Module installs **Cloud Pak for Automation** on an Openshift (ROK
 
 **Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4ba`
 
-- [Terraform Module to install Cloud Pak for Automation](#terraform-module-to-install-cloud-pak-for-automation)
-  - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
-  - [Provisioning this module in a Terraform Script](#provisioning-this-module-in-a-terraform-script)
-    - [Setting up the OpenShift cluster](#setting-up-the-openshift-cluster)
-    - [Provisioning the CP4BAuto Module](#provisioning-the-cp4ba-module)
-  - [Input Variables](#input-variables)
-  - [Executing the Terraform Script](#executing-the-terraform-script)
-  - [Accessing the Cloud Pak Console](#accessing-the-cloud-pak-console)
-  - [Clean up](#clean-up)
-
 ## Set up access to IBM Cloud
 
 If executing these modules from your local terminal, you need to set the credentials to access IBM Cloud.
