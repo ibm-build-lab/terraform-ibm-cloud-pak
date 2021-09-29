@@ -15,8 +15,7 @@ cd ../scripts
 
 # Checking if the spark operator pods are ready and running. 
 # checking status of ibm-cpd-ae-operator
-# ./pod-status-check.sh ibm-cpd-ae-operator ${OP_NAMESPACE}
-sleep 10m
+./pod-status-check.sh ibm-cpd-ae-operator ${OP_NAMESPACE}
 
 #switch to zen namespace
 
@@ -39,5 +38,4 @@ echo $result
 cd ../scripts
 
 # check the spark cr status
-# ./check-cr-status.sh AnalyticsEngine analyticsengine-cr ${NAMESPACE} analyticsengineStatus
-sleep 10m
+./check-cr-status.sh AnalyticsEngine analyticsengine-cr ${NAMESPACE} analyticsengineStatus

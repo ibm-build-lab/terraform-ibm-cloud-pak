@@ -17,8 +17,8 @@ cd ../scripts
 
 # Checking if the wsl operator pods are ready and running. 
 
-# ./pod-status-check.sh ibm-cpd-ws-operator ${OP_NAMESPACE}
-sleep 10m
+./pod-status-check.sh ibm-cpd-ws-operator ${OP_NAMESPACE}
+
 # switch zen namespace
 
 cd ../files
@@ -39,5 +39,4 @@ cd ../scripts
 
 # check the WSL cr status
 
-# ./check-cr-status.sh ws ws-cr ${NAMESPACE} wsStatus
-sleep 10m
+./check-cr-status.sh ws ws-cr ${NAMESPACE} wsStatus

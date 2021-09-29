@@ -17,8 +17,7 @@ cd ../scripts
 
 # checking status of ibm-watson-wml-operator
 
-# ./pod-status-check.sh ibm-cpd-wml-operator ${OP_NAMESPACE}
-sleep 10m
+./pod-status-check.sh ibm-cpd-wml-operator ${OP_NAMESPACE}
 
 # switch zen namespace
 
@@ -43,5 +42,4 @@ cd ../scripts
 
 # check the WML cr status
 
-# ./check-cr-status.sh WmlBase wml-cr ${NAMESPACE} wmlStatus
-sleep 10m
+./check-cr-status.sh WmlBase wml-cr ${NAMESPACE} wmlStatus

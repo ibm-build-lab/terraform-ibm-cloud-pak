@@ -15,8 +15,7 @@ cd ../scripts
 
 
 # Checking if the wsruntime operator pods are ready and running. 
-sleep 10m
-#./pod-status-check.sh ibm-cpd-ws-operator ${OP_NAMESPACE}
+./pod-status-check.sh ibm-cpd-ws-operator ${OP_NAMESPACE}
 
 cd ../files
 
@@ -33,5 +32,4 @@ echo $result
 
 cd ../scripts
 
-# ./check-cr-status.sh NotebookRuntime ibm-cpd-ws-runtime-py37 ${NAMESPACE} runtimeStatus
-sleep 10m
+./check-cr-status.sh NotebookRuntime ibm-cpd-ws-runtime-py37 ${NAMESPACE} runtimeStatus

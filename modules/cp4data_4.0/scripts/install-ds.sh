@@ -19,8 +19,7 @@ cd ../scripts
 
 # Checking if the ds operator pods are ready and running. 	
 # checking status of ds-operator	
-# ./pod-status-check.sh datastage-operator ${OP_NAMESPACE}
-sleep 10m
+./pod-status-check.sh datastage-operator ${OP_NAMESPACE}
 
 # switch to zen namespace	
 oc project ${NAMESPACE}
@@ -36,5 +35,4 @@ echo $result
 cd ../scripts
 
 # check the CCS cr status	
-# ./check-cr-status.sh DataStageService datastage-cr ${NAMESPACE} dsStatus
-sleep 10m
+./check-cr-status.sh DataStageService datastage-cr ${NAMESPACE} dsStatus

@@ -17,8 +17,7 @@ cd ../scripts
 
 # Checking if the dods operator pods are ready and running. 
 # checking status of ibm-cpd-dods-operator
-# ./pod-status-check.sh ibm-cpd-dods-operator ${OP_NAMESPACE}
-sleep 10m
+./pod-status-check.sh ibm-cpd-dods-operator ${OP_NAMESPACE}
 
 # switch to zen namespace
 oc project ${NAMESPACE}
@@ -35,5 +34,4 @@ echo $result
 cd ../scripts
 
 # check the CCS cr status
-# ./check-cr-status.sh DODS dods-cr ${NAMESPACE} dodsStatus
-sleep 10m
+./check-cr-status.sh DODS dods-cr ${NAMESPACE} dodsStatus

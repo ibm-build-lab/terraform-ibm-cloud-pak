@@ -17,8 +17,7 @@ cd ../scripts
 
 # Checking if the bigsql operator pods are ready and running. 
 # checking status of ibm-bigsql-operator
-# ./pod-status-check.sh ibm-bigsql-operator ${OP_NAMESPACE}
-sleep 10m
+./pod-status-check.sh ibm-bigsql-operator ${OP_NAMESPACE}
 
 # switch to zen namespace
 oc project ${NAMESPACE}
@@ -33,5 +32,4 @@ result=$(oc create -f big-sql-cr.yaml)
 echo $result
 
 # check the bigsql cr status
-# ./check-cr-status.sh bigsqlservice bigsql-service ${NAMESPACE} reconcileStatus
-sleep 10m
+./check-cr-status.sh bigsqlservice bigsql-service ${NAMESPACE} reconcileStatus

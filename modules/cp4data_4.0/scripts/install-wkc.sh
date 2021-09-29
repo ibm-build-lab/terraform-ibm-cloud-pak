@@ -16,8 +16,7 @@ sleep 1m
 
 # Checking if the wkc operator pods are ready and running. 
 
-# ./../pod-status-check.sh ibm-cpd-wkc-operator ${OP_NAMESPACE}
-sleep 10m
+./../pod-status-check.sh ibm-cpd-wkc-operator ${OP_NAMESPACE}
 
 # switch to zen namespace
 
@@ -42,15 +41,12 @@ result=$(oc create -f wkc-cr.yaml)
 echo $result
 
 # check the wkc cr status
-# ./../check-cr-status.sh wkc wkc-cr ${NAMESPACE} wkcStatus
-sleep 10m
+./../check-cr-status.sh wkc wkc-cr ${NAMESPACE} wkcStatus
 
 
 # check the iis cr status
-# ./../check-cr-status.sh iis iis-cr ${NAMESPACE} iisStatus
-sleep 10m
+./../check-cr-status.sh iis iis-cr ${NAMESPACE} iisStatus
 
 
 # check the ug cr status
-# ./../check-cr-status.sh ug ug-cr ${NAMESPACE} ugStatus
-sleep 10m
+./../check-cr-status.sh ug ug-cr ${NAMESPACE} ugStatus
