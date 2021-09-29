@@ -1,6 +1,6 @@
 locals {
-  storage_class_file                    = "${path.module}/files/cp4ba_storage_class.yaml"
-  storage_class_file_content            = file(local.cp4ba_storage_class_file)
+  cp4ba_storage_class_file                    = "${path.module}/files/cp4ba_storage_class.yaml"
+  cp4ba_storage_class_file_content            = file(local.cp4ba_storage_class_file)
   pvc_file                              = "${path.module}/files/operator_shared_pvc.yaml"
   pvc_file_content                      = file(local.pvc_file)
   catalog_source_file                   = "${path.module}/files/catalog_source.yaml"
@@ -28,7 +28,7 @@ resource "null_resource" "installing_cp4ba" {
 
   triggers = {
     PVC_FILE_sha1                         = sha1(local.pvc_file_content)
-    STORAGE_CLASS_FILE_sha1               = sha1(local.cp4baq_storage_class_file_content)
+    STORAGE_CLASS_FILE_sha1               = sha1(local.cp4ba_storage_class_file_content)
     CATALOG_SOURCE_FILE_sha1              = sha1(local.catalog_source_file_content)
     CP4BA_SUBSCRIPTION_FILE_sha1          = sha1(local.cp4ba_subscription_content)
     CP4BA_DEPLOYMENT_sha1                 = sha1(local.cp4ba_deployment_content)
