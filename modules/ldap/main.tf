@@ -26,7 +26,7 @@ resource "ibm_compute_vm_instance" "ldap" {
   }
 
   provisioner "file" {
-    source      = "files/install.sh"
+    source      = "scripts/install.sh"
     destination = "/tmp/install.sh"
   }
 
@@ -91,16 +91,4 @@ resource "ibm_compute_ssh_key" "key" {
   label      = "ldap-vm-to-migrate"
   public_key = tls_private_key.ssh.public_key_openssh
   notes      = "created by terraform"
-}
-
-output "CLASSIC_ID" {
-
-  value = var.enable && length(ibm_compute_vm_instance.ldap) > 0 ? ibm_compute_vm_instance.ldap.0.id : ""
-
-}
-
-output "CLASSIC_IP_ADDRESS" {
-
-  value = var.enable && length(ibm_compute_vm_instance.ldap) > 0 ? ibm_compute_vm_instance.ldap.0.ipv4_address : ""
-
 }
