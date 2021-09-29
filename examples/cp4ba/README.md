@@ -1,4 +1,4 @@
-# Example to provision CP4BA Terraform Module
+# Example to provision Cloud Pak for Business Automation Terraform Module
 
 ## Run using IBM Cloud Schematics
 
