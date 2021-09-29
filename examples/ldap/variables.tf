@@ -1,8 +1,3 @@
-variable "enable" {
-    default = true
-    description = "Flag to enable or disable the module to create the LDAP server"
-}
-
 variable "ibmcloud_api_key" {
     default = null
     description = "IBM Cloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
