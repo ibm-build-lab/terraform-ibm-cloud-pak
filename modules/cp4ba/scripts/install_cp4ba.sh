@@ -1,5 +1,4 @@
 #!/bin/bash
-# set -x
 ###############################################################################
 #
 # Licensed Materials - Property of IBM
@@ -12,17 +11,16 @@
 ###############################################################################
 CUR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PARENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
-#
 K8S_CMD=kubectl
-OC_CMD=oc
 
+###### Create the namespace
 echo
 echo "Creating \"${CP4BA_PROJECT_NAME}\" project ... "
 ${K8S_CMD} create namespace "${CP4BA_PROJECT_NAME}"
 echo
 
-# Create the secrets
-echo -e "\x1B[1mCreating secret \"admin.registrykey\" in ${CP4BA_PROJECT_NAME} for CP4BA ...\n\x1B[0m"
+###### Create the secrets
+echo -e "\x1B[1mCreating secret \"admin.registrykey\" in ${CP4BA_PROJECT_NAME}...\n\x1B[0m"
 CREATE_SECRET_RESULT=$(${K8S_CMD} create secret docker-registry admin.registrykey -n "${CP4BA_PROJECT_NAME}" --docker-username="${DOCKER_USERNAME}" --docker-password="${ENTITLED_REGISTRY_KEY}" --docker-server="${DOCKER_SERVER}" --docker-email="${ENTITLED_REGISTRY_EMAIL}")
 sleep 5
 
@@ -31,7 +29,7 @@ if [[ ${CREATE_SECRET_RESULT} ]]; then
 fi
 
 echo
-echo -e "\x1B[1mCreating secret \"ibm-entitlement-key\" in ${CP4BA_PROJECT_NAME} for CP4BA ...\n\x1B[0m"
+echo -e "\x1B[1mCreating secret \"ibm-entitlement-key\" in ${CP4BA_PROJECT_NAME}...\n\x1B[0m"
 CREATE_SECRET_RESULT=$(${K8S_CMD} create secret docker-registry ibm-entitlement-key -n "${CP4BA_PROJECT_NAME}" --docker-username="${DOCKER_USERNAME}" --docker-password="${ENTITLED_REGISTRY_KEY}" --docker-server="${DOCKER_SERVER}" --docker-email="${ENTITLED_REGISTRY_EMAIL}")
 sleep 5
 
@@ -46,6 +44,10 @@ kubectl apply -n ${CP4BA_PROJECT_NAME} -f -<<EOF
 ${SECRETS_CONTENT}
 EOF
 
+###### Create storage
+echo -e "\x1B[1mCreating storage classes...\x1B[0m"
+kubectl apply -f ${CP4BA_STORAGE_CLASS_FILE}
+
 echo -e "\x1B[1mCreating the Persistent Volumes Claim (PVC)...\x1B[0m"
 cat ${OPERATOR_PVC_FILE}
 CREATE_PVC_RESULT=$(kubectl -n ${CP4BA_PROJECT_NAME} apply -f ${OPERATOR_PVC_FILE})
@@ -55,7 +57,7 @@ if [[ $CREATE_PVC_RESULT ]]; then
 else
     echo -e "\x1B[1;31mFailed\x1B[0m"
 fi
-#    Check Operator Persistent Volume status every 5 seconds (max 10 minutes) until allocate.
+# Check Operator Persistent Volume status every 5 seconds (max 10 minutes) until allocate.
 ATTEMPTS=0
 TIMEOUT=60
 printf "\n"
@@ -91,20 +93,21 @@ if [ $ATTEMPTS -lt $TIMEOUT ] ; then
 fi
 echo
 
-# Add the CatalogSource resources to Operator Hub
+###### Add the CatalogSource resources to Operator Hub
 echo -e "\x1B[1mCreating the Catalog Source...\x1B[0m"
 cat ${CATALOG_SOURCE_FILE}
 ${K8S_CMD} apply -f ${CATALOG_SOURCE_FILE}
 sleep 5
 echo ""
 echo ""
-# Create subscription to Business Automation Operator
+
+###### Create subscription to Business Automation Operator
 echo -e "\x1B[1mCreating the Subscription...\n${CP4BA_SUBSCRIPTION_CONTENT}\n\x1B[0m"
 kubectl apply -f -<<EOF
 ${CP4BA_SUBSCRIPTION_CONTENT}
 EOF
 echo "Sleeping for 5 minutes"
-#sleep 300
+sleep 300
 
 ${K8S_CMD} get pods -n ${CP4BA_PROJECT_NAME} | grep ibm-cp4a-operator
 result=$?
@@ -122,29 +125,12 @@ do
     result=$?
 done
 
-# for ((retry=0;retry<=${maxRetry};retry++)); do
-# echo "Waiting for CP4BA operator pod initialization"
-# isReady=$(${K8S_CMD} get pod -n "${CP4BA_PROJECT_NAME}" --no-headers | grep ibm-cp4a-operator | grep "Running")
-# if [[ -z $isReady ]]; then
-# if [[ $retry -eq ${maxRetry} ]]; then
-#     echo "Timeout Waiting for CP4BA deployment to create"
-#     exit 1
-# else
-#     sleep 5
-#     continue
-# fi
-# else
-# echo "CP4BA operator is running $isReady"
-# break
-# fi
-# done
-
-
+###### Copy JDBC Files
 echo -e "\x1B[1mCopying JDBC License Files...\x1B[0m"
 podname=$(${K8S_CMD} get pods -n ${CP4BA_PROJECT_NAME} | grep ibm-cp4a-operator | awk '{print $1}')
 ${K8S_CMD} cp ${CUR_DIR}/files/jdbc ${CP4BA_PROJECT_NAME}/$podname:/opt/ansible/share
 
-# Create Deployment
+###### Create Deployment
 echo -e "\x1B[1mCreating the Deployment \n${CP4BA_DEPLOYMENT_CONTENT}...\x1B[0m"
 ${K8S_CMD} apply -n ${CP4BA_PROJECT_NAME} -f -<<EOF
 ${CP4BA_DEPLOYMENT_CONTENT}

@@ -1,5 +1,7 @@
 locals {
-  pvc_file                              = "${path.module}/files/operator-shared-pvc.yaml"
+  storage_class_file                    = "${path.module}/files/cp4ba_storage_class.yaml"
+  storage_class_file_content            = file(local.cp4ba_storage_class_file)
+  pvc_file                              = "${path.module}/files/operator_shared_pvc.yaml"
   pvc_file_content                      = file(local.pvc_file)
   catalog_source_file                   = "${path.module}/files/catalog_source.yaml"
   catalog_source_file_content           = file(local.catalog_source_file)
@@ -26,6 +28,7 @@ resource "null_resource" "installing_cp4ba" {
 
   triggers = {
     PVC_FILE_sha1                         = sha1(local.pvc_file_content)
+    STORAGE_CLASS_FILE_sha1               = sha1(local.cp4baq_storage_class_file_content)
     CATALOG_SOURCE_FILE_sha1              = sha1(local.catalog_source_file_content)
     CP4BA_SUBSCRIPTION_FILE_sha1          = sha1(local.cp4ba_subscription_content)
     CP4BA_DEPLOYMENT_sha1                 = sha1(local.cp4ba_deployment_content)
@@ -38,7 +41,7 @@ resource "null_resource" "installing_cp4ba" {
     environment = {
       # ---- Cluster ----
       KUBECONFIG                    = var.cluster_config_path
- 
+
       # ---- Platform ----
       CP4BA_PROJECT_NAME            = var.cp4ba_project_name
 
@@ -49,11 +52,12 @@ resource "null_resource" "installing_cp4ba" {
       DOCKER_USERNAME               = local.docker_username
 
       # ------- FILES ASSIGNMENTS --------
-      OPERATOR_PVC_FILE                = local.pvc_file
-      CATALOG_SOURCE_FILE              = local.catalog_source_file
-      CP4BA_SUBSCRIPTION_CONTENT       = local.cp4ba_subscription_content
-      CP4BA_DEPLOYMENT_CONTENT         = local.cp4ba_deployment_content
-      SECRETS_CONTENT                  = local.secrets_content
+      CP4BA_STORAGE_CLASS_FILE      = local.cp4ba_storage_class_file
+      OPERATOR_PVC_FILE             = local.pvc_file
+      CATALOG_SOURCE_FILE           = local.catalog_source_file
+      CP4BA_SUBSCRIPTION_CONTENT    = local.cp4ba_subscription_content
+      CP4BA_DEPLOYMENT_CONTENT      = local.cp4ba_deployment_content
+      SECRETS_CONTENT               = local.secrets_content
     }
   }
 }
@@ -72,3 +76,4 @@ data "external" "get_endpoints" {
     namespace  = var.cp4ba_project_name
   }
 }
+
