@@ -33,14 +33,14 @@ These parameters are:
 - `resource_group_name`: Resource group that the cluster is provisioned in
 - `entitlement_key`: Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable
 - `entitled_registry_user`: IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key
-- ldap_admin: LDAP root user name
-- ldap_password: LDAP password
-- ldap_host_ip: "xx.xx.xxx.xxx"
-- db2_admin: DB2 admin user name as set up in LDAP
-- db2_user: DB2 user name as set up in LDAP
-- db2_password: DB2 user password as set up in LDAP
-- db2_host_name: DB2 Host name
-- db2_host_port: DB2 Host Port
+- `ldap_admin`: LDAP root user name
+- `ldap_password`: LDAP password
+- `ldap_host_ip`: "xx.xx.xxx.xxx"
+- `db2_admin`: DB2 admin user name as set up in LDAP
+- `db2_user`: DB2 user name as set up in LDAP
+- `db2_password`: DB2 user password as set up in LDAP
+- `db2_host_name`: DB2 Host name
+- `db2_host_port`: DB2 Host Port
 
 ### Execute the example
 
