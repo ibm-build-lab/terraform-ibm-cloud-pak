@@ -20,7 +20,7 @@ region                = "us-south"
 on_vpc              = false
 
 // Prereqs
-worker_node_flavor = "bc3.16x64"
+worker_node_flavor = "b3c.16x64"
 
 // Entitled Registry parameters:
 entitled_registry_key        = "******************"
@@ -30,19 +30,21 @@ entitled_registry_user_email = "john.doe@email.com"
 accept_cpd_license = true
 
 // Parameters to install submodules
-install_watson_knowledge_catalog = false
-install_watson_studio            = false
-install_watson_machine_learning  = false
-install_watson_open_scale        = false
-install_data_virtualization      = false
-install_streams                  = false
-install_analytics_dashboard      = false
-install_spark                    = false
-install_db2_warehouse            = false
-install_db2_data_gate            = false
-install_big_sql                  = false
-install_rstudio                  = false
-install_db2_data_management      = false
+install_wsl         = false
+install_aiopenscale = false
+install_wml         = false
+install_wkc         = false
+install_dv          = false
+install_spss        = false
+install_cde         = false
+install_spark       = false
+install_dods        = false
+install_ca          = false
+install_ds          = false
+install_db2oltp     = false
+install_db2wh       = false
+install_big_sql     = false
+install_wsruntime   = false
 ```
 
 These parameters are:
@@ -54,19 +56,21 @@ These parameters are:
 - `entitled_registry_user_email`: IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key
 - `resource_group_name`: Resource group that the cluster is provisioned in
 - `accept_cpd_license`: If set to `true`, you accept all cpd license agreements including additional modules installed. By default, it's `false`
-- `install_watson_knowledge_catalog`:  Install Watson Knowledge Catalog module. By default it's not installed.
-- `install_watson_studio`: Install Watson Studio module. By default it's not installed.
-- `install_watson_machine_learning`: Install Watson Machine Learning module. By default it's not installed.
-- `install_watson_open_scale`: Install Watson Open Scale module. By default it's not installed. 
-- `install_data_virtualization`: Install Data Virtualization module. By default it's not installed.
-- `install_streams`: Install Streams module. By default it's not installed.
-- `install_analytics_dashboard`: Install Analytics Dashboard module. By default it's not installed.
+- `install_wsl`:  Install Watson Studio module. By default it's not installed. 
+- `install_aiopenscale`: Install  Watson AI OpenScale module. By default it's not installed. 
+- `install_wml`: Install Watson Machine Learning module. By default it's not installed.
+- `install_wkc`: Install Watson Knowledge Catalog module. By default it's not installed.
+- `install_dv`: Install Data Virtualization module. By default it's not installed.
+- `install_spss`: Install SPSS Modeler module. By default it's not installed. 
+- `install_cde`: Install Cognos Dashboard Engine module. By default it's not installed.  
 - `install_spark`: Install Analytics Engine powered by Apache Spark module. By default it's not installed.
-- `install_db2_warehouse`: Install DB2 Warehouse module. By default it's not installed.
-- `install_db2_data_gate`: Install DB2 Data_Gate module. By default it's not installed.
-- `install_big_sql`: Install Big SQL module. By default it's not installed.
-- `install_rstudio`: Install RStudio module. By default it's not installed.
-- `install_db2_data_management`: Install DB2 Data Management module. By default it's not installed.                                
+- `install_dods`: Install Decision Optimization module. By default it's not installed. 
+- `install_ca`: Install Cognos Analytics module. By default it's not installed. 
+- `install_ds`: Install DataStage module. By default it's not installed.
+- `install_db2oltp`: Install Db2oltp module. By default it's not installed.
+- `install_db2wh`: Install Db2 Warehouse module. By default it's not installed.         
+- `install_big_sql`: Install Db2 Big SQL module. By default it's not installed.
+- `install_wsruntime`: Install Jupyter Python 3.7 Runtime Addon. By default it's not installed.                                
 
 ### Execute the example
 

@@ -31,7 +31,7 @@ if [[ ${ON_VPC} == false ]] ; then
 fi
 
 # Create wsl CR: 
-sed -i -e s#CPD_NAMESPACE#${NAMESPACE}#g wsl-cr.yaml
+sed -i -e "s/CPD_NAMESPACE/${NAMESPACE}/g" wsl-cr.yaml
 result=$(oc create -f wsl-cr.yaml)
 echo $result
 
