@@ -41,7 +41,6 @@ resource "null_resource" "install_wsl" {
       KUBECONFIG = var.cluster_config_path
       OP_NAMESPACE = var.operator_namespace
       NAMESPACE = var.cpd_project_name
-      NAMESPACE = var.cpd_project_name
       ON_VPC = var.on_vpc
     }
     
