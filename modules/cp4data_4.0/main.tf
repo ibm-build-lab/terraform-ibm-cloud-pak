@@ -66,6 +66,7 @@ resource "null_resource" "install_aiopenscale" {
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
+      ON_VPC = var.on_vpc
     }
     
     working_dir = "${path.module}/scripts/"
@@ -90,6 +91,7 @@ resource "null_resource" "install_wml" {
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
+      ON_VPC = var.on_vpc
     }
     
     working_dir = "${path.module}/scripts/"
@@ -115,6 +117,7 @@ resource "null_resource" "install_wkc" {
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
+      ON_VPC = var.on_vpc
     }
     
     working_dir = "${path.module}/scripts/"
@@ -141,6 +144,7 @@ resource "null_resource" "install_dv" {
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
+      ON_VPC = var.on_vpc
     }
     
     working_dir = "${path.module}/scripts/"
@@ -168,6 +172,7 @@ resource "null_resource" "install_spss" {
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
+      ON_VPC = var.on_vpc
     }
     
     working_dir = "${path.module}/scripts/"
@@ -196,6 +201,7 @@ resource "null_resource" "install_cde" {
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
+      ON_VPC = var.on_vpc
     }
     
     working_dir = "${path.module}/scripts/"
@@ -225,6 +231,7 @@ resource "null_resource" "install_spark" {
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
+      ON_VPC = var.on_vpc
     }
     
     working_dir = "${path.module}/scripts/"
@@ -255,6 +262,7 @@ resource "null_resource" "install_dods" {
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
+      ON_VPC = var.on_vpc
     }
     
     working_dir = "${path.module}/scripts/"
@@ -286,6 +294,7 @@ resource "null_resource" "install_ca" {
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
+      ON_VPC = var.on_vpc
     }
     
     working_dir = "${path.module}/scripts/"
@@ -318,6 +327,7 @@ resource "null_resource" "install_ds" {
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
+      ON_VPC = var.on_vpc
     }
     
     working_dir = "${path.module}/scripts/"
@@ -351,6 +361,7 @@ resource "null_resource" "install_db2oltp" {
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
+      ON_VPC = var.on_vpc
     }
     
     working_dir = "${path.module}/scripts/"
@@ -385,6 +396,7 @@ resource "null_resource" "install_db2wh" {
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
+      ON_VPC = var.on_vpc
     }
     
     working_dir = "${path.module}/scripts/"
@@ -420,6 +432,7 @@ resource "null_resource" "install_big_sql" {
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
+      ON_VPC = var.on_vpc
     }
     
     working_dir = "${path.module}/scripts/"
@@ -456,6 +469,7 @@ resource "null_resource" "install_wsruntime" {
       KUBECONFIG = var.cluster_config_path
       NAMESPACE = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
+      ON_VPC = var.on_vpc
     }
     
     working_dir = "${path.module}/scripts/"
