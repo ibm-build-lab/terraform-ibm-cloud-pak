@@ -72,20 +72,20 @@ module "cp4data" {
 
   // Parameters to install submodules
 
-  install_wsl = var.install_wsl
+  install_wsl         = var.install_wsl
   install_aiopenscale = var.install_aiopenscale
-  install_wml = var.install_wml
-  install_wkc = var.install_wkc
-  install_dv = var.install_dv
-  install_spss = var.install_spss
-  install_cde = var.install_cde
-  install_spark = var.install_spark
-  install_dods = var.install_dods
-  install_ca = var.install_ca
-  install_ds = var.install_ds
-  install_db2oltp = var.install_db2oltp
-  install_db2wh = var.install_db2wh
-  install_big_sql = var.install_big_sql
-  install_wsruntime = var.install_wsruntime
+  install_wml         = var.install_wml
+  install_wkc         = var.install_wkc
+  install_dv          = var.install_dv
+  install_spss        = var.install_spss
+  install_cde         = var.install_cde
+  install_spark       = var.install_spark
+  install_dods        = var.install_dods
+  install_ca          = var.install_ca
+  install_ds          = var.install_ds
+  install_db2oltp     = var.install_db2oltp
+  install_db2wh       = var.install_db2wh
+  install_big_sql     = var.install_big_sql
+  install_wsruntime   = var.install_wsruntime
   
 }
