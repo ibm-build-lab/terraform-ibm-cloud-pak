@@ -45,6 +45,14 @@ data "ibm_resource_group" "group" {
   name = var.resource_group
 }
 
+resource "null_resource" "mkdir_kubeconfig_dir" {
+  triggers = { always_run = timestamp() }
+
+  provisioner "local-exec" {
+    command = "mkdir -p ./kube/config"
+  }
+}
+
 data "ibm_container_cluster_config" "cluster_config" {
   cluster_name_id   = var.cluster_name_id
   resource_group_id = data.ibm_resource_group.group.id
@@ -54,9 +62,6 @@ data "ibm_container_cluster_config" "cluster_config" {
   network           = false
 }
 ```
-
-**NOTE**: Create the `./kube/config` directory if it doesn't exist.
-
 Input:
 
 - `cluster_name_id`: either the cluster name or ID.
