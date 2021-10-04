@@ -113,7 +113,7 @@ module "cp4mcm" {
 
 **NOTE** The boolean input variable `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
 
-For an example of how to put all this together, refer to our [Cloud Pak for Multi Cloud Management Terraform script](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform/cp4mcm).
+For an example of how to put all this together, refer to our [Cloud Pak for Multi Cloud Management Terraform example](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/examples/cp4mcm).
 
 ## Testing
 
