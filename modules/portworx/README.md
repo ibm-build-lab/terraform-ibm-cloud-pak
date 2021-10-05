@@ -153,7 +153,17 @@ Run in the cluster:
 ```bash
 curl -fsL https://install.portworx.com/px-wipe | bash
 ```
-Then run from command line
+
+Next, run the following script from the command line. This will removes the attachments of the storage from the cluster.
+
+__NOTE:__ Make sure to update the `UNIQUE_ID` in `/cleanup/remove_attached.sh` if it's changed from its default value. 
+
+If the volume needs to be deleted, uncomment the commented out section at the bottom of the script.
+```bash
+./cleanup/remove_attached.sh -c [CLUSTER NAME OR ID] -r [REGION]
+```
+
+Finally run the command below from command line:
 ```bash
 terraform destroy
 ```

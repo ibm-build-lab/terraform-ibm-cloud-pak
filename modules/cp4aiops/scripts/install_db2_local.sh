@@ -24,7 +24,7 @@ metadata:
   name: local-storage-operator
   namespace: local-storage
 spec:
-  channel: '4.6'
+  channel: '4.7'
   installPlanApproval: Automatic
   name: local-storage-operator
   source: redhat-operators
