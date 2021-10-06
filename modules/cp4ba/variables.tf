@@ -1,6 +1,6 @@
 variable "enable" {
   default = true
-  description = "If set to true installs Cloud-Pak for Integration on the given cluster"
+  description = "If set to true installs Cloud-Pak for Business Automation on the given cluster"
 }
 
 variable "cluster_name_or_id" {
