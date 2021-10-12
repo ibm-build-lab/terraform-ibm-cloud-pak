@@ -58,6 +58,7 @@ variable "cpd_namespace" {
 
 variable "storage_option" {
   type = string
+  default = "portworx"
 }
 
 variable "cpd_storageclass" {
@@ -80,20 +81,7 @@ variable "rwo_cpd_storageclass" {
   }
 }
 
-variable "cpd_version" {
-  type    = string
-  default = "4.0.0"
-}
-
 ###########
-
-variable "cloudctl_version" {
-  default = "v3.7.1"
-}
-
-variable "datacore_version" {
-  default = "1.3.3"
-}
 
 variable "cpd_platform" {
   type        = map(string)
