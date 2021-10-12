@@ -2,6 +2,8 @@
 
 This Terraform Module installs **Cloud Pak for Data** on an Openshift cluster on AWS.
 
+Based on [cpd-deployment](https://github.com/IBM/cp4d-deployment/tree/master/existing-openshift) opensource project.
+
 **Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4data`
 
 - [Terraform Module to install Cloud Pak for Data](#terraform-module-to-install-cloud-pak-for-data)
