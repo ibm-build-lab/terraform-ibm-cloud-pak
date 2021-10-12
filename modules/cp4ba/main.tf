@@ -1,6 +1,6 @@
 locals {
-  cp4ba_storage_class_file                    = "${path.module}/files/cp4ba_storage_class.yaml"
-  cp4ba_storage_class_file_content            = file(local.cp4ba_storage_class_file)
+  cp4ba_storage_class_file              = "${path.module}/files/cp4ba_storage_class.yaml"
+  cp4ba_storage_class_file_content      = file(local.cp4ba_storage_class_file)
   pvc_file                              = "${path.module}/files/operator_shared_pvc.yaml"
   pvc_file_content                      = file(local.pvc_file)
   catalog_source_file                   = "${path.module}/files/catalog_source.yaml"
@@ -40,7 +40,7 @@ resource "null_resource" "installing_cp4ba" {
 
     environment = {
       # ---- Cluster ----
-      KUBECONFIG                    = var.cluster_config_path
+      cluster_config_path           = var.cluster_config_path
 
       # ---- Platform ----
       CP4BA_PROJECT_NAME            = var.cp4ba_project_name
