@@ -35,9 +35,44 @@ provider "kubernetes" {
 
 ### Setting up the OpenShift cluster
 
-NOTE: an OpenShift cluster is required to install this Portworx service. This can be an existing cluster or can be provisioned in the Terraform script.
+NOTE: an OpenShift cluster is required to install this module. This can be an existing cluster or can be provisioned in the Terraform script.
 
-To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script.
+To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script. 
+
+Add the following code to get the OpenShift cluster (new or existing) configuration:
+
+```hcl
+data "ibm_resource_group" "group" {
+  name = var.resource_group
+}
+
+resource "null_resource" "mkdir_kubeconfig_dir" {
+  triggers = { always_run = timestamp() }
+
+  provisioner "local-exec" {
+    command = "mkdir -p ./kube/config"
+  }
+}
+
+data "ibm_container_cluster_config" "cluster_config" {
+  cluster_name_id   = var.cluster_name_id
+  resource_group_id = data.ibm_resource_group.group.id
+  download          = true
+  config_dir        = "./kube/config"     // Create this directory in advance
+  admin             = false
+  network           = false
+}
+```
+
+Input:
+
+- `cluster_name_id`: either the cluster name or ID.
+
+- `ibm_resource_group`:  resource group where the cluster is running
+
+Output:
+
+`ibm_container_cluster_config` used as input for the `portworx` module.
 
 ### Provisioning the Portworx Module
 
@@ -74,7 +109,6 @@ module "portworx" {
 }
 ```
 
-
 ## Input Variables
 
 | Name                           | Description                                                                                                                                                                                                                | Default | Required |
@@ -99,8 +133,7 @@ module "portworx" {
 
 **NOTE** The boolean input variable `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
 
-For an example of how to put all this together, refer to our [Cloud Pak for Data Terraform script](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform/cp4data).
-
+For an example of how to use this module, refer to our [Portworx Terraform example](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/examples/portworx).
 
 ## Executing the Terraform Script
 
@@ -117,10 +150,20 @@ terraform apply -auto-approve
 To remove Portworx and Storage from a cluster, execute the following command:
 
 Run in the cluster:
+```bash
+curl -fsL https://install.portworx.com/px-wipe | bash
+```
 
-    curl -fsL https://install.portworx.com/px-wipe | bash
+Next, run the following script from the command line. This will removes the attachments of the storage from the cluster.
 
+__NOTE:__ Make sure to update the `UNIQUE_ID` in `/cleanup/remove_attached.sh` if it's changed from its default value. 
 
+If the volume needs to be deleted, uncomment the commented out section at the bottom of the script.
+```bash
+./cleanup/remove_attached.sh -c [CLUSTER NAME OR ID] -r [REGION]
+```
+
+Finally run the command below from command line:
 ```bash
 terraform destroy
 ```

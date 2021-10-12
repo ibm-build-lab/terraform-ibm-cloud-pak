@@ -70,15 +70,18 @@ Use a `module` block assigning the `source` parameter to the location of this mo
 
 ```hcl
 module "cp4i" {
-  source          = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4i"
-  enable          = true
+  source = "../../modules/cp4i"
+  enable = true
 
   // ROKS cluster parameters:
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
+  storageclass        = var.storageclass
 
   // Entitled Registry parameters:
   entitled_registry_key        = var.entitled_registry_key
   entitled_registry_user_email = var.entitled_registry_user_email
+
+  namespace           = "cp4i"
 }
 ```
 

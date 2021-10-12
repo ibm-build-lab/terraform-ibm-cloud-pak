@@ -91,3 +91,4 @@ done
 echo "Cloud Pak for MCM has been installed with the default configuration for all requested modules."
 echo "For advanced configuration, please refer to https://www.ibm.com/docs/en/cloud-paks/cp-management/2.3.x?topic=installation-configuration."
 echo "For post installation tasks, please refer to https://www.ibm.com/docs/en/cloud-paks/cp-management/2.3.x?topic=installation-post-tasks."
+echo "To complete set up for Notary Service pods, please refer to https://www.ibm.com/docs/en/cloud-paks/cp-management/2.3.x?topic=operands-notary-service"
