@@ -32,7 +32,7 @@ echo "Deploying Catalog Option ${IBM_OPERATOR_CATALOG}"
 echo "${IBM_OPERATOR_CATALOG}" | oc apply -f -
 
 # echo "Creating namespace ${NAMESPACE}"
-echo "creating namespace cp4i"
+echo "creating namespace cp4s"
 kubectl create namespace ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
 
 create_secret() {

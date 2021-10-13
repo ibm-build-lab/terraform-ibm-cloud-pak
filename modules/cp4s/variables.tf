@@ -1,7 +1,3 @@
-variable "enable" {
-  default     = true
-  description = "If set to true installs Cloud-Pak for Data on the given cluster"
-}
 
 variable "force" {
   default     = false

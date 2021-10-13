@@ -6,7 +6,7 @@ locals {
 
 # This section checks to see if the values have been updated through out the script running and is required for any dynamic value
 resource "null_resource" "install_cp4s" {
-  count = var.enable ? 1 : 0
+
 
   triggers = {
     namespace_sha1                            = sha1(local.namespace)

@@ -33,7 +33,7 @@ Go [here](../../CREDENTIALS.md) for details.
 
 ### Setting up the OpenShift cluster
 
-NOTE: an OpenShift cluster and and LDAP is required to install the Cloud Pak. This can be an existing cluster or can be provisioned using our `roks` Terraform module. For the LDAP you can set up a LDAP on your own or use our `ldap` Terrform module then get the admin user name for the script.
+NOTE: an OpenShift cluster is required to install the Cloud Pak. This can be an existing cluster or can be provisioned using our `roks` Terraform module. An LDAP is required for functinoality but not for installation. You can set up a LDAP on your own or use our `ldap` Terrform module then get the admin user name for the script.
 
 If you do not have an LDAP you can complete the installation however full features will not be available until after LDAP configuration is complete.
 
@@ -77,28 +77,28 @@ Output:
 Use a `module` block assigning the `source` parameter to the location of this module `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4s`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Security.
 
 ```hcl
-module "cp4s" {
-  source          = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4s"
-  enable          = true
+source          = "./.."
 
-  cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
+// ROKS cluster parameters:
+cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
 
-  // Entitled Registry parameters:
-  entitled_registry_key        = var.entitled_registry_key
-  entitled_registry_user_email = var.entitled_registry_user_email
+// Prereqs
+worker_node_flavor = var.worker_node_flavor
 
-  // LDAP
+// Entitled Registry parameters:
+entitled_registry_key        = var.entitled_registry_key
+entitled_registry_user_email = var.entitled_registry_user_email
 
-  ldap_user_id = var.ldap_user_id
-  ldap_status = var.ldap_status
-}
+// LDAP
+
+ldap_status = var.ldap_status
+ldap_user_uid = var.ldap_user_id
 ```
 
 ## Input Variables
 
 | Name                               | Description                                                                                                                                                                                                                | Default                     | Required |
 | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | -------- |
-| `enable`                           | If set to `false` does not install the cloud pak on the given cluster. By default it's enabled                                                                                                                        | `true`                      | No       |
 | `entitled_registry_key`            | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
 | `entitled_registry_user_email`     | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key                                                                                                                 |                             | Yes      |
 | `ldap_status`                           | Set to true if ldap is available for configuration                                                                                                                        |                       | Yes       |
