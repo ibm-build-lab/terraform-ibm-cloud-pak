@@ -37,6 +37,8 @@ NOTE: an OpenShift cluster is required to install the Cloud Pak. This can be an 
 
 If you do not have an LDAP you can complete the installation however full features will not be available until after LDAP configuration is complete.
 
+For more information on configuring the LDAP for cp4s please reivew [here](https://www.ibm.com/docs/en/cloud-paks/cp-security/1.7?topic=postinstallation-configuring-ldap-authentication)
+
 To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/roks) for the code to add to your Terraform script. The recommended size for an OpenShift 4.6+ cluster on IBM Cloud Classic contains `5` workers of flavor `b3c.8x32`, however read the [Cloud Pak for Security documentation](https://www.ibm.com/docs/en/cloud-paks/cp-security/1.6.0?topic=requirements-hardware) .
 
 Add the following code to get the OpenShift cluster (new or existing) configuration:
