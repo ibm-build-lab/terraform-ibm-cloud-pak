@@ -1,9 +1,10 @@
 #!/bin/sh
 
+K8s_CMD=kubectl
 # TODO: Update OCP_VERSION dynamically for local-storage-operator
 # OCP_VERSION="'4.6'"
 
-cat << EOF | oc apply -f -
+cat << EOF | ${K8s_CMD} apply -f -
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -24,7 +25,7 @@ metadata:
   name: local-storage-operator
   namespace: local-storage
 spec:
-  channel: '4.6'
+  channel: '4.7'
   installPlanApproval: Automatic
   name: local-storage-operator
   source: redhat-operators
@@ -40,7 +41,7 @@ echo "Applying the Db2 LocalVolume to the cluster."
 # TODO: Dynamically update path_to_disk from TF.
 path_to_disk="/dev/vdb"
 
-cat << EOF | oc apply -f -
+cat << EOF | ${K8s_CMD} apply -f -
 apiVersion: "local.storage.openshift.io/v1"
 kind: "LocalVolume"
 metadata:
