@@ -18,9 +18,10 @@ Create the file `test.auto.tfvars` with the following input variables, these val
 
 ```hcl
 source          = "./.."
+enable          = var.enable
 
 // ROKS cluster parameters:
-cluster_config_path = ./kube/config
+cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
 
 // Prereqs
 worker_node_flavor = var.worker_node_flavor
@@ -56,4 +57,4 @@ One of the Test Scenarios is to verify the YAML files rendered to install IAF, t
 
  execute: `terraform destroy`.
 
-There are some directories and files you may want to manually delete, these are: `rm -rf test.auto.tfvars terraform.tfstate* .terraform .kube rendered_files` as well as delete the `cp4s_cli_install` and `ibm-cp-security`
+There are some directories and files you may want to manually delete, these are: `rm -rf test.auto.tfvars terraform.tfstate* .terraform .kube rendered_files` as well as delete the `cp4na_cli_install` and `ibm-cp-network-automation`
