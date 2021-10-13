@@ -22,3 +22,7 @@ variable "entitled_registry_user_email" {
   type        = string
   description = "Docker email address"
 }
+
+variable "admin_user" {
+  description = "user to be given administartor privileges in the default account"
+}

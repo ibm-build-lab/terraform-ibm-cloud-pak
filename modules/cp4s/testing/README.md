@@ -18,7 +18,6 @@ Create the file `test.auto.tfvars` with the following input variables, these val
 
 ```hcl
 source          = "./.."
-enable          = var.enable
 
 // ROKS cluster parameters:
 cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
@@ -30,20 +29,15 @@ worker_node_flavor = var.worker_node_flavor
 entitled_registry_key        = var.entitled_registry_key
 entitled_registry_user_email = var.entitled_registry_user_email
 
-// LDAP
-
-ldap_status = var.ldap_status
-ldap_user_uid = var.ldap_user_id
+admin_user = var.admin_user
 ```
 
 These parameters are:
 
-- `enable`: If set to `false` does not install the cloud pak on the given cluster. By default it's enabled
+
 - `entitled_registry_key`: Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key
 - `entitled_registry_user_email`: IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key
-- `ldap_status` : True if you have an LDAP configured
-- `ldap_user_id` : LDAP user admin uid
-Execute the following Terraform commands:
+- `admin_user` : user to be given administartor privileges in the default account
 
 ```bash
 terraform init

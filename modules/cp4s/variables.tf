@@ -27,11 +27,6 @@ variable "portworx_is_ready" {
   type = any
   default = null
 }
-
-variable "cluster_admin_user" {
-  description = "user to be given administartor privileges in the default account"
-}
-
 variable "entitled_registry_user_email" {
   description = "Docker email address"
 }
@@ -41,6 +36,14 @@ variable "namespace" {
   description = "Namespace for Cloud Pak for Network Automation"
 }
 
+variable "entitled_registry_key" {
+  description = "ibm cloud pak entitlement key"
+}
+
+variable "admin_user" {
+  default = "default_user"
+  description = "user to be given administartor privileges in the default account"
+}
 
 locals {
   namespace                = "cp4s"
@@ -49,7 +52,5 @@ locals {
   docker_registry          = "cp.icr.io" // Staging: "cp.stg.icr.io/cp/cpd"
   docker_username          = "cp"               // "ekey"
   entitled_registry_key    = chomp(var.entitled_registry_key)
-  openshift_version_regex  = regex("(\\d+).(\\d+)(.\\d+)*(_openshift)*", var.openshift_version)
-  openshift_version_number = local.openshift_version_regex[3] == "_openshift" ? tonumber("${local.openshift_version_regex[0]}.${local.openshift_version_regex[1]}") : 0
 
 }
