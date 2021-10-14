@@ -497,6 +497,26 @@ resource "null_resource" "install_wsruntime" {
   ]
 }
 
+# Reencrypt route
+resource "null_resource" "reencrypt_route" {
+  
+  provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.cluster_config_path
+    }
+    working_dir = "${path.module}/scripts/"
+    interpreter = ["/bin/bash", "-c"]
+    command = "./reencrypt_route.sh ${var.cpd_project_name}"
+  }
+
+  depends_on = [
+    var.portworx_is_ready,
+    null_resource.prereqs_checkpoint,
+    null_resource.bedrock_zen_operator,
+  ]
+}
+
+
 data "external" "get_endpoints" {
   count = var.enable ? 1 : 0
 
