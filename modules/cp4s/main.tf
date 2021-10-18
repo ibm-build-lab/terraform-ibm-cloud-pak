@@ -5,8 +5,8 @@ locals {
   common_services_catalog = file(join("/", [path.module, "files", "common-services.yaml"])) 
   operator_group = file(join("/", [path.module, "files", "operator-group.yaml"])) 
   subscription = file(join("/", [path.module, "files", "subscription.yaml"]))
-  cp4s_threat_management = templatefile("${path.module}/templates/cp4s_threat_management.yaml", {
-    admin_name = var.admin_name
+  cp4s_threat_management = templatefile("${path.module}/templates/cp4s-threat-management.yaml", {
+    admin_user = var.admin_user
   })  
 
 

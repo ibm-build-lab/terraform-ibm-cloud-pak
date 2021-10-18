@@ -23,9 +23,6 @@ enable          = var.enable
 // ROKS cluster parameters:
 cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
 
-// Prereqs
-worker_node_flavor = var.worker_node_flavor
-
 // Entitled Registry parameters:
 entitled_registry_key        = var.entitled_registry_key
 entitled_registry_user_email = var.entitled_registry_user_email
