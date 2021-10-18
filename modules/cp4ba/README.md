@@ -15,7 +15,6 @@ This Cloud Pak requires an Entitlement Key. It can be retrieved from [here](http
 If running local Terraform client, edit the `./terraform.tfvars` file to define the `entitled_registry_user_email` variable and optionally the variable `entitled_registry_key` or save the entitlement key in the file `entitlement.key`. The IBM Cloud user email address is required in the variable `entitled_registry_user_email` to access the IBM Cloud Container Registry (ICR), set the user email address of the account used to generate the Entitlement Key.
 
 For example:
-
 ```hcl
 entitled_registry_user_email = "john.smith@ibm.com"
 

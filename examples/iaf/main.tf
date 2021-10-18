@@ -14,7 +14,7 @@ resource "null_resource" "mkdir_kubeconfig_dir" {
 }
 
 data "ibm_container_cluster_config" "cluster_config" {
-  depends_on = [null_resource.mkdir_kubeconfig_dir]
+  depends_on        = [null_resource.mkdir_kubeconfig_dir]
   cluster_name_id   = var.cluster_id
   resource_group_id = data.ibm_resource_group.group.id
   config_dir        = local.config_dir
@@ -35,7 +35,7 @@ module "iaf" {
   resource_group      = var.resource_group
 
   // IBM Cloud API Key
-  ibmcloud_api_key          = var.ibmcloud_api_key
+  ibmcloud_api_key = var.ibmcloud_api_key
 
   // Entitled Registry parameters:
   // 1. Get the entitlement key from: https://myibm.ibm.com/products-services/containerlibrary

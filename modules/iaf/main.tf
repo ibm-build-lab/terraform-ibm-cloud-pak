@@ -2,10 +2,10 @@ locals {
   catalogsource_content = templatefile("${path.module}/templates/CatalogSource.yaml.tmpl", {
   })
   automationbase_content = templatefile("${path.module}/templates/AutomationBase.yaml.tmpl", {
-    namespace                    = local.iaf_namespace
+    namespace = local.iaf_namespace
   })
-  subscription_content  = templatefile("${path.module}/templates/Subscription.yaml.tmpl", {
-    namespace                    = local.iaf_namespace
+  subscription_content = templatefile("${path.module}/templates/Subscription.yaml.tmpl", {
+    namespace = local.iaf_namespace
   })
 }
 
@@ -14,9 +14,9 @@ resource "null_resource" "install_iaf" {
 
   triggers = {
     docker_credentials_sha1 = sha1(join("", [local.entitled_registry_user, var.entitled_registry_key, var.entitled_registry_user_email, local.entitled_registry, local.iaf_namespace]))
-    catalogsource_sha1   = sha1(local.catalogsource_content)
-    subscription_sha1    = sha1(local.subscription_content)
-    automationbase_sha1    = sha1(local.automationbase_content)
+    catalogsource_sha1      = sha1(local.catalogsource_content)
+    subscription_sha1       = sha1(local.subscription_content)
+    automationbase_sha1     = sha1(local.automationbase_content)
   }
 
   provisioner "local-exec" {
@@ -40,11 +40,11 @@ resource "null_resource" "install_iaf" {
     command = "${path.module}/scripts/install_iaf.sh"
 
     environment = {
-      KUBECONFIG                       = var.cluster_config_path
-      IAF_NAMESPACE                    = local.iaf_namespace
-      IAF_CATALOGSOURCE_CONTENT        = local.catalogsource_content
-      IAF_SUBSCRIPTION_CONTENT         = local.subscription_content
-      IAF_INSTALLATION_CONTENT         = local.automationbase_content
+      KUBECONFIG                = var.cluster_config_path
+      IAF_NAMESPACE             = local.iaf_namespace
+      IAF_CATALOGSOURCE_CONTENT = local.catalogsource_content
+      IAF_SUBSCRIPTION_CONTENT  = local.subscription_content
+      IAF_INSTALLATION_CONTENT  = local.automationbase_content
     }
   }
 }

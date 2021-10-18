@@ -1,10 +1,10 @@
 variable "on_vpc" {
-  default = true
+  default     = true
   description = "To determine infrastructure. Options are `true` = installs on VPC, `false`  installs on classic"
 }
 
 variable "entitlement" {
-  default = "cloud_pak"
+  default     = "cloud_pak"
   description = "OCP entitlement"
 }
 
@@ -67,7 +67,7 @@ variable "workers_count" {
 
 variable "datacenter" {
   description = "List all available datacenters/zones with: ibmcloud ks zone ls --provider classic"
-  default = ""
+  default     = ""
 }
 
 // VLAN's numbers variables on the datacenter, they are here until the

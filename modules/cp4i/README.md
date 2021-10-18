@@ -21,14 +21,6 @@ Go [here](../CREDENTIALS.md) for details.
 
 ## Provisioning this module in a Terraform Script
 
-In your Terraform script define the `ibm` provisioner block with the `version`.
-
-```hcl
-provider "ibm" {
-  version          = "~> 1.12"
-}
-```
-
 ### Setting up the OpenShift cluster
 
 NOTE: an OpenShift cluster is required to install the Cloud Pak. This can be an existing cluster or can be provisioned using our `roks` Terraform module.

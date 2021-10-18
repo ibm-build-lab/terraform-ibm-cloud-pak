@@ -35,7 +35,7 @@ resource "null_resource" "install_cp4mcm" {
     installation_sha1       = sha1(local.installation_content)
   }
 
-  provisioner "local-exec" {    
+  provisioner "local-exec" {
     command = "${path.module}/scripts/install_cp4mcm.sh"
 
     environment = {

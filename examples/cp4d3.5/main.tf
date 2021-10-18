@@ -16,7 +16,7 @@ resource "null_resource" "mkdir_kubeconfig_dir" {
 }
 
 data "ibm_container_cluster_config" "cluster_config" {
-  depends_on = [null_resource.mkdir_kubeconfig_dir]
+  depends_on        = [null_resource.mkdir_kubeconfig_dir]
   cluster_name_id   = var.cluster_id
   resource_group_id = data.ibm_resource_group.group.id
   config_dir        = local.cluster_config_path
@@ -24,13 +24,13 @@ data "ibm_container_cluster_config" "cluster_config" {
 
 # Get classic cluster ingress_hostname for output
 data "ibm_container_cluster" "cluster" {
-  count = ! var.on_vpc ? 1 : 0
+  count           = ! var.on_vpc ? 1 : 0
   cluster_name_id = var.cluster_id
 }
 
 # Get vpc cluster ingress_hostname for output
 data "ibm_container_vpc_cluster" "cluster" {
-  count = var.on_vpc ? 1 : 0
+  count           = var.on_vpc ? 1 : 0
   cluster_name_id = var.cluster_id
 }
 
@@ -42,7 +42,7 @@ module "cp4data" {
   // ROKS cluster parameters:
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
   on_vpc              = var.on_vpc
-  portworx_is_ready   = 1          // Assuming portworx is installed if using VPC infrastructure
+  portworx_is_ready   = 1 // Assuming portworx is installed if using VPC infrastructure
 
   // Prereqs
   worker_node_flavor = var.worker_node_flavor

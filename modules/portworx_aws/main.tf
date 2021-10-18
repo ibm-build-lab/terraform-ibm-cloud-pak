@@ -48,8 +48,8 @@ resource "null_resource" "install_portworx" {
   }
   provisioner "local-exec" {
     working_dir = "${path.module}/scripts/"
-    when    = create
-    command = <<EOF
+    when        = create
+    command     = <<EOF
 pwd
 chmod +x portworx-prereq.sh
 bash portworx-prereq.sh ${self.triggers.region}
@@ -91,10 +91,10 @@ EOF
 }
 
 locals {
-  rootpath                      = abspath(path.root)
-  installer_workspace           = "${local.rootpath}/installer-files"
-  px_cluster_id                 = var.portworx_essentials.enable ? var.portworx_essentials.cluster_id : var.portworx_enterprise.cluster_id
-  priv_image_registry           = "image-registry.openshift-image-registry.svc:5000/kube-system"
-  secret_provider               = var.portworx_enterprise.enable && var.portworx_enterprise.enable_encryption ? "aws-kms" : "k8s"
-  px_workspace                  = "${local.installer_workspace}/ibm-px"
+  rootpath            = abspath(path.root)
+  installer_workspace = "${local.rootpath}/installer-files"
+  px_cluster_id       = var.portworx_essentials.enable ? var.portworx_essentials.cluster_id : var.portworx_enterprise.cluster_id
+  priv_image_registry = "image-registry.openshift-image-registry.svc:5000/kube-system"
+  secret_provider     = var.portworx_enterprise.enable && var.portworx_enterprise.enable_encryption ? "aws-kms" : "k8s"
+  px_workspace        = "${local.installer_workspace}/ibm-px"
 }

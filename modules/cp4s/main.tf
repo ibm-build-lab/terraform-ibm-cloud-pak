@@ -1,15 +1,13 @@
 locals {
 
   # These are the the yamls that will be pulled from the ./files  these will be used to start hte operator
-  operator_catalog = file(join("/", [path.module, "files", "operator-catalog.yaml"])) 
+  operator_catalog = file(join("/", [path.module, "files", "operator-catalog.yaml"]))
   common_services_catalog = file(join("/", [path.module, "files", "common-services.yaml"])) 
   operator_group = file(join("/", [path.module, "files", "operator-group.yaml"])) 
   subscription = file(join("/", [path.module, "files", "subscription.yaml"]))
   cp4s_threat_management = templatefile("${path.module}/templates/cp4s-threat-management.yaml", {
     admin_user = var.admin_user
-  })  
-
-
+  })
 }
 
 # This section checks to see if the values have been updated through out the script running and is required for any dynamic value

@@ -1,5 +1,5 @@
 variable "openshift_version" {
-  default = "4.6_openshift"
+  default     = "4.6_openshift"
   description = "Openshift version installed in the cluster"
 }
 

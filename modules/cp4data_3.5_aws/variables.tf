@@ -48,7 +48,7 @@ variable "worker_node_flavor" {
 }
 
 variable "portworx_is_ready" {
-  type = any
+  type    = any
   default = null
 }
 // Modules available to install on CP4D
@@ -121,7 +121,7 @@ variable "install_db2_data_management" {
 
 variable "install_big_sql" {
   default     = false
-  type        = bool 
+  type        = bool
   description = "Install Big SQL module. Only for Cloud Pak for Data v3.5"
 }
 
@@ -130,7 +130,7 @@ locals {
   entitled_registry        = "cp.icr.io"
   entitled_registry_user   = "cp"
   docker_registry          = "cp.icr.io" // Staging: "cp.stg.icr.io/cp/cpd"
-  docker_username          = "cp"               // "ekey"
+  docker_username          = "cp"        // "ekey"
   entitled_registry_key    = chomp(var.entitled_registry_key)
   openshift_version_regex  = regex("(\\d+).(\\d+)(.\\d+)*(_openshift)*", var.openshift_version)
   openshift_version_number = local.openshift_version_regex[3] == "_openshift" ? tonumber("${local.openshift_version_regex[0]}.${local.openshift_version_regex[1]}") : 0

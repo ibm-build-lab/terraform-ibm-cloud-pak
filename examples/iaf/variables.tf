@@ -33,5 +33,5 @@ variable "entitled_registry_key" {
 // ROKS Module : Local Variables and constants
 locals {
   entitled_registry_key_file = "../../entitlement.key"
-  config_dir = "./.kube/config"
+  config_dir                 = "./.kube/config"
 }

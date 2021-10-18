@@ -1,7 +1,7 @@
 // Module:
 module "cp4data" {
-  source          = "./.."
-  enable          = var.enable
+  source = "./.."
+  enable = var.enable
 
   // ROKS cluster parameters:
   openshift_version   = var.openshift_version

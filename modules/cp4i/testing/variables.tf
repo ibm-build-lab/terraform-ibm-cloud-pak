@@ -20,7 +20,7 @@ variable "on_vpc" {
 }
 
 variable "portworx_is_ready" {
-  type = any
+  type    = any
   default = null
 }
 

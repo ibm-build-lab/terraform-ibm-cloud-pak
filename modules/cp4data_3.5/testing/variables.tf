@@ -15,7 +15,7 @@ variable "on_vpc" {
 }
 
 variable "portworx_is_ready" {
-  type = any
+  type    = any
   default = null
 }
 
@@ -127,6 +127,6 @@ variable "install_db2_data_management" {
 
 variable "install_big_sql" {
   default     = false
-  type        = bool 
+  type        = bool
   description = "Install Big SQL module. Only for Cloud Pak for Data v3.5"
 }

@@ -8,8 +8,8 @@ data "ibm_resource_group" "group" {
 }
 
 data "ibm_container_vpc_cluster" "this" {
-  count = var.enable ? 1 : 0
-  name = var.cluster_id
+  count             = var.enable ? 1 : 0
+  name              = var.cluster_id
   resource_group_id = data.ibm_resource_group.group.id
 }
 
@@ -26,7 +26,7 @@ data "ibm_iam_auth_token" "this" {}
 # ibm_is_subnet is currently bugged. On a run, it can error with an expired or bad token. A subsequent rerun fixes this, 
 # but this script should run the first time without any problems.
 data "ibm_is_subnet" "this" {
-  count = var.enable ? var.worker_nodes : 0
+  count      = var.enable ? var.worker_nodes : 0
   identifier = length(data.ibm_container_vpc_cluster_worker.this) > 0 ? data.ibm_container_vpc_cluster_worker.this[count.index].network_interfaces[0].subnet_id : 0
 }
 
@@ -52,14 +52,14 @@ resource "ibm_is_volume" "this" {
     data.ibm_is_subnet.this
   ]
 
-  count = var.enable && var.install_storage ? var.worker_nodes : 0 
-  
-  capacity = var.storage_capacity
-  iops = var.storage_profile == "custom" ? var.storage_iops : null
-  name = length(data.ibm_container_vpc_cluster.this) > 0 ? "${var.unique_id}-pwx-${split("-", data.ibm_container_vpc_cluster.this[0].workers[count.index])[4]}" : "${var.unique_id}-pwx"
-  profile = var.storage_profile
+  count = var.enable && var.install_storage ? var.worker_nodes : 0
+
+  capacity       = var.storage_capacity
+  iops           = var.storage_profile == "custom" ? var.storage_iops : null
+  name           = length(data.ibm_container_vpc_cluster.this) > 0 ? "${var.unique_id}-pwx-${split("-", data.ibm_container_vpc_cluster.this[0].workers[count.index])[4]}" : "${var.unique_id}-pwx"
+  profile        = var.storage_profile
   resource_group = data.ibm_resource_group.group.id
-  zone = length(data.ibm_is_subnet.this) > 0 ? data.ibm_is_subnet.this[count.index].zone : ""
+  zone           = length(data.ibm_is_subnet.this) > 0 ? data.ibm_is_subnet.this[count.index].zone : ""
 }
 
 # locals {
@@ -69,13 +69,13 @@ resource "ibm_is_volume" "this" {
 # Attach block storage to worker
 resource "null_resource" "volume_attachment" {
   # count = length(data.ibm_container_vpc_cluster_worker.worker)
-  count = var.enable && var.install_storage ? var.worker_nodes : 0 
+  count = var.enable && var.install_storage ? var.worker_nodes : 0
 
   depends_on = [
     ibm_is_volume.this,
   ]
   # for_each = local.worker_volume_map
-  
+
   triggers = {
     volume = length(ibm_is_volume.this) > 0 ? ibm_is_volume.this[count.index].id : 0
     worker = length(data.ibm_container_vpc_cluster_worker.this) > 0 ? data.ibm_container_vpc_cluster_worker.this[count.index].id : 0
@@ -109,7 +109,7 @@ resource "null_resource" "volume_attachment" {
   #     WORKER_ID         = length(data.ibm_container_vpc_cluster_worker.this) > 0 ? data.ibm_container_vpc_cluster_worker.this[count.index].id : 0
   #     VOLUME_ID         = length(ibm_is_volume.this) > 0 ? ibm_is_volume.this[count.index].id : 0
   #   }
-  
+
   #   interpreter = ["/bin/bash", "-c"]
   #   command     = file("${path.module}/scripts/volume_attachment_destroy.sh")
   # }
@@ -119,19 +119,19 @@ resource "null_resource" "volume_attachment" {
 # Create 'Databases for Etcd' service instance
 #############################################
 resource "ibm_database" "etcd" {
-  count = var.enable && var.create_external_etcd ? 1 : 0
-  location = var.region
+  count                        = var.enable && var.create_external_etcd ? 1 : 0
+  location                     = var.region
   members_cpu_allocation_count = 9
-  members_disk_allocation_mb = 393216
+  members_disk_allocation_mb   = 393216
   members_memory_allocation_mb = 24576
-  name = "${var.unique_id}-pwx-etcd"
-  plan = "standard"
-  resource_group_id = data.ibm_resource_group.group.id
-  service = "databases-for-etcd"
-  service_endpoints = "private"
-  version = "3.3"
+  name                         = "${var.unique_id}-pwx-etcd"
+  plan                         = "standard"
+  resource_group_id            = data.ibm_resource_group.group.id
+  service                      = "databases-for-etcd"
+  service_endpoints            = "private"
+  version                      = "3.3"
   users {
-    name = var.etcd_username
+    name     = var.etcd_username
     password = var.etcd_password
   }
 }
@@ -139,15 +139,15 @@ resource "ibm_database" "etcd" {
 # find the object in the connectionstrings list in which the `name` is var.etcd_username
 locals {
   etcd_user_connectionstring = (var.create_external_etcd ?
-                                ibm_database.etcd[0].connectionstrings[index(ibm_database.etcd[0].connectionstrings[*].name, var.etcd_username)] :
-                                null)
+    ibm_database.etcd[0].connectionstrings[index(ibm_database.etcd[0].connectionstrings[*].name, var.etcd_username)] :
+  null)
 }
 
 resource "kubernetes_secret" "etcd" {
   count = var.enable && var.create_external_etcd ? 1 : 0
-  
+
   metadata {
-    name = var.etcd_secret_name
+    name      = var.etcd_secret_name
     namespace = "kube-system"
   }
 
@@ -156,7 +156,7 @@ resource "kubernetes_secret" "etcd" {
     username = var.etcd_username
     password = var.etcd_password
   }
-  
+
 }
 
 ##################################
@@ -181,10 +181,10 @@ resource "ibm_resource_instance" "portworx" {
   ]
 
   parameters = {
-    apikey           = var.ibmcloud_api_key
-    cluster_name     = "pwx"
-    clusters         = var.cluster_id
-    etcd_endpoint    = ( var.create_external_etcd ?
+    apikey       = var.ibmcloud_api_key
+    cluster_name = "pwx"
+    clusters     = var.cluster_id
+    etcd_endpoint = (var.create_external_etcd ?
       "etcd:https://${local.etcd_user_connectionstring.hosts[0].hostname}:${local.etcd_user_connectionstring.hosts[0].port}"
       : null
     )
