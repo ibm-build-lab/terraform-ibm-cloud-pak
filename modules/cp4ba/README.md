@@ -1,4 +1,4 @@
-# Cloud Pak for B
+# Cloud Pak for Business Automation
 
 ## Requirements
 
