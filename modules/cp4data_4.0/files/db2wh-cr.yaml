@@ -4,6 +4,7 @@ metadata:
   name: db2wh-cr
   namespace: REPLACE_NAMESPACE
 spec:
+  version: 4.0.2
   license:
     accept: true
     license: "Enterprise"

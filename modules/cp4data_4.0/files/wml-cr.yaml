@@ -9,6 +9,7 @@ metadata:
     app.kubernetes.io/name: ibm-cpd-wml-operator
 spec:
   ignoreForMaintenance: false
+  version: 4.0.2
   storageClass: portworx-shared-gp3
   storageVendor: portworx
   license:
