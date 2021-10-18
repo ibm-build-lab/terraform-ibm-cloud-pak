@@ -15,7 +15,6 @@
 # - kubectl
 
 # Optional input parameters with default values:
-NAMESPACE=${default}
 DEBUG=${DEBUG:-false}
 DOCKER_USERNAME=${DOCKER_USERNAME:-cp}
 DOCKER_REGISTRY=${DOCKER_REGISTRY:-cp.icr.io}  # adjust this if needed
@@ -28,12 +27,15 @@ while [[ -z $(kubectl get route -n openshift-ingress router-default -o jsonpath=
   sleep $WAITING_TIME
 done
 
-echo "Deploying Catalog Option ${IBM_OPERATOR_CATALOG}"
-echo "${IBM_OPERATOR_CATALOG}" | oc apply -f -
-
 # echo "Creating namespace ${NAMESPACE}"
-echo "creating namespace cp4i"
-kubectl create namespace ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
+echo "creating namespace ${NAMESPACE}"
+kubectl create namespace ${NAMESPACE} 
+
+echo "Deploying Catalog Option ${OPERATOR_CATALOG}"
+echo "${OPERATOR_CATALOG}" | oc apply -f -
+
+echo "Deploying Catalog Option ${COMMON_SERVICES_CATALOG}"
+echo "${COMMON_SERVICES_CATALOG}" | oc apply -f -
 
 create_secret() {
   secret_name=$1
@@ -46,23 +48,26 @@ create_secret() {
     --docker-username=${DOCKER_USERNAME} \
     --docker-password=${DOCKER_REGISTRY_PASS} \
     --docker-email=${DOCKER_USER_EMAIL} \
-    --namespace=${namespace}
+    --namespace=${NAMESPACE}
 
   # [[ "${link}" != "no-link" ]] && oc secrets -n ${namespace} link cpdinstall icp4d-anyuid-docker-pull --for=pull
 }
 
-create_secret ibm-entitlement-key default
 create_secret ibm-entitlement-key ${NAMESPACE}
 
+create_secret ibm-isc-pull-secret ${NAMESPACE}
 
 
-sleep 40
+echo "Deploying Operator Group ${OPERATOR_GROUP}"
+echo "${OPERATOR_GROUP}" | oc apply -f -
 
-HELM3=$(which helm)
 
+echo "Deploying Subscription ${SUBSCRIPTION}"
+echo "${SUBSCRIPTION}" | oc apply -f -
 
-mkdir cp4s_cli_install
-cloudctl case save -t 1 --case https://github.com/IBM/cloud-pak/raw/master/repo/case/ibm-cp-security-1.0.17.tgz --outputdir ./cp4s_cli_install/ && tar -xf ./cp4s_cli_install/ibm-cp-security-1.0.17.tgz
-$(sed -e "s/LDAP_USER_ID/${LDAP_USER_ID}/g" -e "s/ENTITLEMENT_KEY/${DOCKER_REGISTRY_PASS}/g"  ../templates/values.conf > ./ibm-cp-security/inventory/installProduct/files/values.conf)
-cloudctl case launch -t 1 --case ibm-cp-security --namespace default  --inventory installProduct --action install --args "--license accept --helm3 ${HELM3} --inputDir ./cp4s_cli_install/"
+sleep 60
 
+echo "Deploying Subscription ${CP4S_THREAT_MANAGEMENT}"
+echo "${CP4S_THREAT_MANAGEMENT}" | oc apply -f -
+
+# TODO  while oc -n ${NAMESPACE} get cpdservice ${SERVICE}-cpdservice --output=json | jq -c -r '.status'
