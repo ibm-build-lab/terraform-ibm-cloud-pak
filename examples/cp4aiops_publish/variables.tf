@@ -28,5 +28,5 @@ variable "entitled_registry_user_email" {
 }
 
 locals {
-  cluster_config_path = "./kube/config"
+  cluster_config_path = "./.kube/config"
 }
