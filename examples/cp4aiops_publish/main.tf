@@ -1,8 +1,12 @@
 // Requirements:
-
-provider "ibm" {
-  region     = var.region
-  version    = "~> 1.13"
+terraform {
+  required_version = ">=0.13"
+  required_providers {
+    ibm = {
+      source = "IBM-Cloud/ibm"
+      version    = "~> 1.12"
+    }
+  }
 }
 
 data "ibm_resource_group" "group" {
