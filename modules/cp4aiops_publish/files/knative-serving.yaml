@@ -1,0 +1,15 @@
+apiVersion: operator.knative.dev/v1alpha1
+kind: KnativeServing
+metadata:
+  name: knative-serving
+  namespace: knative-serving
+  labels:
+    ibm-aiops-install/install: knative-serving
+spec:
+  config:
+    autoscaler:
+      enable-scale-to-zero: "true"
+    domain:
+      svc.cluster.local: |
+        selector:
+          sdlc.visibility: cluster-local
