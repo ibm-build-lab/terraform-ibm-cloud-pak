@@ -1,23 +1,15 @@
-output "CLASSIC_ID" {
-
-  value = var.enable && length(ibm_compute_vm_instance.ldap) > 0 ? ibm_compute_vm_instance.ldap.0.id : ""
-
+output "ldap_id" {
+  value = module.ldap.CLASSIC_ID
 }
 
 output "CLASSIC_IP_ADDRESS" {
-
-  value = var.enable && length(ibm_compute_vm_instance.ldap) > 0 ? ibm_compute_vm_instance.ldap.0.ipv4_address : ""
-
+  value = module.ldap.CLASSIC_IP_ADDRESS
 }
 
 output "ldapBindDN" {
-
-  value = var.ldapBindDN
-
+  value = module.ldap.ldapBindDN
 }
 
 output "ldapBindDNPassword" {
-
-  value = var.ldapBindDNPassword
-
+  value = module.ldap.ldapBindDNPassword
 }
