@@ -16,7 +16,7 @@ variable "iaas_classic_api_key" {
 
 variable "iaas_classic_username" {
     default = null
-    description = "IBM Classic Infrastucture API Key (see https://cloud.ibm.com/docs/account?topic=account-classic_keys)"
+    description = "Run `ibmcloud sl user list` for account username"
 }
 
 variable "ibmcloud_domain" {
