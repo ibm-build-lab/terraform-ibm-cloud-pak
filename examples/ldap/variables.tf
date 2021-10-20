@@ -28,8 +28,8 @@ variable "ibmcloud_domain" {
 }
 
 variable "os_reference_code" {
-    default = null
-    description = "The Operating System Reference Code, for example `CentOS_8_64` (see https://cloud.ibm.com/docs/ibm-cloud-provider-for-terraform)"
+    default = "CentOS_8_64"
+    description = "The Operating System Reference Code (see https://cloud.ibm.com/docs/ibm-cloud-provider-for-terraform)"
 }
 
 variable "cores" {
@@ -83,6 +83,6 @@ variable "ldapBindDN" {
 }
 
 variable "ldapBindDNPassword" {
-  default     = null
+  default     = "Passw0rd"
   description = "Bind DN Password (https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-connector-ldap-cp4d)"
 }
