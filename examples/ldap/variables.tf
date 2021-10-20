@@ -26,7 +26,7 @@ variable "ibmcloud_domain" {
 
 variable "os_reference_code" {
     default = "CentOS_8_64"
-    description = "The Operating System Reference Code (see https://cloud.ibm.com/docs/ibm-cloud-provider-for-terraform)"
+    description = "The Operating System Reference Code (see https://stackoverflow.com/questions/29743298/how-to-get-list-of-softlayers-operatingsystemreferencecode)"
 }
 
 variable "cores" {
