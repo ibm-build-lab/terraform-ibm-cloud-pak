@@ -13,7 +13,16 @@ resource "ibm_compute_vm_instance" "ldap" {
   memory               = var.memory
   disks                = var.disks
   local_disk           = var.local_disk
+  ldapBindDN           = var.ldapBindDN
+  ldapBindDNPassword   = var.ldapBindDNPassword
 
+  # connection {
+  #   type        = "ssh"
+  #   user        = "root"
+  #   private_key = tls_private_key.ssh.private_key_pem
+  #   agent       = false
+  #   host        = ibm_compute_vm_instance.ldap[count.index].ipv4_address
+  # }
 }
 
 resource "null_resource" "ldap_files" {
@@ -63,26 +72,26 @@ resource "null_resource" "ldap_files" {
       "yum install -y ksh",
       "yum install -y libaio",
       "chmod +x /tmp/install.sh",
-      "sh /tmp/install.sh",
-      ]
+      "sh /tmp/install.sh ${ibm_compute_vm_instance.ldap.0.ldapBindDN} ${ibm_compute_vm_instance.ldap.0.ldapBindDNPassword}",
+    ]
   }
 }
 
 # Generate an SSH key/pair to be used to provision the classic VSI
 resource "tls_private_key" "ssh" {
   algorithm = "RSA"
-  rsa_bits = 4096
+  rsa_bits  = 4096
 }
 
 resource "local_file" "ssh-private-key" {
-  content = tls_private_key.ssh.private_key_pem
-  filename = "generated_key_rsa"
+  content         = tls_private_key.ssh.private_key_pem
+  filename        = "generated_key_rsa"
   file_permission = "0600"
 }
 
 resource "local_file" "ssh-public-key" {
-  content = tls_private_key.ssh.public_key_openssh
-  filename = "generated_key_rsa.pub"
+  content         = tls_private_key.ssh.public_key_openssh
+  filename        = "generated_key_rsa.pub"
   file_permission = "0600"
 }
 

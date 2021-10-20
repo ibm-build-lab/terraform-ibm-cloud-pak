@@ -40,19 +40,19 @@ See the example [here](../../examples/ldap) on how to provision this module.
 | `iaas_classic_api_key`  | IBM Classic Infrastucture API Key (see https://cloud.ibm.com/docs/account?topic=account-classic_keys). Needed to create SSH key                                               |         | Yes      |
 | `iaas_classic_username` | The IBM Cloud Classic Infrastructure username associated with the Classic Infrasture API key. Needed to create SSH key                                                      |         | Yes      |
 | `region`                | Region code (https://cloud.ibm.com/docs/codeengine?topic=codeengine-regions) |         | Yes      |
-| `os_reference_code`     | The Operating System Reference Code, for example `CentOS_8_64` (see https://cloud.ibm.com/docs/ibm-cloud-provider-for-terraform)                                                                              |         | Yes      |
-| `datacenter`            | IBM Cloud data center in which you want to provision the instance.                                                                                                                                          |         | Yes      |
-| `hostname`              | Hostname of the virtual Server                                                                                                                                                                              |    "ldapvm"     | No      |
-| `ibmcloud_domain`       | IBM Cloud account Domain, example `<My Company>.cloud`                                                                                                                                                        |    ibm.cloud     | Yes      |
-| `cores`                 | Virtual Server CPU Cores                                                                                                                                                                                    |         | Yes      |
-| `memory`                | Virtual Server Memory                                                                                                                                                                                       |         | Yes      |
-| `disks`                 | Array of numeric disk sizes in GBs for the instance's block device and disk image settings. Example: `[25]` or `[25, 10, 20]`                                                                                                                    |          | Yes      |
-| `network_speed`         | The connection speed (in Mbps) for the instance's network components. The default value is `100`                                                                                                             | `100`   | No      |
+| `os_reference_code`     | The Operating System Reference Code, for example `CentOS_8_64` (see https://cloud.ibm.com/docs/ibm-cloud-provider-for-terraform)    |         | Yes      |
+| `datacenter`            | IBM Cloud data center in which you want to provision the instance.    |         | Yes      |
+| `hostname`              | Hostname of the virtual Server    |    "ldapvm"     | No      |
+| `ibmcloud_domain`       | IBM Cloud account Domain, example `<My Company>.cloud`    |    ibm.cloud     | Yes      |
+| `cores`                 | Virtual Server CPU Cores    |         | Yes      |
+| `memory`                | Virtual Server Memory    |         | Yes      |
+| `disks`                 | Array of numeric disk sizes in GBs for the instance's block device and disk image settings. Example: `[25]` or `[25, 10, 20]`  |          | Yes      |
+| `network_speed`         | The connection speed (in Mbps) for the instance's network components. The default value is `100`   | `100`   | No      |
 | `hourly_billing`        | The billing type for the instance. When set to `true`, the computing instance is billed on hourly usage. Otherwise, the instance is billed monthly. The default value is `true`.                                | `true`  | No      |
-| `private_network_only`  | When set to `true`, a compute instance has only access to the private network. The default value is `false`.                                                                                                    | `false` | No      |
+| `private_network_only`  | When set to `true`, a compute instance has only access to the private network. The default value is `false`.    | `false` | No      |
 | `local_disk`            | The disk type for the instance. When set to `true`, the disks for the computing instance are provisioned on the host that the instance runs. Otherwise, SAN disks are provisioned. The default value is `true`. | `true`  | No      |
-| `private_network_only`  | When set to `true`, a compute instance has only access to the private network. The default value is `false`.| `false`  | No      |
-
+| `ldapBindDN`            | LDAP Bind DN (https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-connector-ldap-cp4d)     | `true`  | Yes      |
+| `ldapBindDNPassword`    | LDAP Bind DN password (https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-connector-ldap-cp4d)      |         | Yes      |
 
 ### Executing the Terraform Script
 
@@ -63,18 +63,21 @@ terraform init
 terraform plan
 terraform apply --auto-approve
 ```
+
 ### Verify
+
 If LDAP is successful, you should see
 
 ```console
 ibm_compute_vm_instance.cp4baldap (remote-exec): Start LDAP complete
 CLASSIC_IP_ADDRESS = "***.**.***.***"
 ```
+
 displayed after the process is complete.
 
 ## Outputs
 
-| Name                 | Description                                                                                                                                |
+| Name                 | Description    |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | `CLASSIC_IP_ADDRESS` | Note: The LDAP server should not be exposed in the Public interface using port 389. Configure the appropriate Security Groups required for the Server. For more information on how to manage Security Groups visit : https://cloud.ibm.com/docs/security-groups?topic=security-groups-managing-sg |
 

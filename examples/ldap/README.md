@@ -1,8 +1,6 @@
 
 # Example to provision LDAP Terraform Module
 
-## Setup
-
 1. Download required license files from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `../../modules/ldap/files` folder
 
     ```console
@@ -22,24 +20,26 @@
 ## Run using local Terraform Client
 
 For instructions to run using the local Terraform Client on your local machine go [here](../Using_Terraform.md).
+
 Set required values in a `terraform.tfvars` file.  Here are some examples:
 
 ```bash
-  ibmcloud_api_key      = "**************"
-  iaas_classic_api_key  = "*******************"
-  iaas_classic_username = "233432_john.doe@ibm.com"
-  os_reference_code     = "CentOS_8_64"
-  region                = "us-south"
-  datacenter            = "dal10"
-  hostname              = "ldapvm"
-  ibmcloud_domain       = "ibm.cloud" 
-  cores                 = 2
-  memory                = 4096
-  network_speed         = 100
-  disks                 = [25]
-  hourly_billing        = false
-  local_disk            = false
-  private_network_only  = true
+ibmcloud_api_key      = "*******************"
+iaas_classic_api_key  = "*******************"
+iaas_classic_username = "******"
+region                = "dal10"
+os_reference_code     = "CentOS_8_64"
+datacenter            = "*****"
+hostname              = "ldapvm"
+ibmcloud_domain       = "<my company>.cloud" 
+cores                 = 2
+memory                = 4096
+disks                 = [25]
+hourly_billing        = true
+local_disk            = true
+private_network_only  = false
+ldapBindDN            = "cn=root"
+ldapBindDNPassword    = "Passw0rd"
 ```
 
 These parameters are:
@@ -54,12 +54,14 @@ These parameters are:
 - `ibmcloud_domain`         : Domain of the Cloud Account
 - `cores`                   : Virtual Server CPU Cores
 - `memory`                  : Virtual Server Memory
-- `disks`                   : Array of numeric disk sizes in GBs for the instance's block device and disk image settings. Example: `[25]` or `[25, 10, 20]`  
-- `hourly_billing`          : The billing type for the instance. When set to `true`, the computing instance is billed on hourly usage. Otherwise, the instance is billed monthly. The default value is `true`.
-- `local_disk`              : The disk type for the instance. When set to `true`, the disks for the computing instance are provisioned on the host that the instance runs. Otherwise, SAN disks are provisioned. The default value is `true`.
-- `private_network_only`    : When set to `true`, a compute instance has only access to the private network. The default value is `false`. 
+- `disks`                   : Boot disk size
+- `hourly_billing`          : The billing type for the instance. When set to `true`, the computing instance is billed on hourly usage. Otherwise, the instance is billed monthly.
+- `local_disk`              : The disk type for the instance. When set to true, the disks for the computing instance are provisioned on the host that the instance runs. Otherwise, SAN disks are provisioned.
+- `private_network_only`    : When set to `true`, a compute instance has only access to the private network.
+- `ldapBindDN`              : LDAP Bind DN
+- `ldapBindDNPassword`      : LDAP Bind DN password
 
-### Execute the example
+## Execute the example
 
 Execute the following Terraform commands:
 
@@ -71,19 +73,16 @@ terraform apply --auto-approve
 
 ## Outputs
 
-Verify the output:
-
-```console
-ldap_id = *********
-ldap_ip_address = xx.xx.xxx.xxx
-```
-
-is displayed.
+Verify the output "ibm_compute_vm_instance.cp4baldap (remote-exec): Start LDAP complete" is displayed and a Public IP created after the process is complete.
 
 | Name                 | Description                                                                                                                                |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `ldap_id` | ID for the LDAP server
+| `ldap_id` | ID for the LDAP server |
 | `ldap_ip_address` | IP address for LDAP server. Note: The LDAP server should not be exposed in the Public interface using port 389. Configure the appropriate Security Groups required for the Server. For more information on how to manage Security Groups visit : https://cloud.ibm.com/docs/security-groups?topic=security-groups-managing-sg |
+| `ldapBindDN` | Bind DN (https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-connector-ldap-cp4d) |
+| `ldapBindDNPassword` | Bind DN Password (https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-connector-ldap-cp4d) |
+
+## To access the Virtual Machine
 
 A public and private key is created to access the Virtual Machine:
 
@@ -100,9 +99,11 @@ ssh root@<ldap_ip_address> -k generated_key_rsa
 
 For more information on accessing the Virtual Machine, visit (https://cloud.ibm.com/docs/account?topic=account-mngclassicinfra)
 
+For more information on accessing the Virtual Machine, visit (https://cloud.ibm.com/docs/account?topic=account-mngclassicinfra)
+
 Apache Directory Studio can be used to access the server (see https://directory.apache.org/studio/download/download-macosx.html)
 
-### Cleanup
+## Cleanup
 
 When the project is complete, execute: `terraform destroy`.
 
