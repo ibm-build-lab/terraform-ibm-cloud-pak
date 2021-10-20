@@ -30,13 +30,11 @@ variable "ibmcloud_domain" {
 variable "os_reference_code" {
     default = null
     description = "The Operating System Reference Code, for example `CentOS_8_64` (see https://cloud.ibm.com/docs/ibm-cloud-provider-for-terraform)"
-
 }
 
 variable "cores" {
     default = null
     description = "Virtual Server CPU Cores"
-
 }
 
 variable "memory" {
