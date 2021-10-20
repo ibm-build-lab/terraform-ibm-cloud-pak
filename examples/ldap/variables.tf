@@ -74,7 +74,16 @@ variable "private_network_only" {
     description = "When set to true, a compute instance has only access to the private network. The default value is false."
 }
 
- variable "local_disk" {
+variable "local_disk" {
     default = true
     description = "The disk type for the instance. When set to true, the disks for the computing instance are provisioned on the host that the instance runs. Otherwise, SAN disks are provisioned. The default value is true."
+
+variable "ldapBindDN" {
+  default     = "cn=root"
+  description = "Bind DN (https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-connector-ldap-cp4d)"
+}
+
+variable "ldapBindDNPassword" {
+  default     = null
+  description = "Bind DN Password (https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-connector-ldap-cp4d)"
 }
