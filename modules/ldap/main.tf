@@ -13,8 +13,6 @@ resource "ibm_compute_vm_instance" "ldap" {
   memory               = var.memory
   disks                = var.disks
   local_disk           = var.local_disk
-  ldapBindDN           = var.ldapBindDN
-  ldapBindDNPassword   = var.ldapBindDNPassword
 
   # connection {
   #   type        = "ssh"
@@ -72,7 +70,7 @@ resource "null_resource" "ldap_files" {
       "yum install -y ksh",
       "yum install -y libaio",
       "chmod +x /tmp/install.sh",
-      "sh /tmp/install.sh ${ibm_compute_vm_instance.ldap.0.ldapBindDN} ${ibm_compute_vm_instance.ldap.0.ldapBindDNPassword}",
+      "sh /tmp/install.sh ${var.ldapBindDN} ${var.ldapBindDNPassword}",
     ]
   }
 }
