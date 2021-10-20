@@ -1,11 +1,9 @@
-<<<<<<< HEAD
-=======
+
 variable "region" {
     default = null
     description = "Region code (https://cloud.ibm.com/docs/codeengine?topic=codeengine-regions)"
 }
 
->>>>>>> main
 variable "ibmcloud_api_key" {
     default = null
     description = "IBM Cloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
