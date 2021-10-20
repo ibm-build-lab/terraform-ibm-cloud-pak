@@ -3,7 +3,7 @@
 ##################################
 
 # Install ODF if the rocks version is v4.7 or newer
-resource "null_resource" "enable_odf_4.7" {
+resource "null_resource" "enable_odf" {
   count = var.enable && var.roks_version != "4.6" ? 1 : 0
 
   provisioner "local-exec" {
