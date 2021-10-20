@@ -11,7 +11,7 @@ module "ldap" {
   enable               = true
   hostname             = var.hostname
   ibmcloud_domain      = var.ibmcloud_domain
-  os_reference_code    = "CentOS_8_64"
+  os_reference_code    = var.os_reference_code
   datacenter           = var.datacenter
   network_speed        = var.network_speed
   hourly_billing       = var.hourly_billing
