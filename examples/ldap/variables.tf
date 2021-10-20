@@ -12,19 +12,16 @@ variable "ibmcloud_api_key" {
 variable "iaas_classic_api_key" {
     default = null
     description = "IBM Classic Infrastucture API Key (https://cloud.ibm.com/docs/account?topic=account-classic_keys)"
-
 }
 
 variable "iaas_classic_username" {
     default = null
     description = "IBM Classic Infrastucture API Key (see https://cloud.ibm.com/docs/account?topic=account-classic_keys)"
-
 }
 
 variable "ibmcloud_domain" {
-    default = null
+    default = "ibm.cloud"
     description = "IBM Cloud account Domain, example `ibm.cloud`"
-
 }
 
 variable "os_reference_code" {
@@ -33,18 +30,18 @@ variable "os_reference_code" {
 }
 
 variable "cores" {
-    default = null
+    default = 2
     description = "Virtual Server CPU Cores"
 }
 
 variable "memory" {
-    default = null
+    default = 4096
     description = "Virtual Server Memory"
 }
 
 variable "disks" {
-    default = null
-    description = "The numeric disk sizes (in GBs) for the instance's block device and disk image settings."
+    default = [25]
+    description = "Array of the numeric disk sizes (in GBs) for the instance's block device and disk image settings."
 }
 
 variable "hostname" {
