@@ -1,58 +1,23 @@
+provider "ibm" {
+  version          = "~> 1.12"
+  region = var.region
+  ibmcloud_api_key   = var.ibmcloud_api_key
+  iaas_classic_api_key   = var.iaas_classic_api_key
+  iaas_classic_username = var.iaas_classic_username
+}
+
 module "ldap" {
-
   source = "../../modules/ldap"
-
-  enable = true
-
+  enable               = true
   hostname             = var.hostname
-  domain               = var.ibmcloud_domain
-  ssh_key_ids          = ["${ibm_compute_ssh_key.key.id}"]
+  ibmcloud_domain      = var.ibmcloud_domain
   os_reference_code    = "CentOS_8_64"
   datacenter           = var.datacenter
-  network_speed        = 10
-  hourly_billing       = true
-  private_network_only = false
-  cores                = "2"
-  memory               = "4096"
-  disks                = [25]
-  local_disk           = false
-  ldapBindDN           = "cn=root"
-  ldapBindDNPassword   = "Passw0rd"
-
-}
-
-# Generate an SSH key/pair to be used to provision the classic VSI
-resource tls_private_key ssh {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
-
-resource "local_file" "ssh-private-key" {
-  content         = tls_private_key.ssh.private_key_pem
-  filename        = "generated_key_rsa"
-  file_permission = "0600"
-}
-
-resource "local_file" "ssh-public-key" {
-  content         = tls_private_key.ssh.public_key_openssh
-  filename        = "generated_key_rsa.pub"
-  file_permission = "0600"
-}
-
-resource "ibm_compute_ssh_key" "key" {
-  label      = "ldap-vm-to-migrate"
-  public_key = tls_private_key.ssh.public_key_openssh
-  notes      = "created by terraform"
-}
-
-output "CLASSIC_ID" {
-
-  value = var.enable && length(ibm_compute_vm_instance.ldap) > 0 ? ibm_compute_vm_instance.ldap.0.id : ""
-
-}
-
-output "CLASSIC_IP_ADDRESS" {
-
-  value = var.enable && length(ibm_compute_vm_instance.ldap) > 0 ? ibm_compute_vm_instance.ldap.0.ipv4_address : ""
-
+  network_speed        = var.network_speed
+  hourly_billing       = var.hourly_billing
+  private_network_only = var.private_network_only
+  cores                = var.cores
+  memory               = var.memory
+  disks                = var.disks
+  local_disk           = var.local_disk
 }

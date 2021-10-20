@@ -1,9 +1,10 @@
 #!/bin/sh
 
+K8s_CMD=kubectl
 echo "creating storage classes"
 
 # This storage class is used for event management and other components.
-cat << EOF | oc apply -f -
+cat << EOF | ${K8s_CMD} apply -f -
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
@@ -17,7 +18,7 @@ allowVolumeExpansion: true
 EOF
 
 # This storage class is used for AI management.
-cat << EOF | oc apply -f -
+cat << EOF | ${K8s_CMD} apply -f -
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:

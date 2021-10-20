@@ -1,5 +1,7 @@
 #!/bin/sh
 
+K8s_CMD=kubectl
+
 NAMESPACE=${NAMESPACE:-aiops}
 DOCKER_USERNAME=${DOCKER_USERNAME:-cp}
 DOCKER_REGISTRY=${DOCKER_REGISTRY:-cp.icr.io}  # adjust this if needed
@@ -14,7 +16,7 @@ create_secret() {
   link=$3
 
   echo "Creating secret ${secret_name} on ${namespace} from entitlement key"
-  oc create secret docker-registry ${secret_name} \
+  ${K8s_CMD} create secret docker-registry ${secret_name} \
     --docker-server=${DOCKER_REGISTRY} \
     --docker-username=${DOCKER_USERNAME} \
     --docker-password=${DOCKER_REGISTRY_PASS} \
@@ -27,14 +29,14 @@ create_secret ibm-entitlement-key "${NAMESPACE}"
 
 # Configure a network policy for the IBM Cloud Pak for Watson AIOps routes
 echo "Configuring the network policy for CP4AIPS routes"
-oc get ingresscontroller default -n openshift-ingress-operator -o yaml
-oc patch namespace default --type=json -p '[{"op":"add","path":"/metadata/labels","value":{"network.openshift.io/policy-group":"ingress"}}]'
+${K8s_CMD} get ingresscontroller default -n openshift-ingress-operator -o yaml
+${K8s_CMD} patch namespace default --type=json -p '[{"op":"add","path":"/metadata/labels","value":{"network.openshift.io/policy-group":"ingress"}}]'
 
 
 # Configure a network policy for traffic between the Operator Lifecycle Manager and the CatalogSource service
 echo "Configuring network policy for traffic between Operator Lifecycle Manager and CatalogSource service."
 
-cat << EOF | oc apply -f -
+cat << EOF | ${K8s_CMD} apply -f -
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -54,7 +56,7 @@ EOF
 
 echo "Adding IBM Cloud Pak for Watson AIOps Orchestrator CatalogSource"
 
-cat << EOF | oc apply -f -
+cat << EOF | ${K8s_CMD} apply -f -
 apiVersion: operators.coreos.com/v1alpha1
 kind: CatalogSource
 metadata:
@@ -73,7 +75,7 @@ EOF
 
 echo "Adding IBM Operators CatalogSource"
 
-cat << EOF | oc apply -f -
+cat << EOF | ${K8s_CMD} apply -f -
 apiVersion: operators.coreos.com/v1alpha1
 kind: CatalogSource
 metadata:
@@ -90,7 +92,7 @@ spec:
 EOF
 
 echo "Adding IBM Common Services CatalogSource"
-cat << EOF | oc apply -f -
+cat << EOF | ${K8s_CMD} apply -f -
 apiVersion: operators.coreos.com/v1alpha1
 kind: CatalogSource
 metadata:
@@ -110,7 +112,7 @@ echo "Sleeping 1 minutes for catalog services"
 sleep 60
 
 echo "Applying CP4WAIOPS subscription"
-echo "${CP4WAIOPS}" | oc apply -f -
+echo "${CP4WAIOPS}" | ${K8s_CMD} apply -f -
 
 
 echo "Waiting 5 minutes for AIOps Operator to install..."
@@ -127,7 +129,7 @@ else
 fi
 AIOPS_SERVICE=`sed -e "s/NAMESPACE/${NAMESPACE}/g" -e "s/STORAGE_CLASS/${storage_class}/g" -e "s/STORAGE_BLOCK_CLASS/${storage_block_class}/g" ../templates/cp-aiops-service.yaml`
 echo "Deploying Watson AIOPS Service ${AIOPS_SERVICE}"
-sed -e "s/NAMESPACE/${NAMESPACE}/g" -e "s/STORAGE_CLASS/${storage_class}/g" -e "s/STORAGE_BLOCK_CLASS/${storage_block_class}/g" ../templates/cp-aiops-service.yaml | oc -n ${NAMESPACE} apply -f -
+sed -e "s/NAMESPACE/${NAMESPACE}/g" -e "s/STORAGE_CLASS/${storage_class}/g" -e "s/STORAGE_BLOCK_CLASS/${storage_block_class}/g" ../templates/cp-aiops-service.yaml | ${K8s_CMD} -n ${NAMESPACE} apply -f -
 
 
 SLEEP_TIME="60"
@@ -137,7 +139,7 @@ service_timeout_count=0
 run_limit_count=0
 
 while true; do
-  if ! STATUS_LONG=$(oc -n ${NAMESPACE} get installation.orchestrator.aiops.ibm.com ibm-cp-watson-aiops --output=json | jq -c -r '.status'); then
+  if ! STATUS_LONG=$(${K8s_CMD} -n ${NAMESPACE} get installation.orchestrator.aiops.ibm.com ibm-cp-watson-aiops --output=json | jq -c -r '.status'); then
     echo 'Error getting status'
     exit 1
   fi
@@ -160,18 +162,18 @@ while true; do
     (( run_limit_count++ ))
 
     echo "Waited ${SERVICE_TIMEOUT_LIMIT} minutes. Deleting hanging AIOPS service."
-    oc -n ${NAMESPACE} delete installation.orchestrator.aiops.ibm.com ibm-cp-watson-aiops
+    ${K8s_CMD} -n ${NAMESPACE} delete installation.orchestrator.aiops.ibm.com ibm-cp-watson-aiops
     
     while true; do
       echo "Waiting for service to finish deleting..."
-      if [ -z $(oc -n cp4aiops get installation.orchestrator.aiops.ibm.com | grep ibm-cp-watson-aiops | awk '{print $1}') ]; then
+      if [ -z $(${K8s_CMD} -n cp4aiops get installation.orchestrator.aiops.ibm.com | grep ibm-cp-watson-aiops | awk '{print $1}') ]; then
         break
       fi
       sleep $SLEEP_TIME
     done
 
     echo "Recreating AIOPS service..."
-    sed -e "s/NAMESPACE/${NAMESPACE}/g" -e "s/STORAGE_CLASS/${storage_class}/g" -e "s/STORAGE_BLOCK_CLASS/${storage_block_class}/g" ../templates/cp-aiops-service.yaml | oc -n ${NAMESPACE} apply -f -
+    sed -e "s/NAMESPACE/${NAMESPACE}/g" -e "s/STORAGE_CLASS/${storage_class}/g" -e "s/STORAGE_BLOCK_CLASS/${storage_block_class}/g" ../templates/cp-aiops-service.yaml | ${K8s_CMD} -n ${NAMESPACE} apply -f -
   fi
 
   # If the service has been restarted 2 times, it will quit and time out.

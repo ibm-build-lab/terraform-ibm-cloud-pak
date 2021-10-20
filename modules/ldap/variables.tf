@@ -16,7 +16,6 @@ variable "region" {
 variable "iaas_classic_api_key" {
   default     = null
   description = "IBM Classic Infrastucture API Key (https://cloud.ibm.com/docs/account?topic=account-classic_keys)"
-
 }
 
 variable "iaas_classic_username" {
@@ -49,8 +48,8 @@ variable "memory" {
 }
 
 variable "disks" {
-  default     = null
-  description = "The numeric disk sizes in GBs for the instance's block device and disk image settings."
+    default = null
+    description = "Array of numeric disk sizes in GBs for the instance's block device and disk image settings. Example: [25] or [25, 10, 20]"
 }
 
 variable "hostname" {

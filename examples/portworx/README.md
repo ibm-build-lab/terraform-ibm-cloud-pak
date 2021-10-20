@@ -1,4 +1,4 @@
-# Example to provision Portworx Terraform Module
+# Example to provision Portworx Terraform Module (this module only supports VPC clusters)
 
 ## Run using IBM Cloud Schematics
 
@@ -33,7 +33,6 @@ unique_id               = "roks-px-tf"
 create_external_etcd    = false
 etcd_username           = "portworxuser"
 etcd_password           = "portworxpassword"
-etcd_secret_name        = "px-etcd-certs" # don't change this
 ```
 
 These parameters are:
@@ -50,7 +49,7 @@ These parameters are:
 - `etcd_username`: Username of etcd. Only used if `create_external_etcd` is set to `true`
 - `etcd_password`: Password of etcd. Only used if `create_external_etcd` is set to `true`
 
-Execute the following Terraform commands:
+Execute the following Terraform commands (note, this module is only supported on TF 0.12 at this time):
 
 ```bash
 terraform init
@@ -135,12 +134,25 @@ kubectl exec -it <portworx_pod> -n kube-system -- /opt/pwx/bin/pxctl cluster pro
 
 ## 4. Cleanup
 
-Run in the cluster:
+To remove Portworx and Storage from a cluster, execute the following command:
 
+Run in the cluster:
 ```bash
 curl -fsL https://install.portworx.com/px-wipe | bash
 ```
 
-When the test is complete, execute: `terraform destroy`.
+Next, run the following script from the command line. This will removes the attachments of the storage from the cluster.
+
+__NOTE:__ Make sure to update the `UNIQUE_ID` in `/terraform-ibm-cloud-pak/modules/portworx/cleanup/remove_attached.sh` if it's changed from its default value. 
+
+If the volume needs to be deleted, uncomment the commented out section at the bottom of the script.
+```bash
+./../../modules/portworx/cleanup/remove_attached.sh -c [CLUSTER NAME OR ID] -r [REGION]
+```
+
+Finally run the command below from command line:
+```bash
+terraform destroy
+```
 
 There are some directories and files you may want to manually delete, these are: `rm -rf terraform.tfstate* .terraform .kube

@@ -23,12 +23,6 @@ variable "entitled_registry_user_email" {
   description = "Docker email address"
 }
 
-variable "ldap_status" {
-  description = "true if client has an ldap, false if client does not have an ldap"
+variable "admin_user" {
+  description = "user to be given administartor privileges in the default account"
 }
-
-variable "ldap_user_id" {
-  description = "value of ldap admin uid"
-}
-
-

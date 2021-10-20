@@ -1,5 +1,5 @@
 output "namespace" {
-  value = var.enable ? local.mcm_namespace : ""
+  value = var.enable ? var.namespace : ""
 }
 
 output "endpoint" {

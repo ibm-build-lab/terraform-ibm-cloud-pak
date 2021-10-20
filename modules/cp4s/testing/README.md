@@ -17,33 +17,27 @@ Follow these instructions to test the Terraform Module manually
 Create the file `test.auto.tfvars` with the following input variables, these values are fake examples:
 
 ```hcl
-source          = "./.."
-enable          = var.enable
-
 // ROKS cluster parameters:
-cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
+cluster_config_path = "./.kube/config"
 
-// Prereqs
-worker_node_flavor = var.worker_node_flavor
+
+region = "cluster_region"
+resource_group_name = "resource_group_name"
+cluster_id = "cluster_id"
+
 
 // Entitled Registry parameters:
-entitled_registry_key        = var.entitled_registry_key
-entitled_registry_user_email = var.entitled_registry_user_email
+entitled_registry_key        = "entitled_registry_key"
+entitled_registry_user_email = "registry_email"
 
-// LDAP
-
-ldap_status = var.ldap_status
-ldap_user_uid = var.ldap_user_id
+admin_user = "admin_user"
 ```
 
 These parameters are:
 
-- `enable`: If set to `false` does not install the cloud pak on the given cluster. By default it's enabled
 - `entitled_registry_key`: Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key
 - `entitled_registry_user_email`: IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key
-- `ldap_status` : True if you have an LDAP configured
-- `ldap_user_id` : LDAP user admin uid
-Execute the following Terraform commands:
+- `admin_user` : user to be given administartor privileges in the default account
 
 ```bash
 terraform init
@@ -57,4 +51,4 @@ One of the Test Scenarios is to verify the YAML files rendered to install IAF, t
 
  execute: `terraform destroy`.
 
-There are some directories and files you may want to manually delete, these are: `rm -rf test.auto.tfvars terraform.tfstate* .terraform .kube rendered_files` as well as delete the `cp4s_cli_install` and `ibm-cp-security`
+There are some directories and files you may want to manually delete, these are: `rm -rf test.auto.tfvars terraform.tfstate* .terraform .kube rendered_files` as well as delete the `cp4na_cli_install` and `ibm-cp-network-automation`

@@ -24,11 +24,10 @@ Go [here](../CREDENTIALS.md) for details.
 
 ## Provisioning this module in a Terraform Script
 
-In your Terraform code define the `ibm` provisioner block with the `region` and the `generation`, which is **1 for Classic** and **2 for VPC Gen 2**.
+In your Terraform code define the `ibm` provisioner block with the `region.
 
 ```hcl
 provider "ibm" {
-  generation = 1
   region     = "us-south"
 }
 ```
@@ -46,6 +45,14 @@ data "ibm_resource_group" "group" {
   name = var.resource_group
 }
 
+resource "null_resource" "mkdir_kubeconfig_dir" {
+  triggers = { always_run = timestamp() }
+
+  provisioner "local-exec" {
+    command = "mkdir -p ./kube/config"
+  }
+}
+
 data "ibm_container_cluster_config" "cluster_config" {
   cluster_name_id   = var.cluster_name_id
   resource_group_id = data.ibm_resource_group.group.id
@@ -55,9 +62,6 @@ data "ibm_container_cluster_config" "cluster_config" {
   network           = false
 }
 ```
-
-**NOTE**: Create the `./kube/config` directory if it doesn't exist.
-
 Input:
 
 - `cluster_name_id`: either the cluster name or ID.
@@ -109,7 +113,7 @@ module "cp4mcm" {
 
 **NOTE** The boolean input variable `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
 
-For an example of how to put all this together, refer to our [Cloud Pak for Multi Cloud Management Terraform script](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform/cp4mcm).
+For an example of how to put all this together, refer to our [Cloud Pak for Multi Cloud Management Terraform example](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/examples/cp4mcm).
 
 ## Testing
 

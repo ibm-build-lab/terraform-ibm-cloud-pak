@@ -1,0 +1,15 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: ibm-management-orchestrator
+  namespace: openshift-marketplace
+spec:
+  displayName: IBM Management Orchestrator Catalog
+  publisher: IBM
+  sourceType: grpc
+  image: quay.io/cp4mcm/cp4mcm-orchestrator-catalog:2.3-latest
+  secrets:
+    - ibm-management-pull-secret
+  updateStrategy:
+    registryPoll:
+      interval: 45m

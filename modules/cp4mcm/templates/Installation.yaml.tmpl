@@ -5,9 +5,9 @@ metadata:
   namespace: ${ namespace }
 spec:
 %{ if on_vpc ~}
-  storageClass: ibmc-vpc-block-retain-10iops-tier
+  storageClass: ibmc-vpc-block-10iops-tier
 %{ else ~}
-  storageClass: ibmc-block-retain-gold
+  storageClass: ibmc-block-gold
 %{ endif ~}
   imagePullSecret: ibm-management-pull-secret
   license:
@@ -32,7 +32,7 @@ spec:
               enabled: true
               existingClaimName: ""
               existingDynamicVolume: false
-              size: 10Gi
+              size: 100Gi
               storageClassName: ibmc-file-gold
               useDynamicProvisioning: true
           camMongoPV:
@@ -42,7 +42,7 @@ spec:
               enabled: true
               existingClaimName: ""
               existingDynamicVolume: false
-              size: 30Gi
+              size: 150Gi
 %{ if on_vpc ~}
               storageClass: ibmc-vpc-block-10iops-tier
 %{ else ~}
@@ -56,18 +56,18 @@ spec:
               enabled: true
               existingClaimName: ""
               existingDynamicVolume: false
-              size: 15Gi
-              storageClassName: ibmc-file-gold-gid
+              size: 150Gi
+              storageClassName: ibmc-file-gold
               useDynamicProvisioning: true
           roks: true
-          roksRegion: us-south
-          roksZone: dal10
+          roksRegion: ${ region }
+          roksZone: ${ zone }
     - enabled: true
       name: ibm-management-service-library
     enabled: ${ install_infr_mgt_module }
     name: infrastructureManagement
   - config:
-    - enabled: false
+    - enabled: true
       name: ibm-management-monitoring
       spec:
         monitoringDeploy:
@@ -111,28 +111,6 @@ spec:
       name: ibm-management-mutation-advisor
     - enabled: true
       name: ibm-management-vulnerability-advisor
-      spec:
-        annotator:
-          esSecretCA: ca.crt
-          esSecretCert: curator.crt
-          esSecretKey: curator.key
-          esSecretName: logging-elk-certs
-          esSecurityEnabled: true
-          esServiceName: elasticsearch.ibm-common-services
-        controlplane:
-          esSecretCA: ca.crt
-          esSecretCert: curator.crt
-          esSecretKey: curator.key
-          esSecretName: logging-elk-certs
-          esSecurityEnabled: true
-          esServiceName: elasticsearch.ibm-common-services
-        indexer:
-          esSecretCA: ca.crt
-          esSecretCert: curator.crt
-          esSecretKey: curator.key
-          esSecretName: logging-elk-certs
-          esSecurityEnabled: true
-          esServiceName: elasticsearch.ibm-common-services
     enabled: ${ install_security_svcs_module }
     name: securityServices
   - config:

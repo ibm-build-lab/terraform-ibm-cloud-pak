@@ -1,0 +1,34 @@
+apiVersion: ocs.openshift.io/v1
+kind: StorageCluster
+metadata:
+  name: ocs-storagecluster
+  namespace: openshift-storage
+spec:
+  encryption: {}
+  externalStorage: {}
+  managedResources:
+    cephBlockPools: {}
+    cephFilesystems: {}
+    cephObjectStoreUsers: {}
+    cephObjectStores: {}
+  storageDeviceSets:
+    - config: {}
+      count: 1
+      dataPVCTemplate:
+        metadata:
+          creationTimestamp: null
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 2Ti
+          storageClassName: ibmc-vpc-block-10iops-tier
+          volumeMode: Block
+        status: {}
+      name: ocs-deviceset-ibmc-vpc-block-10iops-tier
+      placement: {}
+      portable: true
+      replica: 3
+      resources: {}
+  version: 4.7.0
