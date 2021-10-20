@@ -1,22 +1,21 @@
 
 # Example to provision LDAP Terraform Module
 
-## Download required license files
+1. Download required license files from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `../../modules/ldap/files` folder
 
-Download the following DB2 and IBM SDS license files into the `../modules/ldap/files` folder
-:
+    ```console
+    DB2:
+    Part Number : CNB21ML
+    Filename : DB2_AWSE_Restricted_Activation_11.1.zip
 
-DB2:
-PartUmber : CNB21ML
-Filename : DB2_AWSE_Restricted_Activation_11.1.zip
+    IBM SDS:
+    Part Number : CRV3IML
+    Filename : sds64-premium-feature-act-pkg.zip
+    ```
 
-IBM SDS:
-PartUmber : CRV3IML
-Filename : sds64-premium-feature-act-pkg.zip
+ 2. Update the ldif file
 
-## Update the ldif file
-
-Update the `../modules/ldap/files/cp.ldif` file as needed to change the Directory Struture and user information. For information on LDIF format, go [here](https://www.ibm.com/docs/en/i/7.4?topic=reference-ldap-data-interchange-format-ldif)
+    Update the `../../modules/files/cp.ldif` file as needed to change the Directory Structure and user information.  For information on LDIF format, go [here](https://www.ibm.com/docs/en/i/7.4?topic=reference-ldap-data-interchange-format-ldif)
 
 ## Run using local Terraform Client
 
@@ -33,9 +32,12 @@ os_reference_code     = "CentOS_8_64"
 datacenter            = "*****"
 hostname              = "ldapvm"
 ibmcloud_domain       = "<my company>.cloud" 
-cores                 = "2"
-memory                = "4096"
+cores                 = 2
+memory                = 4096
 disks                 = [25]
+hourly_billing        = true
+local_disk            = true
+private_network_only  = false
 ldapBindDN            = "cn=root"
 ldapBindDNPassword    = "Passw0rd"
 ```
@@ -53,6 +55,9 @@ These parameters are:
 - `cores`                   : Virtual Server CPU Cores
 - `memory`                  : Virtual Server Memory
 - `disks`                   : Boot disk size
+- `hourly_billing`          : The billing type for the instance. When set to `true`, the computing instance is billed on hourly usage. Otherwise, the instance is billed monthly.
+- `local_disk`              : The disk type for the instance. When set to true, the disks for the computing instance are provisioned on the host that the instance runs. Otherwise, SAN disks are provisioned.
+- `private_network_only`    : When set to `true`, a compute instance has only access to the private network.
 - `ldapBindDN`              : LDAP Bind DN
 - `ldapBindDNPassword`      : LDAP Bind DN password
 
