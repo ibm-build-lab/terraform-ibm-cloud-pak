@@ -2,7 +2,7 @@ output "ldap_id" {
   value = module.ldap.CLASSIC_ID
 }
 
-output "CLASSIC_IP_ADDRESS" {
+output "ldap_ip_address" {
   value = module.ldap.CLASSIC_IP_ADDRESS
 }
 
