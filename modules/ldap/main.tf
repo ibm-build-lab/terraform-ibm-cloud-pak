@@ -33,7 +33,7 @@ resource "null_resource" "ldap_files" {
   }
 
   provisioner "file" {
-    source      = "../../modules/ldap/files/install.sh"
+    source      = "../../modules/ldap/scripts/install.sh"
     destination = "/tmp/install.sh"
   }
 
