@@ -27,11 +27,11 @@ Set required values in a `terraform.tfvars` file.  Here are some examples:
 ibmcloud_api_key      = "*******************"
 iaas_classic_api_key  = "*******************"
 iaas_classic_username = "******"
-region                = "dal10"
+region                = "us-south"
 os_reference_code     = "CentOS_8_64"
-datacenter            = "*****"
+datacenter            = "dal12"
 hostname              = "ldapvm"
-ibmcloud_domain       = "<my company>.cloud" 
+ibmcloud_domain       = "ibm.cloud" 
 cores                 = 2
 memory                = 4096
 disks                 = [25]
