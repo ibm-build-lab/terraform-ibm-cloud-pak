@@ -120,10 +120,12 @@ cd /opt/ibm/ldap/V6.4/sbin
 ## Enter 1 to continue
 
 ## Set the administration DN and administrative password for an instance
+echo "./idsdnpw -I dsinst1 -u $1 -p $2 -n"
 ./idsdnpw -I dsinst1 -u $1 -p $2 -n
 
 echo "idscfgsuf to run  "
 ## Add suffix
+echo "./idscfgsuf -I dsinst1 -s o=CP -n"
 ./idscfgsuf -I dsinst1 -s o=CP -n
 ## Confirm with 1
 echo "idscfgsuf complete "

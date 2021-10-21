@@ -70,7 +70,7 @@ resource "null_resource" "ldap_files" {
       "yum install -y ksh",
       "yum install -y libaio",
       "chmod +x /tmp/install.sh",
-      "sh /tmp/install.sh ${var.ldapBindDN} ${var.ldapBindDNPassword}",
+      "sh /tmp/install.sh var.ldapBindDN var.ldapBindDNPassword",
     ]
   }
 }
