@@ -23,7 +23,7 @@ resource "null_resource" "install_cp4aiops" {
       KUBECONFIG                    = var.cluster_config_path
       NAMESPACE                     = var.namespace
       ON_VPC                        = var.on_vpc
-
+      IC_API_KEY                    = var.ibmcloud_api_key
       CP4WAIOPS                     = local.cp4aiops_subscription
       DOCKER_REGISTRY_PASS          = var.entitled_registry_key
       DOCKER_USER_EMAIL             = var.entitled_registry_user_email
