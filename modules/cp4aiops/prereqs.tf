@@ -65,7 +65,7 @@ resource "null_resource" "disable_knative_route" {
 # Install Strimzi
 ###########################################
 resource "null_resource" "strimzi_subscription" {
-  depends_on = [null_resource.knative_eventing]
+  depends_on = [null_resource.disable_knative_route]
   
   provisioner "local-exec" {
     environment = {
