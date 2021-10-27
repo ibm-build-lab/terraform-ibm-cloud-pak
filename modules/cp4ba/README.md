@@ -121,12 +121,12 @@ _endpoint)"
 
 ## Uninstall
 
-To uninstall CP4MCM and its dependencies from a cluster, execute the following commands:
+To uninstall CP4BA and its dependencies from a cluster, execute the following commands:
 
 ```bash
-kubectl delete -n openshift-operators subscription.operators.coreos.com ibm-management-orchestrator
-kubectl delete -n openshift-marketplace catalogsource.operators.coreos.com ibm-management-orchestrator opencloud-operators
-kubectl delete namespace cp4mcm
+kubectl get subscription ibm-common-service-operator -n openshift-operators
+kubectl get subscription ibm-common-service-operator -n opencloud-operators
+kubectl delete namespace cp4ba
 ```
 
 **Note**: The uninstall/cleanup process is a work in progress at this time, we are identifying the objects that need to be deleted in order to have a successful re-installation.
