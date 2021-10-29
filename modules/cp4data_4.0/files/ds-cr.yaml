@@ -1,5 +1,5 @@
-apiVersion: dfd.cpd.ibm.com/v1alpha1
-kind: DataStageService
+apiVersion: ds.cpd.ibm.com/v1alpha1
+kind: Datastage
 metadata:
   name: datastage-cr
   namespace: REPLACE_NAMESPACE

@@ -11,8 +11,8 @@ status="unknown"
 while [ "$status" != "Running" ]
 do
   if [ $ATTEMPTS -eq $TIMEOUT ] ; then
-    echo "\nTIMED OUT: Waiting for pod status check $podname"
-    exit 1
+    echo "Took longer than 6 hours: Waiting for pod status check $podname"
+    break
   fi
   pod_name=$(oc get pods -n $namespace | grep $podname | awk '{print $1}' )
   ready_status=$(oc get pods -n $namespace $pod_name  --no-headers | awk '{print $2}')

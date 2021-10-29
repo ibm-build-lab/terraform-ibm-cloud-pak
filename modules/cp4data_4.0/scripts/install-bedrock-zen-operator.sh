@@ -41,14 +41,14 @@ echo $result
 sleep 30
 
 ATTEMPTS=0
-TIMEOUT=60 # 10min
+TIMEOUT=120 # 20min
 while true; do
   if [ $ATTEMPTS -eq $TIMEOUT ] ; then
-    echo "\nTIMED OUT: ibm-operator-catalog"
+    echo "TIMED OUT: ibm-operator-catalog"
     exit 1
   fi
   if oc get catalogsource -n openshift-marketplace | grep ibm-operator-catalog >/dev/null 2>&1; then
-    echo -e "\nIBM Operator Catalog was successfully created."
+    echo -e "IBM Operator Catalog was successfully created."
     break
   fi
   ATTEMPTS=$((ATTEMPTS + 1))
@@ -58,11 +58,11 @@ done
 ATTEMPTS=0
 while true; do
   if [ $ATTEMPTS -eq $TIMEOUT ] ; then
-    echo "\nTIMED OUT: ibm-db2uoperator-catalog"
+    echo "TIMED OUT: ibm-db2uoperator-catalog"
     exit 1
   fi
   if oc get catalogsource -n openshift-marketplace | grep ibm-db2uoperator-catalog >/dev/null 2>&1; then
-    echo -e "\nIBM Db2U Catalog was successfully created."
+    echo -e "IBM Db2U Catalog was successfully created."
     break
   fi
   ATTEMPTS=$((ATTEMPTS + 1))
@@ -100,7 +100,7 @@ sleep 60
 ATTEMPTS=0
 while true; do
   if [ $ATTEMPTS -eq $TIMEOUT ] ; then
-    echo "\nTIMED OUT: cpd-platform-operator.v2.0.4 sub"
+    echo "TIMED OUT: cpd-platform-operator.v2.0.4 sub"
     exit 1
   fi
   if oc get sub -n ${OP_NAMESPACE} cpd-operator -o jsonpath='{.status.installedCSV} {"\n"}' | grep cpd-platform-operator.v2.0.4 >/dev/null 2>&1; then
@@ -114,7 +114,7 @@ done
 ATTEMPTS=0
 while true; do
   if [ $ATTEMPTS -eq $TIMEOUT ] ; then
-    echo "\nTIMED OUT: cpd-platform-operator.v2.0.4 csv"
+    echo "TIMED OUT: cpd-platform-operator.v2.0.4 csv"
     exit 1
   fi
   if oc get csv -n ${OP_NAMESPACE} cpd-platform-operator.v2.0.4 -o jsonpath='{ .status.phase } : { .status.message} {"\n"}' | grep "Succeeded : install strategy completed with no errors" >/dev/null 2>&1; then
@@ -128,7 +128,7 @@ done
 ATTEMPTS=0
 while true; do
   if [ $ATTEMPTS -eq $TIMEOUT ] ; then
-    echo "\nTIMED OUT: cpd-platform-operator.v2.0.4 deployments"
+    echo "TIMED OUT: cpd-platform-operator.v2.0.4 deployments"
     exit 1
   fi
   if oc get deployments -n ${OP_NAMESPACE} -l olm.owner="cpd-platform-operator.v2.0.4" -o jsonpath="{.items[0].status.availableReplicas} {'\n'}" | grep 1 >/dev/null 2>&1; then
@@ -142,7 +142,7 @@ done
 ATTEMPTS=0
 while true; do
   if [ $ATTEMPTS -eq $TIMEOUT ] ; then
-    echo "/nTIMED OUT: ibm-namespace-scope-operator"
+    echo "TIMED OUT: ibm-namespace-scope-operator"
     exit 1
   fi
   if oc get pods -n ${OP_NAMESPACE} | grep ibm-namespace-scope-operator >/dev/null 2>&1; then
@@ -156,7 +156,7 @@ done
 ATTEMPTS=0
 while true; do
   if [ $ATTEMPTS -eq $TIMEOUT ] ; then
-    echo "\nTIMED OUT: cpd-platform-operator-manager"
+    echo "TIMED OUT: cpd-platform-operator-manager"
     exit 1
   fi
   if oc get pods -n ${OP_NAMESPACE} | grep cpd-platform-operator-manager >/dev/null 2>&1; then
@@ -171,7 +171,7 @@ ATTEMPTS=0
 #for reinstall, namespace-scope configmap will be deleted when ibm-common-service-operator first running. need to delete this pod to force recreate Configmap namespace-scope.
 while true; do
   if [ $ATTEMPTS -eq $TIMEOUT ] ; then
-    echo "\nTIMED OUT: namespace-scope ibm-common-service-operator"
+    echo "TIMED OUT: namespace-scope ibm-common-service-operator"
     exit 1
   fi
   # local cm_ns_status=$(oc get cm namespace-scope -n ibm-common-services)
@@ -192,7 +192,7 @@ ATTEMPTS=0
 echo "Waiting for Bedrock operator pods ready"
 while true; do
   if [ $ATTEMPTS -eq $TIMEOUT ] ; then
-    echo "\nTIMED OUT: Waiting for Bedrock operator pods"
+    echo "TIMED OUT: Waiting for Bedrock operator pods"
     exit 1
   fi
   pod_status=$(oc get pods -n ${OP_NAMESPACE} | grep -Ev "NAME|1/1|2/2|3/3|5/5|Comp")
