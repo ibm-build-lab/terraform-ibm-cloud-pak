@@ -26,7 +26,7 @@ data "ibm_container_cluster_config" "cluster_config" {
 }
 
 module "cp4ba" {
-  source = ".git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/cp4ba"
+  source = "../../modules/cp4ba"
   enable = true
 
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
