@@ -12,7 +12,7 @@ TIMEOUT=300 # 5 hours
 while  [[ ! $STATUS =~ ^(Completed|Complete)$ ]]; do
     if [ $ATTEMPTS -eq $TIMEOUT ] ; then
         echo "Took longer than 5 hours: Waiting for check cr status $CRNAME"
-        break
+        exit 1
     fi
     echo "$CRNAME is Installing!!!!"
     sleep 60 
