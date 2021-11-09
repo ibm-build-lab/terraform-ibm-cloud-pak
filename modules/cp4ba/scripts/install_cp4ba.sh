@@ -107,7 +107,7 @@ kubectl apply -f -<<EOF
 ${CP4BA_SUBSCRIPTION_CONTENT}
 EOF
 echo "Sleeping for 5 minutes"
-#sleep 300
+sleep 300
 
 ${K8S_CMD} get pods -n ${CP4BA_PROJECT_NAME} | grep ibm-cp4a-operator
 result=$?
