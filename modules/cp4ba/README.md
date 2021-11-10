@@ -1,6 +1,6 @@
 # Terraform Module to install Cloud Pak for Business Automation
 
-This Terraform Module installs **Cloud Pak for BUsiness Automation** on an Openshift (ROKS) cluster on IBM Cloud.
+This Terraform Module installs **Cloud Pak for Business Automation** on an Openshift (ROKS) cluster on IBM Cloud.
 
 **Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4ba`
 
