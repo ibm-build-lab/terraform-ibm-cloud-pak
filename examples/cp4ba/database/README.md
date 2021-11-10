@@ -1,5 +1,6 @@
-# This script will set up the database schema on a DB2 database for CP4BA installation
+# DB2 setup for CP4BA
 
+This script will set up the database schema on a DB2 database for CP4BA installation
 
 1. Create DB2 Database using the https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/examples/Db2 
 
