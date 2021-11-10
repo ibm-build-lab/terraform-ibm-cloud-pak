@@ -10,6 +10,8 @@
 # disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
 #
 ###############################################################################
+ibmcloud login --apikey $IC_API_KEY
+ibmcloud ks cluster config -c $CLUSTER_ID
 
 db2AdminUserName=db2inst1
 
