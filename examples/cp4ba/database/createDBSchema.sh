@@ -177,59 +177,5 @@ oc exec c-db2ucluster-db2u-0 -it -- su - $db2AdminUserName -c "db2start"
 sleep 5
 
 echo
-echo "Activating databases..."
-echo
-echo "${db2UmsdbName}..."
-oc exec c-db2ucluster-db2u-0 -it -- su - $db2AdminUserName -c "db2 activate database ${db2UmsdbName}"
-sleep 5
-echo
-echo "${db2IcndbName}..."
-oc exec c-db2ucluster-db2u-0 -it -- su - $db2AdminUserName -c "db2 activate database ${db2IcndbName}"
-
-sleep 5
-echo
-echo "${db2Devos1Name}..."
-oc exec c-db2ucluster-db2u-0 -it -- su - $db2AdminUserName -c "db2 activate database ${db2Devos1Name}"
-
-sleep 5
-echo
-echo "${db2AeosName}..."
-oc exec c-db2ucluster-db2u-0 -it -- su - $db2AdminUserName -c "db2 activate database ${db2AeosName}"
-sleep 5
-echo
-echo "${db2BawDocsName}..."
-oc exec c-db2ucluster-db2u-0 -it -- su - $db2AdminUserName -c "db2 activate database ${db2BawDocsName}"
-sleep 5
-echo
-echo "${db2BawDosName}..."
-oc exec c-db2ucluster-db2u-0 -it -- su - $db2AdminUserName -c "db2 activate database ${db2BawDosName}"
-sleep 5
-echo
-echo "${db2BawTosName}..."
-oc exec c-db2ucluster-db2u-0 -it -- su - $db2AdminUserName -c "db2 activate database ${db2BawTosName}"
-sleep 5
-echo
-echo "${db2BawDbName}..."
-oc exec c-db2ucluster-db2u-0 -it -- su - $db2AdminUserName -c "db2 activate database ${db2BawDbName}"
-sleep 5
-echo
-echo "${db2AppdbName}..."
-oc exec c-db2ucluster-db2u-0 -it -- su - $db2AdminUserName -c "db2 activate database ${db2AppdbName}"
-sleep 5
-echo
-echo "${db2AedbName}..."
-oc exec c-db2ucluster-db2u-0 -it -- su - $db2AdminUserName -c "db2 activate database ${db2AedbName}"
-sleep 5
-echo
-echo "${db2BasdbName}..."
-oc exec c-db2ucluster-db2u-0 -it -- su - $db2AdminUserName -c "db2 activate database ${db2BasdbName}"
-
-sleep 5
-echo
-echo "${db2GcddbName}..."
-oc exec c-db2ucluster-db2u-0 -it -- su - $db2AdminUserName -c "db2 activate database ${db2GcddbName}"
-
-
-echo
 echo "Done. Exiting..."
 echo
