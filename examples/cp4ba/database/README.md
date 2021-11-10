@@ -15,4 +15,8 @@ This script will set up the database schema on a DB2 database for CP4BA installa
   export CLUSTER_ID="*****************"
   ```
 
-4. Run `. createDBSchema.sh`
+4. Run 
+  ```
+  chmod +x ./createDBSchema.sh
+  source ./createDBSchema.sh
+  ```
