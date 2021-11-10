@@ -4,6 +4,11 @@ variable "cluster_name_or_id" {
   description = "Enter your cluster id or name to install the Cloud Pak. Leave blank to provision a new Openshift cluster."
 }
 
+variable "ingress_subdomain" {
+  default     = ""
+  description = "Run the command `ibmcloud ks cluster get -c <cluster_name_or_id>` to get the Ingress Subdomain value"
+}
+
 variable "region" {
   default     = "us-south"
   description = "Region where the cluster is hosted."

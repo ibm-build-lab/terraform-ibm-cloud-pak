@@ -45,8 +45,8 @@ ${SECRETS_CONTENT}
 EOF
 
 ###### Create storage
-echo -e "\x1B[1mCreating storage classes...\x1B[0m"
-kubectl apply -f ${CP4BA_STORAGE_CLASS_FILE}
+#echo -e "\x1B[1mCreating storage classes...\x1B[0m"
+#kubectl apply -f ${CP4BA_STORAGE_CLASS_FILE}
 
 echo -e "\x1B[1mCreating the Persistent Volumes Claim (PVC)...\x1B[0m"
 cat ${OPERATOR_PVC_FILE}
@@ -121,9 +121,27 @@ do
     counter=$((counter + 1))
     echo "Waiting for CP4BA operator pod to provision"
     sleep 30;
-    ${K8S_CMD} get pods -n ${CP4BA_PROJECT_NAME} | grep ibm-cp4a-operator
+    kubectl get pods -n ${CP4BA_PROJECT_NAME} | grep ibm-cp4a-operator
     result=$?
 done
+# ##### Create cartridge
+# echo -e "\x1B[1mCreating the cartridge \n${AUTOMATIONUICONFIG_CONTENT}...\x1B[0m"
+# ${K8S_CMD} apply -n ${CP4BA_PROJECT_NAME} -f -<<EOF
+# ${AUTOMATIONUICONFIG_CONTENT}
+# EOF
+
+###### Create tls secret
+echo  "Create tls secret"
+cp4baTlsSecretName=$(kubectl get secrets -n ibm-cert-store | grep tls | awk '{print $1}')
+echo $cp4baTlsSecretName
+tlsCert=$(kubectl get secret/$cp4baTlsSecretName -n ibm-cert-store -o "jsonpath={.data.tls\.crt}")
+tlsKey=$(kubectl get secret/$cp4baTlsSecretName -n ibm-cert-store -o "jsonpath={.data.tls\.key}")
+
+kubectl config set-context --current --namespace=${CP4BA_PROJECT_NAME}
+cp ../../modules/cp4ba/templates/tlsSecrets.yaml.tmpl ../../modules/cp4ba/files/tlsSecrets.yaml
+sed -i.bak "s|tlsCert|$tlsCert|g" ../../modules/cp4ba/files/tlsSecrets.yaml
+sed -i.bak "s|tlsKey|$tlsKey|g" ../../modules/cp4ba/files/tlsSecrets.yaml
+kubectl apply -f ../../modules/cp4ba/files/tlsSecrets.yaml
 
 ###### Copy JDBC Files
 echo -e "\x1B[1mCopying JDBC License Files...\x1B[0m"
