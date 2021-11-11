@@ -75,9 +75,8 @@ variable "private_network_only" {
 }
 
 variable "local_disk" {
-<<<<<<< HEAD
-    default = true
-    description = "The disk type for the instance. When set to true, the disks for the computing instance are provisioned on the host that the instance runs. Otherwise, SAN disks are provisioned. The default value is true."
+  default     = true
+  description = "The disk type for the instance. When set to true, the disks for the computing instance are provisioned on the host that the instance runs. Otherwise, SAN disks are provisioned. The default value is true."
 }
 
 variable "ldapBindDN" {
@@ -86,10 +85,5 @@ variable "ldapBindDN" {
 }
 
 variable "ldapBindDNPassword" {
-  default     = "Passw0rd"
   description = "Bind DN Password (https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-connector-ldap-cp4d)"
-=======
-  default     = true
-  description = "The disk type for the instance. When set to `true`, the disks for the computing instance are provisioned on the host that the instance runs. Otherwise, SAN disks are provisioned. The default value is `true`."
->>>>>>> 7dcb554 (Ran terraform upgrade and fmt)
 }

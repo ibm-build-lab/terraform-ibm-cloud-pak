@@ -1,7 +1,7 @@
 // Module:
 module "cp4aiops" {
-  source          = "./.."
-  enable          = var.enable
+  source = "./.."
+  enable = var.enable
 
   // ROKS cluster parameters:
   cluster_config_path = var.cluster_config_path

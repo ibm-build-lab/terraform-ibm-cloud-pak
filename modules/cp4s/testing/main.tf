@@ -35,11 +35,4 @@ module "cp4s" {
   // Entitled Registry parameters:
   entitled_registry_key        = var.entitled_registry_key
   entitled_registry_user_email = var.entitled_registry_user_email
-
-<<<<<<< HEAD
-=======
-  // LDAP configuration
-  ldap_user_id = var.ldap_user_id
-  ldap_status  = var.ldap_status
->>>>>>> 7dcb554 (Ran terraform upgrade and fmt)
 }

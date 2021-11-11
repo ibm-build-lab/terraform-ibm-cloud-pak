@@ -30,9 +30,9 @@ module "cp4ba" {
   # ibmcloud_api_key       = var.ibmcloud_api_key
 
   # ---- Platform ----
-  cp4ba_project_name       = "cp4ba"
-  entitled_registry_user   = var.entitled_registry_user
-  entitlement_key          = var.entitlement_key
+  cp4ba_project_name     = "cp4ba"
+  entitled_registry_user = var.entitled_registry_user
+  entitlement_key        = var.entitlement_key
 
   # ----- DB2 Settings -----
   db2_host_name = var.db2_host_name

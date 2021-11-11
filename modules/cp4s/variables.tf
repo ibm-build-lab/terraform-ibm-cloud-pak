@@ -24,7 +24,7 @@ variable "on_vpc" {
 }
 
 variable "portworx_is_ready" {
-  type = any
+  type    = any
   default = null
 }
 variable "entitled_registry_user_email" {
@@ -32,7 +32,7 @@ variable "entitled_registry_user_email" {
 }
 
 variable "namespace" {
-  default = "cp4s"
+  default     = "cp4s"
   description = "Namespace for Cloud Pak for Network Automation"
 }
 
@@ -41,15 +41,15 @@ variable "entitled_registry_key" {
 }
 
 variable "admin_user" {
-  default = "default_user"
+  default     = "default_user"
   description = "user to be given administartor privileges in the default account"
 }
 
 locals {
-  namespace                = "cp4s"
-  entitled_registry        = "cp.icr.io"
-  entitled_registry_user   = "cp"
-  docker_registry          = "cp.icr.io" // Staging: "cp.stg.icr.io/cp/cpd"
-  docker_username          = "cp"               // "ekey"
-  entitled_registry_key    = chomp(var.entitled_registry_key)
+  namespace              = "cp4s"
+  entitled_registry      = "cp.icr.io"
+  entitled_registry_user = "cp"
+  docker_registry        = "cp.icr.io" // Staging: "cp.stg.icr.io/cp/cpd"
+  docker_username        = "cp"        // "ekey"
+  entitled_registry_key  = chomp(var.entitled_registry_key)
 }

@@ -115,8 +115,8 @@ resource "null_resource" "cpd_foundational_services" {
   }
 
   provisioner "local-exec" {
-    working_dir = "${path.module}"
-    command = <<-EOF
+    working_dir = path.module
+    command     = <<-EOF
 echo "Ensure the nodes are running"
 bash scripts/nodes_running.sh
 

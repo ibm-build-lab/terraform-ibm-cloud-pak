@@ -36,8 +36,8 @@ data "ibm_container_vpc_cluster" "cluster" {
 
 // Module:
 module "cp4data" {
-  source          = "../../modules/cp4data_3.5"
-  enable          = true
+  source = "../../modules/cp4data_3.5"
+  enable = true
 
   // ROKS cluster parameters:
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
