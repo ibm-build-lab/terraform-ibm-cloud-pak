@@ -20,7 +20,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
-  storageClassName: ibmc-file-retain-gold # cp4a-file-retain-gold-gid
+  storageClassName: ibmc-file-gold-gid
   resources:
     requests:
       storage: 1Gi
@@ -37,7 +37,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
-  storageClassName: ibmc-file-retain-gold # cp4a-file-retain-gold-gid
+  storageClassName: ibmc-file-gold-gid
   resources:
     requests:
       storage: 100Gi

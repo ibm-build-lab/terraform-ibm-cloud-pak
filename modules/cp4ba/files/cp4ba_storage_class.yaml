@@ -11,7 +11,7 @@
 apiVersion: storage.k8s.io/v1beta1
 kind: StorageClass
 metadata:
-  name: cp4a-file-retain-bronze-gid
+  name: cp4a-file-bronze-gid
   labels:
     kubernetes.io/cluster-service: "true"
 provisioner: ibm.io/ibmc-file
@@ -22,13 +22,13 @@ parameters:
   billingType: "hourly"
   classVersion: "2"
   gidAllocate: "true"
-reclaimPolicy: Retain
+reclaimPolicy: Delete
 volumeBindingMode: Immediate
 ---
 apiVersion: storage.k8s.io/v1beta1
 kind: StorageClass
 metadata:
-  name: cp4a-file-retain-silver-gid
+  name: cp4a-file-silver-gid
   labels:
     kubernetes.io/cluster-service: "true"
 provisioner: ibm.io/ibmc-file
@@ -39,13 +39,13 @@ parameters:
   billingType: "hourly"
   classVersion: "2"
   gidAllocate: "true"
-reclaimPolicy: Retain
+reclaimPolicy: Delete
 volumeBindingMode: Immediate
 ---
 apiVersion: storage.k8s.io/v1beta1
 kind: StorageClass
 metadata:
-  name: cp4a-file-retain-gold-gid
+  name: cp4a-file-gold-gid
   labels:
     kubernetes.io/cluster-service: "true"
 provisioner: ibm.io/ibmc-file
@@ -56,5 +56,5 @@ parameters:
   billingType: "hourly"
   classVersion: "2"
   gidAllocate: "true"
-reclaimPolicy: Retain
+reclaimPolicy: Delete
 volumeBindingMode: Immediate
