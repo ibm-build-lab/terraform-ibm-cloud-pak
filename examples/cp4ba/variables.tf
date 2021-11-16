@@ -9,11 +9,6 @@ variable "ingress_subdomain" {
   description = "Run the command `ibmcloud ks cluster get -c <cluster_name_or_id>` to get the Ingress Subdomain value"
 }
 
-variable "region" {
-  default     = "us-south"
-  description = "Region where the cluster is hosted."
-}
-
 variable "resource_group" {
   default     = "partner-sandbox"
   description = "Resource group name where the cluster is hosted."
