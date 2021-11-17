@@ -3,8 +3,10 @@
 This folder contains examples using the Infrastructure as Code or Terraform modules located [here](../modules).  These examples will install Cloud Paks on an existing **Openshift** (ROKS) cluster on IBM Cloud. At this time the supported components are:
 
 - ROKS stand alone cluster in either VPC or Classic
-- Portworx on VPC
+- Portworx on VPC (on ROKS 4.6)
+- ODF on VPC (on ROKS 4.7)
 - LDAP on Classic
+- DB2 Database
 - Automation Foundation (IAF)
 - Cloud Pak for Business Automation (CP4BA)
 - Cloud Pak for Data (CP4Data)
@@ -41,7 +43,9 @@ The Input and Output parameters, as well as basic validations and uninstall proc
 
 - [ROKS](./roks/README.md)
 - [Portworx](./portworx/README.md)
+- [ODF](./odf/README.md)
 - [LDAP](./ldap/README.md)
+- [DB2](./db2/README.md)
 - [Automation Foundation](./iaf/README.md)
 - [Cloud Pak for Business Automation](./cp4ba/README.md)
 - [Cloud Pak for Data](./cp4data/README.md)
