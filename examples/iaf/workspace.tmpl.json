@@ -1,6 +1,6 @@
 {
   "name": "{{ WORKSPACE_NAME }}",
-  "type": ["terraform_v0.12"],
+  "type": ["terraform_v0.13"],
   "description": "IBM Cloud Schematics Workspace to deploy an OpenShift cluster sandbox for Multi Cloud Management Cloud Pak on IBM Cloud Classic",
   "tags": ["owner:{{ OWNER }}", "env:{{ ENV }}", "project:{{ PROJECT }}"],
   "resource_group": "Default",
@@ -11,7 +11,7 @@
   "template_data": [
     {
       "folder": "examples/iaf",
-      "type": "terraform_v0.12",
+      "type": "terraform_v0.13",
       "variablestore": [
         {
           "name": "resource_group",
