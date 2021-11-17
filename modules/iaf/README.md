@@ -2,7 +2,7 @@
 
 This Terraform Module installs the [**IBM Automation Foundation**](https://www.ibm.com/docs/en/automationfoundation/1.0_ent) on an Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/iaf`
+**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git/modules/iaf`
 
 - [Terraform Module to install IBM Automation Foundation](#terraform-module-to-install-ibm-automation-foundation)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
@@ -67,11 +67,11 @@ Output:
 
 ### Provisioning the IAF Module
 
-Use a `module` block assigning `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/iaf`. Then set the [input variables](#input-variables) required to install Automation Foundation. Refer [here](../../examples/iaf) for an example:
+Use a `module` block assigning `source` to `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git/modules/iaf`. Then set the [input variables](#input-variables) required to install Automation Foundation. Refer [here](../../examples/iaf) for an example:
 
 ```hcl
 module "iaf" {
-  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/iaf"
+  source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak.git/modules/iaf"
   enable = true
 
   // ROKS cluster parameters:

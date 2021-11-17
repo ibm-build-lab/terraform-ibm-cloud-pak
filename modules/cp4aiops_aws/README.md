@@ -2,7 +2,7 @@
 
 This Terraform Module installs **Cloud Pak for Watson AIOps** on OCS on AWS.
 
-**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4aiops_aws`
+**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git/modules/cp4aiops_aws`
 
 - [Terraform Module to install Cloud Pak for Watson AIOps](#terraform-module-to-install-cloud-pak-for-aiops)
   - [Provisioning this module in a Terraform Script](#provisioning-this-module-in-a-terraform-script)
@@ -19,7 +19,7 @@ __NOTE:__
 - You must have an OpenShift cluster created that meets minimum specs for CP4AIOps. 
 - You need to have Portworx on the OpenShift cluster. More info can be found [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/portworx_aws)
 
-Use a `module` block assigning `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4aiops_aws`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Watson AIOps.
+Use a `module` block assigning `source` to `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git/modules/cp4aiops_aws`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Watson AIOps.
 
 ```hcl
 module "cp4aiops" {
