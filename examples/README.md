@@ -12,9 +12,9 @@ This folder contains examples using the Infrastructure as Code or Terraform modu
 - Cloud Pak for Data (CP4Data)
 - Cloud Pak for Integration (CP4Int)
 - Cloud Pak for Multi Cloud Management (CP4MCM)
-- Cloud Pak for Security
-- Cloud Pak for AIOps
-- Cloud Pak for Network Automation
+- Cloud Pak for Security (CP4S)
+- Cloud Pak for AIOps (CP4AIOPS)
+- Cloud Pak for Network Automation (CP4NA)
 
 ## Run using IBM Cloud Schematics
 
