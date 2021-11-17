@@ -12,6 +12,7 @@ This folder contains examples using the Infrastructure as Code or Terraform modu
 - Cloud Pak for Multi Cloud Management (CP4MCM)
 - Cloud Pak for Security
 - Cloud Pak for AIOps
+- Cloud Pak for Network Automation
 
 ## Run using IBM Cloud Schematics
 
@@ -46,7 +47,7 @@ The Input and Output parameters, as well as basic validations and uninstall proc
 - [Cloud Pak for Data](./cp4data/README.md)
 - [Cloud Pak for Integration](./cp4int/README.md)
 - [Cloud Pak for Multi Cloud Management](./cp4mcm/README.md)
-- [Cloud Pak for Security](./cp4mcm/README.md)
-- [Cloud Pak for AIOps](./cp4mcm/README.md)
-
+- [Cloud Pak for Security](./cp4s/README.md)
+- [Cloud Pak for AIOps](./cp4aiops/README.md)
+- [Cloud Pak for Network Automation](./cp4na/README.md)
 
