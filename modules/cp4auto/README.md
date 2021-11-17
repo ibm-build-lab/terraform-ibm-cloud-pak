@@ -2,7 +2,7 @@
 
 This Terraform Module installs **Cloud Pak for Automation** on an Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git/modules/cp4auto`
+**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4auto`
 
 - [Terraform Module to install Cloud Pak for Automation](#terraform-module-to-install-cloud-pak-for-automation)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
@@ -68,7 +68,7 @@ Output:
 
 ### Provisioning the CP4Auto Module
 
-Use a `module` block assigning the `source` parameter to the location of this module `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git/modules/cp4auto`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Automation.
+Use a `module` block assigning the `source` parameter to the location of this module `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4auto`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Automation.
 
 ```hcl
 module "cp4auto" {

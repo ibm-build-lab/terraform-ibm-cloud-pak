@@ -2,7 +2,7 @@
 
 This Terraform Module installs the **Portworx Service** on an Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git/modules/portworx`
+**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/portworx`
 
 - [Terraform Module to install Portworx](#terraform-module-to-install-cloud-pak-for-multi-cloud-management)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
@@ -76,11 +76,11 @@ Output:
 
 ### Provisioning the Portworx Module
 
-Use a `module` block assigning `source` to `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git/modules/portworx`. Then set the [input variables](#input-variables) required to install the Portworx service.
+Use a `module` block assigning `source` to `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/portworx`. Then set the [input variables](#input-variables) required to install the Portworx service.
 
 ```hcl
 module "portworx" {
-  source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak.git/modules/portworx"
+  source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/portworx"
   enable = true
   ibmcloud_api_key = "<api-key>"
 

@@ -2,7 +2,7 @@
 
 This Terraform Module install **Cloud Pak for Data** on an existing Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git/modules/cp4data`
+**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4data`
 
 - [Terraform Module to install Cloud Pak for Data](#terraform-module-to-install-cloud-pak-for-data)
   - [Use](#use)
@@ -45,7 +45,7 @@ To build the cluster in your code, use the ROKS module, pointing it with `source
 
 ```hcl
 module "cluster" {
-  source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak.git/modules/roks"
+  source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/roks"
 
   roks_version         = "4.5"
   flavors              = ["b3c.16x64"]

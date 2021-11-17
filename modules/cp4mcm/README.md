@@ -2,7 +2,7 @@
 
 This Terraform Module installs the **Multi Cloud Management Cloud Pak** on an Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git/modules/cp4mcm`
+**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4mcm`
 
 - [Terraform Module to install Cloud Pak for Multi Cloud Management](#terraform-module-to-install-cloud-pak-for-multi-cloud-management)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
@@ -74,11 +74,11 @@ Output:
 
 ### Provisioning the CP4MCM Module
 
-Use a `module` block assigning `source` to `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git/modules/cp4mcm`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Multi Cloud Management and submodules.
+Use a `module` block assigning `source` to `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4mcm`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Multi Cloud Management and submodules.
 
 ```hcl
 module "cp4mcm" {
-  source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak.git/modules/cp4mcm"
+  source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4mcm"
   enable = true
 
   // ROKS cluster parameters:
