@@ -1,7 +1,6 @@
 # Credentials or sensitive information files used by Terraform to ignore
 credentials*.sh
 *.key
-credentials.tfvars
 .terraform_key.json
 typescript
 
@@ -23,7 +22,7 @@ override.tf.json
 /workspace
 dist/
 workspace.json
-my_variables.tfvars
+*.tfvars
 .terraform.d/
 
 # macOS files
