@@ -93,12 +93,36 @@ if [ $ATTEMPTS -lt $TIMEOUT ] ; then
 fi
 echo
 
+<<<<<<< Updated upstream
 ###### Add the CatalogSource resources to Operator Hub
+=======
+# Creating roles
+echo -e "\x1B[1mCreating roles ...\x1B[0m"
+cat ${ROLES_FILE}
+${K8S_CMD} apply -f ${ROLES_FILE} -n ${CP4BA_PROJECT_NAME}
+echo
+
+# Creating roles
+echo -e "\x1B[1mCreating role binding ...\x1B[0m"
+cat ${ROLE_BINDING_FILE}
+${K8S_CMD} apply -f ${ROLE_BINDING_FILE} -n ${CP4BA_PROJECT_NAME}
+echo
+
+# Deploy common-service
+echo -e "\x1B[1mDeploying common-service...\x1B[0m"
+${K8S_CMD} create namespace common-service
+cat ${OPERATOR_GROUP_FILE}
+${K8S_CMD} apply -f "${OPERATOR_GROUP_FILE}"
+echo
+
+# Add the CatalogSource resources to Operator Hub
+>>>>>>> Stashed changes
 echo -e "\x1B[1mCreating the Catalog Source...\x1B[0m"
 cat ${CATALOG_SOURCE_FILE}
 ${K8S_CMD} apply -f ${CATALOG_SOURCE_FILE}
 sleep 5
 echo ""
+<<<<<<< Updated upstream
 echo ""
 
 ###### Create subscription to Business Automation Operator
@@ -108,8 +132,29 @@ ${CP4BA_SUBSCRIPTION_CONTENT}
 EOF
 echo "Sleeping for 5 minutes"
 sleep 300
+=======
 
-${K8S_CMD} get pods -n ${CP4BA_PROJECT_NAME} | grep ibm-cp4a-operator
+# Create Deployment Credentials
+echo -e "\x1B[1mCreating the Deployment Credentials ...\x1B[0m"
+cat ${CP4BA_DEPLOYMENT_CREDENTIALS_FILE}
+${K8S_CMD} apply -n ${CP4BA_PROJECT_NAME} -f ${CP4BA_DEPLOYMENT_CREDENTIALS_FILE}
+echo
+
+# Create Deployment
+echo -e "\x1B[1mCreating the Deployment ...\x1B[0m"
+cat ${CP4BA_DEPLOYMENT_CONTENT}
+${K8S_CMD} apply -n ${CP4BA_PROJECT_NAME} -f ${CP4BA_DEPLOYMENT_CONTENT}
+echo
+
+# Create subscription to Business Automation Operator
+echo -e "\x1B[1mCreating the Subscription...\x1B[0m"
+cat ${CP4BA_SUBSCRIPTION_FILE}
+${K8S_CMD} apply -n ${CP4BA_PROJECT_NAME} -f ${CP4BA_SUBSCRIPTION_FILE}
+>>>>>>> Stashed changes
+
+echo
+
+${K8S_CMD} get pods -n openshift-marketplace | grep ibm-cp4a-operator
 result=$?
 counter=0
 while [[ "${result}" -ne 0 ]]
@@ -121,7 +166,11 @@ do
     counter=$((counter + 1))
     echo "Waiting for CP4BA operator pod to provision"
     sleep 30;
+<<<<<<< Updated upstream
     kubectl get pods -n ${CP4BA_PROJECT_NAME} | grep ibm-cp4a-operator
+=======
+    ${K8S_CMD} get pods -n openshift-marketplace | grep ibm-cp4a-operator
+>>>>>>> Stashed changes
     result=$?
 done
 # ##### Create cartridge
@@ -145,13 +194,17 @@ kubectl apply -f ../../modules/cp4ba/files/tlsSecrets.yaml
 
 ###### Copy JDBC Files
 echo -e "\x1B[1mCopying JDBC License Files...\x1B[0m"
-podname=$(${K8S_CMD} get pods -n ${CP4BA_PROJECT_NAME} | grep ibm-cp4a-operator | awk '{print $1}')
+podname=$(${K8S_CMD} get pods -n openshift-marketplace| grep ibm-cp4a-operator | awk '{print $1}')
 ${K8S_CMD} cp ${CUR_DIR}/files/jdbc ${CP4BA_PROJECT_NAME}/$podname:/opt/ansible/share
+<<<<<<< Updated upstream
 
 ###### Create Deployment
 echo -e "\x1B[1mCreating the Deployment \n${CP4BA_DEPLOYMENT_CONTENT}...\x1B[0m"
 ${K8S_CMD} apply -n ${CP4BA_PROJECT_NAME} -f -<<EOF
 ${CP4BA_DEPLOYMENT_CONTENT}
 EOF
+=======
+echo
+>>>>>>> Stashed changes
 
 

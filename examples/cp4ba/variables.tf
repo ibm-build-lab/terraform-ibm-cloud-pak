@@ -10,7 +10,7 @@ variable "ingress_subdomain" {
 }
 
 variable "resource_group" {
-  default     = "partner-sandbox"
+  default     = "cloud-pak-sandbox-ibm"
   description = "Resource group name where the cluster is hosted."
 }
 
@@ -22,6 +22,11 @@ variable "entitlement_key" {
 variable "entitled_registry_user" {
   type        = string
   description = "Email address of the user owner of the Entitled Registry Key"
+}
+
+locals {
+  docker_server                = "cp.icr.io"
+  docker_username              = "cp"
 }
 
 # Use the id and password that you specified when setting up LDAP
