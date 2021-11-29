@@ -9,9 +9,11 @@ locals {
   roles_file_content                    = file(local.roles_file)
   role_binding_file                     = "${path.module}/files/role_binding.yaml"
   role_binding_content                  = file(local.role_binding_file)
-  cp4ba_subscription_file_content       = templatefile("${path.module}/templates/cp4ba_subscription.yaml.tmpl", {
-    namespace = var.cp4ba_project_name
-  })
+  cp4ba_subscription_file               = "${path.module}/files/cp4ba_subsccription.yaml"
+  cp4ba_subscription_file_content       = file(local.cp4ba_subscription_file)
+//  cp4ba_subscription_file_content       = templatefile("${path.module}/templates/cp4ba_subscription.yaml.tmpl", {
+//    namespace = var.cp4ba_project_name
+//  })
   cp4ba_deployment_credentials_file     = "${path.module}/templates/cp4ba_deployment_credentials.yaml.tmpl"
   cp4ba_deployment_credentials_file_content = file(local.cp4ba_deployment_credentials_file)
   cp4ba_deployment_file_content         = templatefile("${path.module}/templates/cp4ba_deployment.yaml.tmpl", {
@@ -66,7 +68,7 @@ resource "null_resource" "installing_cp4ba" {
       OPERATOR_PVC_FILE                = local.pvc_file
       OPERATOR_GROUP_FILE              = local.operator_group_file
       CATALOG_SOURCE_FILE              = local.catalog_source_file
-      CP4BA_SUBSCRIPTION_FILE          = local.cp4ba_subscription_file_content
+      CP4BA_SUBSCRIPTION_FILE          = local.cp4ba_subscription_file
       CP4BA_DEPLOYMENT_CREDENTIALS_FILE = local.cp4ba_deployment_credentials_file
       CP4BA_DEPLOYMENT_CONTENT         = local.cp4ba_deployment_file_content
       SECRETS_CONTENT                  = local.secrets_content
