@@ -160,22 +160,6 @@ do
     result=$?
 done
 
-####### Create subscription to Business Automation Operator
-#echo -e "\x1B[1mCreating the Subscription...\n${CP4BA_SUBSCRIPTION_CONTENT}\n\x1B[0m"
-#kubectl apply -f -<<EOF
-#${CP4BA_SUBSCRIPTION_CONTENT}
-#EOF
-#echo "Sleeping for 5 minutes"
-#sleep 300
-#echo
-#
-####### Create Deployment
-#echo -e "\x1B[1mCreating the Deployment ...\x1B[0m"
-#cat ${CP4BA_DEPLOYMENT_CONTENT}
-#${K8S_CMD} apply -n ${CP4BA_PROJECT_NAME} -f -<<EOF
-#${CP4BA_DEPLOYMENT_CONTENT}
-#EOF
-#echo
 
 
 
