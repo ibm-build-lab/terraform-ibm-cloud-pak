@@ -24,8 +24,8 @@ data "ibm_container_cluster_config" "cluster_config" {
 }
 
 module "cp4ba" {
-//  source = "../../modules/cp4ba"
-  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/terraform-0.13/modules/cp4ba"
+  source = "../../modules/cp4ba"
+//  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/terraform-0.13/modules/cp4ba"
   enable = true
 
   # ---- Cluster settings ----
