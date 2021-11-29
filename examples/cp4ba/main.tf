@@ -1,21 +1,8 @@
-<<<<<<< Updated upstream
-=======
-terraform {
-  required_version = ">=0.13"
-  required_providers {
-    ibm = {
-      source = "IBM-Cloud/ibm"
-      version    = "~> 1.12"
-    }
-  }
-}
-
 provider "ibm" {
   region           = var.region
   ibmcloud_api_key = var.ibmcloud_api_key
 }
 
->>>>>>> Stashed changes
 data "ibm_resource_group" "group" {
   name = var.resource_group
 }
@@ -42,7 +29,6 @@ module "cp4ba" {
 
   # ---- Cluster settings ----
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
-<<<<<<< Updated upstream
   ingress_subdomain = var.ingress_subdomain
 
   # ---- Cloud Pak settings ----
@@ -61,12 +47,6 @@ module "cp4ba" {
   ldap_admin    = var.ldap_admin
   ldap_password = var.ldap_password
   ldap_host_ip  = var.ldap_host_ip
-=======
-  # ---- Platform ----
-  cp4ba_project_name      = "cp4ba"
-  entitled_registry_user  = var.entitled_registry_user
-  entitlement_key         = var.entitlement_key
->>>>>>> Stashed changes
 }
 
 

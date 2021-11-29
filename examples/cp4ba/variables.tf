@@ -14,6 +14,12 @@ variable "resource_group" {
   description = "Resource group name where the cluster is hosted."
 }
 
+variable "region" {}
+
+variable "ibmcloud_api_key" {
+  description = "Enter your IBM API Cloud access key. Visit this link for more information: https://cloud.ibm.com/docs/account?topic=account-userapikey&interface=ui "
+}
+
 variable "entitlement_key" {
   type        = string
   description = "Do you have a Cloud Pak for Business Automation Entitlement Registry key? If not, Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
