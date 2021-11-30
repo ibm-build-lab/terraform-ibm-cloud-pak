@@ -10,7 +10,7 @@ variable "ingress_subdomain" {
 }
 
 variable "resource_group" {
-  default     = "cloud-pak-sandbox-ibm"
+  default     = "Default"
   description = "Resource group name where the cluster is hosted."
 }
 
