@@ -123,9 +123,7 @@ echo ""
 # Create subscription to Business Automation Operator
 echo -e "\x1B[1mCreating the Subscription...\x1B[0m"
 cat "${CP4BA_SUBSCRIPTION_FILE}"
-${K8S_CMD} apply -n ${CP4BA_PROJECT_NAME} -f -<<EOF
-"${CP4BA_SUBSCRIPTION_FILE}"
-EOF
+${K8S_CMD} apply -f "${CP4BA_SUBSCRIPTION_FILE}" -n "${CP4BA_PROJECT_NAME}"
 sleep 100
 echo
 
