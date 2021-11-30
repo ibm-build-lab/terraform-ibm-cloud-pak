@@ -107,8 +107,20 @@ ${K8S_CMD} apply -f ${ROLE_BINDING_FILE} -n ${CP4BA_PROJECT_NAME}
 echo
 
 # Deploy common-service
-echo -e "\x1B[1mDeploying common-service...\x1B[0m"
+echo -e "\x1B[1m Creating common-service namespace ...\x1B[0m"
 ${K8S_CMD} create namespace common-service
+echo
+
+echo -e "\x1B[1m Deploying common-service ...\x1B[0m"
+cat ${COMMON_SERVICE_FILE}
+${K8S_CMD} apply -f "${COMMON_SERVICE_FILE}"
+sleep 100
+echo
+
+
+
+# CREATING OPERATOR GROUP
+echo -e "\x1B[1m Creating Operator Group ...\x1B[0m"
 cat ${OPERATOR_GROUP_FILE}
 ${K8S_CMD} apply -f "${OPERATOR_GROUP_FILE}"
 echo

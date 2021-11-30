@@ -5,6 +5,8 @@ locals {
   operator_group_file_content           = file(local.operator_group_file)
   catalog_source_file                   = "${path.module}/files/catalog_source.yaml"
   catalog_source_file_content           = file(local.catalog_source_file)
+  common_service_file                   = "${path.module}/files/common-service.yaml"
+  common_service_file_content           = file(local.common_service_file)
   roles_file                            = "${path.module}/files/roles.yaml"
   roles_file_content                    = file(local.roles_file)
   role_binding_file                     = "${path.module}/files/role_binding.yaml"
@@ -46,6 +48,7 @@ resource "null_resource" "installing_cp4ba" {
     SECRET_sha1                           = sha1(local.secrets_content)
     ROLES_sha1                            = sha1(local.roles_file_content)
     ROLE_BINDING_sha1                     = sha1(local.role_binding_content)
+    COMMON_SERVICE_FILE_sha1              = sha1(local.common_service_file_content)
   }
 
   provisioner "local-exec" {
@@ -68,6 +71,7 @@ resource "null_resource" "installing_cp4ba" {
       OPERATOR_PVC_FILE                = local.pvc_file
       OPERATOR_GROUP_FILE              = local.operator_group_file
       CATALOG_SOURCE_FILE              = local.catalog_source_file
+      COMMON_SERVICE_FILE              = local.common_service_file
       CP4BA_SUBSCRIPTION_FILE          = local.cp4ba_subscription_file
       CP4BA_DEPLOYMENT_CREDENTIALS_FILE = local.cp4ba_deployment_credentials_file
       CP4BA_DEPLOYMENT_CONTENT         = local.cp4ba_deployment_file_content
