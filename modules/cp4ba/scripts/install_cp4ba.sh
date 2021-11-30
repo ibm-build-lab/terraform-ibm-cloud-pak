@@ -147,9 +147,7 @@ echo
 
 # Create Deployment
 echo -e "\x1B[1mCreating the Deployment ...\x1B[0m"
-${K8S_CMD} apply -n ${CP4BA_PROJECT_NAME} -f -<<EOF
-"${CP4BA_DEPLOYMENT_CONTENT}"
-EOF
+${K8S_CMD} apply -n ${CP4BA_PROJECT_NAME} -f "${CP4BA_DEPLOYMENT_CONTENT}" --validate=false
 cat "${CP4BA_DEPLOYMENT_CONTENT}"
 
 echo
