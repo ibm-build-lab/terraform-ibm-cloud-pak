@@ -32,6 +32,7 @@ variable "entitled_registry_user" {
   description = "Email address of the user owner of the Entitled Registry Key"
 }
 
+# -------- LDAP Variables ---------
 # Use the id and password that you specified when setting up LDAP
 variable "ldap_admin" {
   default     = "cn=root"
