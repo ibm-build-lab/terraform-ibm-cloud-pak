@@ -14,7 +14,9 @@ variable "resource_group" {
   description = "Resource group name where the cluster is hosted."
 }
 
-variable "region" {}
+variable "region" {
+    description = "Region where the cluster is hosted."
+}
 
 variable "ibmcloud_api_key" {
   description = "Enter your IBM API Cloud access key. Visit this link for more information: https://cloud.ibm.com/docs/account?topic=account-userapikey&interface=ui "
@@ -28,11 +30,6 @@ variable "entitlement_key" {
 variable "entitled_registry_user" {
   type        = string
   description = "Email address of the user owner of the Entitled Registry Key"
-}
-
-locals {
-  docker_server                = "cp.icr.io"
-  docker_username              = "cp"
 }
 
 # Use the id and password that you specified when setting up LDAP
@@ -81,4 +78,6 @@ variable "db2_host_port" {
 locals {
   cluster_config_path = "./.kube/config"
   namespace           = "cp4ba"
+  docker_server                = "cp.icr.io"
+  docker_username              = "cp"
 }
