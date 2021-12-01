@@ -4,7 +4,9 @@ metadata:
   name: ibm-cp-integration
   namespace: ${ namespace }
 spec:
-  channel: v1.3
+  channel: v1.4
+  installPlanApproval: Manual
   name: ibm-cp-integration
   source: ibm-operator-catalog
   sourceNamespace: openshift-marketplace
+  startingCSV: ibm-cp-integration.v1.4.0
