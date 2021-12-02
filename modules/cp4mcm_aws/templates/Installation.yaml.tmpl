@@ -4,11 +4,7 @@ metadata:
   name: cp4mcm-install
   namespace: ${ namespace }
 spec:
-%{ if on_vpc ~}
   storageClass: gp2
-%{ else ~}
-  storageClass: ibmc-block-retain-gold
-%{ endif ~}
   imagePullSecret: ibm-management-pull-secret
   license:
     accept: true
@@ -43,11 +39,7 @@ spec:
               existingClaimName: ""
               existingDynamicVolume: false
               size: 30Gi
-%{ if on_vpc ~}
               storageClass: gp2
-%{ else ~}
-              storageClass: ibmc-block-gold
-%{ endif ~}
               useDynamicProvisioning: true
           camTerraformPV:
             name: cam-terraform-pv
@@ -76,21 +68,12 @@ spec:
             persistence:
               storageClassOption:
                 cassandrabak: none
-%{ if on_vpc ~}
                 cassandradata: gp2
                 couchdbdata: gp2
                 datalayerjobs: gp2
                 elasticdata: gp2
                 kafkadata: gp2
                 zookeeperdata: gp2
-%{ else ~}
-                cassandradata: ibmc-block-gold
-                couchdbdata: ibmc-block-gold
-                datalayerjobs: ibmc-block-gold
-                elasticdata: ibmc-block-gold
-                kafkadata: ibmc-block-gold
-                zookeeperdata: ibmc-block-gold
-%{ endif ~}
               storageSize:
                 cassandrabak: 500Gi
                 cassandradata: 500Gi
