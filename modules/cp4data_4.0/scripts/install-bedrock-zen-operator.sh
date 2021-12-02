@@ -100,11 +100,11 @@ sleep 60
 ATTEMPTS=0
 while true; do
   if [ $ATTEMPTS -eq $TIMEOUT ] ; then
-    echo "TIMED OUT: cpd-platform-operator.v2.0.4 sub"
+    echo "TIMED OUT: cpd-platform-operator.v2.0.5 sub"
     exit 1
   fi
-  if oc get sub -n ${OP_NAMESPACE} cpd-operator -o jsonpath='{.status.installedCSV} {"\n"}' | grep cpd-platform-operator.v2.0.4 >/dev/null 2>&1; then
-    echo -e "\ncpd-platform-operator.v2.0.4 was successfully created."
+  if oc get sub -n ${OP_NAMESPACE} cpd-operator -o jsonpath='{.status.installedCSV} {"\n"}' | grep cpd-platform-operator.v2.0.5 >/dev/null 2>&1; then
+    echo -e "\ncpd-platform-operator.v2.0.5 was successfully created."
     break
   fi
   ATTEMPTS=$((ATTEMPTS + 1))
@@ -114,10 +114,10 @@ done
 ATTEMPTS=0
 while true; do
   if [ $ATTEMPTS -eq $TIMEOUT ] ; then
-    echo "TIMED OUT: cpd-platform-operator.v2.0.4 csv"
+    echo "TIMED OUT: cpd-platform-operator.v2.0.5 csv"
     exit 1
   fi
-  if oc get csv -n ${OP_NAMESPACE} cpd-platform-operator.v2.0.4 -o jsonpath='{ .status.phase } : { .status.message} {"\n"}' | grep "Succeeded : install strategy completed with no errors" >/dev/null 2>&1; then
+  if oc get csv -n ${OP_NAMESPACE} cpd-platform-operator.v2.0.5 -o jsonpath='{ .status.phase } : { .status.message} {"\n"}' | grep "Succeeded : install strategy completed with no errors" >/dev/null 2>&1; then
     echo -e "\nInstall strategy completed with no errors"
     break
   fi
@@ -128,11 +128,11 @@ done
 ATTEMPTS=0
 while true; do
   if [ $ATTEMPTS -eq $TIMEOUT ] ; then
-    echo "TIMED OUT: cpd-platform-operator.v2.0.4 deployments"
+    echo "TIMED OUT: cpd-platform-operator.v2.0.5 deployments"
     exit 1
   fi
-  if oc get deployments -n ${OP_NAMESPACE} -l olm.owner="cpd-platform-operator.v2.0.4" -o jsonpath="{.items[0].status.availableReplicas} {'\n'}" | grep 1 >/dev/null 2>&1; then
-    echo -e "\ncpd-platform-operator.v2.0.4 is ready."
+  if oc get deployments -n ${OP_NAMESPACE} -l olm.owner="cpd-platform-operator.v2.0.5" -o jsonpath="{.items[0].status.availableReplicas} {'\n'}" | grep 1 >/dev/null 2>&1; then
+    echo -e "\ncpd-platform-operator.v2.0.5 is ready."
     break
   fi
   ATTEMPTS=$((ATTEMPTS + 1))
