@@ -3,15 +3,18 @@
 This folder contains examples using the Infrastructure as Code or Terraform modules located [here](../modules).  These examples will install Cloud Paks on an existing **Openshift** (ROKS) cluster on IBM Cloud. At this time the supported components are:
 
 - ROKS stand alone cluster in either VPC or Classic
-- Portworx on VPC
+- Portworx on VPC (on ROKS 4.6)
+- ODF on VPC (on ROKS 4.7)
 - LDAP on Classic
+- DB2 Database
 - Automation Foundation (IAF)
 - Cloud Pak for Business Automation (CP4BA)
 - Cloud Pak for Data (CP4Data)
 - Cloud Pak for Integration (CP4Int)
 - Cloud Pak for Multi Cloud Management (CP4MCM)
-- Cloud Pak for Security
-- Cloud Pak for AIOps
+- Cloud Pak for Security (CP4S)
+- Cloud Pak for AIOps (CP4AIOPS)
+- Cloud Pak for Network Automation (CP4NA)
 
 ## Run using IBM Cloud Schematics
 
@@ -40,13 +43,15 @@ The Input and Output parameters, as well as basic validations and uninstall proc
 
 - [ROKS](./roks/README.md)
 - [Portworx](./portworx/README.md)
+- [ODF](./odf/README.md)
 - [LDAP](./ldap/README.md)
+- [DB2](./db2/README.md)
 - [Automation Foundation](./iaf/README.md)
 - [Cloud Pak for Business Automation](./cp4ba/README.md)
 - [Cloud Pak for Data](./cp4data/README.md)
 - [Cloud Pak for Integration](./cp4int/README.md)
 - [Cloud Pak for Multi Cloud Management](./cp4mcm/README.md)
-- [Cloud Pak for Security](./cp4mcm/README.md)
-- [Cloud Pak for AIOps](./cp4mcm/README.md)
-
+- [Cloud Pak for Security](./cp4s/README.md)
+- [Cloud Pak for AIOps](./cp4aiops/README.md)
+- [Cloud Pak for Network Automation](./cp4na/README.md)
 
