@@ -1,21 +1,10 @@
-terraform {
-  required_version = ">=0.13"
-  required_providers {
-    ibm = {
-      source = "IBM-Cloud/ibm"
-      version    = "~> 1.12"
-//       region     = var.region
-//       ibmcloud_api_key = var.ibmcloud_api_key
-    }
-  }
+provider "ibm" {
+  region           = var.region
+  ibmcloud_api_key = var.ibmcloud_api_key
 }
 
 data "ibm_resource_group" "group" {
   name = var.resource_group_name
-}
-
-data "ibm_iam_api_key" "iam_api_key" {
-    apikey_id = var.ibmcloud_api_key
 }
 
 resource "null_resource" "mkdir_kubeconfig_dir" {
@@ -32,9 +21,6 @@ data "ibm_container_cluster_config" "cluster_config" {
   config_dir        = local.cluster_config_path
 }
 
-provider "ibm" {
-  ibmcloud_api_key = var.ibmcloud_api_key
-}
 
 // Module:
 module "cp4aiops" {
