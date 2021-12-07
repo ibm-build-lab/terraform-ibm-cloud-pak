@@ -74,7 +74,7 @@ locals {
   project_name     = "cp4ba"
   platform_options = 1     // 1: roks - 2: ocp - 3: private cloud
   deployment_type  = 2     // 1: demo - 2: enterprise
-  platform_version = "4.6" // roks version
+  platform_version = "4.7" // roks version
 
   //  entitled_registry_key        = chomp(var.entitlement_key)
   ibmcloud_api_key = chomp(var.ibmcloud_api_key)

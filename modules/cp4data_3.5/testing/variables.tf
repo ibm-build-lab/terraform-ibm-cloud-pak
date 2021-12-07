@@ -30,7 +30,7 @@ variable "kube_config_path" {
 }
 
 variable "openshift_version" {
-  default     = "4.6"
+  default     = "4.7"
   type        = string
   description = "Openshift version installed in the cluster"
 }
