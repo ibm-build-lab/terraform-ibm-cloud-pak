@@ -2,6 +2,10 @@ variable "cluster_id" {
   description = "Id of cluster for AIOps to be installed on"
 }
 
+variable "ibmcloud_api_key" {
+  description = "IBMCloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
+}
+
 variable "region" {
   description = "Region that cluster resides in"
 }
@@ -30,3 +34,4 @@ variable "entitled_registry_user_email" {
 locals {
   cluster_config_path = "./.kube/config"
 }
+

@@ -2,7 +2,7 @@
 
 This Terraform Module installs **Cloud Pak for Watson AIOps** on an Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4aiops`
+**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4aiops`
 
 - [Terraform Module to install Cloud Pak for Watson AIOps](#terraform-module-to-install-cloud-pak-for-aiops)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
@@ -23,11 +23,12 @@ Go [here](../CREDENTIALS.md) for details.
 
 ## Provisioning this module in a Terraform Script
 
-In your Terraform code define the `ibm` provisioner block with the `region`.
+In your Terraform code define the `ibm` provisioner block with the `region` and the `generation`, which is **1 for Classic** and **2 for VPC Gen 2**.
 
 ```hcl
 provider "ibm" {
   region     = "us-south"
+  version    = "~> 1.12"
 }
 ```
 
@@ -68,7 +69,7 @@ Output:
 
 ### Installing the CP4AIOPS Module
 
-Use a `module` block assigning `source` to `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4aiops`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Watson AIOps.
+Use a `module` block assigning `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4aiops`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Watson AIOps.
 
 ```hcl
 module "cp4aiops" {

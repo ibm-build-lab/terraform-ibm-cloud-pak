@@ -16,7 +16,7 @@ resource "null_resource" "mkdir_kubeconfig_dir" {
 }
 
 data "ibm_container_cluster_config" "cluster_config" {
-  depends_on        = [null_resource.mkdir_kubeconfig_dir]
+  depends_on = [null_resource.mkdir_kubeconfig_dir]
   cluster_name_id   = var.cluster_id
   resource_group_id = data.ibm_resource_group.group.id
   config_dir        = var.cluster_config_path
@@ -24,8 +24,8 @@ data "ibm_container_cluster_config" "cluster_config" {
 
 // Module:
 module "cp4aiops" {
-  source = "./.."
-  enable = var.enable
+  source          = ".."
+  enable          = var.enable
 
   // ROKS cluster parameters:
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
