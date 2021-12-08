@@ -11,7 +11,7 @@ resource "null_resource" "install_cp4aiops" {
 
   triggers = {
     namespace_sha1                      = sha1(var.namespace)
-    docker_params_sha1                  = sha1(join("", [var.entitled_registry_user_email, local.entitled_registry_key]))
+    docker_params_sha1                  = sha1(join("", [var.entitled_registry_user, local.entitled_registry_key]))
     cp4aiops_sha1                       = sha1(local.cp4aiops_subscription)
   }
 
@@ -25,10 +25,12 @@ resource "null_resource" "install_cp4aiops" {
       ON_VPC                        = var.on_vpc
       IC_API_KEY                    = var.ibmcloud_api_key
       CP4WAIOPS                     = local.cp4aiops_subscription
-      DOCKER_REGISTRY_PASS          = var.entitled_registry_key
-      DOCKER_USER_EMAIL             = var.entitled_registry_user_email
+      DOCKER_REGISTRY_PASS          = var.entitlement_key
+      DOCKER_USER_EMAIL             = var.entitled_registry_user
       DOCKER_USERNAME               = local.docker_username
       DOCKER_REGISTRY               = local.docker_registry
+
+//      entitlement_key = var.entitlement_key
     }
   }
 
