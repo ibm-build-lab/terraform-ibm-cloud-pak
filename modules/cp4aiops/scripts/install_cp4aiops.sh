@@ -6,6 +6,21 @@ NAMESPACE=${NAMESPACE:-aiops}
 DOCKER_USERNAME=${DOCKER_USERNAME:-cp}
 DOCKER_REGISTRY=${DOCKER_REGISTRY:-cp.icr.io}  # adjust this if needed
 
+
+# Configure a network policy for traffic between the Operator Lifecycle Manager and the CatalogSource service
+echo "Installing Openshift Serverless ..."
+${K8s_CMD} apply -f "${OC_SERVERLESS_FILE}"
+echo
+
+echo "Installing the Knative Eventing Components ..."
+${K8s_CMD} apply -f "${KNATIVE_EVENTING_FILE}"
+echo
+
+echo "Installing the Knative Serving Components ..."
+${K8s_CMD} apply -f "${KNATIVE_SERVING_FILE}"
+echo
+
+
 # Create custom namespace
 echo "Creating namespace ${NAMESPACE}"
 kubectl create namespace "${NAMESPACE}" --dry-run=client -o yaml | kubectl apply -f -
