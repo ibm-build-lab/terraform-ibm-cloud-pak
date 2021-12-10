@@ -14,6 +14,11 @@ variable "on_vpc" {
   description = "If set to true, lets the module know cluster is using VPC Gen2"
 }
 
+variable "openshift_version" {
+  default     = "4.6"
+  description = "Openshift version installed in the cluster"
+}
+
 variable "portworx_is_ready" {
   type    = any
   default = null
