@@ -23,6 +23,8 @@ cat "${KNATIVE_EVENTING_FILE}"
 ${K8s_CMD} apply -f "${KNATIVE_EVENTING_FILE}"
 echo
 
+# oc annotate knativeserving.operator.knative.dev/knative-serving -n knative-serving serving.knative.openshift.io/disableRoute=true
+#knativeserving.operator.knative.dev/knative-serving annotated
 
 # Create custom namespace
 echo "Creating namespace ${NAMESPACE}"
