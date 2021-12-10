@@ -9,15 +9,18 @@ DOCKER_REGISTRY=${DOCKER_REGISTRY:-cp.icr.io}  # adjust this if needed
 
 # Configure a network policy for traffic between the Operator Lifecycle Manager and the CatalogSource service
 echo "Installing Openshift Serverless ..."
+cat "${OC_SERVERLESS_FILE}"
 ${K8s_CMD} apply -f "${OC_SERVERLESS_FILE}"
 echo
 
-echo "Installing the Knative Eventing Components ..."
-${K8s_CMD} apply -f "${KNATIVE_EVENTING_FILE}"
+echo "Installing the Knative Serving Components ..."
+cat "${KNATIVE_SERVING_FILE}"
+${K8s_CMD} apply -f "${KNATIVE_SERVING_FILE}"
 echo
 
-echo "Installing the Knative Serving Components ..."
-${K8s_CMD} apply -f "${KNATIVE_SERVING_FILE}"
+echo "Installing the Knative Eventing Components ..."
+cat "${KNATIVE_EVENTING_FILE}"
+${K8s_CMD} apply -f "${KNATIVE_EVENTING_FILE}"
 echo
 
 
