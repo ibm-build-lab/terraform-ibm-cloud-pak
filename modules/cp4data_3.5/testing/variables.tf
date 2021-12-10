@@ -29,12 +29,6 @@ variable "kube_config_path" {
   description = "Path to the Kubernetes configuration file to access your cluster"
 }
 
-variable "openshift_version" {
-  default     = "4.6"
-  type        = string
-  description = "Openshift version installed in the cluster"
-}
-
 // Prereq
 variable "worker_node_flavor" {
   type        = string
