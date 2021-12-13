@@ -1,0 +1,11 @@
+cat << EOF | oc apply -n openshift-operators -f -
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: serverless-operator
+  namespace: openshift-operators
+spec:
+  channel: "4.6"
+  name: serverless-operator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
