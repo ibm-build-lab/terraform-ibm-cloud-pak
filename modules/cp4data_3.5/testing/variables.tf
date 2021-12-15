@@ -14,6 +14,11 @@ variable "on_vpc" {
   description = "If set to true, lets the module know cluster is using VPC Gen2"
 }
 
+variable "openshift_version" {
+  default     = "4.6"
+  description = "Openshift version installed in the cluster"
+}
+
 variable "portworx_is_ready" {
   type    = any
   default = null
@@ -27,12 +32,6 @@ variable "accept_cpd_license" {
 variable "kube_config_path" {
   type        = string
   description = "Path to the Kubernetes configuration file to access your cluster"
-}
-
-variable "openshift_version" {
-  default     = "4.6"
-  type        = string
-  description = "Openshift version installed in the cluster"
 }
 
 // Prereq

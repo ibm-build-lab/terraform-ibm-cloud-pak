@@ -41,7 +41,7 @@ variable "resource_group" {
   description = "List all available resource groups with: ibmcloud resource groups"
 }
 variable "roks_version" {
-  default     = "4.5"
+  default     = "4.7"
   description = "List available versions: ibmcloud ks versions"
 }
 variable "force_delete_storage" {
