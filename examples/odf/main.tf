@@ -5,7 +5,7 @@ provider "ibm" {
 // Module:
 
 module "odf" {
-  source = "./.."
+  source = "./../../modules/odf"
   // TODO: With Terraform 0.13 replace the parameter 'enable' or the conditional expression using 'with_iaf' with 'count'
   enable = var.enable
   cluster_id = var.cluster_id
