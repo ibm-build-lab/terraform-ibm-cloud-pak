@@ -45,7 +45,7 @@ variable "memory" {
 }
 
 variable "disks" {
-  default     = null
+//  default     = null
   description = "The numeric disk sizes (in GBs) for the instance's block device and disk image settings."
 }
 
