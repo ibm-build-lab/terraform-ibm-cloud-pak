@@ -43,7 +43,6 @@ variable "cores" {
 }
 
 variable "memory" {
-  default     = null
   description = "Virtual Server Memory"
 }
 
