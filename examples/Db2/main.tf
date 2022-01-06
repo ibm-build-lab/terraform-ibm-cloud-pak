@@ -25,16 +25,16 @@ module "Db2" {
   enable = true
 
   # ----- Cluster -----
-  KUBECONFIG = data.ibm_container_cluster_config.cluster_config.config_file_path
+  cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
 
   # ----- Platform -----
-  DB2_PROJECT_NAME        = local.db2_project_name
-  DB2_ADMIN_USER_NAME     = local.db2_admin_user_name
-  DB2_ADMIN_USER_PASSWORD = local.db2_admin_user_password
+  db2_project_name        = var.db2_project_name
+  db2_admin_username      = var.db2_admin_username
+  db2_admin_user_password = var.db2_admin_user_password
 
   # ------ Docker Information ----------
-  ENTITLED_REGISTRY_KEY           = var.entitlement_key
-  ENTITLEMENT_REGISTRY_USER_EMAIL = var.entitled_registry_user_email
-  DOCKER_SERVER                   = local.docker_server
-  DOCKER_USERNAME                 = local.docker_username
+  entitlement_key           = var.entitlement_key
+  entitled_registry_user_email = var.entitled_registry_user_email
+//  docker_server                   = local.docker_server
+//  docker_username                 = local.docker_username
 }
