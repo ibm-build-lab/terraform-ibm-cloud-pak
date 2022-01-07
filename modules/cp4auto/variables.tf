@@ -13,7 +13,7 @@ variable "cluster_config_path" {
 }
 
 variable "openshift_version" {
-  default     = "4.5"
+  default     = "4.6"
   description = "Openshift version installed in the cluster"
 }
 

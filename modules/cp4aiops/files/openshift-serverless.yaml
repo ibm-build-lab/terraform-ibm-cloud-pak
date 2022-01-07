@@ -1,12 +1,34 @@
+###############################################################################
+#
+# Licensed Materials - Property of IBM
+#
+# (C) Copyright IBM Corp. 2021. All Rights Reserved.
+#
+# US Government Users Restricted Rights - Use, duplication or
+# disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+#
+###############################################################################
+
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
   name: serverless-operator
   namespace: openshift-operators
 spec:
-  channel: stable
-  installPlanApproval: Automatic
+  channel: "4.6"
   name: serverless-operator
   source: redhat-operators
   sourceNamespace: openshift-marketplace
-  startingCSV: serverless-operator.v1.15.0
+
+#apiVersion: operators.coreos.com/v1alpha1
+#kind: Subscription
+#metadata:
+#  name: serverless-operator
+#  namespace: openshift-operators
+#spec:
+#  channel: "4.6"
+#  installPlanApproval: Automatic
+#  name: serverless-operator
+#  source: redhat-operators
+#  sourceNamespace: openshift-marketplace
+#  startingCSV: serverless-operator.v1.15.0

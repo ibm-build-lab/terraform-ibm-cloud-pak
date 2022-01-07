@@ -13,11 +13,6 @@ variable "cluster_config_path" {
   description = "Path to the Kubernetes configuration file to access your cluster"
 }
 
-variable "openshift_version" {
-  default     = "4.6"
-  description = "Openshift version installed in the cluster"
-}
-
 # variable "cluster_endpoint" {
 #   default     = "not-required"
 #   description = "URL to access the OpenShift cluster"
