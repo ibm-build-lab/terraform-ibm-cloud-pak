@@ -8,8 +8,12 @@ DOCKER_REGISTRY=${DOCKER_REGISTRY:-cp.icr.io}  # adjust this if needed
 
 
 # Configure a network policy for traffic between the Operator Lifecycle Manager and the CatalogSource service
+echo "Creating \"knative-serving\" namespace ..."
+${K8s_CMD} new-project knative-serving
+echo
+
 echo "Installing Openshift Serverless ..."
-kubectl apply --filename https://github.com/knative/serving/releases/download/v0.1.1/release.yaml
+${K8s_CMD} apply --filename https://github.com/knative/serving/releases/download/v0.1.1/release.yaml
 
 cat "${OC_SERVERLESS_FILE}"
 ${K8s_CMD} apply -f "${OC_SERVERLESS_FILE}"
