@@ -41,14 +41,12 @@ variable "entitled_registry_user" {
 }
 
 variable "namespace" {
-  default = "cpaiops"
+  default = "cp4aiops"
   description = "Namespace for Cloud Pak for AIOps"
 }
 
 
 locals {
-  entitled_registry        = "cp.icr.io"
-  entitled_registry_user   = "cp"
   docker_registry          = "cp.icr.io" // Staging: "cp.stg.icr.io/cp/cpd"
   docker_username          = "cp"               // "ekey"
   entitled_registry_key    = chomp(var.entitlement_key)

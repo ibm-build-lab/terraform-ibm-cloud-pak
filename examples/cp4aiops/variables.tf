@@ -1,4 +1,4 @@
-variable "cluster_name_or_id" {
+variable "cluster_id" {
   description = "Id of cluster for AIOps to be installed on"
 }
 
@@ -10,7 +10,7 @@ variable "region" {
   description = "Region that cluster resides in"
 }
 
-variable "resource_group_name" {
+variable "resource_group" {
   default     = "cloud-pak-sandbox-ibm"
   description = "Resource group that cluster resides in"
 }
