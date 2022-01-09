@@ -36,5 +36,5 @@ module "cp4aiops" {
 
   // AIOps specific parameters:
   namespace           = "cp4aiops"
-  ibmcloud_api_key = var.ibmcloud_api_key
+  ibmcloud_api_key    = var.ibmcloud_api_key
 }
