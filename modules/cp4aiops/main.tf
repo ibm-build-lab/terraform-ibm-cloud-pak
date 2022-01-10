@@ -16,37 +16,40 @@ resource "null_resource" "install_cp4aiops" {
   count = var.enable ? 1 : 0
 
   triggers = {
-    namespace_sha1                      = sha1(var.namespace)
-    docker_params_sha1                  = sha1(join("", [var.entitled_registry_user, local.entitled_registry_key]))
-    cp4aiops_sha1                       = sha1(local.cp4aiops_subscription)
-    oc_serverless_file_sha1             = sha1(local.oc_serverless_file_content)
-    knative_serving_file_sha1           = sha1(local.knative_serving_file_content)
-    knative_eventing_file_sha1          = sha1(local.knative_eventing_file)
+    namespace_sha1 = sha1(var.namespace)
+    docker_params_sha1 = sha1(join("", [
+      var.entitled_registry_user,
+      local.entitled_registry_key]))
+    cp4aiops_sha1 = sha1(local.cp4aiops_subscription)
+    oc_serverless_file_sha1 = sha1(local.oc_serverless_file_content)
+    knative_serving_file_sha1 = sha1(local.knative_serving_file_content)
+    knative_eventing_file_sha1 = sha1(local.knative_eventing_file)
   }
 
   provisioner "local-exec" {
-    command     = "./install_cp4aiops.sh"
+    command = "./install_cp4aiops.sh"
     working_dir = "${path.module}/scripts"
 
     environment = {
-      KUBECONFIG                    = var.cluster_config_path
-      NAMESPACE                     = var.namespace
-      ON_VPC                        = var.on_vpc
-      IC_API_KEY                    = var.ibmcloud_api_key
-      CP4WAIOPS                     = local.cp4aiops_subscription
-      DOCKER_REGISTRY_PASS          = var.entitlement_key
-      DOCKER_USER_EMAIL             = var.entitled_registry_user
-      DOCKER_USERNAME               = local.docker_username
-      DOCKER_REGISTRY               = local.docker_registry
+      KUBECONFIG = var.cluster_config_path
+      NAMESPACE = var.namespace
+      ON_VPC = var.on_vpc
+      IC_API_KEY = var.ibmcloud_api_key
+      CP4WAIOPS = local.cp4aiops_subscription
+      DOCKER_REGISTRY_PASS = var.entitlement_key
+      DOCKER_USER_EMAIL = var.entitled_registry_user
+      DOCKER_USERNAME = local.docker_username
+      DOCKER_REGISTRY = local.docker_registry
 
       # --- File Assignment ---
-      OC_SERVERLESS_FILE    = local.oc_serverless_file
-      KNATIVE_SERVING_FILE  = local.knative_serving_file
+      OC_SERVERLESS_FILE = local.oc_serverless_file
+      KNATIVE_SERVING_FILE = local.knative_serving_file
       KNATIVE_EVENTING_FILE = local.knative_eventing_file
 
-//      entitlement_key = var.entitlement_key
+      //      entitlement_key = var.entitlement_key
     }
   }
+
 
   depends_on = [
     local.on_vpc_ready,

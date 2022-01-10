@@ -1,10 +1,22 @@
 #!/bin/sh
 
+echo "it reads it ..."
 K8s_CMD=kubectl
 
 NAMESPACE=${NAMESPACE:-aiops}
 DOCKER_USERNAME=${DOCKER_USERNAME:-cp}
 DOCKER_REGISTRY=${DOCKER_REGISTRY:-cp.icr.io}  # adjust this if needed
+
+cat << EOF | oc apply -f -
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: cp4waiops-operator-group
+  namespace: cp4waiops
+spec:
+  targetNamespaces:
+    - ${NAMESPACE}
+EOF
 
 
 # Configure a network policy for traffic between the Operator Lifecycle Manager and the CatalogSource service
@@ -12,13 +24,13 @@ echo "Creating \"knative-serving\" namespace ..."
 ${K8s_CMD} new-project knative-serving
 echo
 
-echo "Installing Openshift Serverless ..."
-${K8s_CMD} apply --filename https://github.com/knative/serving/releases/download/v0.1.1/release.yaml
+#echo "Installing Openshift Serverless ..."
+#${K8s_CMD} apply --filename https://github.com/knative/serving/releases/download/v0.1.1/release.yaml
 
 cat "${OC_SERVERLESS_FILE}"
 ${K8s_CMD} apply -f "${OC_SERVERLESS_FILE}"
 echo
-
+#
 echo "Installing the Knative Serving Components ..."
 cat "${KNATIVE_SERVING_FILE}"
 ${K8s_CMD} apply -f "${KNATIVE_SERVING_FILE}"
@@ -28,9 +40,13 @@ echo "Installing the Knative Eventing Components ..."
 cat "${KNATIVE_EVENTING_FILE}"
 ${K8s_CMD} apply -f "${KNATIVE_EVENTING_FILE}"
 echo
-
+#
 # oc annotate knativeserving.operator.knative.dev/knative-serving -n knative-serving serving.knative.openshift.io/disableRoute=true
 #knativeserving.operator.knative.dev/knative-serving annotated
+
+echo "Creating \"openshift-local-storage\" namespace ..."
+${K8s_CMD} create namespace openshift-local-storage
+echo
 
 # Create custom namespace
 echo "Creating namespace ${NAMESPACE}"
@@ -52,13 +68,49 @@ create_secret() {
 
 create_secret ibm-entitlement-key "${NAMESPACE}"
 
+echo
+
+cat <<EOF | oc apply -n cp4waiops -f -
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: aiops-topology-service-account
+  labels:
+    managedByUser: 'true'
+imagePullSecrets:
+  - name: ibm-entitlement-key
+EOF
+
+# Ensuring that external traffic access to Ai Manager
+if [ $(oc get ingresscontroller default -n openshift-ingress-operator -o jsonpath='{.status.endpointPublishingStrategy.type}') = "HostNetwork" ];
+then oc patch namespace default --type=json -p '[{"op":"add","path":"/metadata/labels","value":{"network.openshift.io/policy-group":"ingress"}}]';
+fi
 
 # Configure a network policy for the IBM Cloud Pak for Watson AIOps routes
-echo "Configuring the network policy for CP4AIPS routes"
+#echo "Configuring the network policy for CP4AIPS routes"
 ${K8s_CMD} get ingresscontroller default -n openshift-ingress-operator -o yaml
 ${K8s_CMD} patch namespace default --type=json -p '[{"op":"add","path":"/metadata/labels","value":{"network.openshift.io/policy-group":"ingress"}}]'
 
+echo
+echo "Adding IBM Operators CatalogSource"
 
+cat << EOF | ${K8s_CMD} apply -f -
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: ibm-operator-catalog
+  namespace: openshift-marketplace
+spec:
+  displayName: ibm-operator-catalog
+  publisher: IBM Content
+  sourceType: grpc
+  image: docker.io/ibmcom/ibm-operator-catalog:latest
+  updateStrategy:
+    registryPoll:
+      interval: 45m
+EOF
+
+echo
 # Configure a network policy for traffic between the Operator Lifecycle Manager and the CatalogSource service
 echo "Configuring network policy for traffic between Operator Lifecycle Manager and CatalogSource service."
 
@@ -79,7 +131,7 @@ spec:
   - Ingress
 EOF
 
-
+echo
 echo "Adding IBM Cloud Pak for Watson AIOps Orchestrator CatalogSource"
 
 cat << EOF | ${K8s_CMD} apply -f -
@@ -94,24 +146,6 @@ spec:
   publisher: IBM
   sourceType: grpc
   image: icr.io/cpopen/aiops-orchestrator-catalog:3.1-latest
-  updateStrategy:
-    registryPoll:
-      interval: 45m
-EOF
-
-echo "Adding IBM Operators CatalogSource"
-
-cat << EOF | ${K8s_CMD} apply -f -
-apiVersion: operators.coreos.com/v1alpha1
-kind: CatalogSource
-metadata:
-  name: ibm-operator-catalog
-  namespace: openshift-marketplace
-spec:
-  displayName: ibm-operator-catalog 
-  publisher: IBM Content
-  sourceType: grpc
-  image: docker.io/ibmcom/ibm-operator-catalog:latest
   updateStrategy:
     registryPoll:
       interval: 45m
@@ -134,11 +168,58 @@ spec:
       interval: 45m
 EOF
 
+echo
+echo "Installing the AI Manager Operator ..."
+cat << EOF | oc apply -f -
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: ibm-aiops-orchestrator
+  namespace: openshift-operators
+spec:
+  channel: v3.2
+  installPlanApproval: Automatic
+  name: ibm-aiops-orchestrator
+  source: ibm-operator-catalog
+  sourceNamespace: openshift-marketplace
+EOF
+
+sleep 30
+
+echo
+kubectl get pods -n ${NAMESPACE} | grep ibm-aiops-orchestrator
+
+echo
+echo "Installing AI Manager ..."
+cat << EOF | oc apply -f -
+apiVersion: orchestrator.aiops.ibm.com/v1alpha1
+kind: Installation
+metadata:
+  name: ibm-cp-watson-aiops
+  namespace: ${NAMESPACE}
+spec:
+  imagePullSecret: ibm-entitlement-key
+  license:
+    accept: true
+  pakModules:
+  - name: aiopsFoundation
+    enabled: true
+  - name: applicationManager
+    enabled: true
+  - name: aiManager
+    enabled: true
+  - name: connection
+    enabled: false
+  size: small
+  storageClass: <storage_class_name>
+  storageClassLargeBlock: <large_block_storage_class_name>
+EOF
+
 echo "Sleeping 1 minutes for catalog services"
 sleep 60
 
-echo "Applying CP4WAIOPS subscription"
-echo "${CP4WAIOPS}" | ${K8s_CMD} apply -f -
+#echo "Applying CP4WAIOPS subscription"
+#echo "${CP4WAIOPS}" | ${K8s_CMD} apply -f -
 
 
 echo "Waiting 5 minutes for AIOps Operator to install..."
@@ -171,15 +252,15 @@ while true; do
   fi
 
   echo $STATUS_LONG
- 
+
   STATUS=$(echo $STATUS_LONG | jq -c -r '.locations')
   if [ $STATUS != "{}" ]; then
     break
   fi
-  
+
   echo "Sleeping $SLEEP_TIME seconds..."
   sleep $SLEEP_TIME
-  
+
 
   (( service_timeout_count++ ))
   # Checks to see if the service took too long. If so, it restarts the service
@@ -189,7 +270,7 @@ while true; do
 
     echo "Waited ${SERVICE_TIMEOUT_LIMIT} minutes. Deleting hanging AIOPS service."
     ${K8s_CMD} -n ${NAMESPACE} delete installation.orchestrator.aiops.ibm.com ibm-cp-watson-aiops
-    
+
     while true; do
       echo "Waiting for service to finish deleting..."
       if [ -z $(${K8s_CMD} -n cp4aiops get installation.orchestrator.aiops.ibm.com | grep ibm-cp-watson-aiops | awk '{print $1}') ]; then

@@ -10,11 +10,11 @@ kind: Namespace
 metadata:
   name: local-storage
 ---
-apiVersion: operators.coreos.com/v1
+apiVersion: operators.coreos.com/v1alpha2
 kind: OperatorGroup
 metadata:
   name: local-operator-group
-  namespace: local-storage
+  namespace: openshift-local-storage
 spec:
   targetNamespaces:
     - local-storage

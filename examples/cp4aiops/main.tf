@@ -28,7 +28,7 @@ module "cp4aiops" {
   enable    = true
   cluster_config_path     = data.ibm_container_cluster_config.cluster_config.config_file_path
   on_vpc                  = var.on_vpc
-  portworx_is_ready       = 1  // Assuming portworx is installed if using VPC infrastructure
+//  portworx_is_ready       = 1  // Assuming portworx is installed if using VPC infrastructure
 
   // Entitled Registry parameters:
   entitlement_key         = var.entitlement_key
