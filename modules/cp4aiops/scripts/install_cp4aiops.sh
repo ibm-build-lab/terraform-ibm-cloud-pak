@@ -1,6 +1,5 @@
 #!/bin/sh
 
-echo "it reads it ..."
 K8s_CMD=kubectl
 
 # Create custom namespace
@@ -32,21 +31,12 @@ cat ${STRIMZI_SUBSCRIPTION_FILE}
 ${K8s_CMD} apply -f "${STRIMZI_SUBSCRIPTION_FILE}"
 sleep 2
 
-#echo "Installing Openshift Serverless ..."
-#${K8s_CMD} apply --filename https://github.com/knative/serving/releases/download/v0.1.1/release.yaml
-
 echo
 cat "${OC_SERVERLESS_FILE}"
 ${K8s_CMD} apply -f "${OC_SERVERLESS_FILE}"
 sleep 2
 
 echo
-#
-#if [ $(oc annotate service.serving.knative.dev/kn-cli -n knative-serving serving.knative.openshift.io/disableRoute=true && sleep 30) ]
-#  ignore
-#then
-#  echo 'The newer versions of knative that route is not present'
-#fi
 
 echo "Installing the Knative Serving Components ..."
 cat "${KNATIVE_SERVING_FILE}"
@@ -66,9 +56,7 @@ cat "${KNATIVE_EVENTING_FILE}"
 ${K8s_CMD} apply -f "${KNATIVE_EVENTING_FILE}"
 sleep 2
 echo
-#
-# oc annotate knativeserving.operator.knative.dev/knative-serving -n knative-serving serving.knative.openshift.io/disableRoute=true
-#knativeserving.operator.knative.dev/knative-serving annotated
+
 secret_name="ibm-entitlement-key"
 echo "Creating \"${secret_name}\" name ..."
 sleep 2
@@ -223,10 +211,6 @@ echo
 echo "Sleeping 1 minutes for catalog services"
 sleep 60
 
-#echo "Applying CP4WAIOPS subscription"
-#echo "${CP4WAIOPS}" | ${K8s_CMD} apply -f -
-
-
 echo "Waiting for AIOps Operator to install..."
 sleep 60
 
@@ -289,10 +273,6 @@ EOF
 fi
 sleep 2
 echo
-#AIOPS_SERVICE=`sed -e "s/NAMESPACE/${NAMESPACE}/g" -e "s/STORAGE_CLASS/${storage_class}/g" -e "s/STORAGE_BLOCK_CLASS/${storage_block_class}/g" ../templates/cp-aiops-service.yaml.tmpl`
-#echo "Deploying Watson AIOPS Service ${AIOPS_SERVICE}"
-#sed -e "s/NAMESPACE/${NAMESPACE}/g" -e "s/STORAGE_CLASS/${storage_class}/g" -e "s/STORAGE_BLOCK_CLASS/${storage_block_class}/g" ../templates/cp-aiops-service.yaml.tmpl | ${K8s_CMD} -n ${NAMESPACE} apply -f -
-
 
 SLEEP_TIME="60"
 SERVICE_TIMEOUT_LIMIT=90
@@ -346,4 +326,5 @@ while true; do
 done
 
 echo
-echo '=== Installation Complete ==='
+echo '==================== Installation Complete ===================='
+echo 
