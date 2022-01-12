@@ -25,6 +25,9 @@ ${K8s_CMD} create namespace knative-serving
 
 sleep 2
 
+echo "Installing Knative Build ..."
+${K8s_CMD} apply --filename https://github.com/knative/serving/releases/download/v0.1.1/release.yaml
+
 echo
 echo "Applying strimzi-subscription ..."
 cat ${STRIMZI_SUBSCRIPTION_FILE}
