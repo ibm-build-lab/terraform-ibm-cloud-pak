@@ -1,7 +1,6 @@
 
 provider "ibm" {
   region = var.region
-  ibmcloud_api_key = var.ibmcloud_api_key
 }
 
 provider "kubernetes" {
@@ -18,6 +17,7 @@ module "cluster" {
   owner                = var.owner
   environment          = var.environment
   resource_group       = var.resource_group
+  ibmcloud_api_key     = var.ibmcloud_api_key
   roks_version         = var.roks_version
   entitlement          = var.entitlement
   force_delete_storage = var.force_delete_storage
