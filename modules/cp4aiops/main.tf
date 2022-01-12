@@ -10,10 +10,6 @@ locals {
   knative_eventing_file_content   = file(local.knative_eventing_file)
   strimzi_subscription_file       = "${path.module}/files/strimzi-subscription.yaml"
   strimzi_subscription_file_content = file(local.strimzi_subscription_file)
-//  cp_aiops_service_file           = templatefile("${path.module}/templates/cp-aiops-service.yaml.tmpl", {
-//    NAMESPACE   = var.namespace
-//
-//  })
 }
 
 # This section checks to see if the values have been updated through out the script running and is required for any dynamic value
@@ -52,8 +48,6 @@ resource "null_resource" "install_cp4aiops" {
       KNATIVE_EVENTING_FILE     = local.knative_eventing_file
       CP4WAIOPS                 = local.cp4aiops_subscription
       STRIMZI_SUBSCRIPTION_FILE = local.strimzi_subscription_file
-
-      //      entitlement_key = var.entitlement_key
     }
   }
 

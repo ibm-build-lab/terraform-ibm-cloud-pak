@@ -28,7 +28,6 @@ In your Terraform code define the `ibm` provisioner block with the `region` and 
 ```hcl
 provider "ibm" {
   region     = "us-south"
-  version    = "~> 1.12"
 }
 ```
 
