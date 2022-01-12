@@ -54,19 +54,16 @@ resource "null_resource" "install_cp4aiops" {
 
   depends_on = [
     local.on_vpc_ready
-//    null_resource.prereqs_checkpoint
   ]
 }
 
 data "external" "get_endpoints" {
   count = var.enable ? 1 : 0
-
   depends_on = [
     null_resource.install_cp4aiops
   ]
 
   program = ["/bin/bash", "${path.module}/scripts/get_endpoints.sh"]
-
   query = {
     KUBECONFIG = var.cluster_config_path
     NAMESPACE  = var.namespace
