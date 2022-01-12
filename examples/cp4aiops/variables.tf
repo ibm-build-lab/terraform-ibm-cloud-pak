@@ -31,7 +31,11 @@ variable "entitled_registry_user" {
   description = "Docker email address"
 }
 
+variable "namespace" {
+  default = "cp4aiops"
+  description = "Namespace for Cloud Pak for AIOps"
+}
+
 locals {
   cluster_config_path = "./.kube/config"
 }
-

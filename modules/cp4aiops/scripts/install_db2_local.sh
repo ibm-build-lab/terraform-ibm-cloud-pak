@@ -34,7 +34,7 @@ EOF
 
 
 echo "Waiting 2 minutes for local-storage operator to install"
-sleep 120
+sleep 60
 
 echo "Applying the Db2 LocalVolume to the cluster."
 
@@ -55,4 +55,3 @@ spec:
       devicePaths:
       - ${path_to_disk}
 EOF
-

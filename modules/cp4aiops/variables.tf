@@ -1,10 +1,10 @@
+variable "ibmcloud_api_key" {
+  description = "IBMCloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
+}
+
 variable "enable" {
   default     = true
   description = "If set to true installs Cloud-Pak for Data on the given cluster"
-}
-
-variable "ibmcloud_api_key" {
-  description = "IBMCloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
 }
 
 variable "force" {
@@ -47,8 +47,8 @@ variable "namespace" {
 
 
 locals {
-  docker_registry          = "cp.icr.io" // Staging: "cp.stg.icr.io/cp/cpd"
-  docker_username          = "cp"               // "ekey"
+  docker_registry          = "cp.icr.io"
+  docker_username          = "cp"
   entitled_registry_key    = chomp(var.entitlement_key)
   openshift_version_regex  = regex("(\\d+).(\\d+)(.\\d+)*(_openshift)*", var.openshift_version)
   openshift_version_number = local.openshift_version_regex[3] == "_openshift" ? tonumber("${local.openshift_version_regex[0]}.${local.openshift_version_regex[1]}") : 0
