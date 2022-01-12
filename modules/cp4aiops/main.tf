@@ -8,7 +8,12 @@ locals {
   knative_serving_file_content    = file(local.knative_serving_file)
   knative_eventing_file           = "${path.module}/files/knative-eventing.yaml"
   knative_eventing_file_content   = file(local.knative_eventing_file)
-
+  strimzi_subscription_file       = "${path.module}/files/strimzi-subscription.yaml"
+  strimzi_subscription_file_content = file(local.strimzi_subscription_file)
+//  cp_aiops_service_file           = templatefile("${path.module}/templates/cp-aiops-service.yaml.tmpl", {
+//    NAMESPACE   = var.namespace
+//
+//  })
 }
 
 # This section checks to see if the values have been updated through out the script running and is required for any dynamic value
@@ -23,7 +28,8 @@ resource "null_resource" "install_cp4aiops" {
     cp4aiops_sha1 = sha1(local.cp4aiops_subscription)
     oc_serverless_file_sha1 = sha1(local.oc_serverless_file_content)
     knative_serving_file_sha1 = sha1(local.knative_serving_file_content)
-    knative_eventing_file_sha1 = sha1(local.knative_eventing_file)
+    knative_eventing_file_sha1 = sha1(local.knative_eventing_file_content)
+    strimzi_subscription_file_sha1 = sha1(local.strimzi_subscription_file_content)
   }
 
   provisioner "local-exec" {
@@ -31,20 +37,21 @@ resource "null_resource" "install_cp4aiops" {
     working_dir = "${path.module}/scripts"
 
     environment = {
-      KUBECONFIG = var.cluster_config_path
-      NAMESPACE = var.namespace
-      ON_VPC = var.on_vpc
-      IC_API_KEY = var.ibmcloud_api_key
-      CP4WAIOPS = local.cp4aiops_subscription
-      DOCKER_REGISTRY_PASS = var.entitlement_key
-      DOCKER_USER_EMAIL = var.entitled_registry_user
-      DOCKER_USERNAME = local.docker_username
-      DOCKER_REGISTRY = local.docker_registry
+      KUBECONFIG                = var.cluster_config_path
+      NAMESPACE                 = var.namespace
+      ON_VPC                    = var.on_vpc
+      IC_API_KEY                = var.ibmcloud_api_key
+      DOCKER_REGISTRY_PASS      = var.entitlement_key
+      DOCKER_USER_EMAIL         = var.entitled_registry_user
+      DOCKER_USERNAME           = local.docker_username
+      DOCKER_REGISTRY           = local.docker_registry
 
       # --- File Assignment ---
-      OC_SERVERLESS_FILE = local.oc_serverless_file
-      KNATIVE_SERVING_FILE = local.knative_serving_file
-      KNATIVE_EVENTING_FILE = local.knative_eventing_file
+      OC_SERVERLESS_FILE        = local.oc_serverless_file
+      KNATIVE_SERVING_FILE      = local.knative_serving_file
+      KNATIVE_EVENTING_FILE     = local.knative_eventing_file
+      CP4WAIOPS                 = local.cp4aiops_subscription
+      STRIMZI_SUBSCRIPTION_FILE = local.strimzi_subscription_file
 
       //      entitlement_key = var.entitlement_key
     }
@@ -52,8 +59,8 @@ resource "null_resource" "install_cp4aiops" {
 
 
   depends_on = [
-    local.on_vpc_ready,
-    null_resource.prereqs_checkpoint
+    local.on_vpc_ready
+//    null_resource.prereqs_checkpoint
   ]
 }
 
@@ -67,7 +74,7 @@ data "external" "get_endpoints" {
   program = ["/bin/bash", "${path.module}/scripts/get_endpoints.sh"]
 
   query = {
-    kubeconfig = var.cluster_config_path
-    namespace  = var.namespace
+    KUBECONFIG = var.cluster_config_path
+    NAMESPACE  = var.namespace
   }
 }

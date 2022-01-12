@@ -3,54 +3,76 @@
 echo "it reads it ..."
 K8s_CMD=kubectl
 
-NAMESPACE=${NAMESPACE:-aiops}
-DOCKER_USERNAME=${DOCKER_USERNAME:-cp}
-DOCKER_REGISTRY=${DOCKER_REGISTRY:-cp.icr.io}  # adjust this if needed
+# Create custom namespace
+echo "Creating namespace ${NAMESPACE}"
+kubectl create namespace "${NAMESPACE}"
 
 cat << EOF | oc apply -f -
 apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
 metadata:
-  name: cp4waiops-operator-group
-  namespace: cp4waiops
+  name: cp4aiops-operator-group
+  namespace: ${NAMESPACE}
 spec:
   targetNamespaces:
     - ${NAMESPACE}
 EOF
 
+sleep 2
 
 # Configure a network policy for traffic between the Operator Lifecycle Manager and the CatalogSource service
 echo "Creating \"knative-serving\" namespace ..."
-${K8s_CMD} new-project knative-serving
+${K8s_CMD} create namespace knative-serving
+
+sleep 2
+
 echo
+echo "Applying strimzi-subscription ..."
+cat ${STRIMZI_SUBSCRIPTION_FILE}
+${K8s_CMD} apply -f "${STRIMZI_SUBSCRIPTION_FILE}"
+sleep 2
 
 #echo "Installing Openshift Serverless ..."
 #${K8s_CMD} apply --filename https://github.com/knative/serving/releases/download/v0.1.1/release.yaml
 
+echo
 cat "${OC_SERVERLESS_FILE}"
 ${K8s_CMD} apply -f "${OC_SERVERLESS_FILE}"
+sleep 2
+
 echo
 #
+#if [ $(oc annotate service.serving.knative.dev/kn-cli -n knative-serving serving.knative.openshift.io/disableRoute=true && sleep 30) ]
+#  ignore
+#then
+#  echo 'The newer versions of knative that route is not present'
+#fi
+
 echo "Installing the Knative Serving Components ..."
 cat "${KNATIVE_SERVING_FILE}"
 ${K8s_CMD} apply -f "${KNATIVE_SERVING_FILE}"
+sleep 2
+echo
+
+
+
+echo "Creating \"openshift-local-storage\" namespace ..."
+${K8s_CMD} create namespace openshift-local-storage
+sleep 2
 echo
 
 echo "Installing the Knative Eventing Components ..."
 cat "${KNATIVE_EVENTING_FILE}"
 ${K8s_CMD} apply -f "${KNATIVE_EVENTING_FILE}"
+sleep 2
 echo
 #
 # oc annotate knativeserving.operator.knative.dev/knative-serving -n knative-serving serving.knative.openshift.io/disableRoute=true
 #knativeserving.operator.knative.dev/knative-serving annotated
-
-echo "Creating \"openshift-local-storage\" namespace ..."
-${K8s_CMD} create namespace openshift-local-storage
-echo
-
-# Create custom namespace
-echo "Creating namespace ${NAMESPACE}"
-kubectl create namespace "${NAMESPACE}" --dry-run=client -o yaml | kubectl apply -f -
+secret_name="ibm-entitlement-key"
+echo "Creating \"${secret_name}\" name ..."
+sleep 2
+kubectl apply -f -
 
 create_secret() {
   secret_name=$1
@@ -66,11 +88,12 @@ create_secret() {
     --namespace=${namespace}
 }
 
-create_secret ibm-entitlement-key "${NAMESPACE}"
+create_secret ${secret_name} "${NAMESPACE}"
+sleep 2
 
 echo
 
-cat <<EOF | oc apply -n cp4waiops -f -
+cat <<EOF | oc apply -n ${NAMESPACE} -f -
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -80,6 +103,7 @@ metadata:
 imagePullSecrets:
   - name: ibm-entitlement-key
 EOF
+sleep 2
 
 # Ensuring that external traffic access to Ai Manager
 if [ $(oc get ingresscontroller default -n openshift-ingress-operator -o jsonpath='{.status.endpointPublishingStrategy.type}') = "HostNetwork" ];
@@ -109,6 +133,7 @@ spec:
     registryPoll:
       interval: 45m
 EOF
+sleep 2
 
 echo
 # Configure a network policy for traffic between the Operator Lifecycle Manager and the CatalogSource service
@@ -130,6 +155,7 @@ spec:
   - Egress
   - Ingress
 EOF
+sleep 2
 
 echo
 echo "Adding IBM Cloud Pak for Watson AIOps Orchestrator CatalogSource"
@@ -150,6 +176,7 @@ spec:
     registryPoll:
       interval: 45m
 EOF
+sleep 2
 
 echo "Adding IBM Common Services CatalogSource"
 cat << EOF | ${K8s_CMD} apply -f -
@@ -167,6 +194,8 @@ spec:
     registryPoll:
       interval: 45m
 EOF
+
+sleep 2
 
 echo
 echo "Installing the AI Manager Operator ..."
@@ -190,7 +219,23 @@ echo
 kubectl get pods -n ${NAMESPACE} | grep ibm-aiops-orchestrator
 
 echo
-echo "Installing AI Manager ..."
+
+echo "Sleeping 1 minutes for catalog services"
+sleep 60
+
+#echo "Applying CP4WAIOPS subscription"
+#echo "${CP4WAIOPS}" | ${K8s_CMD} apply -f -
+
+
+echo "Waiting for AIOps Operator to install..."
+sleep 60
+
+# TODO:
+# Potentially pull this out and put it into the TF script instead.
+if ${ON_VPC}; then
+  storage_class="portworx-fs"
+  storage_block_class="portworx-aiops"
+  echo "Installing AI Manager ..."
 cat << EOF | oc apply -f -
 apiVersion: orchestrator.aiops.ibm.com/v1alpha1
 kind: Installation
@@ -211,32 +256,42 @@ spec:
   - name: connection
     enabled: false
   size: small
-  storageClass: <storage_class_name>
-  storageClassLargeBlock: <large_block_storage_class_name>
+  storageClass: ${storage_class}
+  storageClassLargeBlock: ${storage_block_class}
 EOF
-
-echo "Sleeping 1 minutes for catalog services"
-sleep 60
-
-#echo "Applying CP4WAIOPS subscription"
-#echo "${CP4WAIOPS}" | ${K8s_CMD} apply -f -
-
-
-echo "Waiting 5 minutes for AIOps Operator to install..."
-sleep 300
-
-# TODO:
-# Potentially pull this out and put it into the TF script instead.
-if ${ON_VPC}; then
-  storage_class="portworx-fs"
-  storage_block_class="portworx-aiops"
 else
   storage_class="ibmc-file-gold-gid"
   storage_block_class="ibmc-file-gold-gid"
+  echo "Installing AI Manager ..."
+cat << EOF | oc apply -f -
+apiVersion: orchestrator.aiops.ibm.com/v1alpha1
+kind: Installation
+metadata:
+  name: ibm-cp-watson-aiops
+  namespace: ${NAMESPACE}
+spec:
+  imagePullSecret: ibm-entitlement-key
+  license:
+    accept: true
+  pakModules:
+  - name: aiopsFoundation
+    enabled: true
+  - name: applicationManager
+    enabled: true
+  - name: aiManager
+    enabled: true
+  - name: connection
+    enabled: false
+  size: small
+  storageClass: ${storage_class}
+  storageClassLargeBlock: ${storage_block_class}
+EOF
 fi
-AIOPS_SERVICE=`sed -e "s/NAMESPACE/${NAMESPACE}/g" -e "s/STORAGE_CLASS/${storage_class}/g" -e "s/STORAGE_BLOCK_CLASS/${storage_block_class}/g" ../templates/cp-aiops-service.yaml`
-echo "Deploying Watson AIOPS Service ${AIOPS_SERVICE}"
-sed -e "s/NAMESPACE/${NAMESPACE}/g" -e "s/STORAGE_CLASS/${storage_class}/g" -e "s/STORAGE_BLOCK_CLASS/${storage_block_class}/g" ../templates/cp-aiops-service.yaml | ${K8s_CMD} -n ${NAMESPACE} apply -f -
+sleep 2
+echo
+#AIOPS_SERVICE=`sed -e "s/NAMESPACE/${NAMESPACE}/g" -e "s/STORAGE_CLASS/${storage_class}/g" -e "s/STORAGE_BLOCK_CLASS/${storage_block_class}/g" ../templates/cp-aiops-service.yaml.tmpl`
+#echo "Deploying Watson AIOPS Service ${AIOPS_SERVICE}"
+#sed -e "s/NAMESPACE/${NAMESPACE}/g" -e "s/STORAGE_CLASS/${storage_class}/g" -e "s/STORAGE_BLOCK_CLASS/${storage_block_class}/g" ../templates/cp-aiops-service.yaml.tmpl | ${K8s_CMD} -n ${NAMESPACE} apply -f -
 
 
 SLEEP_TIME="60"
@@ -273,14 +328,14 @@ while true; do
 
     while true; do
       echo "Waiting for service to finish deleting..."
-      if [ -z $(${K8s_CMD} -n cp4aiops get installation.orchestrator.aiops.ibm.com | grep ibm-cp-watson-aiops | awk '{print $1}') ]; then
+      if [ -z $(${K8s_CMD} -n ${NAMESPACE} get installation.orchestrator.aiops.ibm.com | grep ibm-cp-watson-aiops | awk '{print $1}') ]; then
         break
       fi
       sleep $SLEEP_TIME
     done
 
     echo "Recreating AIOPS service..."
-    sed -e "s/NAMESPACE/${NAMESPACE}/g" -e "s/STORAGE_CLASS/${storage_class}/g" -e "s/STORAGE_BLOCK_CLASS/${storage_block_class}/g" ../templates/cp-aiops-service.yaml | ${K8s_CMD} -n ${NAMESPACE} apply -f -
+    sed -e "s/NAMESPACE/${NAMESPACE}/g" -e "s/STORAGE_CLASS/${storage_class}/g" -e "s/STORAGE_BLOCK_CLASS/${storage_block_class}/g" ../templates/cp-aiops-service.yaml.tmpl | ${K8s_CMD} -n ${NAMESPACE} apply -f -
   fi
 
   # If the service has been restarted 2 times, it will quit and time out.
@@ -290,4 +345,5 @@ while true; do
   fi
 done
 
+echo
 echo '=== Installation Complete ==='

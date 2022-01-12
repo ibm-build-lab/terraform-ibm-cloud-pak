@@ -24,7 +24,7 @@ data "ibm_container_cluster_config" "cluster_config" {
 
 // Module:
 module "cp4aiops" {
-  source    = "../../modules/cp4aiops"
+  source    = "../../../modules/cp4aiops"
   enable    = true
   cluster_config_path     = data.ibm_container_cluster_config.cluster_config.config_file_path
   on_vpc                  = var.on_vpc
