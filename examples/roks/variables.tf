@@ -1,3 +1,6 @@
+variable "ibmcloud_api_key" {
+  description = "IBMCloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
+}
 
 variable "on_vpc" {
   default     = false

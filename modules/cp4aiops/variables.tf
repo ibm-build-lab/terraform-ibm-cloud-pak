@@ -1,10 +1,10 @@
+variable "ibmcloud_api_key" {
+  description = "IBMCloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
+}
+
 variable "enable" {
   default     = true
   description = "If set to true installs Cloud-Pak for Data on the given cluster"
-}
-
-variable "ibmcloud_api_key" {
-  description = "IBMCloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
 }
 
 variable "force" {
