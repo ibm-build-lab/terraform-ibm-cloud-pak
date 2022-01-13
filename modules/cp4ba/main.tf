@@ -11,11 +11,11 @@ locals {
   roles_file_content                    = file(local.roles_file)
   role_binding_file                     = "${path.module}/files/role_binding.yaml"
   role_binding_content                  = file(local.role_binding_file)
-  cp4ba_subscription_file               = "${path.module}/files/cp4ba_subscription.yaml"
-  cp4ba_subscription_file_content       = file(local.cp4ba_subscription_file)
-//  cp4ba_subscription_file_content       = templatefile("${path.module}/templates/cp4ba_subscription.yaml.tmpl", {
-//    namespace = var.cp4ba_project_name
-//  })
+//  cp4ba_subscription_file               = "${path.module}/files/cp4ba_subscription.yaml"
+//  cp4ba_subscription_file_content       = file(local.cp4ba_subscription_file)
+  cp4ba_subscription_file_content       = templatefile("${path.module}/templates/cp4ba_subscription.yaml.tmpl", {
+    namespace = var.cp4ba_project_name
+  })
   cp4ba_deployment_credentials_file     = "${path.module}/templates/cp4ba_deployment_credentials.yaml.tmpl"
   cp4ba_deployment_credentials_file_content = file(local.cp4ba_deployment_credentials_file)
   cp4ba_deployment_file_content         = templatefile("${path.module}/templates/cp4ba_deployment.yaml.tmpl", {
