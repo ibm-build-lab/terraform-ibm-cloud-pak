@@ -8,7 +8,7 @@ variable "cluster_config_path" {
 }
 
 variable "cluster_name_id" {
-  default = ""
+  default     = ""
   description = "Name or id of the cluster"
 }
 
@@ -69,10 +69,10 @@ variable "install_tech_prev_module" {
 }
 
 locals {
-  mcm_namespace            = "cp4mcm"
-  entitled_registry        = "cp.icr.io"
-  entitled_registry_user   = "cp"
-  entitled_registry_key    = chomp(var.entitled_registry_key)
+  mcm_namespace          = "cp4mcm"
+  entitled_registry      = "cp.icr.io"
+  entitled_registry_user = "cp"
+  entitled_registry_key  = chomp(var.entitled_registry_key)
   # ibmcloud_api_key         = chomp(var.ibmcloud_api_key)
   openshift_version_regex  = regex("(\\d+).(\\d+)(.\\d+)*(_openshift)*", var.openshift_version)
   openshift_version_number = local.openshift_version_regex[3] == "_openshift" ? tonumber("${local.openshift_version_regex[0]}.${local.openshift_version_regex[1]}") : 0

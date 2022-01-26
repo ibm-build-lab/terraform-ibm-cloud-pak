@@ -4,6 +4,7 @@ variable "enable" {
 }
 
 variable "cluster_config_path" {
+  default     = "./.kube/config"
   description = "Path to the Kubernetes configuration file to access your cluster"
 }
 
@@ -22,11 +23,11 @@ variable "entitled_registry_user_email" {
 }
 
 variable "namespace" {
-  default = "cp4aiops"
+  default     = "cp4aiops"
   description = "Namespace for Cloud Pak for Integration"
 }
 
 locals {
-  docker_registry          = "cp.icr.io" 
-  docker_username          = "cp"
- }
+  docker_registry = "cp.icr.io"
+  docker_username = "cp"
+}

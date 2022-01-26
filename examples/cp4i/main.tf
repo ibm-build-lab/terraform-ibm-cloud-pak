@@ -1,7 +1,3 @@
-provider "ibm" {
-  version          = "~> 1.12"
-}
-
 data "ibm_resource_group" "group" {
   name = var.resource_group_name
 }
@@ -14,7 +10,7 @@ resource "null_resource" "mkdir_kubeconfig_dir" {
 }
 
 data "ibm_container_cluster_config" "cluster_config" {
-  depends_on = [null_resource.mkdir_kubeconfig_dir]
+  depends_on        = [null_resource.mkdir_kubeconfig_dir]
   cluster_name_id   = var.cluster_id
   resource_group_id = data.ibm_resource_group.group.id
   config_dir        = local.kube_config_path
@@ -33,5 +29,5 @@ module "cp4i" {
   entitled_registry_key        = var.entitled_registry_key
   entitled_registry_user_email = var.entitled_registry_user_email
 
-  namespace           = "cp4i"
+  namespace = "cp4i"
 }

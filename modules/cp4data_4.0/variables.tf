@@ -38,7 +38,7 @@ variable "cluster_config_path" {
 }
 
 variable "openshift_version" {
-  default     = "4.6"
+  default     = "4.7"
   description = "Openshift version installed in the cluster"
 }
 
@@ -74,7 +74,7 @@ variable "worker_node_flavor" {
 }
 
 variable "portworx_is_ready" {
-  type = any
+  type    = any
   default = null
 }
 // Modules available to install on CP4D
@@ -86,102 +86,102 @@ variable "empty_module_list" {
 }
 
 variable "install_wsl" {
-  default = false
-  type = string
+  default     = false
+  type        = string
   description = "Install WSL module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_aiopenscale" {
-  default = false
-  type = string
+  default     = false
+  type        = string
   description = "Install AI Open Scale module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_wml" {
-  default = false
-  type = string
+  default     = false
+  type        = string
   description = "Install Watson Machine Learning module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_wkc" {
-  default = false
-  type = string
+  default     = false
+  type        = string
   description = "Install Watson Knowledge Catalog module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_dv" {
-  default = false
-  type = string
+  default     = false
+  type        = string
   description = "Install Data Virtualization module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_spss" {
-  default = false
-  type = string
+  default     = false
+  type        = string
   description = "Install SPSS module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_cde" {
-  default = false
-  type = string
+  default     = false
+  type        = string
   description = "Install CDE module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_spark" {
-  default = false
-  type = string
+  default     = false
+  type        = string
   description = "Install Analytics Engine powered by Apache Spark module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_dods" {
-  default = false
-  type = string
+  default     = false
+  type        = string
   description = "Install DODS module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_ca" {
-  default = false
-  type = string
+  default     = false
+  type        = string
   description = "Install CA module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_ds" {
-  default = false
-  type = string
+  default     = false
+  type        = string
   description = "Install DS module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_db2oltp" {
-  default = false
-  type = string
+  default     = false
+  type        = string
   description = "Install DB2OLTP module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_db2wh" {
-  default = false
-  type = string
+  default     = false
+  type        = string
   description = "Install DB2WH module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_big_sql" {
-  default = false
-  type = string
+  default     = false
+  type        = string
   description = "Install Big SQL module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_wsruntime" {
-  default = false
-  type = string
+  default     = false
+  type        = string
   description = "Install WS Runtime. Only for Cloud Pak for Data v4.0"
 }
 
 locals {
-  namespace                = "default"
-  entitled_registry        = "cp.icr.io"
-  entitled_registry_user   = "cp"
-  docker_registry          = "cp.icr.io" // Staging: "cp.stg.icr.io/cp/cpd"
-  docker_username          = "cp"               // "ekey"
-  entitled_registry_key    = chomp(var.entitled_registry_key)
+  namespace              = "default"
+  entitled_registry      = "cp.icr.io"
+  entitled_registry_user = "cp"
+  docker_registry        = "cp.icr.io" // Staging: "cp.stg.icr.io/cp/cpd"
+  docker_username        = "cp"        // "ekey"
+  entitled_registry_key  = chomp(var.entitled_registry_key)
   # ibmcloud_api_key         = chomp(var.ibmcloud_api_key)
   openshift_version_regex  = regex("(\\d+).(\\d+)(.\\d+)*(_openshift)*", var.openshift_version)
   openshift_version_number = local.openshift_version_regex[3] == "_openshift" ? tonumber("${local.openshift_version_regex[0]}.${local.openshift_version_regex[1]}") : 0

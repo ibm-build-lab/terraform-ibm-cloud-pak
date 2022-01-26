@@ -1,7 +1,7 @@
 // Requirements:
 
 provider "ibm" {
-  region     = "us-south"
+  region = "us-south"
 }
 
 data "ibm_resource_group" "group" {

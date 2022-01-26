@@ -2,7 +2,7 @@
 
 This Terraform Module installs **Cloud Pak for Integration** on an Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4i`
+**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4i`
 
 - [Terraform Module to install Cloud Pak for Integration](#terraform-module-to-install-cloud-pak-for-integration)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
@@ -21,19 +21,11 @@ Go [here](../CREDENTIALS.md) for details.
 
 ## Provisioning this module in a Terraform Script
 
-In your Terraform script define the `ibm` provisioner block with the `version`.
-
-```hcl
-provider "ibm" {
-  version          = "~> 1.12"
-}
-```
-
 ### Setting up the OpenShift cluster
 
 NOTE: an OpenShift cluster is required to install the Cloud Pak. This can be an existing cluster or can be provisioned using our `roks` Terraform module.
 
-To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script. The recommended size for an OpenShift 4.6 cluster on IBM Cloud Classic contains `4` workers of flavor `b3c.16x64`, however read the [Cloud Pak for Integration documentation](https://www.ibm.com/docs/en/cloud-paks/cp-integration) to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
+To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script. The recommended size for an OpenShift cluster on IBM Cloud Classic contains `4` workers of flavor `b3c.16x64`, however read the [Cloud Pak for Integration documentation](https://www.ibm.com/docs/en/cloud-paks/cp-integration) to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
 
 Add the following code to get the OpenShift cluster (new or existing) configuration:
 
@@ -66,7 +58,7 @@ Output:
 
 ### Using the CP4I Module
 
-Use a `module` block assigning the `source` parameter to the location of this module `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4i`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Integration.
+Use a `module` block assigning the `source` parameter to the location of this module `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4i`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Integration.
 
 ```hcl
 module "cp4i" {

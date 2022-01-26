@@ -3,7 +3,7 @@ variable "cluster_id" {
   description = "ROKS cluster id. Use the ROKS terraform module or other way to create it"
 }
 
-variable "entitlement_key"{
+variable "entitlement_key" {
   description = "entitlement key"
 }
 

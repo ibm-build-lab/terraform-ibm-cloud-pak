@@ -6,15 +6,15 @@ resource "ibm_is_vpc" "vpc" {
     "env:${var.environment}",
     "owner:${var.owner}"
   ]
-  resource_group           = data.ibm_resource_group.group.id
+  resource_group = data.ibm_resource_group.group.id
 }
 
 resource "ibm_is_public_gateway" "gateway" {
-  count = var.enable && var.on_vpc ? local.max_size : 0
-  name  = "${var.project_name}-${var.environment}-gateway-${format("%02s", count.index)}"
-  vpc   = var.on_vpc ? ibm_is_vpc.vpc[0].id : 0
-  zone  = var.vpc_zone_names[count.index]
-  resource_group           = data.ibm_resource_group.group.id
+  count          = var.enable && var.on_vpc ? local.max_size : 0
+  name           = "${var.project_name}-${var.environment}-gateway-${format("%02s", count.index)}"
+  vpc            = var.on_vpc ? ibm_is_vpc.vpc[0].id : 0
+  zone           = var.vpc_zone_names[count.index]
+  resource_group = data.ibm_resource_group.group.id
 }
 
 resource "ibm_is_subnet" "subnet" {

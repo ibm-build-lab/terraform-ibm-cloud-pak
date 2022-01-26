@@ -8,8 +8,8 @@ variable "cluster_id" {
 }
 
 variable "on_vpc" {
-  type = bool
-  default = false
+  type        = bool
+  default     = false
   description = "Is cluster a VPC cluster"
 }
 
@@ -24,7 +24,7 @@ variable "zone" {
 }
 
 variable "entitled_registry_user_email" {
-  type = string
+  type        = string
   description = "Email address of the owner of the Entitled Registry Key"
 }
 
@@ -40,36 +40,36 @@ variable "resource_group" {
 }
 
 variable "install_infr_mgt_module" {
-  type = bool
+  type        = bool
   default     = false
   description = "Install Infrastructure Management module"
 }
 
 variable "install_monitoring_module" {
-  type = bool
+  type        = bool
   default     = false
   description = "Install Monitoring module"
 }
 
 variable "install_security_svcs_module" {
-  type = bool
+  type        = bool
   default     = false
   description = "Install Security Services module"
 }
 
 variable "install_operations_module" {
-  type = bool
+  type        = bool
   default     = false
   description = "Install Operations module"
 }
 
 variable "install_tech_prev_module" {
-  type = bool
+  type        = bool
   default     = false
   description = "Install Tech Preview module"
 }
 
 locals {
-  namespace = "cp4mcm"
+  namespace  = "cp4mcm"
   config_dir = "./.kube/config"
 }

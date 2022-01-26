@@ -25,7 +25,7 @@ variable "portworx_is_ready" {
 }
 
 variable "openshift_version" {
-  default     = "4.6"
+  default     = "4.7"
   type        = string
   description = "Openshift version installed in the cluster"
 }

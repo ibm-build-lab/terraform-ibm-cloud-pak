@@ -2,7 +2,7 @@
 
 This Terraform Module installs **Cloud Pak for Security Operator** on an Openshift (ROKS) cluster on IBM Cloud. Once the Terraform module has run a cluster will install the CP4S operator creating the threat management resource.  After the threat management resource is created further configuration will be needed, you can follow the instructions on the CP4S documentation [here](https://www.ibm.com/docs/en/cloud-paks/cp-security/1.8?topic=security-postinstallation)
 
-**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4s`
+**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4s`
 
 - [Terraform Module to install Cloud Pak for Security](#terraform-module-to-install-cloud-pak-for-security)
   - [Required command line tools](#setup-tools)
@@ -64,11 +64,11 @@ Output:
 
 ### Using the CP4S Module
 
-Use a `module` block assigning the `source` parameter to the location of this module `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4s`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Security.
+Use a `module` block assigning the `source` parameter to the location of this module `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4s`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Security.
 
 ```hcl
 module "cp4s" {
-  source          = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4s"
+  source          = "github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4s"
   enable          = true
 
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path

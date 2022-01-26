@@ -8,12 +8,6 @@ variable "cluster_id" {
   description = "The id of the cluster"
 }
 
-variable "enable" {
-  default     = true
-  type        = bool
-  description = "If set to true installs Cloud-Pak for Security on the given cluster"
-}
-
 variable "cluster_config_path" {
   type        = string
   description = "Path to the Kubernetes configuration file to access your cluster"

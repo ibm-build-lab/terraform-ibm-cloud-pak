@@ -31,5 +31,7 @@ echo '*** executing **** oc create -f big-sql-cr.yaml'
 result=$(oc create -f big-sql-cr.yaml)
 echo $result
 
+cd ../scripts
+
 # check the bigsql cr status
 ./check-cr-status.sh bigsqlservice bigsql-service ${NAMESPACE} reconcileStatus

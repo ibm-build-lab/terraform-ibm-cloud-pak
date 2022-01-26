@@ -18,7 +18,6 @@ Create the file `test.auto.tfvars` with the following input variables, these val
 
 ```hcl
 source          = "./.."
-enable          = var.enable
 
 // ROKS cluster parameters:
 cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path

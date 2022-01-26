@@ -80,11 +80,14 @@ terraform apply -auto-approve
 
 ### Verify
 
-To verify installation on the Kubernetes cluster go to the console and go to the `Installed Operators` tab. Click on IBM Cloud Pak for Data and click on `Cloud Pak for Data Service` tab. Finally check the status of the lite-cpdservice.
+To verify installation on the Kubernetes cluster, run the following command: `kubectl -n cp4d get cpdservice lite-cpdservice --output=json | jq -c -r '.status'`
+
+To verify any additional cartridges, login to the CPD dashboard and click on the hamburger menu in the top left of the dashboard. Choose Services -> Services Catalog. On the next screen, click the Status drop down on the left side of the screen and choose `Enabled`. The cartridges will be displayed on the screen.
+
 
 ### Cleanup
 
-Go into the console and delete `cpd_project_name` and `cpd-meta-ops` projects.
+Go into the console and delete `cp4d` and `cpd-meta-ops` projects.
 
 Under `kube-system` daemon-sets, remove `norootsquash` and `kernel-optimization`.
 

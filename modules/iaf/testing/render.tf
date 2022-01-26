@@ -4,11 +4,11 @@ locals {
   })
 
   AutomationBase = templatefile("../templates/AutomationBase.yaml.tmpl", {
-    namespace                = "iaf",
+    namespace = "iaf",
   })
 
   subscription_content = templatefile("../templates/Subscription.yaml.tmpl", {
-    namespace                = "iaf",
+    namespace = "iaf",
   })
 }
 

@@ -24,7 +24,7 @@ data "ibm_container_cluster_config" "cluster_config" {
 
 // Module:
 module "cp4aiops" {
-  source          = "./.."
+  source          = ".."
   enable          = var.enable
 
   // ROKS cluster parameters:

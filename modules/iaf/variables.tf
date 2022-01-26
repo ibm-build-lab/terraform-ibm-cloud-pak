@@ -26,7 +26,7 @@ variable "cluster_config_path" {
 // }
 
 variable "cluster_name_id" {
-  default = ""
+  default     = ""
   description = "Name or id of the cluster"
 }
 
@@ -51,9 +51,9 @@ variable "entitled_registry_user_email" {
 }
 
 locals {
-  iaf_namespace            = "iaf"
-  entitled_registry        = "cp.icr.io"
-  entitled_registry_user   = "cp"
-  entitled_registry_key    = chomp(var.entitled_registry_key)
-  ibmcloud_api_key         = chomp(var.ibmcloud_api_key)
+  iaf_namespace          = "iaf"
+  entitled_registry      = "cp.icr.io"
+  entitled_registry_user = "cp"
+  entitled_registry_key  = chomp(var.entitled_registry_key)
+  ibmcloud_api_key       = chomp(var.ibmcloud_api_key)
 }

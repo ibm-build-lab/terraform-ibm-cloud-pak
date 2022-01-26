@@ -41,7 +41,7 @@ echo $result
 sleep 30
 
 ATTEMPTS=0
-TIMEOUT=360 # 1 hr
+TIMEOUT=360 # 1hr
 while true; do
   if [ $ATTEMPTS -eq $TIMEOUT ] ; then
     echo "TIMED OUT: ibm-operator-catalog"
