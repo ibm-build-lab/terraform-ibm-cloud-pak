@@ -34,9 +34,8 @@ admin_user = var.admin_user
 
 These parameters are:
 
-- `enable`: If set to `false` does not install the cloud pak on the given cluster. By default it's enabled
-- `cluster_config_path`: Path leading to the cluster info
-- `region`: Region that the cluster is in.
+- `cluster_config_path`: Path leading to the cluster info by default is set to ./.kube/config/
+- `region`: Region that the cluster is located in.
 - `entitled_registry_key`: Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key
 - `entitled_registry_user_email`: IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key
 - `admin_user`: The admin user name that will be used with the LDAP.  Refer to the CP4S documentation on LDAP requirments
