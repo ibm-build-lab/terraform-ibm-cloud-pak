@@ -1,6 +1,12 @@
-variable "region" {}
-variable "resource_group_name" {}
-variable "cluster_id" {}
+variable "region" {
+  descpriton = "The region name that the cluster is currently running in"
+}
+variable "resource_group_name" {
+ descrpition = "The resource name that the cluster is currently running under"
+}
+variable "cluster_id" {
+  description = "The id of the cluster"
+}
 
 variable "enable" {
   default     = true
@@ -23,11 +29,8 @@ variable "entitled_registry_user_email" {
   description = "Docker email address"
 }
 
-variable "ldap_status" {
-  description = "true if client has an ldap, false if client does not have an ldap"
-}
-
-variable "ldap_user_id" {
+variable "admin_user" {
+  type = string
   description = "value of ldap admin uid"
 }
 
