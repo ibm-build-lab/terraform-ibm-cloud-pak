@@ -1,6 +1,6 @@
 # Terraform Module to install Cloud Pak for Security
 
-This Terraform Module installs **Cloud Pak for Security** on an Openshift (ROKS) cluster on IBM Cloud.
+This Terraform Module installs **Cloud Pak for Security Operator** on an Openshift (ROKS) cluster on IBM Cloud. Once the Terraform module has run a cluster will install the CP4S operator creating the threat management resource.  After the threat management resource is created further configuration will be needed, you can follow the instructions on the CP4S documentation [here](https://www.ibm.com/docs/en/cloud-paks/cp-security/1.8?topic=security-postinstallation)
 
 **Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4s`
 
@@ -58,7 +58,6 @@ Input:
 
 - `ibm_resource_group`:  resource group where the cluster is running
 
-
 Output:
 
 `ibm_container_cluster_config` used as input for the `cp4s` module
@@ -77,7 +76,7 @@ module "cp4s" {
   // Entitled Registry parameters:
   entitled_registry_key        = var.entitled_registry_key
   entitled_registry_user_email = var.entitled_registry_user_email
- 
+  admin_user = var.admin_user
 }
 ```
 
@@ -87,7 +86,7 @@ module "cp4s" {
 | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | -------- |
  `entitled_registry_key`            | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
 | `entitled_registry_user_email`     | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key                                                                                                                 |                             | Yes      |
-| `admin_user`                           | The user name of the default creation of cp4s configuration                                                                                                                        |                       | Yes       |
+| `admin_user`                           | The user name of the LDAP that cp4s will use on default configuration                                                                                                                        |                       | Yes       |
 
 
 For an example of how to put all this together, refer to our [Cloud Pak for Security Terraform script](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform//cp4s).
