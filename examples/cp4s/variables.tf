@@ -1,8 +1,8 @@
 variable "region" {
-  descpriton = "The region name that the cluster is currently running in"
+  description = "The region name that the cluster is currently running in"
 }
 variable "resource_group_name" {
- descrpition = "The resource name that the cluster is currently running under"
+ description = "The resource name that the cluster is currently running under"
 }
 variable "cluster_id" {
   description = "The id of the cluster"
@@ -27,5 +27,4 @@ variable "admin_user" {
   type = string
   description = "value of ldap admin uid"
 }
-
 

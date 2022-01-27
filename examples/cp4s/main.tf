@@ -24,17 +24,16 @@ data "ibm_container_cluster_config" "cluster_config" {
 
 // Module:
 module "cp4s" {
-  source = "./.."
-  enable = true
+  source          = "../../modules/cp4s"
 
   // ROKS cluster parameters:
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
 
+
+  
   // Entitled Registry parameters:
   entitled_registry_key        = var.entitled_registry_key
   entitled_registry_user_email = var.entitled_registry_user_email
 
-  // LDAP USER NAME
-  admin_user = var.admin_user
-  
+
 }
