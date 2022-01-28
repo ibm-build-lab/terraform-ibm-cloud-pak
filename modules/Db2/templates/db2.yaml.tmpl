@@ -1,0 +1,38 @@
+apiVersion: db2u.databases.ibm.com/v1
+kind: Db2uCluster
+metadata:
+  name: db2ucluster
+  namespace: "ibm-db2"
+spec:
+  size: 1
+  license:
+    '${ db2_license }'
+  account:
+    imagePullSecrets:
+      - ibm-db2-registry
+    privileged: true
+  environment:
+    dbType: db2oltp
+    instance:
+      password: "passw0rd"
+  version: "11.5.6.0"
+  podConfig:
+    db2u:
+      resource:
+        db2u:
+          requests:
+            cpu: 4
+            memory: "16Gi"
+          limits:
+            cpu: 4
+            memory: "16Gi"
+  storage:
+    - name: share
+      type: create
+      spec:
+        accessModes:
+          - ReadWriteMany
+        resources:
+          requests:
+            storage: "150Gi"
+        storageClassName: "ibmc-file-gold-gid"
