@@ -66,21 +66,6 @@ locals {
 }
 
 locals {
-//  //  cp4ba_namespace              = "cp4ba"
-//  entitled_registry_key_secret_name = "ibm-entitlement-key"
-//  docker_secret_name                = "docker-registry"
   docker_server                     = "cp.icr.io"
   docker_username                   = "cp"
-//  docker_password                   = chomp(var.entitlement_key)
-//  docker_email                      = var.entitled_registry_user_email
-//
-//  enable_cluster = var.cluster_id == "" || var.cluster_id == null
-//  //  use_entitlement              = "yes"
-//  project_name     = "cp4ba"
-//  platform_options = 1     // 1: roks - 2: ocp - 3: private cloud
-//  deployment_type  = 2     // 1: demo - 2: enterprise
-//  platform_version = "4.6" // roks version
-
-  //  entitled_registry_key        = chomp(var.entitlement_key)
-//  ibmcloud_api_key = chomp(var.ibmcloud_api_key)
 }
