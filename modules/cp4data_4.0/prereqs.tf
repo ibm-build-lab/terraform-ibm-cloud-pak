@@ -24,8 +24,11 @@ resource "null_resource" "setkernelparams" {
 # Create and annotate image registry route
 ###########################################
 resource "null_resource" "create_registry_route" {
-  depends_on = [var.portworx_is_ready]
-
+  depends_on = [
+    var.portworx_is_ready,
+    null_resource.setkernelparams,
+  ]
+  
   provisioner "local-exec" {
     environment = {
       KUBECONFIG = var.cluster_config_path
