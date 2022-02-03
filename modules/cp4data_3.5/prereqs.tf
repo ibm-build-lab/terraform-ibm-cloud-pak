@@ -41,7 +41,10 @@ resource "null_resource" "set_norootsquash" {
 # Create and annotate image registry route
 ###########################################
 resource "null_resource" "create_registry_route" {
-  depends_on = [var.portworx_is_ready]
+  depends_on = [
+    var.portworx_is_ready,
+    null_resource.setkernelparams,
+  ]
 
   provisioner "local-exec" {
     environment = {
