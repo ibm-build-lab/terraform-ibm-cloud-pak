@@ -28,9 +28,7 @@ resource "null_resource" "create_registry_route" {
     var.portworx_is_ready,
     null_resource.setkernelparams,
   ]
-
-  # depends_on = [var.portworx_is_ready]
-
+  
   provisioner "local-exec" {
     environment = {
       KUBECONFIG = var.cluster_config_path
