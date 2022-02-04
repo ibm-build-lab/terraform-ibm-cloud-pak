@@ -10,11 +10,11 @@ kind: Namespace
 metadata:
   name: local-storage
 ---
-apiVersion: operators.coreos.com/v1
+apiVersion: operators.coreos.com/v1alpha2
 kind: OperatorGroup
 metadata:
   name: local-operator-group
-  namespace: local-storage
+  namespace: openshift-local-storage
 spec:
   targetNamespaces:
     - local-storage
@@ -34,7 +34,7 @@ EOF
 
 
 echo "Waiting 2 minutes for local-storage operator to install"
-sleep 120
+sleep 60
 
 echo "Applying the Db2 LocalVolume to the cluster."
 
@@ -55,4 +55,3 @@ spec:
       devicePaths:
       - ${path_to_disk}
 EOF
-

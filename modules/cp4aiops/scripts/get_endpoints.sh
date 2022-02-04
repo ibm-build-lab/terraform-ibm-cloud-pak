@@ -1,7 +1,9 @@
 #!/bin/bash
 
+NAMESPACE="cp4aiops"
+KUBECONFIG="./.kube/config"
 K8s_CMD=kubectl
-eval "$(jq -r '@sh "export KUBECONFIG=\(.kubeconfig) NAMESPACE=\(.namespace)"')"
+#eval "$(jq -r '@sh "export KUBECONFIG=\(.KUBECONFIG) NAMESPACE=\(.NAMESPACE)"')"
 
 # Obtains the credentials and endpoints for the installed CP4I Dashboard
 results() {
