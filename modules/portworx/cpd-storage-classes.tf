@@ -7,14 +7,14 @@ resource "null_resource" "delete_db2_sc" {
   count = var.enable ? 1 : 0
 
   depends_on = [ibm_resource_instance.portworx]
-  
+
   provisioner "local-exec" {
     environment = {
       KUBECONFIG = var.kube_config_path
     }
 
     interpreter = ["/bin/bash", "-c"]
-    command = "kubectl delete sc portworx-db2-sc"
+    command     = "kubectl delete sc portworx-db2-sc"
   }
 }
 
@@ -23,13 +23,13 @@ resource "null_resource" "px_sc" {
   count = var.enable ? 1 : 0
 
   depends_on = [ibm_resource_instance.portworx, null_resource.delete_db2_sc]
-  
+
   provisioner "local-exec" {
     environment = {
       KUBECONFIG = var.kube_config_path
     }
-    
+
     interpreter = ["/bin/bash", "-c"]
-    command = file("${path.module}/scripts/px-sc.sh")
+    command     = file("${path.module}/scripts/px-sc.sh")
   }
 }

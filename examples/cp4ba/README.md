@@ -1,5 +1,9 @@
 # Example to provision Cloud Pak for Business Automation Terraform Module
 
+## Prereq
+
+This Cloud Pak example depends on having a DB2 instance with the CP4BA Schema set up.  See https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/examples/Db2 to create a DB2 instance.  See https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/blob/cp4ba-db-schema/examples/cp4ba/database/README.md to set up the CP4BA Schema.
+
 ## Run using IBM Cloud Schematics
 
 For instructions to run these examples using IBM Schematics go [here](../Using_Schematics.md)

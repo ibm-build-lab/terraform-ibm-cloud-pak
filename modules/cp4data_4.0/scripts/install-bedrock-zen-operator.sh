@@ -41,7 +41,7 @@ echo $result
 sleep 30
 
 ATTEMPTS=0
-TIMEOUT=360 # 1 hr
+TIMEOUT=360 # 1hr
 while true; do
   if [ $ATTEMPTS -eq $TIMEOUT ] ; then
     echo "TIMED OUT: ibm-operator-catalog"
@@ -132,7 +132,7 @@ while true; do
     exit 1
   fi
   if oc get deployments -n ${OP_NAMESPACE} -l olm.owner="cpd-platform-operator.v2.0.6" -o jsonpath="{.items[0].status.availableReplicas} {'\n'}" | grep 1 >/dev/null 2>&1; then
-    echo -e "\ncpd-platform-operator.v
+    echo -e "\ncpd-platform-operator.v2.0.6
     is ready."
     break
   fi

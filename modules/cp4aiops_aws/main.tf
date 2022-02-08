@@ -1,7 +1,7 @@
 locals {
   # These are the the yamls that will be pulled from the ./files  these will be used to start hte operator
-  cp4aiops_subscription = file(join("/", [path.module, "files", "aiops-subscription.yaml"])) 
-  cp4aiops_service      = file(join("/", [path.module, "files", "cp-aiops-service.yaml"])) 
+  cp4aiops_subscription = file(join("/", [path.module, "files", "aiops-subscription.yaml"]))
+  cp4aiops_service      = file(join("/", [path.module, "files", "cp-aiops-service.yaml"]))
 
 }
 
@@ -10,9 +10,9 @@ resource "null_resource" "install_cp4aiops" {
   count = var.enable ? 1 : 0
 
   triggers = {
-    namespace_sha1                      = sha1(var.namespace)
-    cp4aiops_sha1                       = sha1(local.cp4aiops_subscription)
-    cp4aiops_service_sha1               = sha1(local.cp4aiops_service)
+    namespace_sha1        = sha1(var.namespace)
+    cp4aiops_sha1         = sha1(local.cp4aiops_subscription)
+    cp4aiops_service_sha1 = sha1(local.cp4aiops_service)
   }
 
   provisioner "local-exec" {
@@ -20,16 +20,16 @@ resource "null_resource" "install_cp4aiops" {
     working_dir = "${path.module}/scripts"
 
     environment = {
-      KUBECONFIG                    = var.cluster_config_path
-      NAMESPACE                     = var.namespace
-      ON_VPC                        = var.on_vpc
+      KUBECONFIG = var.cluster_config_path
+      NAMESPACE  = var.namespace
+      ON_VPC     = var.on_vpc
 
-      CP4AIOPS_SUB                  = local.cp4aiops_subscription
-      CP4AIOPS_SERVICE              = local.cp4aiops_service
-      DOCKER_REGISTRY_PASS          = var.entitled_registry_key
-      DOCKER_USER_EMAIL             = var.entitled_registry_user_email
-      DOCKER_USERNAME               = local.docker_username
-      DOCKER_REGISTRY               = local.docker_registry
+      CP4AIOPS_SUB         = local.cp4aiops_subscription
+      CP4AIOPS_SERVICE     = local.cp4aiops_service
+      DOCKER_REGISTRY_PASS = var.entitled_registry_key
+      DOCKER_USER_EMAIL    = var.entitled_registry_user_email
+      DOCKER_USERNAME      = local.docker_username
+      DOCKER_REGISTRY      = local.docker_registry
     }
   }
 

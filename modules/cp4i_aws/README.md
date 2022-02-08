@@ -2,7 +2,7 @@
 
 This Terraform Module installs **Cloud Pak for Integration** on an Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4i_aws`
+**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4i_aws`
 
 - [Terraform Module to install Cloud Pak for Integration](#terraform-module-to-install-cloud-pak-for-integration)
   - [Provisioning this module in a Terraform Script](#provisioning-this-module-in-a-terraform-script)
@@ -14,14 +14,6 @@ This Terraform Module installs **Cloud Pak for Integration** on an Openshift (RO
   - [Clean up](#clean-up)
 
 ## Provisioning this module in a Terraform Script
-
-In your Terraform script define the `ibm` provisioner block with the `version`.
-
-```hcl
-provider "ibm" {
-  version          = "~> 1.12"
-}
-```
 
 ### Setting up the OpenShift cluster
 
@@ -35,11 +27,11 @@ NOTE: This module requires Portworx on AWS. To see how to add Portworx, please c
 
 ### Using the CP4I Module
 
-Use a `module` block assigning the `source` parameter to the location of this module `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4i`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Integration.
+Use a `module` block assigning the `source` parameter to the location of this module `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4i`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Integration.
 
 ```hcl
 module "cp4i" {
-  source          = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4i_aws"
+  source          = "github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4i_aws"
   enable          = true
 
   // ROKS cluster parameters:

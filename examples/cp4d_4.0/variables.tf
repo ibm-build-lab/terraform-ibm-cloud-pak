@@ -1,6 +1,6 @@
 variable "operator_namespace" {
   description = "Needs to be ibm-common-services."
-  default = "ibm-common-services"
+  default     = "ibm-common-services"
 }
 
 variable "cluster_id" {
@@ -13,12 +13,12 @@ variable "ibmcloud_api_key" {
 
 variable "region" {
   description = "Region of the cluster"
-  default = "us-south"
+  default     = "us-south"
 }
 
 variable "resource_group_name" {
   description = "Resource group that the cluster is created in"
-  default = "cloud-pak-sandbox-ibm"
+  default     = "cloud-pak-sandbox-ibm"
 }
 
 variable "on_vpc" {
@@ -53,92 +53,92 @@ variable "entitled_registry_user_email" {
 // Modules available to install on CP4D
 
 variable "install_wsl" {
-  default = false
-  type = bool
+  default     = false
+  type        = bool
   description = "Install WSL module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_aiopenscale" {
-  default = false
-  type = bool
+  default     = false
+  type        = bool
   description = "Install AI Open Scale module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_wml" {
-  default = false
-  type = bool
+  default     = false
+  type        = bool
   description = "Install Watson Machine Learning module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_wkc" {
-  default = false
-  type = bool
+  default     = false
+  type        = bool
   description = "Install Watson Knowledge Catalog module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_dv" {
-  default = false
-  type = bool
+  default     = false
+  type        = bool
   description = "Install Data Virtualization module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_spss" {
-  default = false
-  type = bool
+  default     = false
+  type        = bool
   description = "Install SPSS module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_cde" {
-  default = false
-  type = bool
+  default     = false
+  type        = bool
   description = "Install CDE module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_spark" {
-  default = false
-  type = bool
+  default     = false
+  type        = bool
   description = "Install Analytics Engine powered by Apache Spark module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_dods" {
-  default = false
-  type = bool
+  default     = false
+  type        = bool
   description = "Install DODS module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_ca" {
-  default = false
-  type = bool
+  default     = false
+  type        = bool
   description = "Install CA module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_ds" {
-  default = false
-  type = bool
+  default     = false
+  type        = bool
   description = "Install DS module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_db2oltp" {
-  default = false
-  type = bool
+  default     = false
+  type        = bool
   description = "Install DB2OLTP module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_db2wh" {
-  default = false
-  type = bool
+  default     = false
+  type        = bool
   description = "Install DB2WH module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_big_sql" {
-  default = false
-  type = bool
+  default     = false
+  type        = bool
   description = "Install Big SQL module. Only for Cloud Pak for Data v4.0"
 }
 
 variable "install_wsruntime" {
-  default = false
-  type = bool
+  default     = false
+  type        = bool
   description = "Install WS Runtime."
 }
 

@@ -2,7 +2,7 @@
 
 This Terraform Module installs **Cloud Pak for Data** on an Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4data`
+**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4data`
 
 - [Terraform Module to install Cloud Pak for Data](#terraform-module-to-install-cloud-pak-for-data)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
@@ -36,7 +36,7 @@ The token and server info can be found on this Openshift `copy login command` dr
 
 ### Installing the CP4Data Module
 
-Use a `module` block assigning `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4data`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Data.
+Use a `module` block assigning `source` to `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4data`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Data.
 
 ```hcl
 module "cp4data" {
@@ -89,7 +89,6 @@ module "cp4data" {
 | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | -------- |
 | `enable`                           | If set to `false` does not install the cloud pak on the given cluster. By default it's enabled                                                                                                                        | `true`                      | No       |
 | `on_vpc`                           | If set to `false`, it will set the install do classic ROKS. By default it's disabled                                                                                                                        | `false`                      | No       |
-| `openshift_version`                | Openshift version installed in the cluster                                                                                                                                                                                 | `4.6`                       | No       |
 | `entitled_registry_key`            | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
 | `entitled_registry_user_email`     | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key                                                                                                                 |                             | Yes      |
 | `worker_node_flavor`          | Flavor used to determine worker node hardware for the cluster |  | Yes       |

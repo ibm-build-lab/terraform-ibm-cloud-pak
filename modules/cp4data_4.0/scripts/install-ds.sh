@@ -26,6 +26,11 @@ oc project ${NAMESPACE}
 
 cd ../files
 
+# ****** sed command for classic goes here *******
+if [[ ${ON_VPC} == false ]] ; then
+    sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" ds-cr.yaml
+fi
+
 # Create ds CR: 	
 sed -i -e "s/REPLACE_NAMESPACE/${NAMESPACE}/g" ds-cr.yaml
 echo '*** executing **** oc create -f ds-cr.yaml'
@@ -35,4 +40,4 @@ echo $result
 cd ../scripts
 
 # check the CCS cr status	
-./check-cr-status.sh DataStageService datastage-cr ${NAMESPACE} dsStatus
+./check-cr-status.sh DataStage datastage-cr ${NAMESPACE} dsStatus

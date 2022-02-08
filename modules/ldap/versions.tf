@@ -1,10 +1,18 @@
-// Use if running on TF version 0.13 or higher
-# terraform {
-#    required_providers {
-#       ibm = {
-#          source = "IBM-Cloud/ibm"
-#          version = "~>1.12"       
-#          }
-#     }
-# }
-
+terraform {
+  required_version = ">= 0.13"
+  required_providers {
+    ibm = {
+      source  = "ibm-cloud/ibm"
+      version = "1.34"
+    }
+    local = {
+      source = "hashicorp/local"
+    }
+    null = {
+      source = "hashicorp/null"
+    }
+    tls = {
+      source = "hashicorp/tls"
+    }
+  }
+}

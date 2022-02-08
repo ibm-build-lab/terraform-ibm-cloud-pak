@@ -1,8 +1,8 @@
 locals {
   setOpenshiftServerless_file = "openshift-serverless.yaml"
-  setKnativeServing_file = "knative-serving.yaml"
-  setKnativeEventing_file = "knative-eventing.yaml"
-  setStrimzi_file = "strimzi-subscription.yaml"
+  setKnativeServing_file      = "knative-serving.yaml"
+  setKnativeEventing_file     = "knative-eventing.yaml"
+  setStrimzi_file             = "strimzi-subscription.yaml"
 
 }
 
@@ -10,40 +10,40 @@ locals {
 # Create Knative Options and disable route
 ###########################################
 
-resource "null_resource" "openshift_serverless" {  
+resource "null_resource" "openshift_serverless" {
   provisioner "local-exec" {
     environment = {
       KUBECONFIG = var.cluster_config_path
     }
     working_dir = "${path.module}/files/"
     interpreter = ["/bin/bash", "-c"]
-    command = "oc apply -f ${local.setOpenshiftServerless_file} && sleep 120"
+    command     = "oc apply -f ${local.setOpenshiftServerless_file} && sleep 120"
   }
 }
 
 resource "null_resource" "knative_serving" {
   depends_on = [null_resource.openshift_serverless]
-  
+
   provisioner "local-exec" {
     environment = {
       KUBECONFIG = var.cluster_config_path
     }
     working_dir = "${path.module}/files/"
     interpreter = ["/bin/bash", "-c"]
-    command = "oc apply -f ${local.setKnativeServing_file} && sleep 60"
+    command     = "oc apply -f ${local.setKnativeServing_file} && sleep 60"
   }
 }
 
 resource "null_resource" "knative_eventing" {
   depends_on = [null_resource.knative_serving]
-  
+
   provisioner "local-exec" {
     environment = {
       KUBECONFIG = var.cluster_config_path
     }
     working_dir = "${path.module}/files/"
     interpreter = ["/bin/bash", "-c"]
-    command = "oc apply -f ${local.setKnativeEventing_file} && sleep 60"
+    command     = "oc apply -f ${local.setKnativeEventing_file} && sleep 60"
   }
 }
 
@@ -64,14 +64,14 @@ resource "null_resource" "knative_eventing" {
 ###########################################
 resource "null_resource" "strimzi_subscription" {
   depends_on = [null_resource.knative_eventing]
-  
+
   provisioner "local-exec" {
     environment = {
       KUBECONFIG = var.cluster_config_path
     }
     working_dir = "${path.module}/files/"
     interpreter = ["/bin/bash", "-c"]
-    command = "oc apply -f ${local.setStrimzi_file} && sleep 120"
+    command     = "oc apply -f ${local.setStrimzi_file} && sleep 120"
   }
 }
 
@@ -122,6 +122,6 @@ resource "null_resource" "prereqs_checkpoint" {
   ]
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
-    command = "echo '=== REACHED PREREQS CHECKPOINT ==='"
+    command     = "echo '=== REACHED PREREQS CHECKPOINT ==='"
   }
 }
