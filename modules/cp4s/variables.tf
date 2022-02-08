@@ -3,37 +3,19 @@ variable "enable" {
   description = "If set to true installs Cloud-Pak for security on the given cluster"
 }
 
-variable "force" {
-  default     = false
-  description = "Force the execution. Useful to execute the job again"
-}
-
 variable "cluster_config_path" {
+  default = "./.kube/config/"
   description = "Path to the Kubernetes configuration file to access your cluster"
 }
 
-variable "openshift_version" {
-  default     = "4.7"
-  description = "Openshift version installed in the cluster"
-}
-
-variable "on_vpc" {
-  default     = false
-  type        = bool
-  description = "If set to true, lets the module know cluster is using VPC Gen2"
-}
-
-variable "portworx_is_ready" {
-  type    = any
-  default = null
-}
 variable "entitled_registry_user_email" {
   description = "Docker email address"
 }
 
+// This value is currently not being leveraged properly in insatll_cp4s
 variable "namespace" {
-  default     = "cp4s"
-  description = "Namespace for Cloud Pak for Network Automation"
+  default = "cp4s"
+  description = "Namespace for Cloud Pak for Security"
 }
 
 variable "entitled_registry_key" {
