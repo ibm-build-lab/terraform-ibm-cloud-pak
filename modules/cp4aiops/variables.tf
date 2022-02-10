@@ -32,15 +32,15 @@ variable "portworx_is_ready" {
   default = null
 }
 
-variable "entitlement_key" {
+variable "entitled_registry_key" {
   description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
 }
 
-variable "entitled_registry_user" {
+variable "entitled_registry_user_email" {
   description = "Docker email address"
 }
 
-variable "namespace" {
+variable "cp4aiops_namespace" {
   default = "cp4aiops"
   description = "Namespace for Cloud Pak for AIOps"
 }
@@ -49,7 +49,7 @@ variable "namespace" {
 locals {
   docker_registry          = "cp.icr.io"
   docker_username          = "cp"
-  entitled_registry_key    = chomp(var.entitlement_key)
+  entitled_registry_key    = chomp(var.entitled_registry_key)
   openshift_version_regex  = regex("(\\d+).(\\d+)(.\\d+)*(_openshift)*", var.openshift_version)
   openshift_version_number = local.openshift_version_regex[3] == "_openshift" ? tonumber("${local.openshift_version_regex[0]}.${local.openshift_version_regex[1]}") : 0
 }

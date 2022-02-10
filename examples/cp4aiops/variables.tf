@@ -21,17 +21,17 @@ variable "on_vpc" {
   description = "If set to true, lets the module know cluster is using VPC Gen2"
 }
 
-variable "entitlement_key" {
+variable "entitled_registry_key" {
   type        = string
   description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
 }
 
-variable "entitled_registry_user" {
+variable "entitled_registry_user_email" {
   type        = string
   description = "Docker email address"
 }
 
-variable "namespace" {
+variable "cp4aiops_namespace" {
   default = "cp4aiops"
   description = "Namespace for Cloud Pak for AIOps"
 }

@@ -17,9 +17,9 @@ resource "null_resource" "install_cp4aiops" {
   count = var.enable ? 1 : 0
 
   triggers = {
-    namespace_sha1 = sha1(var.namespace)
+    namespace_sha1 = sha1(var.cp4aiops_namespace)
     docker_params_sha1 = sha1(join("", [
-      var.entitled_registry_user,
+      var.entitled_registry_user_email,
       local.entitled_registry_key]))
     cp4aiops_sha1 = sha1(local.cp4aiops_subscription)
     oc_serverless_file_sha1 = sha1(local.oc_serverless_file_content)
@@ -28,33 +28,33 @@ resource "null_resource" "install_cp4aiops" {
     strimzi_subscription_file_sha1 = sha1(local.strimzi_subscription_file_content)
   }
 
-//  provisioner "local-exec" {
-//    command = "./install_cp4aiops.sh"
-//    working_dir = "${path.module}/scripts"
-//
-//    environment = {
-//      KUBECONFIG                = var.cluster_config_path
-//      NAMESPACE                 = var.namespace
-//      ON_VPC                    = var.on_vpc
-//      IC_API_KEY                = var.ibmcloud_api_key
-//      DOCKER_REGISTRY_PASS      = var.entitlement_key
-//      DOCKER_USER_EMAIL         = var.entitled_registry_user
-//      DOCKER_USERNAME           = local.docker_username
-//      DOCKER_REGISTRY           = local.docker_registry
-//
-//      # --- File Assignment ---
-//      OC_SERVERLESS_FILE        = local.oc_serverless_file
-//      KNATIVE_SERVING_FILE      = local.knative_serving_file
-//      KNATIVE_EVENTING_FILE     = local.knative_eventing_file
-//      CP4WAIOPS                 = local.cp4aiops_subscription
-//      STRIMZI_SUBSCRIPTION_FILE = local.strimzi_subscription_file
-//    }
-//  }
-//
-//
-//  depends_on = [
-//    local.on_vpc_ready
-//  ]
+  provisioner "local-exec" {
+    command = "./install_cp4aiops.sh"
+    working_dir = "${path.module}/scripts"
+
+    environment = {
+      KUBECONFIG                = var.cluster_config_path
+      NAMESPACE                 = var.cp4aiops_namespace
+      ON_VPC                    = var.on_vpc
+      IC_API_KEY                = var.ibmcloud_api_key
+      ENTITLED_REGISTRY_KEY    = local.entitled_registry_key
+      ENTITLED_REGISTRY_USER_EMAIL = var.entitled_registry_user_email
+      DOCKER_USERNAME           = local.docker_username
+      DOCKER_REGISTRY           = local.docker_registry
+
+      # --- File Assignment ---
+      OC_SERVERLESS_FILE        = local.oc_serverless_file
+      KNATIVE_SERVING_FILE      = local.knative_serving_file
+      KNATIVE_EVENTING_FILE     = local.knative_eventing_file
+      CP4WAIOPS                 = local.cp4aiops_subscription
+      STRIMZI_SUBSCRIPTION_FILE = local.strimzi_subscription_file
+    }
+  }
+
+
+  depends_on = [
+    local.on_vpc_ready
+  ]
 }
 
 data "external" "get_endpoints" {
@@ -66,6 +66,6 @@ data "external" "get_endpoints" {
   program = ["/bin/bash", "${path.module}/scripts/get_endpoints.sh"]
   query = {
     KUBECONFIG = var.cluster_config_path
-    NAMESPACE  = var.namespace
+    NAMESPACE  = var.cp4aiops_namespace
   }
 }

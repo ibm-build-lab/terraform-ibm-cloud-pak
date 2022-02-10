@@ -28,7 +28,7 @@ module "cp4aiops" {
   ibmcloud_api_key        = var.ibmcloud_api_key
   cluster_config_path     = data.ibm_container_cluster_config.cluster_config.config_file_path
   on_vpc                  = var.on_vpc
-  entitlement_key         = var.entitlement_key
-  entitled_registry_user  = var.entitled_registry_user
-  namespace               = var.namespace
+  entitled_registry_key   = var.entitled_registry_key
+  entitled_registry_user_email = var.entitled_registry_user_email
+  cp4aiops_namespace      = var.cp4aiops_namespace
 }
