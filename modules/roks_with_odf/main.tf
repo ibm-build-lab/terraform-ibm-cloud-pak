@@ -66,6 +66,6 @@ resource "null_resource" "enable_odf" {
     }
 
     interpreter = ["/bin/bash", "-c"]
-    command = "ibmcloud oc cluster addon enable openshift-data-foundation -c ${module.cluster.id} --version ${var.roks_version} --param \"odfDeploy=true\""
+    command = "ibmcloud oc cluster addon enable openshift-data-foundation -c ${module.cluster.id} --version 4.7.0 --param \"odfDeploy=true\""
   }
 }
