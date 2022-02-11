@@ -25,15 +25,6 @@ ${K8s_CMD} create namespace knative-serving
 
 sleep 2
 
-echo "Installing Knative Build ..."
-${K8s_CMD} apply --filename https://github.com/knative/serving/releases/download/v0.1.1/release.yaml
-
-echo
-echo "Applying strimzi-subscription ..."
-cat ${STRIMZI_SUBSCRIPTION_FILE}
-${K8s_CMD} apply -f "${STRIMZI_SUBSCRIPTION_FILE}"
-sleep 2
-
 echo
 cat "${OC_SERVERLESS_FILE}"
 ${K8s_CMD} apply -f "${OC_SERVERLESS_FILE}"
@@ -48,6 +39,11 @@ sleep 2
 echo
 
 
+echo
+echo "Applying strimzi-subscription ..."
+cat ${STRIMZI_SUBSCRIPTION_FILE}
+${K8s_CMD} apply -f "${STRIMZI_SUBSCRIPTION_FILE}"
+sleep 2
 
 echo "Creating \"openshift-local-storage\" namespace ..."
 ${K8s_CMD} create namespace openshift-local-storage
@@ -320,6 +316,7 @@ while true; do
     echo "Recreating AIOPS service..."
     sed -e "s/NAMESPACE/${NAMESPACE}/g" -e "s/STORAGE_CLASS/${storage_class}/g" -e "s/STORAGE_BLOCK_CLASS/${storage_block_class}/g" ../templates/cp-aiops-service.yaml.tmpl | ${K8s_CMD} -n ${NAMESPACE} apply -f -
   fi
+
 
   # If the service has been restarted 2 times, it will quit and time out.
   if [ "$run_limit_count" -eq "$RUN_LIMIT" ]; then

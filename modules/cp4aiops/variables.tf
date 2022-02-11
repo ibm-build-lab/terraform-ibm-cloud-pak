@@ -45,7 +45,6 @@ variable "cp4aiops_namespace" {
   description = "Namespace for Cloud Pak for AIOps"
 }
 
-
 locals {
   docker_registry          = "cp.icr.io"
   docker_username          = "cp"

@@ -37,7 +37,7 @@ resource "null_resource" "install_cp4aiops" {
       NAMESPACE                 = var.cp4aiops_namespace
       ON_VPC                    = var.on_vpc
       IC_API_KEY                = var.ibmcloud_api_key
-      ENTITLED_REGISTRY_KEY    = local.entitled_registry_key
+      ENTITLED_REGISTRY_KEY     = local.entitled_registry_key
       ENTITLED_REGISTRY_USER_EMAIL = var.entitled_registry_user_email
       DOCKER_USERNAME           = local.docker_username
       DOCKER_REGISTRY           = local.docker_registry
@@ -51,9 +51,9 @@ resource "null_resource" "install_cp4aiops" {
     }
   }
 
-
   depends_on = [
-    local.on_vpc_ready
+    local.on_vpc_ready,
+    null_resource.prereqs_checkpoint
   ]
 }
 
