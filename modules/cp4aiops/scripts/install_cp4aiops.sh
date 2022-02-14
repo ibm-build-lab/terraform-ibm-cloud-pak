@@ -1,8 +1,10 @@
 #!/bin/sh
+export AnException=100
 
 K8s_CMD=kubectl
 
-# Create custom namespace
+
+    # Create custom namespace
 echo "Creating namespace ${NAMESPACE}"
 kubectl create namespace "${NAMESPACE}"
 
@@ -27,14 +29,16 @@ sleep 2
 
 echo
 cat "${OC_SERVERLESS_FILE}"
-${K8s_CMD} apply -f "${OC_SERVERLESS_FILE}"
+set -e
+${K8s_CMD} apply -f "${OC_SERVERLESS_FILE}" || true
 sleep 2
 
 echo
 
 echo "Installing the Knative Serving Components ..."
 cat "${KNATIVE_SERVING_FILE}"
-${K8s_CMD} apply -f "${KNATIVE_SERVING_FILE}"
+set -e
+${K8s_CMD} apply -f "${KNATIVE_SERVING_FILE}" || true
 sleep 2
 echo
 
@@ -42,7 +46,8 @@ echo
 echo
 echo "Applying strimzi-subscription ..."
 cat ${STRIMZI_SUBSCRIPTION_FILE}
-${K8s_CMD} apply -f "${STRIMZI_SUBSCRIPTION_FILE}"
+set -e
+${K8s_CMD} apply -f "${STRIMZI_SUBSCRIPTION_FILE}" || true
 sleep 2
 
 echo "Creating \"openshift-local-storage\" namespace ..."
@@ -52,7 +57,8 @@ echo
 
 echo "Installing the Knative Eventing Components ..."
 cat "${KNATIVE_EVENTING_FILE}"
-${K8s_CMD} apply -f "${KNATIVE_EVENTING_FILE}"
+set -e
+${K8s_CMD} apply -f "${KNATIVE_EVENTING_FILE}" || true
 sleep 2
 echo
 
@@ -328,3 +334,5 @@ done
 echo
 echo '==================== Installation Complete ===================='
 echo
+
+
