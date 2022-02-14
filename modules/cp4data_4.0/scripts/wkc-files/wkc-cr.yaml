@@ -9,6 +9,8 @@ spec:
   license:
     accept: true
     license: Enterprise
-  wkc_db2u_set_kernel_params: True
-  iis_db2u_set_kernel_params: True 
+  docker_registry_prefix: cp.icr.io/cp/cpd
+  useODLM: true
+  # wkc_db2u_set_kernel_params: True
+  # iis_db2u_set_kernel_params: True 
   # install_wkc_core_only: true     # To install the core version of the service, remove the comment tagging from the beginning of the line.
