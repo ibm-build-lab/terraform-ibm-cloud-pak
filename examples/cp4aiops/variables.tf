@@ -21,7 +21,7 @@ variable "on_vpc" {
   description = "If set to true, lets the module know cluster is using VPC Gen2"
 }
 
-variable "entitled_registy_key" {
+variable "entitled_registry_key" {
   type        = string
   description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
 }
