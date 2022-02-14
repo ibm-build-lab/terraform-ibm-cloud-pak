@@ -1,5 +1,4 @@
 locals {
-  # These are the the yamls that will be pulled from the ./files  these will be used to start hte operator
   cp4aiops_subscription = file(join("/", [path.module, "files", "aiops-subscription.yaml"]))
   on_vpc_ready = var.on_vpc ? var.portworx_is_ready : 1
   oc_serverless_file              = "${path.module}/files/openshift-serverless.yaml"
@@ -11,7 +10,6 @@ locals {
 
 }
 
-# This section checks to see if the values have been updated through out the script running and is required for any dynamic value
 resource "null_resource" "install_cp4aiops" {
   count = var.enable ? 1 : 0
 
@@ -43,8 +41,6 @@ resource "null_resource" "install_cp4aiops" {
       OC_SERVERLESS_FILE    = local.oc_serverless_file
       KNATIVE_SERVING_FILE  = local.knative_serving_file
       KNATIVE_EVENTING_FILE = local.knative_eventing_file
-
-//      entitlement_key = var.entitlement_key
     }
   }
 
