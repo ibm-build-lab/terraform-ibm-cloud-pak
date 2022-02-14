@@ -16,8 +16,8 @@ resource "null_resource" "install_cp4aiops" {
   count = var.enable ? 1 : 0
 
   triggers = {
-    namespace_sha1                      = sha1(var.namespace)
-    docker_params_sha1                  = sha1(join("", [var.entitled_registry_user, local.entitled_registry_key]))
+    namespace_sha1                      = sha1(var.cp4aiops_namespace)
+    docker_params_sha1                  = sha1(join("", [var.entitled_registry_user_email, local.entitled_registry_key]))
     cp4aiops_sha1                       = sha1(local.cp4aiops_subscription)
     oc_serverless_file_sha1             = sha1(local.oc_serverless_file_content)
     knative_serving_file_sha1           = sha1(local.knative_serving_file_content)
@@ -30,12 +30,12 @@ resource "null_resource" "install_cp4aiops" {
 
     environment = {
       KUBECONFIG                    = var.cluster_config_path
-      NAMESPACE                     = var.namespace
+      NAMESPACE                     = var.cp4aiops_namespace
       ON_VPC                        = var.on_vpc
       IC_API_KEY                    = var.ibmcloud_api_key
       CP4WAIOPS                     = local.cp4aiops_subscription
-      DOCKER_REGISTRY_PASS          = var.entitlement_key
-      DOCKER_USER_EMAIL             = var.entitled_registry_user
+      ENTITLED_REGISTRY_KEY         = var.entitled_registry_key
+      DOCKER_USER_EMAIL             = var.entitled_registry_user_email
       DOCKER_USERNAME               = local.docker_username
       DOCKER_REGISTRY               = local.docker_registry
 
@@ -65,6 +65,6 @@ data "external" "get_endpoints" {
 
   query = {
     kubeconfig = var.cluster_config_path
-    namespace  = var.namespace
+    namespace  = var.cp4aiops_namespace
   }
 }
