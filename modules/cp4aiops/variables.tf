@@ -37,7 +37,7 @@ variable "entitled_registry_key" {
 }
 
 variable "entitled_registry_user_email" {
-  description = "Docker email address"
+  description = "Required: Email address of the user owner of the Entitled Registry Key"
 }
 
 variable "cp4aiops_namespace" {
@@ -47,9 +47,7 @@ variable "cp4aiops_namespace" {
 
 
 locals {
-  entitled_registry        = "cp.icr.io"
-  entitled_registry_user   = "cp"
-  docker_registry          = "cp.icr.io" // Staging: "cp.stg.icr.io/cp/cpd"
+  docker_registry          = "cp.icr.io"
   docker_username          = "cp"               // "ekey"
   entitled_registry_key    = chomp(var.entitled_registry_key)
   openshift_version_regex  = regex("(\\d+).(\\d+)(.\\d+)*(_openshift)*", var.openshift_version)
