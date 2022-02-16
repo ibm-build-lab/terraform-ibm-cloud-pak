@@ -39,7 +39,7 @@ See the example [here](../../examples/Db2) on how to provision this module.
 | `db2_cpu`                  |                                                                        |          |   Yes    |
 | `db2_memory`               |                                                                        |          |   Yes    |
 | `db2_storage_size`         |                                                                        |          |   Yes    |
-| `db2_storage_class`        |                                                                        | ``       |   No     |
+| `db2_storage_class`        |                                                                        |          |   No     |
 
 
 ### Executing the Terraform Script
