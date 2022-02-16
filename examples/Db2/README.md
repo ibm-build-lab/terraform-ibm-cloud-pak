@@ -43,6 +43,8 @@ See the example [here](../../examples/Db2) on how to provision this module.
 | `db2_memory`               | Memory setting for the pod requests and limits                         |  `110Gi`               |   Yes    |
 | `db2_storage_size`         | Storage size for the db2 databases                                     |  `200Gi`               |   Yes    |
 | `db2_storage_class`        | Name for the Storage Class                                             | `ibmc-file-gold-gid`   |   No     |
+| `entitled_registry_key`    | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
+| `entitled_registry_user_email`| IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key. i.e: joe@ibm.com |              | Yes      |
 
 
 ### Executing the Terraform Script
