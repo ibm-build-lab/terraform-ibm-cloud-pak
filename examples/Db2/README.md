@@ -63,7 +63,9 @@ If DB2 is successful and the process is completed, you should see the following 
 ```
 ```
 
-## Outputs
+## Output Parameters
+
+The Terraform code return the following output parameters:
 
 | Name                   | Description                                                                                 |
 |------------------------|---------------------------------------------------------------------------------------------|
