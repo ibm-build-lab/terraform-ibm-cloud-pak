@@ -1,37 +1,39 @@
-variable "cluster_id" {
-  description = "Enter your cluster id or name to install the Cloud Pak. Leave blank to provision a new Openshift cluster."
-}
-
 variable "ibmcloud_api_key" {
   description = "IBMCloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
 }
 
 variable "region" {
-  description = "Region that cluster resides in"
+  default     = "us-south"
+  description = "Region where the cluster is created."
 }
 
 variable "resource_group" {
-  default     = "default"
+  default     = "cloud-pak-sandbox"
   description = "Resource group name where the cluster will be hosted."
 }
+
+variable "cluster_id" {
+  description = "Enter your cluster id or name to install the Cloud Pak. Leave blank to provision a new Openshift cluster."
+}
+
 variable "entitled_registry_user_email" {
   type        = string
   description = "Email address of the user owner of the Entitled Registry Key"
 }
 
-variable "entitlement_key" {
+variable "entitled_registry_key" {
   type        = string
   description = "Do you have a Cloud Pak for Business Automation Entitlement Registry key? If not, Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
 }
 
 # --------- DB2 SETTINGS ----------
-variable "enable" {
-  default = true
+variable "enable_db2" {
+  default     = true
   description = "If set to true, it will install DB2 on the given cluster"
 }
 
  variable "db2_project_name" {
-   default = "ibm-db2"
+   default     = "ibm-db2"
    description = "The namespace/project for Db2"
  }
 variable "db2_admin_user_password" {
@@ -39,7 +41,7 @@ variable "db2_admin_user_password" {
 }
 
 variable "db2_admin_username" {
-  default = "db2inst1"
+  default     = "db2inst1"
   description = "Db2 admin username defined in LDAP"
 }
 
@@ -59,27 +61,43 @@ variable "db2_standard_license_key" {
   description = "The standard license key for the Db2 database product"
 }
 
-# DB2 Setting
-locals {
-  cluster_config_path = "./kube/config"
+variable "operatorVersion" {
+  default     = "db2u-operator.v1.1.10"
+  description = "Operator version"
+}
+
+variable "operatorChannel" {
+  default     = "v1.1"
+  description = "The Operator Channel performs rollout update when new release is available."
+}
+
+variable "db2_instance_version" {
+  default     = "11.5.6.0"
+  description = "DB2 version to be installed"
+}
+
+variable "db2_cpu" {
+  default     = "16"
+  description = "CPU setting for the pod requests and limits"
+}
+
+variable "db2_memory" {
+  default     = "110Gi"
+  description = "Memory setting for the pod requests and limits"
+}
+
+variable "db2_storage_size" {
+  default     = "200Gi"
+  description = "Storage size for the db2 databases"
+}
+
+variable "db2_storage_class" {
+  default     = "ibmc-file-gold-gid"
+  description = "Name for the Storage Class"
 }
 
 locals {
-//  cp4ba_namespace              = "cp4ba"
-//  entitled_registry_key_secret_name = "ibm-entitlement-key"
-//  docker_secret_name                = "docker-registry"
-  docker_server                     = "cp.icr.io"
-  docker_username                   = "cp"
-//  docker_password                   = chomp(var.entitlement_key)
-//  docker_email                      = var.entitled_registry_user_email
-//
-//  enable_cluster = var.cluster_id == "" || var.cluster_id == null
-//  //  use_entitlement              = "yes"
-//  project_name     = "cp4ba"
-//  platform_options = 1     // 1: roks - 2: ocp - 3: private cloud
-//  deployment_type  = 2     // 1: demo - 2: enterprise
-//  platform_version = "4.6" // roks version
-
-  //  entitled_registry_key        = chomp(var.entitlement_key)
-//  ibmcloud_api_key = chomp(var.ibmcloud_api_key)
+  docker_server   = "cp.icr.io"
+  docker_username = "cp"
+  cluster_config_path = "./kube/config"
 }

@@ -14,7 +14,7 @@ output "db2_admin_username" {
 }
 
 //output "db2_host_name" {
-//  value = var.db2_host_name
+//  value = module.db2_host_name
 //  description = "Host name of Db2 instance"
 //}
 //

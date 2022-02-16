@@ -14,7 +14,7 @@ locals {
 
 
 resource "null_resource" "install_db2" {
-  count = var.enable ? 1 : 0
+  count = var.enable_db2 ? 1 : 0
 
   triggers = {
     db2_file_sha1                  = sha1(local.db2_file)
@@ -43,7 +43,7 @@ resource "null_resource" "install_db2" {
       DB2_CPU                  = var.db2_cpu
       DB2_MEMORY               = var.db2_memory
       DB2_STORAGE_SIZE         = var.db2_storage_size
-      DB2_STORAGE_CLASS         = var.db2_storage_class
+      DB2_STORAGE_CLASS        = var.db2_storage_class
 
 
       # ------ FILES ASSIGNMENTS -----------
@@ -54,7 +54,7 @@ resource "null_resource" "install_db2" {
       DB2_FILE                  = local.db2_file
 
       # ------ Docker Information ----------
-      ENTITLED_REGISTRY_KEY           = var.entitlement_key
+      ENTITLED_REGISTRY_KEY           = var.entitled_registry_key
       ENTITLEMENT_REGISTRY_USER_EMAIL = var.entitled_registry_user_email
       DOCKER_SERVER                   = local.docker_server
       DOCKER_USERNAME                 = local.docker_username

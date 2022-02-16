@@ -27,19 +27,22 @@ See the example [here](../../examples/Db2) on how to provision this module.
 
 ## Input Variables
 
-| Name                       | Description                                                            | Default  | Required |
-| ---------------------------|------------------------------------------------------------------------|----------|----------|
-| `enable`                   | If set to `false`, IBM DB2 will not be installed. Enabled by default   |   true   |   No     |
-| `db2_project_name`         |                                                                        |          |   Yes    |
-| `db2_admin_user_password`  |                                                                        |          |   Yes    |
-| `db2_standard_license_key` |                                                                        |          |   Yes    |
-| `operatorVersion`          |                                                                        |          |   Yes    |
-| `operatorChannel`          |                                                                        |          |   Yes    |
-| `db2_instance_version`     |                                                                        |"11.5.6.0"|   No     |
-| `db2_cpu`                  |                                                                        |          |   Yes    |
-| `db2_memory`               |                                                                        |          |   Yes    |
-| `db2_storage_size`         |                                                                        |          |   Yes    |
-| `db2_storage_class`        |                                                                        |          |   No     |
+| Name                       | Description                                                            | Default                | Required |
+| ---------------------------|------------------------------------------------------------------------|------------------------|----------|
+| `ibmcloud_api_key`         | IBM Cloud API key:                                                     |                        | Yes      |
+| `resource_group`           | Region where the cluster is created. Managing resource groups:         | `default`              | Yes      |
+| `region`                   | Region code                                                            | `us-south`             | No       |
+| `enable_db2`               | If set to `false`, IBM DB2 will not be installed. Enabled by default   |  `true`                |   No     |
+| `db2_project_name`         | The namespace/project for Db2                                          | `ibm-db2`              |   Yes    |
+| `db2_admin_user_password`  | Admin user name defined in associated LDAP                             | `cpadmin`              |   Yes    |
+| `db2_standard_license_key` | The standard license key for the Db2 database product                  |                        |   Yes    |
+| `operatorVersion`          | The version of the Db2 Operator                                        |`db2u-operator.v1.1.10` |   Yes    |
+| `operatorChannel`          | The Operator Channel performs rollout update when new release is available.|   `v1.1`           |   Yes    |
+| `db2_instance_version`     | The version of the logical environment for Db2 Database Manager        |`11.5.6.0`              |   No     |
+| `db2_cpu`                  | CPU setting for the pod requests and limits                            |   `16`                 |   Yes    |
+| `db2_memory`               | Memory setting for the pod requests and limits                         |  `110Gi`               |   Yes    |
+| `db2_storage_size`         | Storage size for the db2 databases                                     |  `200Gi`               |   Yes    |
+| `db2_storage_class`        | Name for the Storage Class                                             | `ibmc-file-gold-gid`   |   No     |
 
 
 ### Executing the Terraform Script
