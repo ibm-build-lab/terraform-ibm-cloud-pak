@@ -63,10 +63,10 @@ If DB2 is successful and the process is completed, you should see the following 
 
 ## Outputs
 
-| Name                 | Description                                                                                 |
-| -------------------- |---------------------------------------------------------------------------------------------|
-| `DB2 Host Name`      |                                                                                             |
-| `DB2 Port`           |                                                                                             |
+| Name                   | Description                                                                                 |
+|------------------------|---------------------------------------------------------------------------------------------|
+| `db2_host_name`        | Host name for DB2 instance                                                                  |
+| `db2_host_port_number` | Port number for DB2 instance                                                                |
 
 
 
