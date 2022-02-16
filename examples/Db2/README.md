@@ -76,7 +76,7 @@ The Terraform code return the following output parameters:
 
 ### Clean up
 
-When the project is complete, execute: 
+When you finish installing Db2, release the resources by executing the following command:: 
 ```
 terraform destroy
 ```
