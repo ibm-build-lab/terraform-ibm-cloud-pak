@@ -33,7 +33,7 @@ See the example [here](../../examples/Db2) on how to provision this module.
 | `resource_group`           | Region where the cluster is created. Managing resource groups: https://cloud.ibm.com/docs/account?topic=account-rgs&interface=ui        | `default`              | Yes      |
 | `region`                   | Region code: https://cloud.ibm.com/docs/codeengine?topic=codeengine-regions                                                            | `us-south`             | No       |
 | `enable_db2`               | If set to `false`, IBM DB2 will not be installed. Enabled by default   |  `true`                |   No     |
-| `db2_project_name`         | The namespace/project for Db2                                          | `ibm-db2`              |   Yes    |
+| `db2_project_name`         | The namespace or project for Db2                                       | `ibm-db2`              |   Yes    |
 | `db2_admin_user_password`  | Admin user name defined in associated LDAP                             | `cpadmin`              |   Yes    |
 | `db2_standard_license_key` | The standard license key for the Db2 database product                  |                        |   Yes    |
 | `operatorVersion`          | The version of the Db2 Operator                                        |`db2u-operator.v1.1.10` |   Yes    |
