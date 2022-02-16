@@ -2,11 +2,11 @@ apiVersion: db2u.databases.ibm.com/v1
 kind: Db2uCluster
 metadata:
   name: db2ucluster
-  namespace: db2OnOcpProjectName
+  namespace: ibm-db2
 spec:
   size: 1
   license:
-    db2License
+    accept: true
   account:
     imagePullSecrets:
       - ibm-db2-registry
@@ -14,18 +14,18 @@ spec:
   environment:
     dbType: db2oltp
     instance:
-      password: db2AdminUserPassword
-  version: db2InstanceVersion
+      password: Passw0rd
+  version: 11.5.6.0
   podConfig:
     db2u:
       resource:
         db2u:
           requests:
-            cpu: db2Cpu
-            memory: db2Memory
+            cpu: 16
+            memory: 110Gi
           limits:
-            cpu: db2Cpu
-            memory: db2Memory
+            cpu: 16
+            memory: 110Gi
   storage:
     - name: share
       type: create
@@ -34,5 +34,5 @@ spec:
           - ReadWriteMany
         resources:
           requests:
-            storage: db2StorageSize
-        storageClassName: db2OnOcpStorageClassName
+            storage: 200Gi
+        storageClassName: ibmc-file-gold-gid

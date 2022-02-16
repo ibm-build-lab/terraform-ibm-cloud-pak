@@ -51,6 +51,7 @@ variable "operatorVersion" {
 }
 
 variable "db2_standard_license_key" {
+  default     = ""
   description = "Leave blank for standard licence. Specify the db2 license key for Advanced."
 }
 

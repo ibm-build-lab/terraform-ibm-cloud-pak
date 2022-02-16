@@ -58,6 +58,7 @@ variable "db2_admin_username" {
 //}
 //
 variable "db2_standard_license_key" {
+  default     = ""
   description = "The standard license key for the Db2 database product"
 }
 

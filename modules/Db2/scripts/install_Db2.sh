@@ -127,10 +127,12 @@ oc apply -f ../../modules/Db2/files/db2-subscription.yaml
 #echo -e "\x1B[1mCreating the Subscription...\n${DB2_SUBSCRIPTION_FILE}\n\x1B[0m"
 #kubectl apply -f ${DB2_OPERATOR_GROUP_FILE}
 
+wating_time=20
 echo
-echo "Waiting up to 5 minutes for DB2 Operator install plan to be generated. $DB2_PROJECT_NAME"
+echo "Waiting up to ${wating_time} minutes for DB2 Operator install plan to be generated. $DB2_PROJECT_NAME"
 date
-installPlan=$(wait_for_install_plan "db2u-operator" 5 $DB2_PROJECT_NAME)
+
+installPlan=$(wait_for_install_plan "db2u-operator" ${wating_time} $DB2_PROJECT_NAME)
 if [ -z "$installPlan" ]
 then
   echo "Timed out waiting for DB2 install plan. Check status for CSV $DB2_STARTING_CSV"
@@ -143,14 +145,16 @@ fi
 echo
 echo "Approving DB2 Operator install plan."
 oc patch installplan $installPlan --namespace ${DB2_PROJECT_NAME} --type merge --patch '{"spec":{"approved":true}}'
+echo
 ##
 ## Waiting up to 5 minutes for DB2 Operator installation to complete.
 ## The CSV name for the DB2 operator is exactly the version of the CSV hence
 ## using db2OperatorVersion as the operator name.
 ##
+timer_2=10
 echo "Waiting up to 5 minutes for DB2 Operator to install."
 date
-operatorInstallStatus=$(wait_for_operator_to_install_successfully $DB2_STARTING_CSV 5 $DB2_PROJECT_NAME)
+operatorInstallStatus=$(wait_for_operator_to_install_successfully ${DB2_OPERATOR_VERSION} ${timer_2} $DB2_PROJECT_NAME)
 if [ -z "$operatorInstallStatus" ]
 then
   echo "Timed out waiting for DB2 operator to install.  Check status for CSV $DB2_STARTING_CSV"
@@ -159,7 +163,7 @@ fi
 
 echo "Deploying the Db2u cluster ..."
 
-cp ../../modules/Db2/templates/db2_tmpl.yaml ../../modules/Db2/files/db2.yaml
+cp ../../modules/Db2/templates/db2.template.yaml ../../modules/Db2/files/db2.yaml
 
 sed -i.bak "s|db2OnOcpProjectName|$DB2_PROJECT_NAME|g" ../../modules/Db2/files/db2.yaml
 sed -i.bak "s|db2AdminUserPassword|$DB2_ADMIN_USER_PASSWORD|g" ../../modules/Db2/files/db2.yaml
@@ -178,29 +182,6 @@ fi
 sed -i.bak "s|db2License|$db2License|g" ../../modules/Db2/files/db2.yaml
 
 oc apply -f ../../modules/Db2/files/db2.yaml
-
-##
-## Create the DB2 Cluster instance using our predefined template
-##
-#echo
-#echo "Deploying the Db2u cluster."
-#cp db2.template.yaml db2.yaml
-#sed -i.bak "s|db2OnOcpProjectName|$db2OnOcpProjectName|g" db2.yaml
-#sed -i.bak "s|db2AdminUserPassword|$db2AdminUserPassword|g" db2.yaml
-#sed -i.bak "s|db2InstanceVersion|$db2InstanceVersion|g" db2.yaml
-#sed -i.bak "s|db2Cpu|$db2Cpu|g" db2.yaml
-#sed -i.bak "s|db2Memory|$db2Memory|g" db2.yaml
-#sed -i.bak "s|db2StorageSize|$db2StorageSize|g" db2.yaml
-#sed -i.bak "s|db2OnOcpStorageClassName|$db2OnOcpStorageClassName|g" db2.yaml
-#db2License="accept: true"
-#if [ "$db2StandardLicenseKey" == "" ]; then
-#   db2License="accept: true"
-#else
-#   db2License="value: $db2StandardLicenseKey"
-#fi
-#sed -i.bak "s|db2License|$db2License|g" db2_tmpl.yaml
-
-#oc apply -f ../../modules/Db2/files/db2_tmpl.yaml
 
 ##
 ## Wait for c-db2ucluster-db2u statefulset to be created so that we can apply requried patch.
