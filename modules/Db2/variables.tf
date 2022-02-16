@@ -1,10 +1,10 @@
 variable "cluster_id" {
-  default     = ""
+  default     = "c7k5n2rd02oue2lo2c60"
   description = "Enter your cluster id or name to install the Cloud Pak. Leave blank to provision a new Openshift cluster."
 }
 
 variable "cluster_config_path" {
-  default     = ".kube/config"
+  default     = "/.kube/config"
   type        = string
   description = "Path to the cluster configuration file to access your cluster"
 }
@@ -42,6 +42,49 @@ variable "db2_admin_username" {
   description = "Db2 admin username defined in LDAP"
 }
 
+
+variable "operatorVersion" {
+  default = "db2u-operator.v1.1.10"
+  description = "Operator version"
+}
+
+variable "db2_standard_license_key" {
+  default = ""
+  description = "Leave blank for standard licence. Specify the db2 license key for Advanced."
+}
+
+variable "operatorChannel" {
+  default = "v1.1"
+  description = "<<add description>>"
+}
+
+variable "db2_instance_version" {
+  default = "11.5.6.0"
+  description = "DB2 version to be installed"
+}
+
+variable "db2_cpu" {
+  default = "16"
+  description = "CPU setting for the pod requests and limits"
+}
+
+
+variable "db2_memory" {
+  default = "110Gi"
+  description = "Memory setting for the pod requests and limits"
+}
+
+variable "db2_storage_size"" {
+  default = "200Gi"
+  description = "Storage size for the db2 databases"
+}
+
+variable "db2_storage_class"" {
+  default = "ibmc-file-gold-gid"
+  description = "Name for the Storage Class"
+}
+
+
 //variable "db2_host_name" {
 //  description = "Host name of Db2 instance"
 //}
@@ -54,11 +97,60 @@ variable "db2_admin_username" {
 //  description = "Port for Db2 instance"
 //}
 //
-variable "db2_standard_license_key" {
-  description = "The standard license key for the Db2 database product"
-}
+
+//locals {
+//  # CP4BA Database Name information
+//  //  db2_ums_db_name   = "UMSDB"
+//  //  db2_icn_db_name   = "ICNDB"
+//  //  db2_devos_1_name  = "DEVOS1"
+//  //  db2_aeos_name     = "AEOS"
+//  //  db2_baw_docs_name = "BAWDOCS"
+//  //  db2_baw_tos_name  = "BAWTOS"
+//  //  db2_baw_dos_name  = "BAWDOS"
+//  //  db2_baw_Db_name   = "BAWDB"
+//  //  db2_app_db_name   = "APPDB"
+//  //  db2_ae_db_name    = "AEDB"
+//  //  db2_bas_db_name   = "BASDB"
+//  //  db2_gcd_db_name   = "GCDDB"
+//  db2_admin_user_password  = "passw0rd"
+//  db2_standard_license_key = "W0xpY2Vuc2VDZXJ0aWZpY2F0ZV0KQ2hlY2tTdW09Q0FBODlCOTA0QzU3RTY2OTU1RjJDQTY4MzlCRTZCOTMKVGltZVN0YW1wPTE1NjU3MjM5MDIKUGFzc3dvcmRWZXJzaW9uPTQKVmVuZG9yTmFtZT1JQk0gVG9yb250byBMYWIKVmVuZG9yUGFzc3dvcmQ9N3Y4cDRmcTJkdGZwYwpWZW5kb3JJRD01ZmJlZTBlZTZmZWIuMDIuMDkuMTUuMGYuNDguMDAuMDAuMDAKUHJvZHVjdE5hbWU9REIyIFN0YW5kYXJkIEVkaXRpb24KUHJvZHVjdElEPTE0MDUKUHJvZHVjdFZlcnNpb249MTEuNQpQcm9kdWN0UGFzc3dvcmQ9MzR2cnc1MmQyYmQyNGd0NWFmNHU4Y2M0ClByb2R1Y3RBbm5vdGF0aW9uPTEyNyAxNDMgMjU1IDI1NSA5NCAyNTUgMSAwIDAgMC0yNzsjMCAxMjggMTYgMCAwCkFkZGl0aW9uYWxMaWNlbnNlRGF0YT0KTGljZW5zZVN0eWxlPW5vZGVsb2NrZWQKTGljZW5zZVN0YXJ0RGF0ZT0wOC8xMy8yMDE5CkxpY2Vuc2VEdXJhdGlvbj02NzE2CkxpY2Vuc2VFbmREYXRlPTEyLzMxLzIwMzcKTGljZW5zZUNvdW50PTEKTXVsdGlVc2VSdWxlcz0KUmVnaXN0cmF0aW9uTGV2ZWw9MwpUcnlBbmRCdXk9Tm8KU29mdFN0b3A9Tm8KQnVuZGxlPU5vCkN1c3RvbUF0dHJpYnV0ZTE9Tm8KQ3VzdG9tQXR0cmlidXRlMj1ObwpDdXN0b21BdHRyaWJ1dGUzPU5vClN1YkNhcGFjaXR5RWxpZ2libGVQcm9kdWN0PU5vClRhcmdldFR5cGU9QU5ZClRhcmdldFR5cGVOYW1lPU9wZW4gVGFyZ2V0ClRhcmdldElEPUFOWQpFeHRlbmRlZFRhcmdldFR5cGU9CkV4dGVuZGVkVGFyZ2V0SUQ9ClNlcmlhbE51bWJlcj0KVXBncmFkZT1ObwpJbnN0YWxsUHJvZ3JhbT0KQ2FwYWNpdHlUeXBlPQpNYXhPZmZsaW5lUGVyaW9kPQpEZXJpdmVkTGljZW5zZVN0eWxlPQpEZXJpdmVkTGljZW5zZVN0YXJ0RGF0ZT0KRGVyaXZlZExpY2Vuc2VFbmREYXRlPQpEZXJpdmVkTGljZW5zZUFnZ3JlZ2F0ZUR1cmF0aW9uPQo="
+//  //  db2_cpu    = 4
+//  //  db2_memory = "16Gi"
+//  //  db2_instance_version = "11.5.6.0"
+//  //  db2_host_name   = "REQUIRED"
+//  //  db2_host_ip     = "REQUIRED"
+//  //  db2_port_number = "REQUIRED"
+//  //  db2_use_on_ocp  = true
+//  db2_admin_user_name = "db2inst1"
+//  //  cp4ba_deployment_platform     = local.platform_options
+//  //  db2_on_ocp_storage_class_name = local.sc_fast_file_storage_classname
+//  //  db2_storage_size              = "150Gi"
+//  db2_project_name = "ibm-db2"
+//}
+
+// Portworx Module Variables
+//variable "install_portworx" {
+//  type        = bool
+//  default     = false
+//  description = "Install Portworx on the ROKS cluster. `true` or `false`"
+//}
 
 locals {
+  //  cp4ba_namespace              = "cp4ba"
+//  entitled_registry_key_secret_name = "ibm-entitlement-key"
+//  docker_secret_name                = "docker-registry"
   docker_server                     = "cp.icr.io"
   docker_username                   = "cp"
+//  docker_password                   = chomp(var.entitlement_key)
+//  docker_email                      = var.entitled_registry_user_email
+
+//  enable_cluster = var.cluster_id == "" || var.cluster_id == null
+//  //  use_entitlement              = "yes"
+//  project_name     = "cp4ba"
+//  platform_options = 1     // 1: roks - 2: ocp - 3: private cloud
+//  deployment_type  = 2     // 1: demo - 2: enterprise
+//  platform_version = "4.6" // roks version
+
+  //  entitled_registry_key        = chomp(var.entitlement_key)
+//  ibmcloud_api_key = chomp(var.ibmcloud_api_key)
 }

@@ -33,10 +33,18 @@ resource "null_resource" "install_db2" {
       KUBECONFIG = var.cluster_config_path
 
       # ----- Platform -----
-      DB2_PROJECT_NAME        = var.db2_project_name
-      DB2_ADMIN_USERNAME      = var.db2_admin_username
-      DB2_ADMIN_USER_PASSWORD = var.db2_admin_user_password
+      DB2_PROJECT_NAME         = var.db2_project_name
+      DB2_ADMIN_USERNAME       = var.db2_admin_username
+      DB2_ADMIN_USER_PASSWORD  = var.db2_admin_user_password
       DB2_STANDARD_LICENSE_KEY = var.db2_standard_license_key
+      DB2_OPERATOR_VERSION     = var.operatorVersion
+      DB2_OPERATOR_CHANNEL     = var.operatorChannel
+      DB2_INSTANCE_VERSION     = var.db2_instance_version
+      DB2_CPU                  = var.db2_cpu
+      DB2_MEMORY               = var.db2_memory
+      DB2_STORAGE_SIZE         = var.db2_storage_size
+      DB2_STORAGE_CLASS         = var.db2_storage_class
+
 
       # ------ FILES ASSIGNMENTS -----------
       DB2_OPERATOR_GROUP_FILE   = local.db2_operator_group_file

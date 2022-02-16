@@ -8,27 +8,17 @@
 # disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
 #
 ###############################################################################
-
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
   name: db2u-operator
-  namespace: ibm-db2
+  namespace: paramDB2Namespace 
+  labels:
+    operators.coreos.com/db2u-operator.paramDB2Namespace: ''
 spec:
-  channel: v1.1
+  channel: paramDB2OperatorChannel 
   name: db2u-operator
+  installPlanApproval: Manual
   source: ibm-operator-catalog
   sourceNamespace: openshift-marketplace
-  startingCSV: db2u-operator.v1.1.10
-
-
-
-
-
-
-
-
-
-
-
-
+  startingCSV: paramDB2OperatorVersion

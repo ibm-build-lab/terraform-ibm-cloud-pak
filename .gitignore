@@ -32,3 +32,4 @@ my_variables.tfvars
 ## Temporary files to ignore
 **/.helm
 modules/cp4na/files/tnco-ldap-secret.txt
+examples/cp4aiops/terraform.tfvars
