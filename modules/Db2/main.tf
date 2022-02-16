@@ -31,7 +31,6 @@ resource "null_resource" "install_db2" {
     environment = {
       # ----- Cluster -----
       KUBECONFIG = var.cluster_config_path
-
       # ----- Platform -----
       DB2_PROJECT_NAME         = var.db2_project_name
       DB2_ADMIN_USERNAME       = var.db2_admin_username
@@ -44,15 +43,12 @@ resource "null_resource" "install_db2" {
       DB2_MEMORY               = var.db2_memory
       DB2_STORAGE_SIZE         = var.db2_storage_size
       DB2_STORAGE_CLASS        = var.db2_storage_class
-
-
       # ------ FILES ASSIGNMENTS -----------
       DB2_OPERATOR_GROUP_FILE   = local.db2_operator_group_file
       DB2_SUBSCRIPTION_FILE     = local.db2_subscription_file
       DB2_OPERATOR_CATALOG_FILE = local.db2_operator_catalog_file
       DB2_STORAGE_CLASS_FILE    = local.db2_storage_class_file
       DB2_FILE                  = local.db2_file
-
       # ------ Docker Information ----------
       ENTITLED_REGISTRY_KEY           = var.entitled_registry_key
       ENTITLEMENT_REGISTRY_USER_EMAIL = var.entitled_registry_user_email

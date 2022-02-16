@@ -1,7 +1,3 @@
-variable "ibmcloud_api_key" {
-  description = "IBMCloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
-}
-
 variable "region" {
   default     = "us-south"
   description = "Region where the cluster is created."
@@ -10,10 +6,6 @@ variable "region" {
 variable "resource_group" {
   default     = "cloud-pak-sandbox"
   description = "Resource group name where the cluster will be hosted."
-}
-
-variable "cluster_id" {
-  description = "Enter your cluster id or name to install the Cloud Pak. Leave blank to provision a new Openshift cluster."
 }
 
 variable "cluster_config_path" {
