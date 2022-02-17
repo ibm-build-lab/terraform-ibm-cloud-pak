@@ -1,11 +1,11 @@
-resource "ibm_resource_instance" "cos" {
-  count             = var.enable && var.on_vpc ? 1 : 0
-  name              = "${var.project_name}-${var.environment}-cos"
-  resource_group_id = data.ibm_resource_group.group.id
-  service           = "cloud-object-storage"
-  plan              = "standard"
-  location          = "global"
-}
+// resource "ibm_resource_instance" "cos" {
+//   count             = var.enable && var.on_vpc ? 1 : 0
+//   name              = "${var.project_name}-${var.environment}-cos"
+//   resource_group_id = data.ibm_resource_group.group.id
+//   service           = "cloud-object-storage"
+//   plan              = "standard"
+//   location          = "global"
+// }
 
 resource "ibm_container_vpc_cluster" "cluster" {
   count                = var.enable && var.on_vpc ? 1 : 0
@@ -15,7 +15,7 @@ resource "ibm_container_vpc_cluster" "cluster" {
   worker_count         = var.workers_count[0]
   kube_version         = local.roks_version
   resource_group_id    = data.ibm_resource_group.group.id
-  cos_instance_crn     = ibm_resource_instance.cos[0].id
+  // cos_instance_crn     = ibm_resource_instance.cos[0].id
   wait_till            = "IngressReady"
   entitlement          = var.entitlement
   force_delete_storage = var.force_delete_storage

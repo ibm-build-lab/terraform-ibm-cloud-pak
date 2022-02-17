@@ -57,17 +57,6 @@ data "ibm_container_cluster_config" "cluster_config" {
   network           = false
 }
 
-resource "null_resource" "check_ingress" {
-  provisioner "local-exec" {
-    environment = {
-      KUBECONFIG = var.config_dir
-    }
-
-    command     = "./install_odf.sh"
-    working_dir = "${path.module}/scripts"
-  }
-}
-
 # Install ODF if the rocks version is v4.7 or newer
 resource "null_resource" "enable_odf" {
   count = var.enable ? 1 : 0
