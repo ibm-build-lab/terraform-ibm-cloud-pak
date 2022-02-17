@@ -11,12 +11,12 @@ variable "entitlement" {
 
 variable "on_vpc" {
   type        = bool
-  default     = false
+  default     = true
   description = "Ignored if `cluster_id` is specified. Type of infrastructure should cluster be? Options are `true` = VPC, `false` classic"
 }
 
 variable "region" {
-  default     = "us-south"
+  default     =  "ca-tor" //"us-south"
   description = "Region that the cluster is/will be located. List all available regions with: `ibmcloud regions`"
 }
 
@@ -41,7 +41,7 @@ variable "owner" {
 }
 
 variable "environment" {
-  default     = "dev"
+  default     = "test"
   description = "Ignored if `cluster_id` is specified.  The environment name is used to name the cluster with the project name"
 }
 
@@ -54,7 +54,7 @@ variable "force_delete_storage" {
 // OpenShift cluster specific input parameters and default values:
 variable "flavors" {
   type    = list(string)
-  default = ["b3c.16x64"]
+  default = ["bx2.16x64"]
   description = "Ignored if `cluster_id` is specified. Array with the flavors or machine types of each of the workers. List all flavors for each zone with: `ibmcloud ks flavors --zone us-south-1 --provider vpc-gen2` or `ibmcloud ks flavors --zone dal10 --provider classic`. On Classic only list one flavor, i.e. `[\"b3c.16x64\"]`. On VPC can list multiple flavors `[\"mx2.4x32\", \"mx2.8x64\", \"cx2.4x8\"] or [\"bx2.16x64\"]`"
 }
 
@@ -81,7 +81,7 @@ variable "datacenter" {
 
 variable "vpc_zone_names" {
   type    = list(string)
-  default = ["us-south-1"]
+  default = ["ca-tor-1"]  //["us-south-1"]
   description = "Ignored if `cluster_id` is specified. VPC only. Array with the subzones in the region to create the workers groups. List all the zones with: `ibmcloud ks zone ls --provider vpc-gen2`. Example [\"us-south-1\", \"us-south-2\", \"us-south-3\"]"
 }
 
@@ -94,7 +94,7 @@ variable "config_dir" {
 
 variable "is_enable" {
   type        = bool
-  default     = false
+  default     = true
   description = "Install ODF on the ROKS cluster. `true` or `false`"
 }
 

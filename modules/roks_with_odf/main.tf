@@ -57,15 +57,28 @@ data "ibm_container_cluster_config" "cluster_config" {
   network           = false
 }
 
-resource "null_resource" "enable_odf" {
-  count = var.is_enable && var.roks_version != "4.6" ? 1 : 0
-
+resource "null_resource" "check_ingress" {
   provisioner "local-exec" {
     environment = {
       KUBECONFIG = var.config_dir
     }
 
+    command     = "./install_odf.sh"
+    working_dir = "${path.module}/scripts"
+  }
+}
+
+# Install ODF if the rocks version is v4.7 or newer
+resource "null_resource" "enable_odf" {
+  count = var.enable ? 1 : 0
+
+  provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
-    command = "ibmcloud oc cluster addon enable openshift-data-foundation -c ${var.cluster_id} --version 4.7.0 --param \"odfDeploy=true\""
+    command = "${path.module}/scripts/install_odf.sh"
+
+    environment = {
+      IC_API_KEY = var.ibmcloud_api_key
+      CLUSTER = var.module.cluster.id
+    }
   }
 }
