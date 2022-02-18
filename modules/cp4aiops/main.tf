@@ -4,6 +4,25 @@ locals {
   on_vpc_ready = var.on_vpc ? var.portworx_is_ready : 1
 }
 
+resource "null_resource" "install_aiops_operator" {
+  count = var.enable ? 1 : 0
+
+  provisioner "local-exec" {
+    command     = "./install_aiops_operator.sh"
+    working_dir = "${path.module}/scripts"
+
+    environment = {
+      KUBECONFIG                    = var.cluster_config_path
+      NAMESPACE                     = var.namespace
+    }
+  }
+
+  depends_on = [
+    local.on_vpc_ready,
+    null_resource.prereqs_checkpoint
+  ]
+}
+
 # This section checks to see if the values have been updated through out the script running and is required for any dynamic value
 resource "null_resource" "install_cp4aiops" {
   count = var.enable ? 1 : 0
@@ -32,8 +51,7 @@ resource "null_resource" "install_cp4aiops" {
   }
 
   depends_on = [
-    local.on_vpc_ready,
-    null_resource.prereqs_checkpoint
+    null_resource.install_aiops_operator
   ]
 }
 
