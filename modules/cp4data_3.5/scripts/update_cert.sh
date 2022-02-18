@@ -50,7 +50,7 @@ openssl req -x509 -passin pass:dataPlatf0rm -sha512 -newkey rsa:2048 -keyout ${s
 create_external_secret()
 {
     echo "=== creating secret ==="
-    kubectl create secret generic external-tls-secret --from-file=cert.crt=${ssltmpdir}/cert.crt --from-file=cert.key=${ssltmpdir}/cert.key --dry-run -o yaml | kubectl apply -f -
+    kubectl create secret generic external-tls-secret --from-file=cert.crt=${ssltmpdir}/cert.crt --from-file=cert.key=${ssltmpdir}/cert.key -n $NAMESPACE --dry-run -o yaml | kubectl apply -f -n $NAMESPACE -
 }
 
 nginx_reload()
@@ -58,23 +58,22 @@ nginx_reload()
     echo "===nginx reload ... wait a minute for the secret to be (re-)mounted==="
     sleep 60s 
     
-    for i in `kubectl get pods | grep ibm-nginx |  cut -f1 -d\ `; do kubectl exec ${i} -- /scripts/reload.sh; done
+    for i in `kubectl get pods -n $NAMESPACE | grep ibm-nginx |  cut -f1 -d\ `; do kubectl exec ${i} -- /scripts/reload.sh; done
 }
 
 restart_nginx_pods()
 {
     echo "=== restarting nginix pods ==="
-    for i in `kubectl get pods | grep ibm-nginx |  cut -f1 -d\ `; do kubectl delete po  ${i}; done
+    for i in `kubectl get pods -n $NAMESPACE | grep ibm-nginx |  cut -f1 -d\ `; do kubectl delete po  ${i}; done
 }
 
 recreate_route()
 {
     echo "=== recreating route ==="
-    kubectl delete route ${NAMESPACE}-cpd
-    kubectl create route reencrypt ${NAMESPACE}-cpd --service=ibm-nginx-svc --port=ibm-nginx-https-port --dest-ca-cert=${HOME}/tmp/genssl/cert.crt
+    kubectl delete route ${NAMESPACE}-cpd -n $NAMESPACE 
+    kubectl create route reencrypt ${NAMESPACE}-cpd --service=ibm-nginx-svc --port=ibm-nginx-https-port --dest-ca-cert=${HOME}/tmp/genssl/cert.crt -n $NAMESPACE 
 }
 
-kubectl project ${NAMESPACE}
 genSelfSignedCert
 create_external_secret
 nginx_reload

@@ -441,6 +441,7 @@ resource "null_resource" "update_cert" {
 
   depends_on = [
     null_resource.install_lite,
+    null_resource.reencrypt_route,
     null_resource.install_spark,
     null_resource.install_dv,
     null_resource.install_wkc,
@@ -469,6 +470,7 @@ resource "null_resource" "get_endpoint" {
 
   depends_on = [
     null_resource.install_lite,
+    null_resource.reencrypt_route,
     null_resource.install_spark,
     null_resource.install_dv,
     null_resource.install_wkc,
