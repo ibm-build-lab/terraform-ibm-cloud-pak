@@ -31,7 +31,9 @@ variable "entitled_registry_user" {
   description = "Docker email address"
 }
 
-locals {
-  cluster_config_path = "./.kube/config"
+variable "cluster_config_path" {
+  default     = "./.kube/config"
+  type        = string
+  description = "Defaulted to `./.kube/config` but for schematics, use `/tmp/.schematic/.kube/config"
 }
 
