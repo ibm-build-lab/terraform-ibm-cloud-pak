@@ -50,12 +50,12 @@ openssl req -x509 -passin pass:dataPlatf0rm -sha512 -newkey rsa:2048 -keyout ${s
 create_external_secret()
 {
     echo "=== creating secret ==="
-    kubectl create secret generic external-tls-secret --from-file=cert.crt=${ssltmpdir}/cert.crt --from-file=cert.key=${ssltmpdir}/cert.key -n $NAMESPACE --dry-run -o yaml | kubectl apply -f -n $NAMESPACE -
+    kubectl create secret generic external-tls-secret --from-file=cert.crt=${ssltmpdir}/cert.crt --from-file=cert.key=${ssltmpdir}/cert.key -n $NAMESPACE --dry-run=client -o yaml | kubectl apply -n $NAMESPACE -f  -
 }
 
 nginx_reload()
 {
-    echo "===nginx reload ... wait a minute for the secret to be (re-)mounted==="
+    echo "=== nginx reload ... wait a minute for the secret to be (re-)mounted ==="
     sleep 60s 
     
     for i in `kubectl get pods -n $NAMESPACE | grep ibm-nginx |  cut -f1 -d\ `; do kubectl exec ${i} -- /scripts/reload.sh; done
@@ -79,6 +79,3 @@ create_external_secret
 nginx_reload
 restart_nginx_pods
 recreate_route
-
-### You can then use ${ssltmpdir}/cert.crt with `--dest-ca-cert=` (destinationCACertificate) for a reencrypt route
-  
