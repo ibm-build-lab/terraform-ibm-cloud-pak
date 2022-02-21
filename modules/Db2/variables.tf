@@ -66,12 +66,12 @@ variable "db2_instance_version" {
 }
 
 variable "db2_cpu" {
-  default     = "16"
+  default     = "4"
   description = "CPU setting for the pod requests and limits"
 }
 
 variable "db2_memory" {
-  default     = "110Gi"
+  default     = "16"
   description = "Memory setting for the pod requests and limits"
 }
 

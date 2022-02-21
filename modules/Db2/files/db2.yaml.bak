@@ -21,11 +21,11 @@ spec:
       resource:
         db2u:
           requests:
-            cpu: 16
-            memory: 110Gi
+            cpu: 4
+            memory: 16
           limits:
-            cpu: 16
-            memory: 110Gi
+            cpu: 4
+            memory: 16
   storage:
     - name: share
       type: create
