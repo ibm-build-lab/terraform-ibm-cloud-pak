@@ -1,5 +1,5 @@
 #!/bin/bash
-
+NAMESPACE="cp4d"
 set -e
 
 ssltmpdir=${HOME}/tmp/genssl
@@ -58,20 +58,22 @@ nginx_reload()
     echo "=== nginx reload ... wait a minute for the secret to be (re-)mounted ==="
     sleep 60s 
     
-    for i in `kubectl get pods -n $NAMESPACE | grep ibm-nginx |  cut -f1 -d\ `; do kubectl exec ${i} -- /scripts/reload.sh; done
+    for i in `kubectl get pods -n $NAMESPACE | grep ibm-nginx |  cut -f1 -d\ `; do kubectl -n $NAMESPACE exec ${i} -- /scripts/reload.sh; done
 }
 
 restart_nginx_pods()
 {
     echo "=== restarting nginix pods ==="
-    for i in `kubectl get pods -n $NAMESPACE | grep ibm-nginx |  cut -f1 -d\ `; do kubectl delete po  ${i}; done
+    for i in `kubectl get pods -n $NAMESPACE | grep ibm-nginx |  cut -f1 -d\ `; do kubectl -n $NAMESPACE delete po  ${i}; done
 }
 
 recreate_route()
 {
     echo "=== recreating route ==="
-    kubectl delete route ${NAMESPACE}-cpd -n $NAMESPACE 
-    kubectl create route reencrypt ${NAMESPACE}-cpd --service=ibm-nginx-svc --port=ibm-nginx-https-port --dest-ca-cert=${HOME}/tmp/genssl/cert.crt -n $NAMESPACE 
+    kubectl delete route ${NAMESPACE}-cpd -n $NAMESPACE
+    # NOTE: must us `oc` as `kubectl` does not contain an option to create a route.
+    # TODO: Create route template and populate variables.
+    oc create route reencrypt ${NAMESPACE}-cpd --service=ibm-nginx-svc --port=ibm-nginx-https-port --dest-ca-cert=${HOME}/tmp/genssl/cert.crt -n $NAMESPACE 
 }
 
 genSelfSignedCert
