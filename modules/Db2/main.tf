@@ -57,3 +57,14 @@ resource "null_resource" "install_db2" {
     }
   }
 }
+
+
+data "external" "get_endpoints" {
+  count           = var.enable_db2 ? 1 : 0
+  depends_on      = [null_resource.install_db2]
+  program         = ["/bin/bash", "${path.module}/scripts/get_db2_endpoints.sh"]
+  query = {
+    kubeconfig    = var.cluster_config_path
+    db2_namespace = var.db2_project_name
+  }
+}
