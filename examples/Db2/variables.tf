@@ -83,12 +83,12 @@ variable "db2_cpu" {
 }
 
 variable "db2_memory" {
-  default     = "16"
+  default     = "16Gi"
   description = "Memory setting for the pod requests and limits"
 }
 
 variable "db2_storage_size" {
-  default     = "200Gi"
+  default     = "150Gi"
   description = "Storage size for the db2 databases"
 }
 

@@ -22,10 +22,10 @@ spec:
         db2u:
           requests:
             cpu: 4
-            memory: 16
+            memory: 16Gi
           limits:
             cpu: 4
-            memory: 16
+            memory: 16Gi
   storage:
     - name: share
       type: create
@@ -34,5 +34,5 @@ spec:
           - ReadWriteMany
         resources:
           requests:
-            storage: 200Gi
+            storage: 150Gi
         storageClassName: ibmc-file-gold-gid
