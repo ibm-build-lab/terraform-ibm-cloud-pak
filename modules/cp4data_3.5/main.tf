@@ -428,18 +428,20 @@ resource "null_resource" "install_rstudio" {
   ]
 }
 
-resource "null_resource" "get_endpoint" {
+resource "null_resource" "update_cert" {
   provisioner "local-exec" {
     environment = {
-      KUBECONFIG = var.cluster_config_path
+      KUBECONFIG = var.cluster_config_path,
+      NAMESPACE  = var.cpd_project_name
     }
     working_dir = "${path.module}/scripts/"
     interpreter = ["/bin/bash", "-c"]
-    command     = "./get_endpoints.sh"
+    command     = "./update_cert.sh"
   }
 
   depends_on = [
     null_resource.install_lite,
+    null_resource.reencrypt_route,
     null_resource.install_spark,
     null_resource.install_dv,
     null_resource.install_wkc,
@@ -455,3 +457,34 @@ resource "null_resource" "get_endpoint" {
     null_resource.install_rstudio
   ]
 }
+
+resource "null_resource" "get_endpoint" {
+  provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.cluster_config_path
+    }
+    working_dir = "${path.module}/scripts/"
+    interpreter = ["/bin/bash", "-c"]
+    command     = "./get_endpoints.sh"
+  }
+
+  depends_on = [
+    null_resource.install_lite,
+    null_resource.reencrypt_route,
+    null_resource.install_spark,
+    null_resource.install_dv,
+    null_resource.install_wkc,
+    null_resource.install_wsl,
+    null_resource.install_wml,
+    null_resource.install_aiopenscale,
+    null_resource.install_cde,
+    null_resource.install_streams,
+    null_resource.install_dmc,
+    null_resource.install_db2wh,
+    null_resource.install_datagate,
+    null_resource.install_big_sql,
+    null_resource.install_rstudio,
+    null_resource.update_cert
+  ]
+}
+
