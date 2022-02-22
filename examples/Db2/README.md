@@ -69,8 +69,8 @@ The Terraform code return the following output parameters:
 
 | Name                   | Description                                                                                 |
 |------------------------|---------------------------------------------------------------------------------------------|
-| `db2_host_name`        | Host name for DB2 instance                                                                  |
-| `db2_host_port_number` | Port number for DB2 instance                                                                |
+| `db2_host_address`     | Host name for DB2 instance                                                                  |
+| `db2_ports`            | Port number for DB2 instance                                                                |
 
 
 
