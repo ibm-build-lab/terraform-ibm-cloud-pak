@@ -1,34 +1,15 @@
-output "db2_project_name" {
-  value = var.db2_project_name
-  description = "The namespace/project for Db2"
+output "db2_host_address" {
+    depends_on = [
+    data.external.get_endpoints,
+  ]
+  description = "Use Host name of Db2 instance to update in  property \"db2_Host_address\" with this information (in Skytap, use the IP 10.0.0.10 instead."
+  value = var.enable_db2 && length(data.external.get_endpoints) > 0 ? data.external.get_endpoints.0.result.endpoint : ""
 }
 
-output "db2_admin_user_password" {
-  value = var.db2_admin_user_password
-  description = "Db2 admin user password defined in LDAP"
+output "db2_ports" {
+  depends_on = [
+    data.external.get_endpoints,
+  ]
+  description = "Use these Ports for Db2 instance to update in  property \"db2PortNumber\" with this information (legacy-server)."
+  value = var.enable_db2 && length(data.external.get_endpoints) > 0 ? data.external.get_endpoints.0.result.nodePort : ""
 }
-
-output "db2_admin_username" {
-  value = var.db2_admin_username
-  description = "Db2 admin username defined in LDAP"
-}
-
-//output "db2_host_name" {
-//  value = module.db2_host_name
-//  description = "Host name of Db2 instance"
-//}
-//
-//output "db2_host_ip" {
-//  value = var.db2_host_ip
-//  description = "IP address for the Db2"
-//}
-//
-//output "db2_port_number" {
-//  value = var.db2_port_number
-//  description = "Port for Db2 instance"
-//}
-//
-//output "db2_standard_license_key" {
-//  value = var.db2_standard_license_key
-//  description = "The standard license key for the Db2 database product"
-//}

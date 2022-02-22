@@ -45,18 +45,6 @@ variable "db2_admin_username" {
   description = "Db2 admin username defined in LDAP"
 }
 
-//variable "db2_host_name" {
-//  description = "Host name of Db2 instance"
-//}
-//
-//variable "db2_host_ip" {
-//  description = "IP address for the Db2"
-//}
-//
-//variable "db2_port_number" {
-//  description = "Port for Db2 instance"
-//}
-//
 variable "db2_standard_license_key" {
   default     = ""
   description = "The standard license key for the Db2 database product"
