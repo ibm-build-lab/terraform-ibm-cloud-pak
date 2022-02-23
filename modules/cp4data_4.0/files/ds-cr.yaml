@@ -1,5 +1,5 @@
-apiVersion: dfd.cpd.ibm.com/v1alpha1
-kind: DataStageService
+apiVersion: ds.cpd.ibm.com/v1alpha1
+kind: DataStage
 metadata:
   name: datastage-cr
   namespace: REPLACE_NAMESPACE
@@ -8,3 +8,4 @@ spec:
     accept: true
     license: Enterprise
   version: 4.0.2
+  storageClass: "portworx-shared-gp3"

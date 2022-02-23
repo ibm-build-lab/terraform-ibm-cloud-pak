@@ -2,21 +2,21 @@
 # Optimize kernel parameters
 #############################
 locals {
-  setkernelparams_file = local.worker_node_memory < 128 ? "setkernelparams.yaml" : "setkernelparams_128gbRAM.yaml"
+  setkernelparams_file  = local.worker_node_memory < 128 ? "setkernelparams.yaml" : "setkernelparams_128gbRAM.yaml"
   set_norootsquash_file = "norootsquash.yaml"
-  worker_node_memory = tonumber(regex("[0-9]+$", var.worker_node_flavor))
+  worker_node_memory    = tonumber(regex("[0-9]+$", var.worker_node_flavor))
 }
 
 resource "null_resource" "setkernelparams" {
   depends_on = [var.portworx_is_ready]
-  
+
   provisioner "local-exec" {
     environment = {
       KUBECONFIG = var.cluster_config_path
     }
     working_dir = "${path.module}/files/"
     interpreter = ["/bin/bash", "-c"]
-    command = "kubectl apply -n kube-system -f ${local.setkernelparams_file}"
+    command     = "kubectl apply -n kube-system -f ${local.setkernelparams_file}"
   }
 }
 
@@ -25,15 +25,15 @@ resource "null_resource" "setkernelparams" {
 #############################
 
 resource "null_resource" "set_norootsquash" {
-    depends_on = [var.portworx_is_ready]
+  depends_on = [var.portworx_is_ready]
 
-    provisioner "local-exec" {
-      environment = {
-        KUBECONFIG = var.cluster_config_path
-      }
-      working_dir = "${path.module}/files/"
-      interpreter = ["/bin/bash", "-c"]
-      command = "kubectl apply -n kube-system -f ${local.set_norootsquash_file}"
+  provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.cluster_config_path
+    }
+    working_dir = "${path.module}/files/"
+    interpreter = ["/bin/bash", "-c"]
+    command     = "kubectl apply -n kube-system -f ${local.set_norootsquash_file}"
   }
 }
 
@@ -52,7 +52,7 @@ resource "null_resource" "create_registry_route" {
       KUBECONFIG = var.cluster_config_path
     }
     interpreter = ["/bin/bash", "-c"]
-    command = "oc create route reencrypt --service=image-registry -n openshift-image-registry"
+    command     = "oc create route reencrypt --service=image-registry -n openshift-image-registry"
   }
 }
 resource "null_resource" "annotate_registry_route" {
@@ -63,7 +63,7 @@ resource "null_resource" "annotate_registry_route" {
       KUBECONFIG = var.cluster_config_path
     }
     interpreter = ["/bin/bash", "-c"]
-    command = "oc annotate route image-registry --overwrite haproxy.router.openshift.io/balance=source -n openshift-image-registry"
+    command     = "oc annotate route image-registry --overwrite haproxy.router.openshift.io/balance=source -n openshift-image-registry"
   }
 }
 
@@ -81,6 +81,6 @@ resource "null_resource" "prereqs_checkpoint" {
   ]
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
-    command = "echo '=== REACHED PREREQS CHECKPOINT ==='"
+    command     = "echo '=== REACHED PREREQS CHECKPOINT ==='"
   }
 }

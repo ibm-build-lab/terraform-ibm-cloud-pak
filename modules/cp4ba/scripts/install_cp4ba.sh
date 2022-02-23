@@ -94,22 +94,64 @@ fi
 echo
 
 ###### Add the CatalogSource resources to Operator Hub
+# Creating roles
+echo -e "\x1B[1mCreating roles ...\x1B[0m"
+cat ${ROLES_FILE}
+${K8S_CMD} apply -f ${ROLES_FILE} -n ${CP4BA_PROJECT_NAME}
+echo
+
+# Creating roles
+echo -e "\x1B[1mCreating role binding ...\x1B[0m"
+cat ${ROLE_BINDING_FILE}
+${K8S_CMD} apply -f ${ROLE_BINDING_FILE} -n ${CP4BA_PROJECT_NAME}
+echo
+
+# Deploy common-service
+echo -e "\x1B[1m Creating common-service namespace ...\x1B[0m"
+${K8S_CMD} create namespace common-service
+echo
+
+
+# CREATING OPERATOR GROUP
+echo -e "\x1B[1m Creating Operator Group ...\x1B[0m"
+cat ${OPERATOR_GROUP_FILE}
+${K8S_CMD} apply -f "${OPERATOR_GROUP_FILE}"
+echo
+
+# Add the CatalogSource resources to Operator Hub
 echo -e "\x1B[1mCreating the Catalog Source...\x1B[0m"
 cat ${CATALOG_SOURCE_FILE}
 ${K8S_CMD} apply -f ${CATALOG_SOURCE_FILE}
-sleep 5
-echo ""
+sleep 10
 echo ""
 
-###### Create subscription to Business Automation Operator
-echo -e "\x1B[1mCreating the Subscription...\n${CP4BA_SUBSCRIPTION_CONTENT}\n\x1B[0m"
-kubectl apply -f -<<EOF
-${CP4BA_SUBSCRIPTION_CONTENT}
-EOF
-echo "Sleeping for 5 minutes"
-sleep 300
+echo -e "\x1B[1m Deploying common-service ...\x1B[0m"
+cat ${COMMON_SERVICE_FILE}
+${K8S_CMD} apply -f "${COMMON_SERVICE_FILE}"
+sleep 100
+echo
 
-${K8S_CMD} get pods -n ${CP4BA_PROJECT_NAME} | grep ibm-cp4a-operator
+# Create subscription to Business Automation Operator
+echo -e "\x1B[1mCreating the Subscription...\x1B[0m"
+cat "${CP4BA_SUBSCRIPTION_FILE}"
+${K8S_CMD} apply -f "${CP4BA_SUBSCRIPTION_FILE}" -n "${CP4BA_PROJECT_NAME}"
+sleep 100
+echo
+
+# Create Deployment Credentials
+echo -e "\x1B[1mCreating the Deployment Credentials ...\x1B[0m"
+cat "${CP4BA_DEPLOYMENT_CREDENTIALS_FILE}"
+${K8S_CMD} apply -n ${CP4BA_PROJECT_NAME} -f "${CP4BA_DEPLOYMENT_CREDENTIALS_FILE}"
+echo
+
+# Create Deployment
+echo -e "\x1B[1mCreating the Deployment ...\x1B[0m"
+${K8S_CMD} apply -n ${CP4BA_PROJECT_NAME} -f "${CP4BA_DEPLOYMENT_CONTENT}" --validate=false
+cat "${CP4BA_DEPLOYMENT_CONTENT}"
+
+echo
+
+${K8S_CMD} get pods -n openshift-marketplace | grep ibm-cp4a-operator
 result=$?
 counter=0
 while [[ "${result}" -ne 0 ]]
@@ -121,37 +163,10 @@ do
     counter=$((counter + 1))
     echo "Waiting for CP4BA operator pod to provision"
     sleep 30;
-    kubectl get pods -n ${CP4BA_PROJECT_NAME} | grep ibm-cp4a-operator
+    ${K8S_CMD} get pods -n openshift-marketplace | grep ibm-cp4a-operator
     result=$?
 done
-# ##### Create cartridge
-# echo -e "\x1B[1mCreating the cartridge \n${AUTOMATIONUICONFIG_CONTENT}...\x1B[0m"
-# ${K8S_CMD} apply -n ${CP4BA_PROJECT_NAME} -f -<<EOF
-# ${AUTOMATIONUICONFIG_CONTENT}
-# EOF
 
-###### Create tls secret
-echo  "Create tls secret"
-cp4baTlsSecretName=$(kubectl get secrets -n ibm-cert-store | grep tls | awk '{print $1}')
-echo $cp4baTlsSecretName
-tlsCert=$(kubectl get secret/$cp4baTlsSecretName -n ibm-cert-store -o "jsonpath={.data.tls\.crt}")
-tlsKey=$(kubectl get secret/$cp4baTlsSecretName -n ibm-cert-store -o "jsonpath={.data.tls\.key}")
 
-kubectl config set-context --current --namespace=${CP4BA_PROJECT_NAME}
-cp ../../modules/cp4ba/templates/tlsSecrets.yaml.tmpl ../../modules/cp4ba/files/tlsSecrets.yaml
-sed -i.bak "s|tlsCert|$tlsCert|g" ../../modules/cp4ba/files/tlsSecrets.yaml
-sed -i.bak "s|tlsKey|$tlsKey|g" ../../modules/cp4ba/files/tlsSecrets.yaml
-kubectl apply -f ../../modules/cp4ba/files/tlsSecrets.yaml
-
-###### Copy JDBC Files
-echo -e "\x1B[1mCopying JDBC License Files...\x1B[0m"
-podname=$(${K8S_CMD} get pods -n ${CP4BA_PROJECT_NAME} | grep ibm-cp4a-operator | awk '{print $1}')
-${K8S_CMD} cp ${CUR_DIR}/files/jdbc ${CP4BA_PROJECT_NAME}/$podname:/opt/ansible/share
-
-###### Create Deployment
-echo -e "\x1B[1mCreating the Deployment \n${CP4BA_DEPLOYMENT_CONTENT}...\x1B[0m"
-${K8S_CMD} apply -n ${CP4BA_PROJECT_NAME} -f -<<EOF
-${CP4BA_DEPLOYMENT_CONTENT}
-EOF
 
 

@@ -33,13 +33,13 @@ echo "creating namespace cp4na"
 kubectl create namespace cp4na --dry-run=client -o yaml | kubectl apply -f -
 
 echo "Deploying Catalog Option ${OPERATOR_CATALOG}"
-echo "${OPERATOR_CATALOG}" | oc apply -f -
+echo "${OPERATOR_CATALOG}" | kubectl apply -f -
 
 echo "Deploying Catalog Option ${COMMON_SERVICES_CATALOG}"
-echo "${COMMON_SERVICES_CATALOG}" | oc apply -f -
+echo "${COMMON_SERVICES_CATALOG}" | kubectl apply -f -
 
 echo "Deploying Catalog Option ${REDIS_CATALOG}"
-echo "${REDIS_CATALOG}" | oc apply -f -
+echo "${REDIS_CATALOG}" | kubectl apply -f -
 
 
 create_secret() {
@@ -48,29 +48,29 @@ create_secret() {
   link=$3
 
   echo "Creating secret ${secret_name} on ${namespace} from entitlement key"
-  oc create secret docker-registry ${secret_name} \
+  kubectl create secret docker-registry ${secret_name} \
     --docker-server=${DOCKER_REGISTRY} \
     --docker-username=${DOCKER_USERNAME} \
     --docker-password=${DOCKER_REGISTRY_PASS} \
     --docker-email=${DOCKER_USER_EMAIL} \
     --namespace=${NAMESPACE}
 
-  # [[ "${link}" != "no-link" ]] && oc secrets -n ${namespace} link cpdinstall icp4d-anyuid-docker-pull --for=pull
+  # [[ "${link}" != "no-link" ]] && kubectl secrets -n ${namespace} link cpdinstall icp4d-anyuid-docker-pull --for=pull
 }
 
 create_secret ibm-entitlement-key ${NAMESPACE}
 
 echo "Creating Service Account ${SERVICE_ACCOUNT}"
-echo "${SERVICE_ACCOUNT}" | oc apply -f -
+echo "${SERVICE_ACCOUNT}" | kubectl apply -f -
 
 
 sleep 40
 
 
 echo "Deploying Operator Group ${OPERATOR_GROUP}"
-echo "${OPERATOR_GROUP}" | oc apply -f -
+echo "${OPERATOR_GROUP}" | kubectl apply -f -
 
 
 echo "Deploying Subscription ${SUBSCRIPTION}"
-echo "${SUBSCRIPTION}" | oc apply -f -
+echo "${SUBSCRIPTION}" | kubectl apply -f -
 

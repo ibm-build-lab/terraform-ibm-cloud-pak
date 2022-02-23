@@ -25,8 +25,8 @@ resource "null_resource" "install_wkc" {
     cpd_workspace = local.cpd_workspace
   }
   provisioner "local-exec" {
-    working_dir = "${path.module}"
-    command = <<-EOF
+    working_dir = path.module
+    command     = <<-EOF
 echo "Create SCC for WKC-IIS"
 oc create -f ${self.triggers.cpd_workspace}/wkc_iis_scc.yaml
 

@@ -33,7 +33,7 @@ resource "ibm_container_cluster" "cluster" {
   // public_service_endpoint  = true
   // private_service_endpoint = true
 
-  entitlement          = var.entitlement
+  entitlement = var.entitlement
 
   tags = [
     "project:${var.project_name}",

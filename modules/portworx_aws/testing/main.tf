@@ -38,7 +38,7 @@ EOF
 module "portworx" {
   # TF 13+ count
   # count                = var.portworx_enterprise.enable || var.portworx_essentials.enable ? 1 : 0
-  
+
   source                = "../."
   region                = var.region
   aws_access_key_id     = var.access_key_id

@@ -9,14 +9,14 @@ locals {
 
 resource "null_resource" "setkernelparams" {
   depends_on = [var.portworx_is_ready]
-  
+
   provisioner "local-exec" {
     environment = {
       KUBECONFIG = var.cluster_config_path
     }
     working_dir = "${path.module}/files/"
     interpreter = ["/bin/bash", "-c"]
-    command = "oc apply -n kube-system -f ${local.setkernelparams_file}"
+    command     = "oc apply -n kube-system -f ${local.setkernelparams_file}"
   }
 }
 
@@ -24,14 +24,17 @@ resource "null_resource" "setkernelparams" {
 # Create and annotate image registry route
 ###########################################
 resource "null_resource" "create_registry_route" {
-  depends_on = [var.portworx_is_ready]
-
+  depends_on = [
+    var.portworx_is_ready,
+    null_resource.setkernelparams,
+  ]
+  
   provisioner "local-exec" {
     environment = {
       KUBECONFIG = var.cluster_config_path
     }
     interpreter = ["/bin/bash", "-c"]
-    command = "oc create route reencrypt --service=image-registry -n openshift-image-registry"
+    command     = "oc create route reencrypt --service=image-registry -n openshift-image-registry"
   }
 }
 resource "null_resource" "annotate_registry_route" {
@@ -42,7 +45,7 @@ resource "null_resource" "annotate_registry_route" {
       KUBECONFIG = var.cluster_config_path
     }
     interpreter = ["/bin/bash", "-c"]
-    command = "oc annotate route image-registry --overwrite haproxy.router.openshift.io/balance=source -n openshift-image-registry"
+    command     = "oc annotate route image-registry --overwrite haproxy.router.openshift.io/balance=source -n openshift-image-registry"
   }
 }
 
@@ -59,6 +62,6 @@ resource "null_resource" "prereqs_checkpoint" {
   ]
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
-    command = "echo '=== REACHED PREREQS CHECKPOINT ==='"
+    command     = "echo '=== REACHED PREREQS CHECKPOINT ==='"
   }
 }

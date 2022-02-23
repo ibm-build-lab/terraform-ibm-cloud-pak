@@ -8,12 +8,12 @@ variable "cluster_config_path" {
 }
 
 variable "cluster_name_id" {
-  default = ""
+  default     = ""
   description = "Name or id of the cluster"
 }
 
 variable "on_vpc" {
-  default = false
+  default     = false
   description = "Cluster type. VPC: `on_vpc=true`, Classic: `on_vpc=false`"
 }
 
@@ -70,8 +70,8 @@ variable "install_tech_prev_module" {
 }
 
 locals {
-  entitled_registry        = "cp.icr.io"
-  entitled_registry_user   = "cp"
-  entitled_registry_key    = chomp(var.entitled_registry_key)
-  ibmcloud_api_key         = chomp(var.ibmcloud_api_key)
+  entitled_registry      = "cp.icr.io"
+  entitled_registry_user = "cp"
+  entitled_registry_key  = chomp(var.entitled_registry_key)
+  ibmcloud_api_key       = chomp(var.ibmcloud_api_key)
 }

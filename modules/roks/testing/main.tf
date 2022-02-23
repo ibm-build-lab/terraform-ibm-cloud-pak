@@ -1,8 +1,8 @@
 // Requirements
 
 provider "ibm" {
-//  version    = "~> 1.13"
-  region     = var.region
+  //  version    = "~> 1.13"
+  region = var.region
 }
 
 // Module
@@ -17,12 +17,12 @@ module "cluster" {
   on_vpc = var.on_vpc
 
   // General
-  project_name   = var.project_name
-  owner          = var.owner
-  environment    = var.environment
-  resource_group = var.resource_group
-  roks_version   = var.roks_version
-  entitlement    = var.entitlement
+  project_name         = var.project_name
+  owner                = var.owner
+  environment          = var.environment
+  resource_group       = var.resource_group
+  roks_version         = var.roks_version
+  entitlement          = var.entitlement
   force_delete_storage = var.force_delete_storage
 
   // Parameters for Kubernetes Config

@@ -10,5 +10,5 @@ module "cp4i" {
   entitled_registry_key        = var.entitled_registry_key
   entitled_registry_user_email = var.entitled_registry_user_email
 
-  namespace           = "cp4i"
+  namespace = "cp4i"
 }

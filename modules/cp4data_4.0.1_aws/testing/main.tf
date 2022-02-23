@@ -11,7 +11,7 @@
 # }
 
 module "cpd" {
-#   count                     = var.accept_cpd_license == "accept" ? 1 : 0
+  #   count                     = var.accept_cpd_license == "accept" ? 1 : 0
   source                    = "./.."
   openshift_api             = var.openshift_api
   openshift_username        = var.openshift_username

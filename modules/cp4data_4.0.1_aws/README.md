@@ -4,7 +4,7 @@ This Terraform Module installs **Cloud Pak for Data** on an Openshift cluster on
 
 Based on [cpd-deployment](https://github.com/IBM/cp4d-deployment/tree/master/existing-openshift) opensource project.
 
-**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4data`
+**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4data`
 
 - [Terraform Module to install Cloud Pak for Data](#terraform-module-to-install-cloud-pak-for-data)
   - [Installing the CP4Data Module](#installing-the-cp4data-module)
@@ -17,7 +17,7 @@ Based on [cpd-deployment](https://github.com/IBM/cp4d-deployment/tree/master/exi
 
 ### Installing the CP4Data Module
 
-Use a `module` block assigning `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4data_4.0.1_aws`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Data.
+Use a `module` block assigning `source` to `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4data_4.0.1_aws`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Data.
 
 ```hcl
 module "cp4data" {

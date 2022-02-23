@@ -35,3 +35,19 @@ spec:
   updateStrategy:
     registryPoll:
       interval: 45m
+
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: ibm-cp4a-operator-catalog
+  namespace: openshift-marketplace
+spec:
+  displayName: ibm-cp4a-operator
+  publisher: IBM
+  sourceType: grpc
+  image: cp.stg.icr.io/cp/cp4a/ibm-cp-automation-catalog:latest
+#  image: cp.stg.icr.io/cp/cp4a/ibm-cp-automation-catalog:21.1.1
+  updateStrategy:
+    registryPoll:
+      interval: 45m
