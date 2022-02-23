@@ -16,7 +16,7 @@ resource "null_resource" "mkdir_kubeconfig_dir" {
 }
 
 data "ibm_container_cluster_config" "cluster_config" {
-  depends_on = [null_resource.mkdir_kubeconfig_dir]
+  depends_on        = [null_resource.mkdir_kubeconfig_dir]
   cluster_name_id   = var.cluster_id
   resource_group_id = data.ibm_resource_group.group.id
   config_dir        = var.kube_config_path
@@ -24,8 +24,8 @@ data "ibm_container_cluster_config" "cluster_config" {
 
 // Module:
 module "cp4i" {
-  source          = "./.."
-  enable          = var.enable
+  source = "./.."
+  enable = var.enable
 
   // ROKS cluster parameters:
   openshift_version   = var.openshift_version

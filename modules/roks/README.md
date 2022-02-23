@@ -2,7 +2,7 @@
 
 This Terraform Module creates an Openshift (ROKS) cluster on IBM Cloud Classic or VPC Gen 2 infrastructure.
 
-**Module Source**: `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/roks`
+**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/roks`
 
 - [Terraform Module to Create an OpenShift Cluster on IBM Cloud](#terraform-module-to-create-an-openshift-cluster-on-ibm-cloud)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
@@ -30,13 +30,13 @@ provider "ibm" {
 }
 ```
 
-Add a `module` block to provision the [roks](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) module. Set `source` to `git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/roks`. Then pass the input parameters depending on the infrastructure to deploy the cluster:
+Add a `module` block to provision the [roks](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) module. Set `source` to `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/roks`. Then pass the input parameters depending on the infrastructure to deploy the cluster:
 
 - **IBM Cloud Classic**
 
   ```hcl
   module "cluster" {
-    source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/roks"
+    source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/roks"
 
     // General variables:
     on_vpc         = false
@@ -48,7 +48,7 @@ Add a `module` block to provision the [roks](https://github.com/ibm-hcbt/terrafo
 
     // Openshift parameters:
     resource_group       = "default"
-    roks_version         = "4.6"
+    roks_version         = "4.7"
     force_delete_storage = true
 
     // IBM Cloud Classic variables:
@@ -62,7 +62,7 @@ Add a `module` block to provision the [roks](https://github.com/ibm-hcbt/terrafo
 
   ```hcl
   module "cluster" {
-    source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/roks"
+    source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/roks"
 
     // General variables:
     on_vpc         = "true"
@@ -74,7 +74,7 @@ Add a `module` block to provision the [roks](https://github.com/ibm-hcbt/terrafo
 
     // Openshift parameters:
     resource_group       = "default"
-    roks_version         = "4.6"
+    roks_version         = "4.7"
     force_delete_storage = true
 
     // IBM Cloud VPC variables:
@@ -101,7 +101,7 @@ The Terraform script requires the following list of input variables. Here are so
 | `environment`          | Used to name the cluster with the project name, like this: `{project_name}-{environment}-cluster` | `dev`            | No       |
 | `entitlement`          | Source of OCP entitlement | `cloud_pak`            | No       |
 | `resource_group`       | Resource Group used to host the cluster. List all available resource groups with: `ibmcloud resource groups`                                                                           | `default`        | No       |
-| `roks_version`         | OpenShift version to install. List all available versions: `ibmcloud ks versions`. There is no need to include the suffix `_OpenShift`. The module will append it to install the specified version of OpenShift.  | `4.6`            | No       |
+| `roks_version`         | OpenShift version to install. List all available versions: `ibmcloud ks versions`. There is no need to include the suffix `_OpenShift`. The module will append it to install the specified version of OpenShift.  | `4.7`            | No       |
 | `datacenter`           | **IBM Cloud Classic** only (`on_vpc` = `false`). This is the Datacenter or Zone in the Region to provision the cluster. List all available zones with: `ibmcloud ks zone ls --provider classic`    | `dal10`          | No       |
 | `private_vlan_number`  | **IBM Cloud Classic** only. (`on_vpc` = `false`). Private VLAN assigned to your zone. Make it an empty string to select a private unnamed VLAN or to create new VLAN if there isn't one (i.e. this is the first cluster in the zone). To list available VLANs in the zone: `ibmcloud ks vlan ls --zone <datacenter>`. Make sure the the VLAN type is `private` and the router begins with `bc`. Use the `ID` or `Number` |                  | No       |
 | `public_vlan_number`   | **IBM Cloud Classic** only (`on_vpc` = `false`). Public VLAN assigned to your zone. Set to an empty string to select a public unnamed VLAN or to create a new VLAN if there aren't any (i.e. this is the first cluster in the zone). List available VLANs in the zone: `ibmcloud ks vlan ls --zone <datacenter>`. Make sure the the VLAN type is `public` and the router begins with `fc`. Use the `ID` or `Number`    |                  | No       |
