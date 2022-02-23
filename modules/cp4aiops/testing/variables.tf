@@ -9,8 +9,8 @@ variable "enable" {
 }
 
 variable "cluster_config_path" {
-  type        = string
   description = "Path to the Kubernetes configuration file to access your cluster"
+  default     = "./.kube/config"
 }
 
 variable "on_vpc" {

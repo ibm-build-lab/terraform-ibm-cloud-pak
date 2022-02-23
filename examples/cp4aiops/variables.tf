@@ -36,6 +36,7 @@ variable "cp4aiops_namespace" {
   description = "Namespace for Cloud Pak for AIOps"
 }
 
-locals {
-  cluster_config_path = "./.kube/config"
+variable "cluster_config_path" {
+  description = "Path to the Kubernetes configuration file to access your cluster"
+  default     = "./.kube/config"
 }

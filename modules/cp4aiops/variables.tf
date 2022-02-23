@@ -14,6 +14,7 @@ variable "force" {
 
 variable "cluster_config_path" {
   description = "Path to the Kubernetes configuration file to access your cluster"
+  default     = "./.kube/config"
 }
 
 variable "openshift_version" {
