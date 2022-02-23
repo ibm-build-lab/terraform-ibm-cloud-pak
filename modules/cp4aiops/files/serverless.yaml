@@ -1,4 +1,3 @@
-cat << EOF | oc apply -n openshift-operators -f -
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
