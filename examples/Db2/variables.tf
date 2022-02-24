@@ -17,7 +17,7 @@ variable "cluster_id" {
 }
 
 variable "cluster_config_path" {
-  default     = "/.kube/config"
+  default     = "./.kube/config"
   description = "Path to the cluster configuration file to access your cluster"
 }
 

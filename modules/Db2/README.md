@@ -11,7 +11,7 @@ Go [here](../../CREDENTIALS.md) for details.
 
 ### Download required license files
 
-Download required license files from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `../../modules/db2/files` folder
+Download required license files from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `../../modules/db2/files` folder on your local computer. 
 ```bash
 DB2:
 Part Number : CNB21ML
@@ -48,7 +48,7 @@ See the example [here](../../examples/Db2) on how to provision this module.
 
 ### Executing the Terraform Script
 
-Follow this link to execute this DB2 module: [IBM Cloud Pak DB2 Terraform Example](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/examples/Db2)
+Follow this link to execute this DB2 module: [Install IBM Cloud Pak DB2 Terraform Example](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/examples/Db2)
 
 ### Verify
 

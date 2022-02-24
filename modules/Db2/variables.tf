@@ -9,7 +9,6 @@ variable "resource_group" {
 }
 
 variable "cluster_config_path" {
-  default     = "/.kube/config"
   description = "Path to the cluster configuration file to access your cluster"
 }
 
