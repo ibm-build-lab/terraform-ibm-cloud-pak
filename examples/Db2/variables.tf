@@ -16,6 +16,11 @@ variable "cluster_id" {
   description = "Enter your cluster id or name to install the Cloud Pak. Leave blank to provision a new Openshift cluster."
 }
 
+variable "cluster_config_path" {
+  default     = "/.kube/config"
+  description = "Path to the cluster configuration file to access your cluster"
+}
+
 variable "entitled_registry_user_email" {
   type        = string
   description = "Email address of the user owner of the Entitled Registry Key"
@@ -36,18 +41,19 @@ variable "enable_db2" {
    default     = "ibm-db2"
    description = "The namespace/project for Db2"
  }
+
 variable "db2_admin_user_password" {
   description = "Db2 admin user password defined in LDAP"
 }
 
 variable "db2_admin_username" {
   default     = "db2inst1"
-  description = "Db2 admin username defined in LDAP"
+  description = "Db2 default admin username."
 }
 
 variable "db2_standard_license_key" {
   default     = ""
-  description = "The standard license key for the Db2 database product"
+  description = "The standard license key for the Db2 database product. Note: the license key is required only for Advanced DB2 installation."
 }
 
 variable "operatorVersion" {
@@ -88,5 +94,4 @@ variable "db2_storage_class" {
 locals {
   docker_server   = "cp.icr.io"
   docker_username = "cp"
-  cluster_config_path = "./kube/config"
 }

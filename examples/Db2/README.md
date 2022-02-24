@@ -11,13 +11,13 @@ Go [here](../../CREDENTIALS.md) for details.
 
 ### Download required license files
 
-Download required license files from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `./files` folder
+Download required license files from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `../../modules/db2/files` folder
 ```bash
 DB2:
 Part Number : CNB21ML
 Filename    : DB2_AWSE_Restricted_Activation_11.5.zip
 ```
-Note: the license key is required only for Advanced DB2 installation
+
 
 
 
@@ -30,12 +30,14 @@ See the example [here](../../examples/Db2) on how to provision this module.
 | Name                       | Description                                                            | Default                | Required |
 | ---------------------------|------------------------------------------------------------------------|------------------------|----------|
 | `ibmcloud_api_key`         | IBM Cloud API key: https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key                                                    |                        | Yes      |
-| `resource_group`           | Region where the cluster is created. Managing resource groups: https://cloud.ibm.com/docs/account?topic=account-rgs&interface=ui        | `default`              | Yes      |
+| `resource_group`           | Region where the cluster is created. Managing resource groups: https://cloud.ibm.com/docs/account?topic=account-rgs&interface=ui | `cloud-pak-sandbox` | Yes      |
 | `region`                   | Region code: https://cloud.ibm.com/docs/codeengine?topic=codeengine-regions                                                            | `us-south`             | No       |
+| `cluster_id`               | Add cluster id to install the Cloud Pak on. Leave blank to provision a new Openshift cluster.   |          |   No   |
 | `enable_db2`               | If set to `false`, IBM DB2 will not be installed. Enabled by default   |  `true`                |   No     |
 | `db2_project_name`         | The namespace or project for Db2                                       | `ibm-db2`              |   Yes    |
-| `db2_admin_user_password`  | Db2 admin username defined in associated LDAP                             | `cpadmin`              |   Yes    |
-| `db2_standard_license_key` | The standard license key for the Db2 database product                  |                        |   Yes    |
+| `db2_admin_username`       | Db2 default admi username                                              | `db2inst1`             |   Yes    |
+| `db2_admin_user_password`  | Db2 admin username defined in associated LDAP                          |                        |   Yes    |
+| `db2_standard_license_key` | The standard license key for the Db2 database product. **Note**: The license key is required only for an Advanced DB2 installation.|                       |   No    |
 | `operatorVersion`          | The version of the Db2 Operator                                        |`db2u-operator.v1.1.10` |   Yes    |
 | `operatorChannel`          | The Operator Channel performs rollout update when new release is available.|   `v1.1`           |   Yes    |
 | `db2_instance_version`     | The version of the logical environment for Db2 Database Manager        |`11.5.6.0`              |   No     |

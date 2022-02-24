@@ -1,0 +1,7 @@
+ibmcloud_api_key             = "************"
+resource_group               = "************"
+region                       = "************"
+cluster_id                   = "************"
+db2_admin_user_password      = "************"
+entitled_registry_key        = "************"
+entitled_registry_user_email = "************"

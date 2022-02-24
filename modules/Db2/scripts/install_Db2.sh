@@ -14,7 +14,14 @@
 CUR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 OC_CMD=oc
 
-. ../../modules/Db2/scripts/common-ocp-utils.sh
+echo
+echo "Creating project ${DB2_PROJECT_NAME}..."
+${OC_CMD} new-project ${DB2_PROJECT_NAME}
+${OC_CMD} project ${DB2_PROJECT_NAME}
+echo
+
+#. ../../modules/Db2/scripts/common-ocp-utils.sh
+./common-ocp-utils.sh
 
 
 echo "Creating Storage Class ..."
@@ -22,7 +29,7 @@ ${OC_CMD} apply -f ${DB2_STORAGE_CLASS_FILE}
 sleep 10
 
 echo "Docker username: ${DOCKER_USERNAME}"
-${OC_CMD} create secret docker-registry ibm-registry --docker-server=${DOCKER_SERVER} --docker-username=${DOCKER_USERNAME} --docker-password=${ENTITLED_REGISTRY_KEY} --docker-email=${ENTITLEMENT_REGISTRY_USER_EMAIL} --namespace=ibm-db2
+${OC_CMD} create secret docker-registry ibm-registry --docker-server=${DOCKER_SERVER} --docker-username=${DOCKER_USERNAME} --docker-password=${ENTITLED_REGISTRY_KEY} --docker-email=${ENTITLEMENT_REGISTRY_USER_EMAIL} --namespace=${DB2_PROJECT_NAME}
 
 sleep 10
 
@@ -42,16 +49,11 @@ echo "Installing the IBM Operator Catalog..."
 ${OC_CMD} apply -f ${DB2_OPERATOR_CATALOG_FILE}
 
 echo
-echo "Creating project ${DB2_PROJECT_NAME}..."
-${OC_CMD} new-project ${DB2_PROJECT_NAME}
-${OC_CMD} project ${DB2_PROJECT_NAME}
-
-echo
 echo "You can get the Entitlement Registry key from here: https://myibm.ibm.com/products-services/containerlibrary"
 echo
 
 echo "Docker username: ${DOCKER_USERNAME}"
-${OC_CMD} create secret docker-registry ibm-db2-registry --docker-server=${DOCKER_SERVER} --docker-username=${DOCKER_USERNAME} --docker-password=${ENTITLED_REGISTRY_KEY} --docker-email=${ENTITLEMENT_REGISTRY_USER_EMAIL} --namespace=ibm-db2
+${OC_CMD} create secret docker-registry ibm-db2-registry --docker-server=${DOCKER_SERVER} --docker-username=${DOCKER_USERNAME} --docker-password=${ENTITLED_REGISTRY_KEY} --docker-email=${ENTITLEMENT_REGISTRY_USER_EMAIL} --namespace=${DB2_PROJECT_NAME}
 
 
 echo "Preparing the cluster for Db2..."
@@ -127,12 +129,12 @@ oc apply -f ../../modules/Db2/files/db2-subscription.yaml
 #echo -e "\x1B[1mCreating the Subscription...\n${DB2_SUBSCRIPTION_FILE}\n\x1B[0m"
 #kubectl apply -f ${DB2_OPERATOR_GROUP_FILE}
 
-wating_time=20
+waiting_time=20
 echo
-echo "Waiting up to ${wating_time} minutes for DB2 Operator install plan to be generated. $DB2_PROJECT_NAME"
+echo "Waiting up to ${waiting_time} minutes for DB2 Operator install plan to be generated. $DB2_PROJECT_NAME"
 date
 
-installPlan=$(wait_for_install_plan "db2u-operator" ${wating_time} $DB2_PROJECT_NAME)
+installPlan=$(wait_for_install_plan "db2u-operator" ${waiting_time} $DB2_PROJECT_NAME)
 if [ -z "$installPlan" ]
 then
   echo "Timed out waiting for DB2 install plan. Check status for CSV $DB2_STARTING_CSV"
@@ -283,7 +285,7 @@ echo -e "\tOther possible addresses(If hostname not available above): $workerNod
 echo
 echo "Use one of these NodePorts to access the databases e.g. with IBM Data Studio (usually the first one is for legacy-server (Db2 port 50000), the second for ssl-server (Db2 port 50001))."
 echo -e "\x1B[1mPlease also update in ${DB2_INPUT_PROPS_FILENAME} property \"db2PortNumber\" with this information (legacy-server).\x1B[0m"
-oc get svc -n "ibm-db2" c-db2ucluster-db2u-engn-svc -o json | grep nodePort
+oc get svc -n ${DB2_PROJECT_NAME} c-db2ucluster-db2u-engn-svc -o json | grep nodePort
 echo
 echo "Use \"${DB2_ADMIN_USER_NAME} \" and password \"${DB2_ADMIN_USER_PASSWORD} \" to access the databases e.g. with IBM Data Studio."
 echo
