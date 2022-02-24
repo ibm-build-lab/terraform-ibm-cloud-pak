@@ -31,19 +31,19 @@ See the example [here](../../examples/Db2) on how to provision this module.
 | `region`                   | Region code: https://cloud.ibm.com/docs/codeengine?topic=codeengine-regions                                                            | `us-south`             | No       |
 | `cluster_config_path`      | Path to the cluster configuration file to access your cluster          | `/.kube/config`        |   No     |
 | `enable_db2`               | If set to `false`, IBM DB2 will not be installed. Enabled by default   |  `true`                |   No     |
-| `DB2_PROJECT_NAME`         | The namespace or project for Db2                                       | `ibm-db2`              |   Yes    |
-| `DB2_ADMIN_USERNAME`       | Db2 default admi username                                              | `db2inst1`             |   Yes    |
-| `DB2_ADMIN_USER_PASSWORD`  | Db2 admin username defined in associated LDAP                          |                        |   Yes    |
-| `DB2_STANDARD_LICENSE_KEY` | The standard license key for the Db2 database product. **Note**: The license key is required only for an Advanced DB2 installation.|                       |   No    |
-| `DB2_OPERATOR_VERSION`     | The version of the Db2 Operator                                        |`db2u-operator.v1.1.10` |   Yes    |
-| `DB2_OPERATOR_CHANNEL`     | The Operator Channel performs rollout update when new release is available.|   `v1.1`           |   Yes    |
-| `DB2_INSTANCE_VERSION`     | The version of the logical environment for Db2 Database Manager        |`11.5.6.0`              |   No     |
-| `DB2_CPU`                  | CPU setting for the pod requests and limits                            |   `16`                 |   Yes    |
-| `DB2_MEMORY`               | Memory setting for the pod requests and limits                         |  `16Gi`               |   Yes    |
-| `DB2_STORAGE_SIZE`         | Storage size for the db2 databases                                     |  `150Gi`               |   Yes    |
-| `DB2_STORAGE_CLASS`        | Name for the Storage Class                                             | `ibmc-file-gold-gid`   |   No     |
-| `ENTITLED_REGISTRY_KEY`    | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
-| `ENTITLEMENT_REGISTRY_USER_EMAIL`| IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key. i.e: joe@ibm.com |              | Yes      |
+| `db2_project_name`         | The namespace or project for Db2                                       | `ibm-db2`              |   Yes    |
+| `db2_admin_username`       | Db2 default admin username                                              | `db2inst1`             |   Yes    |
+| `db2_admin_user_password`  | Db2 admin username defined in associated LDAP                          |                        |   Yes    |
+| `db2_standard_license_key` | The standard license key for the Db2 database product. **Note**: The license key is required only for an Advanced DB2 installation.|                       |   No    |
+| `operatorVersion`          | The version of the Db2 Operator                                        |`db2u-operator.v1.1.10` |   Yes    |
+| `operatorChannel`          | The Operator Channel performs rollout update when new release is available.|   `v1.1`           |   Yes    |
+| `db2_instance_version`     | The version of the logical environment for Db2 Database Manager        |`11.5.6.0`              |   No     |
+| `db2_cpu`                  | CPU setting for the pod requests and limits                            |   `16`                 |   Yes    |
+| `db2_memory`               | Memory setting for the pod requests and limits                         |  `16Gi`               |   Yes    |
+| `db2_storage_size`         | Storage size for the db2 databases                                     |  `150Gi`               |   Yes    |
+| `db2_storage_class`        | Name for the Storage Class                                             | `ibmc-file-gold-gid`   |   No     |
+| `entitled_registry_key`    | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
+| `entitled_registry_user_email`| IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key. i.e: joe@ibm.com |              | Yes      |
 
 
 ### Executing the Terraform Script
