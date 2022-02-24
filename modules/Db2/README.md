@@ -48,13 +48,7 @@ See the example [here](../../examples/Db2) on how to provision this module.
 
 ### Executing the Terraform Script
 
-Execute the following Terraform commands:
-
-```bash
-terraform init
-terraform plan
-terraform apply --auto-approve
-```
+Follow this link to execute this DB2 module: [IBM Cloud Pak DB2 Terraform Example](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/examples/Db2)
 
 ### Verify
 
