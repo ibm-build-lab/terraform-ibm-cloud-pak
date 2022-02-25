@@ -20,8 +20,8 @@ ${OC_CMD} new-project ${DB2_PROJECT_NAME}
 ${OC_CMD} project ${DB2_PROJECT_NAME}
 echo
 
-#. ../../modules/Db2/scripts/common-ocp-utils.sh
-./common-ocp-utils.sh
+. ../../modules/Db2/scripts/common-ocp-utils.sh
+#./common-ocp-utils.sh
 
 
 echo "Creating Storage Class ..."

@@ -35,7 +35,7 @@ See the example [here](../../examples/Db2) on how to provision this module.
 | `db2_admin_username`       | Db2 default admin username                                              | `db2inst1`             |   Yes    |
 | `db2_admin_user_password`  | Db2 admin username defined in associated LDAP                          |                        |   Yes    |
 | `db2_standard_license_key` | The standard license key for the Db2 database product. **Note**: The license key is required only for an Advanced DB2 installation.|                       |   No    |
-| `operatorVersion`          | The version of the Db2 Operator                                        |`db2u-operator.v1.1.10` |   Yes    |
+| `operatorVersion`          | The version of the Db2 Operator. [Db2 Operators and their Associated Db2 Engines](https://www.ibm.com/docs/en/db2/11.5?topic=deployments-db2-red-hat-openshift) |`db2u-operator.v1.1.11` |   Yes    |
 | `operatorChannel`          | The Operator Channel performs rollout update when new release is available.|   `v1.1`           |   Yes    |
 | `db2_instance_version`     | The version of the logical environment for Db2 Database Manager        |`11.5.6.0`              |   No     |
 | `db2_cpu`                  | CPU setting for the pod requests and limits                            |   `16`                 |   Yes    |
@@ -54,6 +54,13 @@ Follow this link to execute this DB2 module: [Install IBM Cloud Pak DB2 Terrafor
 
 If DB2 is successful and the process is completed, you should see the following similar outputs:
 ```
+Apply complete! Resources: 2 added, 0 changed, 2 destroyed.
+
+Outputs:
+
+db2_host_address =  @@@@@@@@@@@@-clust-c0b572361ba41c9eef42d4d51297b04b-0000.us-south.containers.appdomain.cloud                 
+db2_ports =  00000,
+ 00001,
 ```
 
 ## Output Parameters

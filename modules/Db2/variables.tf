@@ -30,7 +30,7 @@ variable "enable_db2" {
 
  variable "db2_project_name" {
    default     = "ibm-db2"
-   description = "The namespace/project for Db2"
+   description = "The namespace or project for Db2"
  }
 
 variable "db2_admin_user_password" {
@@ -44,7 +44,7 @@ variable "db2_admin_username" {
 
 
 variable "operatorVersion" {
-  default     = "db2u-operator.v1.1.10"
+  default     = "db2u-operator.v1.1.11"
   description = "Operator version"
 }
 

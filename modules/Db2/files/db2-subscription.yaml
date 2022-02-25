@@ -21,4 +21,4 @@ spec:
   installPlanApproval: Manual
   source: ibm-operator-catalog
   sourceNamespace: openshift-marketplace
-  startingCSV: db2u-operator.v1.1.10
+  startingCSV: db2u-operator.v1.1.11
