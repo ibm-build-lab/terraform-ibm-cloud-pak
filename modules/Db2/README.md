@@ -29,7 +29,7 @@ See the example [here](../../examples/Db2) on how to provision this module.
 | `ibmcloud_api_key`         | IBM Cloud API key: https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key                                                    |                        | Yes      |
 | `resource_group`           | Region where the cluster is created. Managing resource groups: https://cloud.ibm.com/docs/account?topic=account-rgs&interface=ui | `cloud-pak-sandbox` | Yes      |
 | `region`                   | Region code: https://cloud.ibm.com/docs/codeengine?topic=codeengine-regions                                                            | `us-south`             | No       |
-| `cluster_config_path`      | Path to the cluster configuration file to access your cluster          | `/.kube/config`        |   No     |
+| `cluster_config_path`      | Path to the cluster configuration file to access your cluster          | `./.kube/config`        |   No     |
 | `enable_db2`               | If set to `false`, IBM DB2 will not be installed. Enabled by default   |  `true`                |   No     |
 | `db2_project_name`         | The namespace or project for Db2                                       | `ibm-db2`              |   Yes    |
 | `db2_admin_username`       | Db2 default admin username                                              | `db2inst1`             |   Yes    |
