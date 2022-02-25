@@ -13,7 +13,7 @@ variable "resource_group" {
 }
 
 variable "cluster_id" {
-  description = "Enter your cluster id or name to install the Cloud Pak. Leave blank to provision a new Openshift cluster."
+  description = "Enter your cluster id or name to install the Cloud Pak."
 }
 
 variable "cluster_config_path" {
