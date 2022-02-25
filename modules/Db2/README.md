@@ -1,7 +1,7 @@
 
 # Terraform Module to install and configure DB2 on Openshift
 
-**DB2 Module Source**: `https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/Db2`
+**DB2 Module Source**: https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/Db2
 
 ## Set up access to IBM Cloud
 
