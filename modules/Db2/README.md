@@ -84,4 +84,4 @@ terraform destroy
 
 ## Uninstall
 
-**Note**: The uninstall/cleanup process is a work in progress at this time, we are identifying the objects that need to be deleted in order to have a successful re-installation.
+**Note**: The uninstall or cleanup process is a work in progress at this time, we are identifying the objects that need to be deleted in order to have a successful re-installation.
