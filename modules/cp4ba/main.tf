@@ -11,7 +11,7 @@ locals {
   roles_file_content                    = file(local.roles_file)
   role_binding_file                     = "${path.module}/files/role_binding.yaml"
   role_binding_content                  = file(local.role_binding_file)
-//  cp4ba_subscription_file               = "${path.module}/files/cp4ba_subscription.yaml"
+  cp4ba_subscription_file               = "${path.module}/files/cp4ba_subscription.yaml"
 //  cp4ba_subscription_file_content       = file(local.cp4ba_subscription_file)
   cp4ba_subscription_file_content       = templatefile("${path.module}/templates/cp4ba_subscription.yaml.tmpl", {
     namespace = var.cp4ba_project_name
@@ -21,8 +21,8 @@ locals {
   cp4ba_deployment_file_content         = templatefile("${path.module}/templates/cp4ba_deployment.yaml.tmpl", {
     ldap_host_ip     = var.ldap_host_ip,
     db2_admin        = var.db2_admin,
-    db2_host_name    = var.db2_host_name,
-    db2_host_port    = var.db2_host_port,
+    db2_host_name    = var.db2_host_address,
+    db2_host_port    = var.db2_ports,
     ingress_subdomain = var.ingress_subdomain
   })
 
@@ -31,7 +31,7 @@ locals {
     ldap_password    = var.ldap_password,
     db2_admin        = var.db2_admin,
     db2_user         = var.db2_user,
-    db2_password     = var.db2_password
+    db2_password     = var.db2_admin_user_password
   })
 }
 
@@ -62,8 +62,8 @@ resource "null_resource" "installing_cp4ba" {
       CP4BA_PROJECT_NAME            = var.cp4ba_project_name
 
       # ---- Registry Images ----
-      ENTITLED_REGISTRY_EMAIL       = var.entitled_registry_user
-      ENTITLED_REGISTRY_KEY         = var.entitlement_key
+      ENTITLED_REGISTRY_EMAIL       = var.entitled_registry_user_email
+      ENTITLED_REGISTRY_KEY         = var.entitled_registry_key
       DOCKER_SERVER                 = local.docker_server
       DOCKER_USERNAME               = local.docker_username
 

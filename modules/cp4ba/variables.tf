@@ -24,12 +24,12 @@ variable "resource_group" {
   description = "Resource group name where the cluster will be hosted."
 }
 
-variable "entitlement_key" {
+variable "entitled_registry_key" {
   type        = string
   description = "Do you have a Cloud Pak for Business Automation Entitlement Registry key? If not, Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
 }
 
-variable "entitled_registry_user" {
+variable "entitled_registry_user_email" {
   type        = string
   description = "Email address of the user owner of the Entitled Registry Key"
 }
@@ -55,6 +55,17 @@ variable "ldap_host_ip" {
 }
 
 # -------- DB2 Variables ---------
+# --------- DB2 SETTINGS ----------
+variable "enable_db2" {
+  default     = true
+  description = "If set to true, it will install DB2 on the given cluster"
+}
+
+variable "db2_project_name" {
+ default     = "ibm-db2"
+ description = "The namespace/project for Db2"
+}
+
 variable "db2_admin" {
   default     = "cpadmin"
   description = "Admin user name defined in LDAP"
@@ -65,24 +76,23 @@ variable "db2_user" {
   description = "User name defined in LDAP"
 }
 
-variable "db2_password" {
-  default     = "passw0rd"
-  description = "Password defined in LDAP"
+variable "db2_admin_user_password" {
+  description = "Db2 admin user password defined in LDAP"
 }
 
-variable "db2_host_name" {
+variable "db2_host_address" {
+  description = "Host name for DB2 instance. Ignore if there is not an existing Db2."
   default     = ""
-  description = "Host name of DB2 instance"
 }
 
-variable "db2_host_port" {
-  default     = ""
-  description = "Port for DB2 instance"
+variable "db2_ports" {
+  description = "Port number for DB2 instance. Ignore if there is not an existing Db2."
+  default = ""
 }
 
 locals {
-  docker_server   = "cp.icr.io"
-  docker_username = "cp"
+  docker_server       = "cp.icr.io"
+  docker_username     = "cp"
 }
 
 
