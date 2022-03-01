@@ -11,4 +11,4 @@ spec:
     accept: true
     license: "Enterprise"
   kind: ibm-cpd-ws-runtime-py37
-  version: "4.0.5"
+  version: "4.0.4"
