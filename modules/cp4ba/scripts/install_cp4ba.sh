@@ -48,9 +48,10 @@ EOF
 #echo -e "\x1B[1mCreating storage classes...\x1B[0m"
 #kubectl apply -f ${CP4BA_STORAGE_CLASS_FILE}
 
-echo -e "\x1B[1mCreating the Persistent Volumes Claim (PVC)...\x1B[0m"
+echo
+echo -e "\x1B[1mCreating the Persistent Volumes (PVs) and Persistent Volume Claims (PVCs)...\x1B[0m"
 cat ${OPERATOR_PVC_FILE}
-CREATE_PVC_RESULT=$(kubectl -n ${CP4BA_PROJECT_NAME} apply -f ${OPERATOR_PVC_FILE})
+CREATE_PVC_RESULT=$(kubectl apply -f ${OPERATOR_PVC_FILE} --validate=false)
 
 if [[ $CREATE_PVC_RESULT ]]; then
     echo -e "\x1B[1;34mThe Persistent Volume Claims have been created.\x1B[0m"

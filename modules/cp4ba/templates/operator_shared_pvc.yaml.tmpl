@@ -1,4 +1,4 @@
-##############################################################################
+###############################################################################
 #
 # Licensed Materials - Property of IBM
 #
@@ -12,7 +12,7 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: operator-shared-pv
-  namespace: ${cp4ba_project_name}
+  namespace: ${ cp4ba_project_name }
 spec:
   accessModes:
   - ReadWriteMany
@@ -20,7 +20,7 @@ spec:
     storage: 1Gi
   nfs:
     path: /shared/operator
-#    server: <NFS Server>
+    server:
   persistentVolumeReclaimPolicy: Retain
 ---
 apiVersion: v1
@@ -29,7 +29,7 @@ metadata:
   labels:
     type: local
   name: cp4a-shared-log-pv
-  namespace: ${cp4ba_project_name}
+  namespace: ${ cp4ba_project_name }
 spec:
   capacity:
     storage: 100Gi
@@ -37,7 +37,7 @@ spec:
     - ReadWriteMany
   nfs:
     path: /shared/logs
-#    server: <NFS Server>
+    server:
   persistentVolumeReclaimPolicy: Delete
 
 ---
@@ -45,7 +45,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: operator-shared-pvc
-  namespace: ${cp4ba_project_name}
+  namespace: ${ cp4ba_project_name }
   labels:
     app.kubernetes.io/instance: ibm-dba
     app.kubernetes.io/managed-by: ibm-dba
@@ -63,7 +63,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: cp4a-shared-log-pvc
-  namespace: ${cp4ba_project_name}
+  namespace: ${ cp4ba_project_name }
   labels:
     app.kubernetes.io/instance: ibm-dba
     app.kubernetes.io/managed-by: ibm-dba

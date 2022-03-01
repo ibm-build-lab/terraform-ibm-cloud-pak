@@ -3,7 +3,7 @@ variable "enable" {
   description = "If set to true installs Cloud-Pak for Business Automation on the given cluster"
 }
 
-variable "cluster_name_or_id" {
+variable "cluster_id" {
   default     = ""
   description = "Enter your cluster id or name to install the Cloud Pak. Leave blank to provision a new Openshift cluster."
 }
