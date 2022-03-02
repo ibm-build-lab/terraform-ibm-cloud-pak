@@ -120,7 +120,7 @@ ${K8S_CMD} apply -f "${OPERATOR_GROUP_FILE}"
 echo
 
 # Add the CatalogSource resources to Operator Hub
-echo -e "\x1B[1mCreating the Catalog Source...\x1B[0m"
+echo -e "\x1B[1m Creating the Catalog Source ...\x1B[0m"
 cat ${CATALOG_SOURCE_FILE}
 ${K8S_CMD} apply -f ${CATALOG_SOURCE_FILE}
 sleep 10
@@ -133,7 +133,7 @@ sleep 100
 echo
 
 # Create subscription to Business Automation Operator
-echo -e "\x1B[1mCreating the Subscription...\x1B[0m"
+echo -e "\x1B[1m Creating the Subscription ...\x1B[0m"
 cat "${CP4BA_SUBSCRIPTION_FILE}"
 ${K8S_CMD} apply -f "${CP4BA_SUBSCRIPTION_FILE}" -n "${CP4BA_PROJECT_NAME}"
 sleep 100

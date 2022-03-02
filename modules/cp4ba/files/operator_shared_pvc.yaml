@@ -20,7 +20,7 @@ spec:
     storage: 1Gi
   nfs:
     path: /shared/operator
-#    server: <NFS Server>
+    server: 172.17.0.2
   persistentVolumeReclaimPolicy: Retain
 ---
 apiVersion: v1
@@ -37,7 +37,7 @@ spec:
     - ReadWriteMany
   nfs:
     path: /shared/logs
-#    server: <NFS Server>
+    server: 172.17.0.2
   persistentVolumeReclaimPolicy: Delete
 
 ---
