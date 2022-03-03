@@ -18,8 +18,6 @@ Make sure you have the latest updates for all IBM Cloud plugins by running `ibmc
 
 ## Provisioning this module in a Terraform Script
 
-### Setting up the OpenShift cluster
-
 NOTE: an OpenShift cluster is required to install this ODF service. This can be an existing cluster or can be provisioned in the Terraform script.
 
 To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script.
