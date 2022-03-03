@@ -20,7 +20,7 @@ Make sure you have the latest updates for all IBM Cloud plugins by running `ibmc
 
 Follow these instructions to test the Terraform Module manually
 
-Create the file `test.auto.tfvars` with the following input variables, these values are fake examples:
+Create a file `terraform.tfvars` with the following input variables:
 
 ```hcl
 ibmcloud_api_key        = "<api-key>"
