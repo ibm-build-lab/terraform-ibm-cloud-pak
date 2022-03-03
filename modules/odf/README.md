@@ -19,19 +19,13 @@ If running these modules from your local terminal, you need to set the credentia
 
 Go [here](../CREDENTIALS.md) for details.
 
+You also need to install the [IBM Cloud cli](https://cloud.ibm.com/docs/cli?topic=cli-install-ibmcloud-cli) as well as the [OpenShift cli](https://cloud.ibm.com/docs/openshift?topic=openshift-openshift-cli)
+
+Make sure you have the latest updates for all IBM Cloud plugins by running `ibmcloud plugin update`.  
+
+**NOTE**: These requirements are not required if running this Terraform code within an **IBM Cloud Schematics** workspace. They are automatically set from your account.
+
 ## Provisioning this module in a Terraform Script
-
-In your Terraform code define the `ibm` provisioner block with the `region`.
-
-```hcl
-provider "ibm" {
-  region     = "us-south"
-}
-
-provider "kubernetes" {
-  config_path = "~/.kube/config"
-}
-```
 
 ### Setting up the OpenShift cluster
 
@@ -44,33 +38,35 @@ To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-i
 Use a `module` block assigning `source` to `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/odf`. Then set the [input variables](#input-variables) required to install the ODF service.
 
 ```hcl
-module "odf" {
-  source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/odf"
-  enable = var.enable
-  cluster_id = var.cluster_id
-  roks_version = var.roks_version
+provider "ibm" {
+}
 
-  // Cluster parameters
-  kube_config_path = var.kube_config_path
+// Module:
+module "odf" {
+  source = "./.."
+  enable = var.enable
+  cluster = var.cluster
+  ibmcloud_api_key = var.ibmcloud_api_key
 }
 ```
-
 
 ## Input Variables
 
 | Name                           | Description                                                                                                                                                                                                                | Default | Required |
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | -------- |
-| `enable`                       | If set to `false` does not install Portworx on the given cluster. Enabled by default | `true`  | Yes       |
+| `enable`                       | If set to `false` does not install Portworx on the given cluster. Enabled by default | `true`  | No       |
 | `ibmcloud_api_key`             | This requires an ibmcloud api key found here: `https://cloud.ibm.com/iam/apikeys`    |         | Yes       |
-| `kube_config_path`             | This is the path to the kube config                                          |  `.kube/config` | Yes       |
-| `resource_group_name`          | The resource group name where the cluster is housed                                  |         | Yes      |
-| `region`                       | The region that resources will be provisioned in. Ex: `"us-east"` `"us-south"` etc.  |         | Yes      |
-| `cluster_id`                   | The name of the cluster created |  | Yes       |
+| `cluster`                   | The id of the OpenShift cluster to be installed on |  | Yes       |
 
+**NOTE** The boolean input variable `enable` is used to enable/disable the module. 
 
-**NOTE** The boolean input variable `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
+## Output Variable
 
-For an example of how to put all this together, refer to our [Cloud Pak for Data Terraform script](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform/cp4data).
+| Name                           | Description                                                                                                                                                                                                                | 
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `odf_is_ready`                       | Flag set when ODF has completed it's install.  Used when adding this with other modules |
+
+For an example of how to put all this together, refer to our [OpenShift Data Foundation Terraform Example](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/examples/odf).
 
 
 ## Executing the Terraform Script
