@@ -64,7 +64,7 @@ module "odf" {
 
 | Name                           | Description                                                                                                                                                                                                                | 
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `odf_is_ready`                       | Flag set when ODF has completed it's install.  Used when adding this with other modules |
+| `odf_is_ready`                       | Flag set when ODF has completed its install.  Used when adding this with other modules |
 
 For an example of how to put all this together, refer to our [OpenShift Data Foundation Terraform Example](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/examples/odf).
 
