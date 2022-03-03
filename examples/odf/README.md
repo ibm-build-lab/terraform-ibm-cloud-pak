@@ -1,4 +1,4 @@
-# Test ODF Terraform Module
+# OpenShift Data Foundation Terraform Module Example
 
 ## 1. Set up access to IBM Cloud
 
