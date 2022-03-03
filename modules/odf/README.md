@@ -4,15 +4,6 @@ This Terraform Module installs the **ODF Service** on an Openshift (ROKS) cluste
 
 **Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/odf`
 
-- [Terraform Module to install Openshift Data Foundation](#terraform-module-to-install-cloud-pak-for-multi-cloud-management)
-  - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
-  - [Provisioning this module in a Terraform Script](#provisioning-this-module-in-a-terraform-script)
-    - [Setting up the OpenShift cluster](#setting-up-the-openshift-cluster)
-    - [Installing ODF Module](#provisioning-the-odf-module)
-  - [Input Variables](#input-variables)
-  - [Executing the Terraform Script](#executing-the-terraform-script)
-  - [Clean up](#clean-up)
-
 ## Set up access to IBM Cloud
 
 If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
