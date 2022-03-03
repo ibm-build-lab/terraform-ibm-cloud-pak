@@ -19,7 +19,6 @@ Follow these instructions to test the Terraform Module manually
 Create the file `test.auto.tfvars` with the following input variables, these values are fake examples:
 
 ```hcl
-enable                  = true
 ibmcloud_api_key        = "<api-key>"
 cluster                 = "<cluster-id>"
 ```
@@ -27,7 +26,6 @@ cluster                 = "<cluster-id>"
 These parameters are:
 
 - `ibmcloud_api_key`: IBM Cloud Key needed to provision resources.
-- `worker_nodes`: Number of worker nodes in the cluster
 - `cluster`: Cluster ID of the OpenShift cluster where to install IAF
 
 Execute the following Terraform commands:
