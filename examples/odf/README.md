@@ -8,7 +8,11 @@ You can define the IBM Cloud credentials in the IBM provider block but it is rec
 
 Go [here](../../CREDENTIALS.md) for details.
 
-**NOTE**: These credentials are not required if running this Terraform code within an **IBM Cloud Schematics** workspace. They are automatically set from your account.
+You also need to install the [IBM Cloud cli](https://cloud.ibm.com/docs/cli?topic=cli-install-ibmcloud-cli) as well as the [OpenShift cli](https://cloud.ibm.com/docs/openshift?topic=openshift-openshift-cli)
+
+Make sure you have the latest updates for all IBM Cloud plugins by running `ibmcloud plugin update`.  
+
+**NOTE**: These requirements are not required if running this Terraform code within an **IBM Cloud Schematics** workspace. They are automatically set from your account.
 
 ## 2. Test
 
