@@ -21,25 +21,14 @@ Create the file `test.auto.tfvars` with the following input variables, these val
 ```hcl
 enable                  = true
 ibmcloud_api_key        = "<api-key>"
-
-// Cluster parameters
-kube_config_path        = ".kube/config"
-worker_nodes            = 2  // Number of workers
-
-// ODF parameters
-resource_group_name     = "default"
-region                  = "us-east"
-cluster_id              = "<cluster-id>"
+cluster                 = "<cluster-id>"
 ```
 
 These parameters are:
 
 - `ibmcloud_api_key`: IBM Cloud Key needed to provision resources.
-- `config_dir`: Directory to download the kubeconfig file. Default value is `./.kube/config`
 - `worker_nodes`: Number of worker nodes in the cluster
-- `resource_group_name`: Resource group where the cluster is running. Default value is `Default`
-- `region`: Region that the resources are in
-- `cluster_id`: Cluster ID of the OpenShift cluster where to install IAF
+- `cluster`: Cluster ID of the OpenShift cluster where to install IAF
 
 Execute the following Terraform commands:
 
