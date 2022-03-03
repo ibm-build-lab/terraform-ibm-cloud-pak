@@ -32,7 +32,7 @@ provider "ibm" {
 
 // Module:
 module "odf" {
-  source = "./.."
+  source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/odf"
   enable = var.enable
   cluster = var.cluster
   ibmcloud_api_key = var.ibmcloud_api_key
