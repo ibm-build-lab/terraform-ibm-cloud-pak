@@ -54,7 +54,7 @@ cat ${OPERATOR_PV_FILE}
 CREATE_PVC_RESULT=$(kubectl apply -f ${OPERATOR_PV_FILE} --validate=false)
 
 echo
-echo -e "\x1B[1mCreating the Persistent Volumes (PVs) and Persistent Volume Claims (PVCs)...\x1B[0m"
+echo -e "\x1B[1m Creating Persistent Volume Claims (PVCs) ...\x1B[0m"
 cat ${OPERATOR_PVC_FILE}
 CREATE_PVC_RESULT=$(kubectl apply -f ${OPERATOR_PVC_FILE} --validate=false)
 
@@ -140,7 +140,7 @@ echo
 # Create subscription to Business Automation Operator
 echo -e "\x1B[1m Creating the Subscription ...\x1B[0m"
 cat ${CP4BA_SUBSCRIPTION_FILE}
-${K8S_CMD} apply -f ${CP4BA_SUBSCRIPTION_FILE} # -n "${CP4BA_PROJECT_NAME}"
+${K8S_CMD} apply -f "${CP4BA_SUBSCRIPTION_FILE}" -n "${CP4BA_PROJECT_NAME}"
 sleep 100
 echo
 
