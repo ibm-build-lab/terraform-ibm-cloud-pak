@@ -40,7 +40,7 @@ echo
 
 # echo -e "\x1B[1mCreating remaining secrets \n${SECRETS_CONTENT}...\n\x1B[0m"
 echo -e "\x1B[1mCreating remaining secrets...\n\x1B[0m"
-kubectl apply -n ${CP4BA_PROJECT_NAME} -f -<<EOF
+kubectl apply -n "${CP4BA_PROJECT_NAME}" -f -<<EOF
 ${SECRETS_CONTENT}
 EOF
 
@@ -48,21 +48,54 @@ EOF
 #echo -e "\x1B[1mCreating storage classes...\x1B[0m"
 #kubectl apply -f ${CP4BA_STORAGE_CLASS_FILE}
 
+#! PVs
 echo
-echo -e "\x1B[1mCreating the Persistent Volumes (PVs) ...\x1B[0m"
-cat ${OPERATOR_PV_FILE}
-CREATE_PVC_RESULT=$(kubectl apply -f ${OPERATOR_PV_FILE} --validate=false)
-
-echo
-echo -e "\x1B[1m Creating Persistent Volume Claims (PVCs) ...\x1B[0m"
-cat ${OPERATOR_PVC_FILE}
-CREATE_PVC_RESULT=$(kubectl apply -f ${OPERATOR_PVC_FILE} --validate=false)
+echo -e "\x1B[1m Creating the \"operator-shared-pv\" Persistent Volumes (PVs) ...\x1B[0m"
+cat "${OPERATOR_PV_FILE}"
+CREATE_PVC_RESULT=$(kubectl apply -f "${OPERATOR_PV_FILE}" --validate=false)
 
 if [[ $CREATE_PVC_RESULT ]]; then
-    echo -e "\x1B[1;34mThe Persistent Volume Claims have been created.\x1B[0m"
+    echo -e "\x1B[1;34m The \"operator-shared-pv\" Persistent Volume has been created.\x1B[0m"
 else
     echo -e "\x1B[1;31mFailed\x1B[0m"
 fi
+
+echo
+echo -e "\x1B[1m Creating the \"cp4a-shared-log-pv\" Persistent Volumes (PVs) ...\x1B[0m"
+cat "${SHARED_LOG_PV_FILE}"
+CREATE_PVC_RESULT=$(kubectl apply -f "${SHARED_LOG_PV_FILE}" --validate=false)
+
+if [[ $CREATE_PVC_RESULT ]]; then
+    echo -e "\x1B[1;34m The \"cp4a-shared-log-pv\" Persistent Volume has been created.\x1B[0m"
+else
+    echo -e "\x1B[1;31mFailed\x1B[0m"
+fi
+
+
+#!    PVCs
+echo
+echo -e "\x1B[1m Creating \"operator-shared-pvc\" Persistent Volume Claim (PVC) ...\x1B[0m"
+cat "${OPERATOR_SHARED_PVC_FILE}"
+CREATE_PVC_RESULT=$(kubectl apply -f "${OPERATOR_SHARED_PVC_FILE}" --validate=false)
+
+if [[ $CREATE_PVC_RESULT ]]; then
+    echo -e "\x1B[1;34m The \"operator-shared-pvc\"  Persistent Volume Claims has been created.\x1B[0m"
+else
+    echo -e "\x1B[1;31mFailed\x1B[0m"
+fi
+
+echo
+echo -e "\x1B[1m Creating \"cp4a-shared-log-pvc\" Persistent Volume Claim (PVC) ...\x1B[0m"
+cat "${SHARED_LOG_PVC_FILE}"
+CREATE_PVC_RESULT=$(kubectl apply -f "${SHARED_LOG_PVC_FILE}" --validate=false)
+
+if [[ $CREATE_PVC_RESULT ]]; then
+    echo -e "\x1B[1;34m The \"cp4a-shared-log-pvc\" Persistent Volume Claim has been created.\x1B[0m"
+else
+    echo -e "\x1B[1;31mFailed\x1B[0m"
+fi
+
+
 # Check Operator Persistent Volume status every 5 seconds (max 10 minutes) until allocate.
 ATTEMPTS=0
 TIMEOUT=60
@@ -102,14 +135,14 @@ echo
 ###### Add the CatalogSource resources to Operator Hub
 # Creating roles
 echo -e "\x1B[1mCreating roles ...\x1B[0m"
-cat ${ROLES_FILE}
-${K8S_CMD} apply -f ${ROLES_FILE} -n ${CP4BA_PROJECT_NAME}
+cat "${ROLES_FILE}"
+${K8S_CMD} apply -f "${ROLES_FILE}" -n "${CP4BA_PROJECT_NAME}"
 echo
 
 # Creating roles
 echo -e "\x1B[1mCreating role binding ...\x1B[0m"
-cat ${ROLE_BINDING_FILE}
-${K8S_CMD} apply -f ${ROLE_BINDING_FILE} -n ${CP4BA_PROJECT_NAME}
+cat "${ROLE_BINDING_FILE}"
+${K8S_CMD} apply -f "${ROLE_BINDING_FILE}" -n "${CP4BA_PROJECT_NAME}"
 echo
 
 # Deploy common-service
@@ -120,26 +153,26 @@ echo
 
 # CREATING OPERATOR GROUP
 echo -e "\x1B[1m Creating Operator Group ...\x1B[0m"
-cat ${OPERATOR_GROUP_FILE}
+cat "${OPERATOR_GROUP_FILE}"
 ${K8S_CMD} apply -f "${OPERATOR_GROUP_FILE}"
 echo
 
 # Add the CatalogSource resources to Operator Hub
 echo -e "\x1B[1m Creating the Catalog Source ...\x1B[0m"
-cat ${CATALOG_SOURCE_FILE}
-${K8S_CMD} apply -f ${CATALOG_SOURCE_FILE}
+cat "${CATALOG_SOURCE_FILE}"
+${K8S_CMD} apply -f "${CATALOG_SOURCE_FILE}"
 sleep 10
 echo ""
 
 echo -e "\x1B[1m Deploying common-service ...\x1B[0m"
-cat ${COMMON_SERVICE_FILE}
+cat "${COMMON_SERVICE_FILE}"
 ${K8S_CMD} apply -f "${COMMON_SERVICE_FILE}"
 sleep 100
 echo
 
 # Create subscription to Business Automation Operator
 echo -e "\x1B[1m Creating the Subscription ...\x1B[0m"
-cat ${CP4BA_SUBSCRIPTION_FILE}
+cat "${CP4BA_SUBSCRIPTION_FILE}"
 ${K8S_CMD} apply -f "${CP4BA_SUBSCRIPTION_FILE}" -n "${CP4BA_PROJECT_NAME}"
 sleep 100
 echo
@@ -147,12 +180,12 @@ echo
 # Create Deployment Credentials
 echo -e "\x1B[1mCreating the Deployment Credentials ...\x1B[0m"
 cat "${CP4BA_DEPLOYMENT_CREDENTIALS_FILE}"
-${K8S_CMD} apply -n ${CP4BA_PROJECT_NAME} -f "${CP4BA_DEPLOYMENT_CREDENTIALS_FILE}"
+${K8S_CMD} apply -n "${CP4BA_PROJECT_NAME}" -f "${CP4BA_DEPLOYMENT_CREDENTIALS_FILE}"
 echo
 
 # Create Deployment
 echo -e "\x1B[1mCreating the Deployment ...\x1B[0m"
-${K8S_CMD} apply -n ${CP4BA_PROJECT_NAME} -f "${CP4BA_DEPLOYMENT_CONTENT}" --validate=false
+${K8S_CMD} apply -n "${CP4BA_PROJECT_NAME}" -f "${CP4BA_DEPLOYMENT_CONTENT}" --validate=false
 cat "${CP4BA_DEPLOYMENT_CONTENT}"
 
 echo

@@ -12,10 +12,16 @@ locals {
   cp4ba_subscription_file_content       = templatefile("${path.module}/templates/cp4ba_subscription.yaml.tmpl", {
     cp4ba_project_name = var.cp4ba_project_name
   })
-  pv_file_content      = templatefile("${path.module}/templates/operator_shared_pv.yaml.tmpl", {
+  operator_shared_pv_file_content   = templatefile("${path.module}/templates/operator_shared_pv.yaml.tmpl", {
     cp4ba_project_name = var.cp4ba_project_name
   })
-  pvc_file_content     = templatefile("${path.module}/templates/operator_shared_pvc.yaml.tmpl", {
+  shared_log_pv_file_content        = templatefile("${path.module}/templates/cp4a_shared_log_pv.yaml.tmpl", {
+    cp4ba_project_name = var.cp4ba_project_name
+  })
+  operator_shared_pvc_file_content  = templatefile("${path.module}/templates/operator_shared_pvc.yaml.tmpl", {
+    cp4ba_project_name = var.cp4ba_project_name
+  })
+  shared_log_pvc_file_content       = templatefile("${path.module}/templates/cp4a-shared-log-pvc.yaml.tmpl", {
     cp4ba_project_name = var.cp4ba_project_name
   })
   cp4ba_deployment_credentials_file_content = "${path.module}/templates/cp4ba_deployment_credentials.yaml.tmpl"
@@ -39,8 +45,11 @@ resource "null_resource" "installing_cp4ba" {
   count = var.enable ? 1 : 0
 
   triggers = {
-    PV_FILE_sha1                          = sha1(local.pv_file_content)
-    PVC_FILE_sha1                         = sha1(local.pvc_file_content)
+    OPERATOR_SHARED_PV_FILE_sha1          = sha1(local.operator_shared_pv_file_content)
+    SHARED_LOG_PV_FILE_sha1               = sha1(local.shared_log_pv_file_content)
+
+    OPERATOR_SHARED_PVC_FILE_sha1         = sha1(local.operator_shared_pvc_file_content)
+    SHARED_LOG_PVC_FILE_sha1              = sha1(local.shared_log_pvc_file_content)
     OPERATOR_GROUP_sha1                   = sha1(local.operator_group_file_content)
     CATALOG_SOURCE_FILE_sha1              = sha1(local.catalog_source_file_content)
     CP4BA_SUBSCRIPTION_FILE_sha1          = sha1(local.cp4ba_subscription_file_content)
@@ -66,8 +75,10 @@ resource "null_resource" "installing_cp4ba" {
       DOCKER_SERVER                 = local.docker_server
       DOCKER_USERNAME               = local.docker_username
       # ------- FILES ASSIGNMENTS --------
-      OPERATOR_PV_FILE                 = local.pv_file_content
-      OPERATOR_PVC_FILE                = local.pvc_file_content
+      OPERATOR_SHARED_PV_FILE          = local.operator_shared_pv_file_content
+      SHARED_LOG_PV_FILE               = local.shared_log_pv_file_content
+      OPERATOR_SHARED_PVC_FILE         = local.operator_shared_pvc_file_content
+      SHARED_LOG_PVC_FILE              = local.shared_log_pvc_file_content
       OPERATOR_GROUP_FILE              = local.operator_group_file
       CATALOG_SOURCE_FILE              = local.catalog_source_file
       COMMON_SERVICE_FILE              = local.common_service_file
