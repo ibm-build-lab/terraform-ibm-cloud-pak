@@ -51,8 +51,8 @@ EOF
 #! PVs
 echo
 echo -e "\x1B[1m Creating the \"operator-shared-pv\" Persistent Volumes (PVs) ...\x1B[0m"
-cat "${OPERATOR_PV_FILE}"
-CREATE_PVC_RESULT=$(kubectl apply -f "${OPERATOR_PV_FILE}" --validate=false)
+cat "${OPERATOR_SHARED_PV_FILE}"
+CREATE_PVC_RESULT=$(kubectl apply -f "${OPERATOR_SHARED_PV_FILE}" --validate=false)
 
 if [[ $CREATE_PVC_RESULT ]]; then
     echo -e "\x1B[1;34m The \"operator-shared-pv\" Persistent Volume has been created.\x1B[0m"
