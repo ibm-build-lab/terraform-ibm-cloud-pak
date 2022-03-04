@@ -1,8 +1,6 @@
 
 # Terraform Module to install and configure DB2 on Openshift
 
-**DB2 Module Source**: https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/Db2
-
 ## Set up access to IBM Cloud
 
 If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
@@ -19,8 +17,6 @@ Filename    : DB2_AWSE_Restricted_Activation_11.5.zip
 ```
 
 ## Provisioning this module in a Terraform Script
-
-See the example [here](../../examples/Db2) on how to provision this module.
 
 ## Input Variables
 
