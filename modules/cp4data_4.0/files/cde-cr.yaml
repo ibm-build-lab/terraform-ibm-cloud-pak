@@ -4,7 +4,7 @@ metadata:
   name: cde-cr
   namespace: "REPLACE_NAMESPACE"
 spec:
-  version: 4.0.4
+  version: 4.0.5
   storageClass: "portworx-shared-gp3"
   license:
     accept: true

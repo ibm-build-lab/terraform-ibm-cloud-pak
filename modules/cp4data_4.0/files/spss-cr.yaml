@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/name: ibm-cpd-spss-operator
 spec:    
   storageClass: "portworx-shared-gp3"
-  version: 4.0.4
+  version: 4.0.5
   license:
     accept: true
     license: Enterprise
