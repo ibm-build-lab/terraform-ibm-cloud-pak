@@ -21,7 +21,7 @@ locals {
   operator_shared_pvc_file_content  = templatefile("${path.module}/templates/operator_shared_pvc.yaml.tmpl", {
     cp4ba_project_name = var.cp4ba_project_name
   })
-  shared_log_pvc_file_content       = templatefile("${path.module}/templates/cp4a-shared-log-pvc.yaml.tmpl", {
+  shared_log_pvc_file_content       = templatefile("${path.module}/templates/cp4a_shared_log_pvc.yaml.tmpl", {
     cp4ba_project_name = var.cp4ba_project_name
   })
   cp4ba_deployment_credentials_file_content = "${path.module}/templates/cp4ba_deployment_credentials.yaml.tmpl"
