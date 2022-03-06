@@ -31,3 +31,4 @@ workspace.json
 ## Temporary files to ignore
 **/.helm
 modules/cp4na/files/tnco-ldap-secret.txt
+modules/cp4aiops/files/temp.yaml
