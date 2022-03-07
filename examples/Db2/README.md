@@ -1,11 +1,41 @@
 
-# Terraform Module to install and configure DB2 on Openshift
+# Example to install and configure DB2 Terraform Module on Openshift
 
-## Set up access to IBM Cloud
+## Run using IBM Cloud Schematics
 
-If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
+For instructions to run these examples using IBM Schematics go [here](../Using_Schematics.md)
 
-Go [here](../../CREDENTIALS.md) for details.
+For more information on IBM Schematics, refer [here](https://cloud.ibm.com/docs/schematics?topic=schematics-get-started-terraform).
+
+## Run using local Terraform Client
+
+For instructions to run using the local Terraform Client on your local machine go [here](../Using_Terraform.md). 
+
+### Download required license files
+
+Download required license files from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `../../modules/db2/files` folder on your local computer. 
+```bash
+DB2:
+Part Number : CNB21ML
+Filename    : DB2_AWSE_Restricted_Activation_11.5.zip
+```
+
+## Provisioning this module in a Terraform Script
+
+```hcl
+ibmcloud_api_key             = "************"
+resource_group               = "************"
+region                       = "************"
+cluster_id                   = "************"
+cluster_config_path          = "************"
+enable_db2                   = "************"
+db2_project_name             = "************"
+db2_admin_username           = "************"
+db2_admin_user_password      = "************"
+db2_storage_size             = "************"
+entitled_registry_key        = "************"
+entitled_registry_user_email = "************"
+``` 
 
 ### Download required license files
 
