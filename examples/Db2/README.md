@@ -37,15 +37,6 @@ entitled_registry_key        = "************"
 entitled_registry_user_email = "************"
 ``` 
 
-### Download required license files
-
-Download required license files from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `../../modules/db2/files` folder on your local computer. 
-```bash
-DB2:
-Part Number : CNB21ML
-Filename    : DB2_AWSE_Restricted_Activation_11.5.zip
-```
-
 ## Provisioning this module in a Terraform Script
 
 ## Input Variables
