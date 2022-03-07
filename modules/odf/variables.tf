@@ -1,4 +1,4 @@
-variable "enable" {
+variable "is_enable" {
     default     = true
 }
 

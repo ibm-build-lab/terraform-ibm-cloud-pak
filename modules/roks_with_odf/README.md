@@ -10,7 +10,7 @@ The Terraform script requires the following list of input variables. Here are so
 
 | Name | Description  | Default | Required |
 | - | - | - | - |
-| `cluster_id`          | Name or Id of existing cluster if only installing Portworx. If left blank, a new Openshift cluster will be provisioned |              | No       |
+| `cluster_id`          | Name or Id of existing cluster if only installing ODF. If left blank, a new Openshift cluster will be provisioned |              | No       |
 | `entitlement`          | Ignored if `cluster_id` is specified. Enter `cloud_pak` if using a Cloud Pak entitlement. Leave blank if using OCP entitlement |              | No       |
 | `on_vpc`               | Ignored if `cluster_id` is specified. If `true` provision the cluster on IBM Cloud VPC Gen 2, otherwise provision on IBM Cloud Classic  | `true`           | No       |
 | `region`               | Ignored if `cluster_id` is specified. IBM Cloud region to host the cluster. List all available zones with: `ibmcloud is regions` | `us-south`           | No       |
@@ -26,14 +26,9 @@ The Terraform script requires the following list of input variables. Here are so
 | `flavors`              | Ignored if `cluster_id` is specified. Array with the flavors or machine types of each of the workers.  List all flavors for each zone with: `ibmcloud ks flavors --zone us-south-1 --provider vpc-gen2` or `ibmcloud ks flavors --zone dal10 --provider classic`. On Classic it is only possible to have one worker group, so only list one flavor, i.e. `["b3c.16x64"]`. Example on VPC `["mx2.4x32", "mx2.8x64", "cx2.4x8"]` or `["mx2.4x32"]`  | `["mx2.4x32"]`   | No       |
 | `workers_count`        | Ignored if `cluster_id` is specified. Array with the amount of workers on each workers group. On Classic it's only possible to have one workers group, so only the first number in the list is taken for the cluster size. Example: `[1, 3, 5]` or `[2]`   | `[2]`            | Yes       |
 | `force_delete_storage` | Ignored if `cluster_id` is specified. If set to `true`, force the removal of persistent storage associated with the cluster during cluster deletion. Default value is `false`.                                                             | `false`          | Yes       |
-| `install_portworx`               | Install Portworx on cluster  | false           | No       |
+| `is_enable`               | Install ODF on cluster  | false           | No       |
 | `ibmcloud_api_key`               | Ignored if Portworx is not enabled: IBMCloud API Key for the account the resources will be provisioned on. This is need for Portworx. Go here to create an ibmcloud_api_key: https://cloud.ibm.com/iam/apikeys  | ""           | No       |
-| `storage_capacity`             | Ignored if Portworx is not enabled: Sets the capacity of the volume in GBs. |   `200`    | Yes      |
-| `storage_profile`              | Ignored if Portworx is not enabled. Optional, the is the storage profile used for creating storage. If this is set to a custom profile, you must update the `storage_iops` |   `10iops-tier`    | No      |
-| `storage_iops`                 | Ignored if Portworx is not enabled. Optional, sets the number of iops for a custom class. *Note* This is used only if a user provides a custom `storage_profile` |   `10`    | Yes      |
-| `create_external_etcd`         | Ignored if Portworx is not enabled: Set this value to `true` or `false` to create an external etcd | `false` | Yes |
-| `etcd_username`                | Ignored if Portworx is not enabled. Optional, username needed for etcd                         |      | No |
-| `etcd_password`                | Ignored if Portworx is not enabled. Optional, password needed for etcd                         |      | No |
+
 
 ## Output Parameters
 
@@ -58,7 +53,7 @@ ibmcloud ks cluster config -cluster $(terraform output cluster_id)
 kubectl cluster-info
 ```
 
-<b>For Portworx:</b>
+<b>For ODF:</b>
 
 If you have not setup `kubectl` to access the cluster, execute:
 
@@ -97,15 +92,15 @@ When the cluster is no longer needed, run `terraform destroy` if this was create
 
 If this cluster was created using `schematics`, just delete the schematics workspace and specify to delete all created resources.
 
-<b>For Portworx:</b>
+<b>For ODF:</b>
 
-To uninstall Portworx and its dependencies from a cluster, execute the following commands:
+To uninstall ODF and its dependencies from a cluster, execute the following commands:
 
 While logged into the cluster
 
 ```bash
-curl -fsL https://install.portworx.com/px-wipe | bash
+terraform destroy -target null_resource.enable_odf
 ```
-This will remove the Portworx and Stork pods on the cluster.
+This will disable the ODF on the cluster
 
 Once this completes, execute: `terraform destroy` if this was create locally using Terraform or remove the Schematic's workspace.

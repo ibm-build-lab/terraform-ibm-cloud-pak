@@ -1,6 +1,6 @@
-variable "enable" {
+variable "is_enable" {
   default     = true
-  description = "If set to true installs Portworx on the given cluster"
+  description = "If set to true installs ODF on the given cluster"
 }
 
 variable "ibmcloud_api_key" {

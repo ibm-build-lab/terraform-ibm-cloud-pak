@@ -23,12 +23,14 @@ Follow these instructions to test the Terraform Module manually
 Create a file `terraform.tfvars` with the following input variables:
 
 ```hcl
+is_enable               = true
 ibmcloud_api_key        = "<api-key>"
 cluster                 = "<cluster-id>"
 ```
 
 These parameters are:
 
+- `is_enable`: Variable to enable ODF install
 - `ibmcloud_api_key`: IBM Cloud Key needed to provision resources.
 - `cluster`: Cluster ID of the OpenShift cluster where to install IAF
 
@@ -62,4 +64,19 @@ This should produce output like:
 
 ## 4. Cleanup
 
-WIP
+When the cluster is no longer needed, run `terraform destroy` if this was created using your local Terraform client with `terraform apply`. 
+
+If this cluster was created using `schematics`, just delete the schematics workspace and specify to delete all created resources.
+
+<b>For ODF:</b>
+
+To uninstall ODF and its dependencies from a cluster, execute the following commands:
+
+While logged into the cluster
+
+```bash
+terraform destroy -target null_resource.enable_odf
+```
+This will disable the ODF on the cluster
+
+Once this completes, execute: `terraform destroy` if this was create locally using Terraform or remove the Schematic's workspace.

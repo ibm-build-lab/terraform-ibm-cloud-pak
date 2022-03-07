@@ -33,7 +33,7 @@ provider "ibm" {
 // Module:
 module "odf" {
   source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/odf"
-  enable = var.enable
+  is_enable = var.is_enable
   cluster = var.cluster
   ibmcloud_api_key = var.ibmcloud_api_key
 }
@@ -43,11 +43,11 @@ module "odf" {
 
 | Name                           | Description                                                                                                                                                                                                                | Default | Required |
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | -------- |
-| `enable`                       | If set to `false` does not install Portworx on the given cluster. Enabled by default | `true`  | No       |
+| `is_enable`                       | If set to `false` does not install Portworx on the given cluster. Enabled by default | `true`  | No       |
 | `ibmcloud_api_key`             | This requires an ibmcloud api key found here: `https://cloud.ibm.com/iam/apikeys`    |         | Yes       |
 | `cluster`                   | The id of the OpenShift cluster to be installed on |  | Yes       |
 
-**NOTE** The boolean input variable `enable` is used to enable/disable the module. 
+**NOTE** The boolean input variable `is_enable` is used to enable/disable the module. 
 
 ## Output Variable
 
@@ -70,7 +70,22 @@ terraform apply -auto-approve
 
 ## Clean up
 
-Work in progress
+When the cluster is no longer needed, run `terraform destroy` if this was created using your local Terraform client with `terraform apply`. 
+
+If this cluster was created using `schematics`, just delete the schematics workspace and specify to delete all created resources.
+
+<b>For ODF:</b>
+
+To uninstall ODF and its dependencies from a cluster, execute the following commands:
+
+While logged into the cluster
+
+```bash
+terraform destroy -target null_resource.enable_odf
+```
+This will disable the ODF on the cluster
+
+Once this completes, execute: `terraform destroy` if this was create locally using Terraform or remove the Schematic's workspace.
 
 
 
