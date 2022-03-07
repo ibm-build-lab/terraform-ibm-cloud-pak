@@ -4,8 +4,9 @@ This Terraform Module installs **DB2** on an Openshift (ROKS) cluster on IBM Clo
 
 **Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/Db2`
 
-- [Terraform Module to install DB2](#terraform-module-to-install-Db2)
+- [Terraform DB2 Module toinstall and configure DB2 on Openshift](#terraform-db2-module-toinstall-and-configure-db2-on-openshift)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
+  - [Download required license files](#download-required-license-files)
   - [Provisioning this module in a Terraform Script](#provisioning-this-module-in-a-terraform-script)
     - [Setting up the OpenShift cluster](#setting-up-the-openshift-cluster)
     - [Using the Db2 Module](#using-the-Db2-module)
@@ -18,6 +19,15 @@ This Terraform Module installs **DB2** on an Openshift (ROKS) cluster on IBM Clo
 If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
 
 Go [here](../CREDENTIALS.md) for details.
+
+## Download required license files
+
+Download required license files from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `../../modules/db2/files` folder on your local computer. 
+```bash
+DB2:
+Part Number : CNB21ML
+Filename    : DB2_AWSE_Restricted_Activation_11.5.zip
+```
 
 ## Provisioning this module in a Terraform Script
 In your Terraform script define the `ibm` provisioner block with the `version`.
