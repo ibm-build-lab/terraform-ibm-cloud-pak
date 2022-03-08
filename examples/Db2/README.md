@@ -1,5 +1,5 @@
 
-# Example to install and configure DB2 Terraform Module on Openshift
+# Example to provision DB2 Terraform Module
 
 ## Run using IBM Cloud Schematics
 
