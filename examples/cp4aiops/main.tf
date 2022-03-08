@@ -32,12 +32,11 @@ module "cp4aiops" {
 
   // Entitled Registry parameters:
   entitlement_key        = var.entitlement_key
-  entitled_registry_user       = var.entitled_registry_user
+  entitled_registry_user = var.entitled_registry_user
 
   // AIOps specific parameters:
-  namespace           = "cp4aiops"
+  namespace            = "aiops"
+  enable_aimanager     = true
+  enable_event_manager = true
 
-  ibmcloud_api_key = var.ibmcloud_api_key
-//  entitlement_key = var.entitlement_key
-//  entitled_registry_user = var.entitled_registry_user
 }
