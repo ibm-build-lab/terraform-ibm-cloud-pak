@@ -5,6 +5,12 @@
 # Install ODF if the rocks version is v4.7 or newer
 resource "null_resource" "enable_odf" {
   count = var.is_enable ? 1 : 0
+  
+
+  triggers = {
+    IC_API_KEY = var.ibmcloud_api_key
+    CLUSTER = var.cluster
+  }
 
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
@@ -18,12 +24,13 @@ resource "null_resource" "enable_odf" {
 
   provisioner "local-exec" {
     when        = destroy
-    command     = "./uninstall_odf.sh"
-    working_dir = "${path.module}/scripts"
+
+    interpreter = ["/bin/bash", "-c"]
+    command = "${path.module}/scripts/uninstall_odf.sh"
 
     environment = {
-      IC_API_KEY = self.triggers.ibmcloud_api_key
-      CLUSTER  = self.triggers.cluster
+      IC_API_KEY = self.triggers.IC_API_KEY
+      CLUSTER = self.triggers.CLUSTER
     }
   }
 }

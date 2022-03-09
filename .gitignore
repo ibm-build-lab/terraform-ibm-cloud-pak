@@ -24,6 +24,7 @@ dist/
 workspace.json
 *.tfvars
 .terraform.d/
+.terraform.lock.hcl
 
 # macOS files
 .DS_Store
