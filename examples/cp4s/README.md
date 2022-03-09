@@ -34,7 +34,7 @@ admin_user = var.admin_user
 
 These parameters are:
 
-- `cluster_config_path`: Path leading to the cluster info by default is set to ./.kube/config/
+- `cluster_config_path`: Path leading to the cluster info by default is set to ./.kube/config/. For schematics, use `/tmp/.schematics/.kube/config`
 - `region`: Region that the cluster is located in.
 - `entitled_registry_key`: Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key
 - `entitled_registry_user_email`: IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key

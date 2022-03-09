@@ -48,6 +48,7 @@ These parameters are:
 - `create_external_etcd`: Do you want to create an external etcd? Default value is `false`
 - `etcd_username`: Username of etcd. Only used if `create_external_etcd` is set to `true`
 - `etcd_password`: Password of etcd. Only used if `create_external_etcd` is set to `true`
+- `cluster_config_path`: Directory to place kube config. For Schematic, it's recommended to use `/tmp/.schematics/.kube/config`
 
 Execute the following Terraform commands (note, this module is only supported on TF 0.12 at this time):
 

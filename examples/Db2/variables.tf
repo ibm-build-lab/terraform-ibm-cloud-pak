@@ -22,6 +22,11 @@ variable "enable" {
   description = "If set to true installs Cloud-Pak for Business Automation on the given cluster"
 }
 
+variable "cluster_config_path" {
+  default     = "./.kube/config"
+  description = "Directory to store the kubeconfig file, set the value to empty string to not download the config. If running on Schematics, use `/tmp/.schematics/.kube/config`"
+}
+
 locals {
   db2_admin_user_password  = ""
   db2_standard_license_key = ""
@@ -30,7 +35,6 @@ locals {
 }
 
 locals {
-  cluster_config_path               = ".kube/config"
   entitled_registry_key_secret_name = "ibm-entitlement-key"
   docker_secret_name                = "docker-registry"
   docker_server                     = "cp.icr.io"
