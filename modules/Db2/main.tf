@@ -1,25 +1,36 @@
 locals {
-  db2_operator_group_file           = "${path.module}/files/db2_operator_group.yaml"
-  db2_operator_group_file_content   = file(local.db2_operator_group_file)
-  db2_subscription_file             = "${path.module}/files/db2_subscription.yaml"
-  db2_subscription_file_content     = file(local.db2_subscription_file)
+  db2_operator_group_file_content   = templatefile("${path.module}/templates/db2_operator_group.yaml.tmpl", {
+    paramDB2Namespace = var.db2_project_name
+})
+  db2_subscription_file_content     = templatefile("${path.module}/templates/db2_subscription.yaml.tmpl", {
+    paramDB2Namespace       = var.db2_project_name
+    paramDB2OperatorVersion = var.operatorVersion
+    paramDB2OperatorChannel = var.operatorChannel
+})
+
   db2_operator_catalog_file         = "${path.module}/files/ibm_operator_catalog.yaml"
-  db2_operator_catalog_file_content = file(local.db2_operator_group_file)
+  db2_operator_catalog_file_content = file(local.db2_operator_catalog_file)
   db2_storage_class_file            = "${path.module}/files/storage_class.yaml"
   db2_storage_class_file_content    = file(local.db2_storage_class_file)
-  db2_file = templatefile("${path.module}/templates/db2.yaml.tmpl", {
-    db2_license = var.db2_standard_license_key
+  db2u_cluster_file                 = templatefile("${path.module}/templates/db2u_cluster.yaml.tmpl", {
+    db2OnOcpProjectName   = var.db2_project_name
+    db2AdminUserPassword  = var.db2_admin_user_password
+    db2InstanceVersion    = var.db2_instance_version
+    db2License            = "" ? "accept: true" : join("value: ", var.db2_standard_license_key)
+    db2Cpu                = var.db2_cpu
+    db2Memory             = var.db2_memory
+    db2StorageSize        = var.db2_storage_size
+    db2OnOcpStorageClassName = var.db2_storage_class
   })
 }
-
 
 resource "null_resource" "install_db2" {
   count = var.enable_db2 ? 1 : 0
 
   triggers = {
-    db2_file_sha1                  = sha1(local.db2_file)
-    db2_operator_group_file_sha1   = sha1(local.db2_operator_group_file)
-    db2_subscription_file_sha1     = sha1(local.db2_subscription_file)
+    db2_file_sha1                  = sha1(local.db2u_cluster_file)
+    db2_operator_group_file_sha1   = sha1(local.db2_operator_group_file_content)
+    db2_subscription_file_sha1     = sha1(local.db2_subscription_file_content)
     db2_operator_catalog_file_sha1 = sha1(local.db2_operator_catalog_file)
     db2_storage_class_file_sha1    = sha1(local.db2_storage_class_file)
   }
@@ -44,11 +55,11 @@ resource "null_resource" "install_db2" {
       DB2_STORAGE_SIZE         = var.db2_storage_size
       DB2_STORAGE_CLASS        = var.db2_storage_class
       # ------ FILES ASSIGNMENTS -----------
-      DB2_OPERATOR_GROUP_FILE   = local.db2_operator_group_file
-      DB2_SUBSCRIPTION_FILE     = local.db2_subscription_file
+      DB2_OPERATOR_GROUP_FILE   = local.db2_operator_group_file_content
+      DB2_SUBSCRIPTION_FILE     = local.db2_subscription_file_content
       DB2_OPERATOR_CATALOG_FILE = local.db2_operator_catalog_file
       DB2_STORAGE_CLASS_FILE    = local.db2_storage_class_file
-      DB2_FILE                  = local.db2_file
+      DB2U_CLUSTER_FILE         = local.db2u_cluster_file
       # ------ Docker Information ----------
       ENTITLED_REGISTRY_KEY           = var.entitled_registry_key
       ENTITLEMENT_REGISTRY_USER_EMAIL = var.entitled_registry_user_email

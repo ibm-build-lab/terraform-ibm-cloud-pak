@@ -29,13 +29,13 @@ function wait_for_operator_to_install_successfully {
   local csvName=$1
   local timeToWait=$2
   local namespace=$3
-  local TOTAL_WAIT_TIME_SECS=$(( 60 * $timeToWait))
+  local TOTAL_WAIT_TIME_SECS=$(( 60 * "$timeToWait"))
   local CURRENT_WAIT_TIME=0
   local CSV_STATUS=""
 
   while [ $CURRENT_WAIT_TIME -lt $TOTAL_WAIT_TIME_SECS ]
   do
-    CSV_STATUS=$(oc get csv $csvName -o custom-columns=PHASE:.status.phase --no-headers -n $namespace 2>/dev/null | grep Succeeded | cat)
+    CSV_STATUS=$(oc get csv "$csvName" -o custom-columns=PHASE:.status.phase --no-headers -n "$namespace" 2>/dev/null | grep Succeeded | cat)
     if [ ! -z "$CSV_STATUS" ]
     then
       #Done waiting
@@ -43,10 +43,10 @@ function wait_for_operator_to_install_successfully {
     fi
     # Still waiting
     sleep 10
-    CURRENT_WAIT_TIME=$(( $CURRENT_WAIT_TIME + 10 ))
+    CURRENT_WAIT_TIME=$(( "$CURRENT_WAIT_TIME" + 10 ))
   done
 
-  echo $CSV_STATUS
+  echo "$CSV_STATUS"
 }
 
 
@@ -65,15 +65,15 @@ function wait_for_install_plan {
   local subscriptionName=$1
   local timeToWait=$2
   local namespace=$3
-  local TOTAL_WAIT_TIME_SECS=$(( 60 * $timeToWait))
+  local TOTAL_WAIT_TIME_SECS=$(( 60 * "$timeToWait"))
   local CURRENT_WAIT_TIME=0
   local INSTALL_PLAN=""
 
   while [ $CURRENT_WAIT_TIME -lt $TOTAL_WAIT_TIME_SECS ]
   do
-    INSTALL_PLAN=$(oc get subscription $subscriptionName -o custom-columns=IPLAN:.status.installplan.name --no-headers -n $namespace 2>/dev/null | grep -v "<none>" | cat)
+    INSTALL_PLAN=$(oc get subscription "$subscriptionName" -o custom-columns=IPLAN:.status.installplan.name --no-headers -n "$namespace" 2>/dev/null | grep -v "<none>" | cat)
     
-    echo $INSTALL_PLAN
+    echo "$INSTALL_PLAN"
 
     if [ ! -z "$INSTALL_PLAN" ] 
     then
@@ -82,10 +82,10 @@ function wait_for_install_plan {
     fi
     # Still waiting
     sleep 10
-    CURRENT_WAIT_TIME=$(( $CURRENT_WAIT_TIME + 10 ))
+    CURRENT_WAIT_TIME=$(( "$CURRENT_WAIT_TIME" + 10 ))
   done
 
-  echo $INSTALL_PLAN 
+  echo "$INSTALL_PLAN"
 }
 
 ##
@@ -105,13 +105,13 @@ function wait_for_resource_created_by_name {
   local name=$2
   local timeToWait=$3
   local namespace=$4
-  local TOTAL_WAIT_TIME_SECS=$(( 60 * $timeToWait))
+  local TOTAL_WAIT_TIME_SECS=$(( 60 * "$timeToWait"))
   local CURRENT_WAIT_TIME=0
   local RESOURCE_FULLY_QUALIFIED_NAME=""
 
   while [ $CURRENT_WAIT_TIME -lt $TOTAL_WAIT_TIME_SECS ]
   do
-    RESOURCE_FULLY_QUALIFIED_NAME=$(oc get $resourceKind $name  -o name --no-headers -n $namespace 2>/dev/null)
+    RESOURCE_FULLY_QUALIFIED_NAME=$(oc get "$resourceKind" "$name"  -o name --no-headers -n "$namespace" 2>/dev/null)
     if [ ! -z "$RESOURCE_FULLY_QUALIFIED_NAME" ] 
     then
       # Done waiting 
@@ -119,10 +119,10 @@ function wait_for_resource_created_by_name {
     fi
     # Still waiting
     sleep 10
-    CURRENT_WAIT_TIME=$(( $CURRENT_WAIT_TIME + 10 ))
+    CURRENT_WAIT_TIME=$(( "$CURRENT_WAIT_TIME" + 10 ))
   done
  
-  echo $RESOURCE_FULLY_QUALIFIED_NAME 
+  echo "$RESOURCE_FULLY_QUALIFIED_NAME"
 }
 
 
@@ -141,13 +141,13 @@ function wait_for_job_to_complete_by_name {
   local jobName=$1
   local timeToWait=$2
   local namespace=$3
-  local TOTAL_WAIT_TIME_SECS=$(( 60 * $timeToWait))
+  local TOTAL_WAIT_TIME_SECS=$(( 60 * "$timeToWait"))
   local CURRENT_WAIT_TIME=0
   local JOB_STATUS=""
 
   while [ $CURRENT_WAIT_TIME -lt $TOTAL_WAIT_TIME_SECS ]
   do
-    JOB_STATUS=$(oc get job $jobName -n $namespace -o custom-columns=STATUS:'.status.conditions[*].type' 2>/dev/null | grep Complete | cat)
+    JOB_STATUS=$(oc get job "$jobName" -n "$namespace" -o custom-columns=STATUS:'.status.conditions[*].type' 2>/dev/null | grep Complete | cat)
     if [ ! -z "$JOB_STATUS" ] 
     then
       # Done waiting 
@@ -155,10 +155,10 @@ function wait_for_job_to_complete_by_name {
     fi
     # Still waiting
     sleep 10
-    CURRENT_WAIT_TIME=$(( $CURRENT_WAIT_TIME + 10 ))
+    CURRENT_WAIT_TIME=$(( "$CURRENT_WAIT_TIME" + 10 ))
   done
  
-  echo $JOB_STATUS 
+  echo "$JOB_STATUS"
 }
 
 
@@ -180,16 +180,16 @@ function get_worker_node_addresses_from_pod {
   local HOST_NODE=""
   local HOST_ADDRESSES=""
 
-  HOST_NODE=$(oc get pod $podName -o custom-columns=NODE:.spec.nodeName --no-headers 2>/dev/null) 
+  HOST_NODE=$(oc get pod "$podName" -o custom-columns=NODE:.spec.nodeName --no-headers 2>/dev/null)
   ## This is using the filtering capabilities to find the ExternalIP of the worker node
   if [ ! -z "$typeFilter" ] 
   then 
-    HOST_ADDRESSES=$(oc get node $HOST_NODE -o custom-columns="ADDRESS":".status.addresses[?(@.type==\"${typeFilter}\")].address" --no-headers 2>/dev/null) 
+    HOST_ADDRESSES=$(oc get node "$HOST_NODE" -o custom-columns="ADDRESS":".status.addresses[?(@.type==\"${typeFilter}\")].address" --no-headers 2>/dev/null)
     # Example: 
     # HOST_ADDRESSES=$(oc get node $HOST_NODE -o custom-columns="ADDRESS":'.status.addresses[?(@.type=="ExternalIP")].address' --no-headers 2>/dev/null)
   else
-    HOST_ADDRESSES=$(oc get node $HOST_NODE -o custom-columns="ADDRESSES":'.status.addresses[*].address' --no-headers 2>/dev/null)
+    HOST_ADDRESSES=$(oc get node "$HOST_NODE" -o custom-columns="ADDRESSES":'.status.addresses[*].address' --no-headers 2>/dev/null)
   fi
 
-  echo $HOST_ADDRESSES
+  echo "$HOST_ADDRESSES"
 }

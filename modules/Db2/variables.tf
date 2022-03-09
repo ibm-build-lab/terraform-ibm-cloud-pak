@@ -4,7 +4,7 @@ variable "region" {
 }
 
 variable "resource_group" {
-  default     = "cloud-pak-sandbox"
+  default     = "Default"
   description = "Resource group name where the cluster will be hosted."
 }
 
@@ -50,7 +50,7 @@ variable "operatorVersion" {
 
 variable "db2_standard_license_key" {
   default     = ""
-  description = "Leave blank for standard licence. Specify the db2 license key for Advanced."
+  description = "The standard license key for the Db2 database product. Note: the license key is required only for Advanced DB2 installation. Click here to download it: (https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/)"
 }
 
 variable "operatorChannel" {
