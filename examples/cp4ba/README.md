@@ -45,6 +45,7 @@ These parameters are:
 - `db2_password`: DB2 user password as set up in LDAP
 - `db2_host_name`: DB2 Host name
 - `db2_host_port`: DB2 Host Port
+- `cluster_config_path`: Directory to place kube config. For Schematic, it's recommended to use `/tmp/.schematics/.kube/config`
 
 ### Execute the example
 

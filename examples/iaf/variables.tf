@@ -30,8 +30,12 @@ variable "entitled_registry_key" {
   description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
 }
 
+variable "cluster_config_path" {
+  default     = "./.kube/config"
+  description = "Directory to store the kubeconfig file, set the value to empty string to not download the config. If running on Schematics, use `/tmp/.schematics/.kube/config`"
+}
+
 // ROKS Module : Local Variables and constants
 locals {
   entitled_registry_key_file = "../../entitlement.key"
-  config_dir                 = "./.kube/config"
 }
