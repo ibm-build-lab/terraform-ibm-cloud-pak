@@ -4,7 +4,6 @@ variable "region" {
 }
 
 variable "resource_group" {
-  default     = "Default"
   description = "Resource group name where the cluster will be hosted."
 }
 

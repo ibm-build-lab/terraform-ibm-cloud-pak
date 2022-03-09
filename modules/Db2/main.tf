@@ -16,7 +16,7 @@ locals {
     db2OnOcpProjectName   = var.db2_project_name
     db2AdminUserPassword  = var.db2_admin_user_password
     db2InstanceVersion    = var.db2_instance_version
-    db2License            = "" ? "accept: true" : join("value: ", var.db2_standard_license_key)
+    db2License            = var.db2_standard_license_key == "" ? "accept: true" : join("value: ", var.db2_standard_license_key)
     db2Cpu                = var.db2_cpu
     db2Memory             = var.db2_memory
     db2StorageSize        = var.db2_storage_size
