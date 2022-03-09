@@ -1,11 +1,10 @@
-variable "enable" {
-  default     = true
-  description = "If set to true installs Cloud-Pak for Business Automation on the given cluster"
+variable "ibmcloud_api_key" {
+  description = "Enter your IBM API Cloud access key. Visit this link for more information: https://cloud.ibm.com/docs/account?topic=account-userapikey&interface=ui "
 }
 
 variable "cluster_id" {
   default     = ""
-  description = "Enter your cluster id or name to install the Cloud Pak. Leave blank to provision a new Openshift cluster."
+  description = "Set your cluster ID to install the Cloud Pak for Business Automation. Leave blank to provision a new OpenShift cluster."
 }
 
 variable "ingress_subdomain" {
@@ -13,15 +12,18 @@ variable "ingress_subdomain" {
   description = "Run the command `ibmcloud ks cluster get -c <cluster_name_or_id>` to get the Ingress Subdomain value"
 }
 
-variable "cluster_config_path" {
-  default     = "./.kube/config"
-  type        = string
-  description = "Path to the cluster configuration file to access your cluster"
+variable "resource_group" {
+  default     = "Default"
+  description = "Resource group name where the cluster is hosted."
 }
 
-variable "resource_group" {
-  default     = "cloud-pak-sandbox-ibm"
-  description = "Resource group name where the cluster will be hosted."
+variable "region" {
+    description = "Region where the cluster is hosted."
+}
+
+variable "cluster_config_path" {
+  default     = "./.kube/config"
+  description = "directory to store the kubeconfig file"
 }
 
 variable "entitled_registry_key" {
@@ -36,17 +38,29 @@ variable "entitled_registry_user_email" {
 
 variable "cp4ba_project_name" {
   default     = "cp4ba"
-  description = "Project name or namespace where Cloud Pak for Business Automation will be installed."
+  description = "Namespace or project for cp4ba"
 }
 
-# Use the id and password that you specified when setting up LDAP
-variable "ldap_admin" {
-  default     = "cn=root"
-  description = "LDAP Admin user name"
+variable "enable_cp4ba" {
+  description = "If set to true, it will install CP4BA on the given cluster"
+  type = bool
+  default = true
 }
-variable "ldap_password" {
-  default     = "Passw0rd"
+
+# --- LDAP SETTINGS ---
+# Password for LDAP Admin User (ldapAdminName name see below), for example passw0rd - use the password that you specified when setting up LDAP
+variable "ldap_admin_name" {
+  default = "cn=root"
+  description = "The LDAP root administrator account to access the directory. To learn more: https://www.ibm.com/docs/en/sva/7.0.0?topic=tuning-ldap-root-administrator-account-cnroot"
+}
+
+variable "ldap_admin_password" {
   description = "LDAP Admin password"
+}
+
+variable "hostname" {
+  default     = "ldapvm"
+  description = "Hostname of the virtual Server"
 }
 
 variable "ldap_host_ip" {
@@ -54,7 +68,7 @@ variable "ldap_host_ip" {
   description = "LDAP server IP address"
 }
 
-# -------- DB2 Variables ---------
+
 # --------- DB2 SETTINGS ----------
 variable "enable_db2" {
   default     = true
@@ -66,7 +80,7 @@ variable "db2_project_name" {
  description = "The namespace/project for Db2"
 }
 
-variable "db2_admin" {
+variable "db2_admin_username" {
   default     = "cpadmin"
   description = "Admin user name defined in LDAP"
 }
@@ -85,16 +99,14 @@ variable "db2_host_address" {
   default     = ""
 }
 
-variable "db2_ports" {
+variable "db2_host_port" {
   description = "Port number for DB2 instance. Ignore if there is not an existing Db2."
   default = ""
 }
 
 locals {
+  cluster_config_path = "./.kube/config"
+  namespace           = "cp4ba"
   docker_server       = "cp.icr.io"
   docker_username     = "cp"
 }
-
-
-
-
