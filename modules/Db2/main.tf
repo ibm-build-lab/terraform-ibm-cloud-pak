@@ -1,18 +1,20 @@
 locals {
-  db2_operator_group_file_content   = templatefile("${path.module}/templates/db2_operator_group.yaml.tmpl", {
+  db2_operator_catalog_file         = "${path.module}/files/ibm_operator_catalog.yaml"
+  db2_operator_catalog_file_content = file(local.db2_operator_catalog_file)
+  db2_storage_class_file            = "${path.module}/files/storage_class.yaml"
+  db2_storage_class_file_content    = file(local.db2_storage_class_file)
+
+  db2_operator_group_file_content = templatefile("${path.module}/templates/db2_operator_group.yaml.tmpl", {
     paramDB2Namespace = var.db2_project_name
 })
-  db2_subscription_file_content     = templatefile("${path.module}/templates/db2_subscription.yaml.tmpl", {
+
+  db2_subscription_file_content = templatefile("${path.module}/templates/db2_subscription.yaml.tmpl", {
     paramDB2Namespace       = var.db2_project_name
     paramDB2OperatorVersion = var.operatorVersion
     paramDB2OperatorChannel = var.operatorChannel
 })
 
-  db2_operator_catalog_file         = "${path.module}/files/ibm_operator_catalog.yaml"
-  db2_operator_catalog_file_content = file(local.db2_operator_catalog_file)
-  db2_storage_class_file            = "${path.module}/files/storage_class.yaml"
-  db2_storage_class_file_content    = file(local.db2_storage_class_file)
-  db2u_cluster_file                 = templatefile("${path.module}/templates/db2u_cluster.yaml.tmpl", {
+  db2u_cluster_file       = templatefile("${path.module}/templates/db2u_cluster.yaml.tmpl", {
     db2OnOcpProjectName   = var.db2_project_name
     db2AdminUserPassword  = var.db2_admin_user_password
     db2InstanceVersion    = var.db2_instance_version
