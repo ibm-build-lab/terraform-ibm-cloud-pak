@@ -49,13 +49,12 @@ variable "enable_cp4ba" {
 
 # -------- LDAP Variables ---------
 # Use the id and password that you specified when setting up LDAP
-variable "ldap_admin" {
-  default     = "cn=root"
-  description = "LDAP Admin user name"
+variable "ldap_admin_name" {
+  default = "cn=root"
+  description = "The LDAP root administrator account to access the directory. To learn more: https://www.ibm.com/docs/en/sva/7.0.0?topic=tuning-ldap-root-administrator-account-cnroot"
 }
 
-variable "ldap_password" {
-  default     = "Passw0rd"
+variable "ldap_admin_password" {
   description = "LDAP Admin password"
 }
 
@@ -76,7 +75,7 @@ variable "db2_project_name" {
  description = "The namespace/project for Db2"
 }
 
-variable "db2_admin" {
+variable "db2_admin_username" {
   default     = "cpadmin"
   description = "Admin user name defined in LDAP"
 }
@@ -95,7 +94,7 @@ variable "db2_host_address" {
   default     = ""
 }
 
-variable "db2_ports" {
+variable "db2_host_port" {
   description = "Port number for DB2 instance. Ignore if there is not an existing Db2."
   default = ""
 }

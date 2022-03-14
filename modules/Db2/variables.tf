@@ -23,6 +23,7 @@ variable "entitlement_key" {
   description = "Do you have a Cloud Pak for Business Automation Entitlement Registry key? If not, Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
 }
 
+
 locals {
   # CP4BA Database Name information
   //  db2_ums_db_name   = "UMSDB"

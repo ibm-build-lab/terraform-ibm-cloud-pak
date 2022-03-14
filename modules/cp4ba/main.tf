@@ -27,8 +27,7 @@ locals {
   cp4ba_deployment_credentials_file_content = "${path.module}/templates/cp4ba_deployment_credentials.yaml.tmpl"
   cp4ba_deployment_file_content             = templatefile("${path.module}/templates/cp4ba_deployment.yaml.tmpl", {
     ldap_host_ip     = var.ldap_host_ip,
-    db2_admin        = var.db2_admin_username,
-    db2_host_name    = var.db2_host_address,
+    db2_host_address    = var.db2_host_address,
     db2_host_port    = var.db2_host_port,
     ingress_subdomain = var.ingress_subdomain
   })
@@ -42,7 +41,7 @@ locals {
 }
 
 resource "null_resource" "installing_cp4ba" {
-  enable_cp4ba = var.enable_cp4ba ? 1 : 0
+//  enable_cp4ba = var.enable_cp4ba
 
   triggers = {
     OPERATOR_SHARED_PV_FILE_sha1          = sha1(local.operator_shared_pv_file_content)

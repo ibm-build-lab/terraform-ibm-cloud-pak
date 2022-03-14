@@ -96,7 +96,6 @@ variable "db2_admin_user_password" {
 
 variable "db2_host_address" {
   description = "Host name for DB2 instance. Ignore if there is not an existing Db2."
-  default     = ""
 }
 
 variable "db2_host_port" {
