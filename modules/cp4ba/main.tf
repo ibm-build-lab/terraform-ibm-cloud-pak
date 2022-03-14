@@ -27,7 +27,7 @@ locals {
   cp4ba_deployment_credentials_file_content = "${path.module}/templates/cp4ba_deployment_credentials.yaml.tmpl"
   cp4ba_deployment_file_content             = templatefile("${path.module}/templates/cp4ba_deployment.yaml.tmpl", {
     ldap_host_ip     = var.ldap_host_ip,
-    db2_host_address    = var.db2_host_address,
+    db2_host_address = var.db2_host_address,
     db2_host_port    = var.db2_host_port,
     ingress_subdomain = var.ingress_subdomain
   })
@@ -41,7 +41,6 @@ locals {
 }
 
 resource "null_resource" "installing_cp4ba" {
-//  enable_cp4ba = var.enable_cp4ba
 
   triggers = {
     OPERATOR_SHARED_PV_FILE_sha1          = sha1(local.operator_shared_pv_file_content)
@@ -90,17 +89,19 @@ resource "null_resource" "installing_cp4ba" {
 
       ldap_admin              = var.ldap_admin_name
       ldap_password           = var.ldap_admin_password
+      ldap_host_ip            = var.ldap_host_ip
       # ----- DB2 Settings -----
       db2_host_port           = var.db2_host_port # != null ? var.db2_ports : module.install_db2.db2_ports # var.db2_port_number
       db2_host_address        = var.db2_host_address
-      db2_admin_username      = var.db2_admin_username
-      db2_admin_user_password = var.db2_admin_user_password
+      db2_admin               = var.db2_admin_username
+      db2_password            = var.db2_admin_user_password
+      db2_user                = var.db2_user
     }
   }
 }
 
 data "external" "get_endpoints" {
-  count = var.enable_cp4ba ? 1 : 0
+  count = true
 
   depends_on = [
     null_resource.installing_cp4ba

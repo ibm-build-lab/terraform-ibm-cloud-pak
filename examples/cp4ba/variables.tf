@@ -4,7 +4,7 @@ variable "ibmcloud_api_key" {
 
 variable "cluster_id" {
   default     = ""
-  description = "Set your cluster ID to install the Cloud Pak for Business Automation. Leave blank to provision a new OpenShift cluster."
+  description = "Enter your cluster id or name to install the Cloud Pak. Leave blank to provision a new Openshift cluster."
 }
 
 variable "ingress_subdomain" {
