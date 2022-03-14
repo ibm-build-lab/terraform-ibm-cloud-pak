@@ -34,7 +34,7 @@ locals {
   })
   secrets_content    = templatefile("${path.module}/templates/secrets.yaml.tmpl", {
     ldap_admin       = var.ldap_admin,
-    ldap_password    = var.ldap_password,
+    ldap_password    = var.ldap_admin_password,
     db2_admin        = var.db2_admin,
     db2_user         = var.db2_user,
     db2_password     = var.db2_admin_user_password
