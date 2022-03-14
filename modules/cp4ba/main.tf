@@ -27,15 +27,15 @@ locals {
   cp4ba_deployment_credentials_file_content = "${path.module}/templates/cp4ba_deployment_credentials.yaml.tmpl"
   cp4ba_deployment_file_content             = templatefile("${path.module}/templates/cp4ba_deployment.yaml.tmpl", {
     ldap_host_ip     = var.ldap_host_ip,
-    db2_admin        = var.db2_admin,
+    db2_admin        = var.db2_admin_username,
     db2_host_name    = var.db2_host_address,
-    db2_host_port    = var.db2_ports,
+    db2_host_port    = var.db2_host_port,
     ingress_subdomain = var.ingress_subdomain
   })
   secrets_content    = templatefile("${path.module}/templates/secrets.yaml.tmpl", {
-    ldap_admin       = var.ldap_admin,
+    ldap_admin       = var.ldap_admin_name,
     ldap_password    = var.ldap_admin_password,
-    db2_admin        = var.db2_admin,
+    db2_admin        = var.db2_admin_username,
     db2_user         = var.db2_user,
     db2_password     = var.db2_admin_user_password
   })
