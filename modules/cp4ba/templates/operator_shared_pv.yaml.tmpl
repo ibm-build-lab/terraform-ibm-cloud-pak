@@ -1,0 +1,24 @@
+###############################################################################
+#
+# Licensed Materials - Property of IBM
+#
+# (C) Copyright IBM Corp. 2021. All Rights Reserved.
+#
+# US Government Users Restricted Rights - Use, duplication or
+# disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+#
+###############################################################################
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: operator-shared-pv
+  namespace: ${cp4ba_project_name}
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 1Gi
+  nfs:
+    path: /shared/operator
+    server:
+  persistentVolumeReclaimPolicy: Retain

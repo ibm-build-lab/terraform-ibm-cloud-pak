@@ -12,11 +12,20 @@ Go [here](../CREDENTIALS.md) for details.
 
 ## Provisioning this module in a Terraform Script
 
-In your Terraform script define the `ibm` provisioner block with the `version`.
+You will need a versions.tf file containing the `ibm` provisioner block with the `version`. Here is an example:
 
 ```hcl
-provider "ibm" {
-  version          = "~> 1.12"
+terraform {
+  required_version = ">= 0.13"
+  required_providers {
+    ibm = {
+      source  = "ibm-cloud/ibm"
+      version = "1.34"
+    }
+    null = {
+      source = "hashicorp/null"
+    }
+  }
 }
 ```
 

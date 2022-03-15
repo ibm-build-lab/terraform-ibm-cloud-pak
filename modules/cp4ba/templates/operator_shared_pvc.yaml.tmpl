@@ -1,0 +1,29 @@
+###############################################################################
+#
+# Licensed Materials - Property of IBM
+#
+# (C) Copyright IBM Corp. 2021. All Rights Reserved.
+#
+# US Government Users Restricted Rights - Use, duplication or
+# disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+#
+###############################################################################
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: operator-shared-pvc
+  namespace: ${cp4ba_project_name}
+  labels:
+    app.kubernetes.io/instance: ibm-dba
+    app.kubernetes.io/managed-by: ibm-dba
+    app.kubernetes.io/name: ibm-dba
+    release: 21.0.1
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ibmc-file-gold-gid
+  resources:
+    requests:
+      storage: 1Gi
+
+
