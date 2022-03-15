@@ -1,6 +1,4 @@
 locals {
-  operator_group_file                   = "${path.module}/files/operator-group.yaml"
-  operator_group_file_content           = file(local.operator_group_file)
   catalog_source_file                   = "${path.module}/files/catalog_source.yaml"
   catalog_source_file_content           = file(local.catalog_source_file)
   common_service_file                   = "${path.module}/files/common-service.yaml"
@@ -9,6 +7,9 @@ locals {
   roles_file_content                    = file(local.roles_file)
   role_binding_file                     = "${path.module}/files/role_binding.yaml"
   role_binding_content                  = file(local.role_binding_file)
+  operator_group_file_content           = templatefile("${path.module}/templates/operator-group.yaml.tmpl", {
+    cp4ba_project_name = var.cp4ba_project_name
+  })
   cp4ba_subscription_file_content       = templatefile("${path.module}/templates/cp4ba_subscription.yaml.tmpl", {
     cp4ba_project_name = var.cp4ba_project_name
   })
@@ -77,7 +78,7 @@ resource "null_resource" "installing_cp4ba" {
       SHARED_LOG_PV_FILE               = local.shared_log_pv_file_content
       OPERATOR_SHARED_PVC_FILE         = local.operator_shared_pvc_file_content
       SHARED_LOG_PVC_FILE              = local.shared_log_pvc_file_content
-      OPERATOR_GROUP_FILE              = local.operator_group_file
+      OPERATOR_GROUP_FILE              = local.operator_group_file_content
       CATALOG_SOURCE_FILE              = local.catalog_source_file
       COMMON_SERVICE_FILE              = local.common_service_file
       CP4BA_SUBSCRIPTION_FILE          = local.cp4ba_subscription_file_content
