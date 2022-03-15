@@ -170,6 +170,12 @@ ${K8S_CMD} apply -f "${COMMON_SERVICE_FILE}"
 sleep 100
 echo
 
+echo -e "\x1B[1m Creating the AutomationUIConfig and the Cartage ...\x1B[0m"
+kubectl apply -f "${AUTO_UI_CONFIG_FILE_CONTENT}"
+cat "${AUTO_UI_CONFIG_FILE_CONTENT}"
+sleep 10
+echo
+
 # Create subscription to Business Automation Operator
 echo -e "\x1B[1m Creating the Subscription ...\x1B[0m"
 cat "${CP4BA_SUBSCRIPTION_FILE}"

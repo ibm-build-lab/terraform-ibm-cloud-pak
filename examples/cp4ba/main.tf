@@ -38,6 +38,7 @@ module "install_cp4ba" {
   # ----- LDAP Settings -----
   ldap_admin_name         = var.ldap_admin_name
   ldap_admin_password     = var.ldap_admin_password
+  ldap_host_ip            = var.ldap_host_ip
   # ----- DB2 Settings -----
   db2_host_port           = var.db2_host_port # != null ? var.db2_ports : module.install_db2.db2_ports # var.db2_port_number
   db2_host_address        = var.db2_host_address

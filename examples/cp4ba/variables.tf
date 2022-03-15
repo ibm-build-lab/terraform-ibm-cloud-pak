@@ -21,11 +21,6 @@ variable "region" {
     description = "Region where the cluster is hosted."
 }
 
-variable "cluster_config_path" {
-  default     = "./.kube/config"
-  description = "directory to store the kubeconfig file"
-}
-
 variable "entitled_registry_key" {
   type        = string
   description = "Do you have a Cloud Pak for Business Automation Entitlement Registry key? If not, Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"

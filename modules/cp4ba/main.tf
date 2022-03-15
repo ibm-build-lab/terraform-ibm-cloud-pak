@@ -7,6 +7,9 @@ locals {
   roles_file_content                    = file(local.roles_file)
   role_binding_file                     = "${path.module}/files/role_binding.yaml"
   role_binding_content                  = file(local.role_binding_file)
+  auto_ui_config_file_content             = templatefile("${path.module}/templates/automationUIConfig.yaml.tmpl", {
+    cp4ba_project_name = var.cp4ba_project_name
+  })
   operator_group_file_content           = templatefile("${path.module}/templates/operator-group.yaml.tmpl", {
     cp4ba_project_name = var.cp4ba_project_name
   })
@@ -46,7 +49,7 @@ resource "null_resource" "installing_cp4ba" {
   triggers = {
     OPERATOR_SHARED_PV_FILE_sha1          = sha1(local.operator_shared_pv_file_content)
     SHARED_LOG_PV_FILE_sha1               = sha1(local.shared_log_pv_file_content)
-
+    AUTO_UI_CONFIG_FILE_CONTENT_sha1      = sha1(local.auto_ui_config_file_content)
     OPERATOR_SHARED_PVC_FILE_sha1         = sha1(local.operator_shared_pvc_file_content)
     SHARED_LOG_PVC_FILE_sha1              = sha1(local.shared_log_pvc_file_content)
     OPERATOR_GROUP_sha1                   = sha1(local.operator_group_file_content)
@@ -74,6 +77,7 @@ resource "null_resource" "installing_cp4ba" {
       DOCKER_SERVER                 = local.docker_server
       DOCKER_USERNAME               = local.docker_username
       # ------- FILES ASSIGNMENTS --------
+      AUTO_UI_CONFIG_FILE_CONTENT      = local.auto_ui_config_file_content
       OPERATOR_SHARED_PV_FILE          = local.operator_shared_pv_file_content
       SHARED_LOG_PV_FILE               = local.shared_log_pv_file_content
       OPERATOR_SHARED_PVC_FILE         = local.operator_shared_pvc_file_content
