@@ -1,15 +1,11 @@
-variable "enable" {
+variable "is_enable" {
     default     = true
-}
-variable "kube_config_path" {
-  description = "Path to the k8s config file: ex `~/.kube/config`"
 }
 
 variable "cluster" {
-  description = ""
+  description = "Provide cluster id"
 }
 
-variable "roks_version" {
-    default = "4.7"
-  description = ""
+variable "ibmcloud_api_key" {
+  description = "IBMCloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
 }
