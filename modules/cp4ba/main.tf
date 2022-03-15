@@ -101,7 +101,7 @@ resource "null_resource" "installing_cp4ba" {
 }
 
 data "external" "get_endpoints" {
-  count = true
+  count = 1
 
   depends_on = [
     null_resource.installing_cp4ba
