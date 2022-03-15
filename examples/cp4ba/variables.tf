@@ -99,8 +99,12 @@ variable "db2_host_port" {
   default = ""
 }
 
+variable "cluster_config_path" {
+  default     = "./.kube/config"
+  description = "Directory to store the kubeconfig file, set the value to empty string to not download the config. If running on Schematics, use `/tmp/.schematics/.kube/config`"
+}
+
 locals {
-  cluster_config_path = "./.kube/config"
   namespace           = "cp4ba"
   docker_server       = "cp.icr.io"
   docker_username     = "cp"
