@@ -1,10 +1,5 @@
 #!/bin/sh
 
-# -----REMOVE---------
-# ON_VPC=false
-# NAMESPACE="cp4aiops"
-# -----REMOVE---------
-
 K8s_CMD=kubectl
 
 NAMESPACE=${NAMESPACE:-aiops}
@@ -54,9 +49,25 @@ spec:
     enabled: false
 EOF
 
-### CHECK FOR INSTALLATION
-#oc get installations.orchestrator.aiops.ibm.com -n aiops
-
+###
+# Wait for AIOpsAnalyticsOrchestrator to create..
+evtCount=0
+evtTimeout=15 #15 mins
+SLEEP_TIME="60"
+while true; do
+  if [ "$evtCount" -eq "$evtTimeout" ]; then
+    echo "Kind: AIOpsAnalyticsOrchestrator did not create a resource. Please check the Installation: ibm-aiops"
+    exit 1
+  fi
+  # Check to make sure it exists:
+  ## TODO: Capture error when the AIOpsAnalyticsOrchestrator resource hasn't been created yet.
+  if [ "`kubectl get AIOpsAnalyticsOrchestrator aiops -n ${NAMESPACE} --ignore-not-found=true`" != "" ]; then
+    break
+  fi
+  echo "Waiting for AIOpsAnalyticsOrchestrator, sleeping ${SLEEP_TIME} seconds"
+  sleep $SLEEP_TIME
+  evtCount=$(( evtCount+1 ))
+done
 
 echo "=== Adding pull secret to the ibm-aiops-orchestrator operator"
 
@@ -91,7 +102,7 @@ spec:
   license:
     accept: true
   size: small
-  topologyInstanceName: aiops,
+  topologyInstanceName: aiops
   pullSecrets:
   - ibm-aiops-pull-secret
 EOF
@@ -119,7 +130,7 @@ is_complete_aiopsedge=false
 is_complete_asm=false
 
 SLEEP_TIME="60" # seconds
-TIMEOUT_LIMIT=90 # 90min timout
+TIMEOUT_LIMIT=240 # 240min = 4hr timeout
 TIMEOUT_COUNT=0
 
 while true; do
@@ -137,7 +148,7 @@ while true; do
         break
     fi
 
-    if [ $is_complete_ircore = false ] && [ "`oc get ircore -A --output=json | jq -c -r '.items[].status.conditions[] | select( .type | contains( "Ready")) | .reason'`" == "Ready" ]; then
+    if [ $is_complete_ircore = false ] && [ "`oc get ircore -A --output=json --ignore-not-found=true | jq -c -r '.items[].status.conditions[] | select( .type | contains( "Ready")) | .reason'`" == "Ready" ]; then
         echo "ircore is ready"
         is_complete_ircore=true
     fi
@@ -183,7 +194,7 @@ while true; do
 
     echo "Sleeping $SLEEP_TIME seconds"
     sleep $SLEEP_TIME
-    (( TIMEOUT_COUNT++ ))
+    TIMEOUT_COUNT=$(( TIMEOUT_COUNT+1 ))
 done
 
 echo '=== Installation Complete ==='

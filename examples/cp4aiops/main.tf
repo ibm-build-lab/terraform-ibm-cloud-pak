@@ -35,6 +35,7 @@ module "cp4aiops" {
   entitled_registry_user = var.entitled_registry_user
 
   // AIOps specific parameters:
+  accept_aiops_license = var.accept_aiops_license
   namespace            = "aiops"
   enable_aimanager     = true
   enable_event_manager = true

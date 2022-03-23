@@ -137,17 +137,20 @@ evtTimeout=120 #2 hours
 SLEEP_TIME="60"
 while (( $evtCount < $evtTimeout )); do
 
-    if [ `oc get NOI -n ${NAMESPACE} evtmanager -o json | jq -c -r '.status.phase'` == "OK" ]; then
-        break
-    fi
+  STATUS=`oc get NOI -n ${NAMESPACE} evtmanager -o json | jq -c -r '.status.phase'`
+  if [ "$STATUS" == "OK" ]; then
+    break
+  fi
 
-    echo "Sleeping ${SLEEP_TIME} seconds"
-    sleep $SLEEP_TIME
-    evtCount=$(( evtCount+1 ))
+  echo "Current NOI Status: $STATUS"
+
+  echo "Sleeping ${SLEEP_TIME} seconds"
+  sleep $SLEEP_TIME
+  evtCount=$(( evtCount+1 ))
 done
 
 # Timeout check, fail out than let script "complete"
 if [ $evtCount == $evtTimeout ]; then
-    echo "EventManager timed out after ${evtTimeout} minutes. Please check the installation status of EventManager"
-    exit 1
+  echo "EventManager installation timed out after ${evtTimeout} minutes. Please check the installation status of EventManager"
+  exit 1
 fi

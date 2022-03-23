@@ -37,3 +37,8 @@ variable "cluster_config_path" {
   description = "Defaulted to `./.kube/config` but for schematics, use `/tmp/.schematic/.kube/config"
 }
 
+variable "accept_aiops_license" {
+  default     = false
+  type        = bool
+  description = "Do you accept the aiops licensing? Default is `false`"
+}

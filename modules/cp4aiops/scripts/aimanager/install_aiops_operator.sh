@@ -38,7 +38,7 @@ TIMEOUT_COUNT=0
 
 echo "Grabbing csv name"
 while true; do
-    POD_NAME=`kubectl get csv -n $NAMESPACE | grep ibm-aiops-orchestrator | awk '{print $1}'`
+    POD_NAME=`kubectl get csv -n $NAMESPACE --ignore-not-found=true | grep ibm-aiops-orchestrator | awk '{print $1}'`
     if [ "$POD_NAME" != "" ]; then
         break
     fi
@@ -64,7 +64,7 @@ while true; do
     echo "Sleeping $SLEEP_TIME seconds..."
     sleep $SLEEP_TIME
 
-    (( TIMEOUT_COUNT++ ))
+    TIMEOUT_COUNT=$(( TIMEOUT_COUNT+1 ))
 done
 
 echo "=== operator install successful ==="

@@ -3,10 +3,10 @@ locals {
 
   # TODO, add additional aiops features from default
   storageclass = {
-    "ldap"        = var.on_vpc ? "ibmc-block-gold" : "ibmc-file-gold-gid",
-    "persistence" = var.on_vpc ? "ibmc-block-gold" : "ibmc-file-gold-gid",
-    # "zen"         = var.on_vpc ? "ibmc-block-gold" : "ibmc-file-gold-gid",
-    "topology"    = var.on_vpc ? "ibmc-block-gold" : "ibmc-file-gold-gid"
+    "ldap"        = var.on_vpc ? "portworx-aiops" : "ibmc-file-gold-gid",
+    "persistence" = var.on_vpc ? "portworx-aiops" : "ibmc-file-gold-gid",
+    # "zen"         = var.on_vpc ? "portworx-aiops" : "ibmc-file-gold-gid",
+    "topology"    = var.on_vpc ? "portworx-aiops" : "ibmc-file-gold-gid"
   }
 }
 
