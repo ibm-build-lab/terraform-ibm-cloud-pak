@@ -12,6 +12,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: operator-shared-pvc
+  namespace: ${cp4ba_project_name}
   labels:
     app.kubernetes.io/instance: ibm-dba
     app.kubernetes.io/managed-by: ibm-dba
@@ -24,20 +25,5 @@ spec:
   resources:
     requests:
       storage: 1Gi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: cp4a-shared-log-pvc
-  labels:
-    app.kubernetes.io/instance: ibm-dba
-    app.kubernetes.io/managed-by: ibm-dba
-    app.kubernetes.io/name: ibm-dba
-    release: 21.0.1
-spec:
-  accessModes:
-    - ReadWriteMany
-  storageClassName: ibmc-file-gold-gid
-  resources:
-    requests:
-      storage: 100Gi
+
+

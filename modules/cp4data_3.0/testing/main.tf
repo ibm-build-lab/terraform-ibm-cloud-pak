@@ -21,7 +21,6 @@ locals {
 
 // Module:
 
-// TODO: With Terraform 0.13 replace the parameter 'enable' or the conditional expression using 'with_cp4data' with 'count'
 module "cp4data" {
   source = "./.."
   enable = true

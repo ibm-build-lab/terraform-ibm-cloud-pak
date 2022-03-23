@@ -69,7 +69,11 @@ variable "install_tech_prev_module" {
   description = "Install Tech Preview module"
 }
 
+variable "cluster_config_path" {
+  default     = "./.kube/config"
+  description = "Directory to store the kubeconfig file, set the value to empty string to not download the config. If running on Schematics, use `/tmp/.schematics/.kube/config`"
+}
+
 locals {
   namespace  = "cp4mcm"
-  config_dir = "./.kube/config"
 }

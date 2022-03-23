@@ -40,6 +40,7 @@ These parameters are:
 - `install_security_svcs_module`: Install the Security Services module
 - `install_operations_module`: Install the Operations module
 - `install_tech_prev_module`: Install the Tech Preview module
+- `cluster_config_path`: Directory to place kube config. For Schematic, it's recommended to use `/tmp/.schematics/.kube/config`
 
 Execute the following Terraform commands:
 

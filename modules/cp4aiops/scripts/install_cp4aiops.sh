@@ -39,7 +39,7 @@ create_secret() {
   ${K8s_CMD} create secret docker-registry ${secret_name} \
     --docker-server=${DOCKER_REGISTRY} \
     --docker-username=${DOCKER_USERNAME} \
-    --docker-password=${DOCKER_REGISTRY_PASS} \
+    --docker-password=${ENTITLED_REGISTRY_KEY} \
     --docker-email=${DOCKER_USER_EMAIL} \
     --namespace=${namespace}
 }

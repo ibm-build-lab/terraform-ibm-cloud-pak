@@ -1,4 +1,4 @@
-variable "cluster_name_or_id" {
+variable "cluster_id" {
   description = "Id of cluster for AIOps to be installed on"
 }
 
@@ -10,7 +10,7 @@ variable "region" {
   description = "Region that cluster resides in"
 }
 
-variable "resource_group_name" {
+variable "resource_group" {
   default     = "cloud-pak-sandbox-ibm"
   description = "Resource group that cluster resides in"
 }
@@ -21,17 +21,22 @@ variable "on_vpc" {
   description = "If set to true, lets the module know cluster is using VPC Gen2"
 }
 
-variable "entitlement_key" {
+variable "entitled_registry_key" {
   type        = string
   description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
 }
 
-variable "entitled_registry_user" {
+variable "entitled_registry_user_email" {
   type        = string
   description = "Docker email address"
 }
 
-locals {
-  cluster_config_path = "./.kube/config"
+variable "cp4aiops_namespace" {
+  default = "cpaiops"
+  description = "Namespace for Cloud Pak for AIOps"
 }
 
+variable "cluster_config_path" {
+  default     = "./.kube/config"
+  description = "Directory to store the kubeconfig file, set the value to empty string to not download the config. If running on Schematics, use `/tmp/.schematics/.kube/config`"
+}

@@ -1,15 +1,11 @@
-variable "enable" {
-  default     = true
-  description = "If set to true installs Portworx on the given cluster"
-}
-variable "kube_config_path" {
-  description = "Path to the k8s config file: ex `~/.kube/config`"
+variable "is_enable" {
+    default     = true
 }
 
-variable "cluster_id" {
-  description = ""
+variable "cluster" {
+  description = "Provide cluster id"
 }
 
-variable "roks_version" {
-  description = ""
+variable "ibmcloud_api_key" {
+  description = "IBMCloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
 }

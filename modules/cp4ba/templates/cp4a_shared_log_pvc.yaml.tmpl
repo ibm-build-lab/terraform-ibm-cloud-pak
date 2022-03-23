@@ -8,11 +8,20 @@
 # disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
 #
 ###############################################################################
-apiVersion: operators.coreos.com/v1
-kind: OperatorGroup
+apiVersion: v1
+kind: PersistentVolumeClaim
 metadata:
-  name: ibm-db2-group
-  namespace: "ibm-db2"
+  name: cp4a-shared-log-pvc
+  namespace: ${cp4ba_project_name}
+  labels:
+    app.kubernetes.io/instance: ibm-dba
+    app.kubernetes.io/managed-by: ibm-dba
+    app.kubernetes.io/name: ibm-dba
+    release: 21.0.1
 spec:
-  targetNamespaces:
-    - "ibm-db2"
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ibmc-file-gold-gid
+  resources:
+    requests:
+      storage: 100Gi

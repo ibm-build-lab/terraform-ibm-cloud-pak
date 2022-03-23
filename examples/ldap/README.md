@@ -28,7 +28,7 @@ ibmcloud_api_key      = "*******************"
 iaas_classic_api_key  = "*******************"
 iaas_classic_username = "******"
 region                = "us-south"
-os_reference_code     = "CentOS_8_64"
+os_reference_code     = "CentOS_7_64"
 datacenter            = "dal12"
 hostname              = "ldapvm"
 ibmcloud_domain       = "ibm.cloud" 
@@ -48,7 +48,7 @@ These parameters are:
 - `iaas_classic_api_key`    : IBM Classic Infrastucture API Key (see https://cloud.ibm.com/docs/account?topic=account-classic_keys)
 - `iaas_classic_username`   : IBM Classic Infrastucture User Name (see https://cloud.ibm.com/docs/schematics?topic=schematics-create-tf-config). To see your account user name, run the command `"ibmcloud sl user list"`
 - `region`                  : Region code (https://cloud.ibm.com/docs/codeengine?topic=codeengine-regions)
-- `os_reference_code`       : The Operating System Reference Code, for example `CentOS_8_64` (see https://cloud.ibm.com/docs/ibm-cloud-provider-for-terraform)
+- `os_reference_code`       : The Operating System Reference Code, for example `CentOS_7_64` (run command `ibmcloud sl hardware create-options` to see available options )
 - `datacenter`              : The datacenter to which the Virtual Machine will be deployed to, for example `dal10`. (see https://cloud.ibm.com/docs/schematics?topic=schematics-create-tf-config)
 - `hostname`                : Hostname of the virtual Server
 - `ibmcloud_domain`         : Domain of the Cloud Account
