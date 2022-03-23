@@ -4,7 +4,7 @@ metadata:
      name: ibm-cp-security-operator
      namespace: cp4s
 spec:
-     channel: v1.8
+     channel: v1.9
      installPlanApproval: Automatic
      name: ibm-cp-security-operator
      source: ibm-operator-catalog

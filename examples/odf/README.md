@@ -1,3 +1,4 @@
+
 # OpenShift Data Foundation Terraform Module Example
 
 ## 1. Set up access to IBM Cloud
@@ -34,6 +35,7 @@ These parameters are:
 - `ibmcloud_api_key`: IBM Cloud Key needed to provision resources.
 - `cluster`: Cluster ID of the OpenShift cluster where to install IAF
 
+
 Execute the following Terraform commands:
 
 ```bash
@@ -64,6 +66,7 @@ This should produce output like:
 
 ## 4. Cleanup
 
+
 When the cluster is no longer needed, run `terraform destroy` if this was created using your local Terraform client with `terraform apply`. 
 
 If this cluster was created using `schematics`, just delete the schematics workspace and specify to delete all created resources.
@@ -80,3 +83,4 @@ terraform destroy -target null_resource.enable_odf
 This will disable the ODF on the cluster
 
 Once this completes, execute: `terraform destroy` if this was create locally using Terraform or remove the Schematic's workspace.
+
