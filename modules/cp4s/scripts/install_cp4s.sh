@@ -60,6 +60,7 @@ create_secret ibm-isc-pull-secret ${NAMESPACE}
 echo "Deploying Operator Group ${KNATIVE_SUBSCRIPTION}"
 echo "${KNATIVE_SUBSCRIPTION}" | kubectl apply -f -
 
+sleep 60
 
 
 echo "Deploying Operator Group ${OPERATOR_GROUP}"
