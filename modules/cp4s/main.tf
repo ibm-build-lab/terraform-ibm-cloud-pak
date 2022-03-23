@@ -5,6 +5,7 @@ locals {
   common_services_catalog = file(join("/", [path.module, "files", "common-services.yaml"]))
   operator_group          = file(join("/", [path.module, "files", "operator-group.yaml"]))
   subscription            = file(join("/", [path.module, "files", "subscription.yaml"]))
+  knative_subscription = file(join("/", [path.module, "files", "knative-subscription.yaml"]))
   cp4s_threat_management = templatefile("${path.module}/templates/cp4s-threat-management.yaml", {
     admin_user = var.admin_user
   })
@@ -22,6 +23,7 @@ resource "null_resource" "install_cp4s" {
     operator_group_sha1          = sha1(local.operator_group)
     subscription_sha1            = sha1(local.subscription)
     cp4s_threat_management_sha1  = sha1(local.cp4s_threat_management)
+    knative_subscription_sha1    = sha1(local.knative_subscription)
   }
 
   provisioner "local-exec" {
@@ -36,6 +38,7 @@ resource "null_resource" "install_cp4s" {
       SUBSCRIPTION            = local.subscription
       OPERATOR_CATALOG        = local.operator_catalog
       COMMON_SERVICES_CATALOG = local.common_services_catalog
+      KNATIVE_SUBSCRIPTION    = local.knative_subscription
       DOCKER_REGISTRY_PASS    = var.entitled_registry_key
       DOCKER_USER_EMAIL       = var.entitled_registry_user_email
       DOCKER_USERNAME         = local.docker_username
