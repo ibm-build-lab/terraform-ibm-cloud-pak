@@ -1,14 +1,14 @@
 output "cp4ba_endpoint" {
   description = "Access your Cloud Pak for Business Automation deployment at this URL."
-  value       = module.cp4ba.cp4ba_endpoint
+  value       = module.install_cp4ba.cp4ba_endpoint
 }
 
-output "cp4ba_user" {
+output "cp4ba_admin_username" {
   description = "Username for your Cloud Pak for Business Automation deployment."
-  value       = module.cp4ba.cp4ba_user
+  value       = module.install_cp4ba.cp4ba_admin_username
 }
 
-output "cp4ba_password" {
+output "cp4ba_admin_password" {
   description = "Password for your Cloud Pak for Business Automation deployment."
-  value       = module.cp4ba.cp4ba_password
+  value       = module.install_cp4ba.cp4ba_admin_password
 }

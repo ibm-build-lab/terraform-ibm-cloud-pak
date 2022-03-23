@@ -32,7 +32,6 @@ resource "null_resource" "install_aiops_operator" {
   }
 }
 
-# This section checks to see if the values have been updated through out the script running and is required for any dynamic value
 resource "null_resource" "install_cp4aiops" {
   depends_on = [
     null_resource.install_aiops_operator
@@ -49,7 +48,7 @@ resource "null_resource" "install_cp4aiops" {
 
     environment = {
       KUBECONFIG                    = var.cluster_config_path
-      NAMESPACE                     = var.namespace
+      NAMESPACE                     = var.cp4aiops_namespace
       ON_VPC                        = var.on_vpc
       DOCKER_REGISTRY_PASS          = var.entitlement_key
       DOCKER_USER_EMAIL             = var.entitled_registry_user

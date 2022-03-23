@@ -1,17 +1,14 @@
-###############################################################################
-#
 # Licensed Materials - Property of IBM
 #
 # (C) Copyright IBM Corp. 2021. All Rights Reserved.
 #
 # US Government Users Restricted Rights - Use, duplication or
 # disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
-#
-###############################################################################
+
 apiVersion: core.automation.ibm.com/v1beta1
 kind: AutomationUIConfig
 metadata:
-  namespace: ${ namespace }
+  namespace: ${cp4ba_project_name}
   name:  iaf-system
 spec:
   description: automation-ui-config for CP4BA Cartridge
@@ -21,15 +18,5 @@ spec:
   tls: {}
   storage:
     class: ibmc-file-gold-gid
----
-apiVersion: core.automation.ibm.com/v1beta1
-kind: Cartridge
-metadata:
-  namespace: ${ namespace }
-  name: icp4ba
-spec:
-  description: cartridge for all CP4BA
-  license:
-    accept: true
-  version: 1.0.0
+
 

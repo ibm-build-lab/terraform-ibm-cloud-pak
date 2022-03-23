@@ -11,7 +11,7 @@ data "ibm_resource_group" "group" {
 resource "null_resource" "mkdir_kubeconfig_dir" {
   triggers = { always_run = timestamp() }
   provisioner "local-exec" {
-    command = "mkdir -p ${local.kube_config_path}"
+    command = "mkdir -p ${var.cluster_config_path}"
   }
 }
 
@@ -19,14 +19,13 @@ data "ibm_container_cluster_config" "cluster_config" {
   depends_on        = [null_resource.mkdir_kubeconfig_dir]
   cluster_name_id   = var.cluster_id
   resource_group_id = data.ibm_resource_group.group.id
-  config_dir        = local.kube_config_path
+  config_dir        = var.cluster_config_path
 }
 
 // Module:
 
 module "portworx" {
   source = "../../modules/portworx"
-  // TODO: With Terraform 0.13 replace the parameter 'enable' or the conditional expression using 'with_iaf' with 'count'
   enable = true
 
   ibmcloud_api_key = var.ibmcloud_api_key
