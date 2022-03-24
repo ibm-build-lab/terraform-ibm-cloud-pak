@@ -31,12 +31,14 @@ variable "entitled_registry_user_email" {
   description = "Docker email address"
 }
 
-variable "cp4aiops_namespace" {
-  default = "cpaiops"
-  description = "Namespace for Cloud Pak for AIOps"
-}
-
 variable "cluster_config_path" {
   default     = "./.kube/config"
-  description = "Directory to store the kubeconfig file, set the value to empty string to not download the config. If running on Schematics, use `/tmp/.schematics/.kube/config`"
+  type        = string
+  description = "Defaulted to `./.kube/config` but for schematics, use `/tmp/.schematic/.kube/config"
+}
+
+variable "accept_aiops_license" {
+  default     = false
+  type        = bool
+  description = "Do you accept the aiops licensing? Default is `false`"
 }

@@ -28,9 +28,16 @@ module "cp4aiops" {
   enable    = true
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
   on_vpc              = var.on_vpc
-  portworx_is_ready   = 1
-  ibmcloud_api_key    = var.ibmcloud_api_key
-  entitled_registry_key        = var.entitled_registry_key
-  entitled_registry_user_email = var.entitled_registry_user_email
-  cp4aiops_namespace           = var.cp4aiops_namespace
+  portworx_is_ready   = 1          // Assuming portworx is installed if using VPC infrastructure
+
+  // Entitled Registry parameters:
+  entitlement_key        = var.entitlement_key
+  entitled_registry_user = var.entitled_registry_user
+
+  // AIOps specific parameters:
+  accept_aiops_license = var.accept_aiops_license
+  namespace            = "aiops"
+  enable_aimanager     = true
+  enable_event_manager = true
+
 }
