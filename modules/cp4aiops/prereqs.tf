@@ -27,7 +27,7 @@ resource "null_resource" "create_entitlement_account" {
     environment = {
       KUBECONFIG                    = var.cluster_config_path
       NAMESPACE                     = var.namespace
-      ENTITLEMENT_KEY               = var.entitlement_key
+      ENTITLEMENT_KEY               = var.entitled_registry_key
     }
   }
 }
@@ -59,7 +59,7 @@ resource "null_resource" "event_man_prereq_install" {
     environment = {
       KUBECONFIG                    = var.cluster_config_path
       NAMESPACE                     = var.namespace
-      ENTITLEMENT_KEY               = var.entitlement_key
+      ENTITLEMENT_KEY               = var.entitled_registry_key
     }
   }
 }
