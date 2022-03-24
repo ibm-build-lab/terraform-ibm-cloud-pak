@@ -20,7 +20,7 @@ For instructions to run using the local Terraform Client on your local machine g
 customizing these values in the `terraform.tfvars` file:
 
 ```hcl
-  cluster_id            = "******************"
+  cluster_name_or_id            = "******************"
   on_vpc                = true
   region                = "us-south"
   resource_group_name   = "Default"
@@ -33,7 +33,7 @@ customizing these values in the `terraform.tfvars` file:
 
 These parameters are:
 
-- `cluster_id`: ID of the cluster to install cloud pak on
+- `cluster_name_or_id`: ID of the cluster to install cloud pak on
 - `on_vpc`: Set to true if the cluster is vpc. **NOTE** Portworx must be installed if using a VPC cluster
 - `region`: The region that the cluster is provisioned in
 - `resource_group_name`: Resource group that the cluster is provisioned in

@@ -28,7 +28,7 @@ variable "entitled_registry_user_email" {
   description = "Required: Email address of the user owner of the Entitled Registry Key"
 }
 
-variable "cp4aiops_namespace" {
+variable "namespace" {
   default = "cpaiops"
   description = "Namespace for Cloud Pak for AIOps"
 }
@@ -63,5 +63,5 @@ variable "enable_persistence" {
 locals {
   docker_registry          = "cp.icr.io" // Staging: "cp.stg.icr.io/cp/cpd"
   docker_username          = "cp"               // "ekey"
-  entitled_registry_key    = chomp(var.entitlement_key)
+  entitled_registry_key    = chomp(var.entitled_registry_key)
 }

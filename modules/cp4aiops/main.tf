@@ -39,7 +39,7 @@ resource "null_resource" "install_cp4aiops" {
   
   triggers = {
     namespace_sha1                      = sha1(var.namespace)
-    docker_params_sha1                  = sha1(join("", [var.entitled_registry_user, local.entitled_registry_key]))
+    docker_params_sha1                  = sha1(join("", [var.entitled_registry_user_email, local.entitled_registry_key]))
   }
 
   provisioner "local-exec" {
@@ -48,10 +48,10 @@ resource "null_resource" "install_cp4aiops" {
 
     environment = {
       KUBECONFIG                    = var.cluster_config_path
-      NAMESPACE                     = var.cp4aiops_namespace
+      NAMESPACE                     = var.namespace
       ON_VPC                        = var.on_vpc
-      DOCKER_REGISTRY_PASS          = var.entitlement_key
-      DOCKER_USER_EMAIL             = var.entitled_registry_user
+      DOCKER_REGISTRY_PASS          = var.entitled_registry_key
+      DOCKER_USER_EMAIL             = var.entitled_registry_user_email
       DOCKER_USERNAME               = local.docker_username
       DOCKER_REGISTRY               = local.docker_registry
     }
