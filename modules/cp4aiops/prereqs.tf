@@ -1,6 +1,5 @@
 locals {
   setAIOPS_catalog_source = "aiops-catalog.yaml"
-  setNOI_catalog_source = "noi-catalog.yaml"
 }
 
 ###########################################
@@ -41,7 +40,7 @@ resource "null_resource" "configure_network_policies" {
       KUBECONFIG = var.cluster_config_path
     }
     interpreter = ["/bin/bash", "-c"]
-    command     = "if [ $(kubectl get ingresscontroller default -n openshift-ingress-operator -o jsonpath='{.status.endpointPublishingStrategy.type}') = \"HostNetwork\" ]; then oc patch namespace default --type=json -p '[{\"op\":\"add\",\"path\":\"/metadata/labels\",\"value\":{\"network.openshift.io/policy-group\":\"ingress\"}}]'; fi"
+    command     = "if [ $(kubectl get ingresscontroller default -n openshift-ingress-operator -o jsonpath='{.status.endpointPublishingStrategy.type}') = \"HostNetwork\" ]; then kubectl patch namespace default --type=json -p '[{\"op\":\"add\",\"path\":\"/metadata/labels\",\"value\":{\"network.openshift.io/policy-group\":\"ingress\"}}]'; fi"
   }
 }
 

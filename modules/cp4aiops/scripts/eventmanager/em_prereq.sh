@@ -12,7 +12,7 @@ kubectl create secret docker-registry noi-registry-secret  \
 echo "=== Checking route for Event Manager ==="
 if [ "`kubectl get ingresscontroller default -n openshift-ingress-operator -o json | jq -c -r '.spec.endpointPublishingStrategy.type'`" == "HostNetwork" ]; then
     echo "Updating to allow network policies to function correctly"
-    oc patch namespace default --type=json -p '[{"op":"add","path":"/metadata/labels","value":{"network.openshift.io/policy-group":"ingress"}}]'
+    kubectl patch namespace default --type=json -p '[{"op":"add","path":"/metadata/labels","value":{"network.openshift.io/policy-group":"ingress"}}]'
 fi
 
 echo "=== Creating NOI Service Account ==="

@@ -18,7 +18,7 @@ fi
 
 # TODO:
 # Create license var for T/F
-cat << EOF | oc apply -f -
+cat << EOF | kubectl apply -f -
 apiVersion: orchestrator.aiops.ibm.com/v1alpha1
 kind: Installation
 metadata:
@@ -136,11 +136,11 @@ TIMEOUT_COUNT=0
 while true; do
     if [ "$TIMEOUT_COUNT" -eq "$TIMEOUT_LIMIT" ]; then
         echo "=== problem installing custom resource, please check the operator log/events ==="
-        oc get installations.orchestrator.aiops.ibm.com -A &&
-            echo "" && oc get ircore,AIOpsAnalyticsOrchestrator -A -o custom-columns="KIND:kind,NAMESPACE:metadata.namespace,NAME:metadata.name,STATUS:status.conditions[?(@.type==\"Ready\")].reason" &&
-            echo "" && oc get lifecycleservice -A -o custom-columns="KIND:kind,NAMESPACE:metadata.namespace,NAME:metadata.name,STATUS:status.conditions[?(@.type==\"Lifecycle Service Ready\")].reason" &&
-            echo "" && oc get BaseUI -A -o custom-columns="KIND:kind,NAMESPACE:metadata.namespace,NAME:metadata.name,STATUS:status.conditions[?(@.type==\"Ready\")].reason" &&
-            echo "" && oc get AIManager,aiopsedge,asm -A -o custom-columns="KIND:kind,NAMESPACE:metadata.namespace,NAME:metadata.name,STATUS:status.phase"
+        kubectl get installations.orchestrator.aiops.ibm.com -A &&
+            echo "" && kubectl get ircore,AIOpsAnalyticsOrchestrator -A -o custom-columns="KIND:kind,NAMESPACE:metadata.namespace,NAME:metadata.name,STATUS:status.conditions[?(@.type==\"Ready\")].reason" &&
+            echo "" && kubectl get lifecycleservice -A -o custom-columns="KIND:kind,NAMESPACE:metadata.namespace,NAME:metadata.name,STATUS:status.conditions[?(@.type==\"Lifecycle Service Ready\")].reason" &&
+            echo "" && kubectl get BaseUI -A -o custom-columns="KIND:kind,NAMESPACE:metadata.namespace,NAME:metadata.name,STATUS:status.conditions[?(@.type==\"Ready\")].reason" &&
+            echo "" && kubectl get AIManager,aiopsedge,asm -A -o custom-columns="KIND:kind,NAMESPACE:metadata.namespace,NAME:metadata.name,STATUS:status.phase"
         exit 1
     fi
 
@@ -148,48 +148,48 @@ while true; do
         break
     fi
 
-    if [ $is_complete_ircore = false ] && [ "`oc get ircore -A --output=json --ignore-not-found=true | jq -c -r '.items[].status.conditions[] | select( .type | contains( "Ready")) | .reason'`" == "Ready" ]; then
+    if [ $is_complete_ircore = false ] && [ "`kubectl get ircore -A --output=json --ignore-not-found=true | jq -c -r '.items[].status.conditions[] | select( .type | contains( "Ready")) | .reason'`" == "Ready" ]; then
         echo "ircore is ready"
         is_complete_ircore=true
     fi
 
-    if [ $is_complete_AIOpsAnalyticsOrchestrator = false ] && [ "`oc get AIOpsAnalyticsOrchestrator -A --output=json | jq -c -r '.items[].status.conditions[] | select( .type | contains( "Ready")) | .reason'`" == "Ready" ]; then
+    if [ $is_complete_AIOpsAnalyticsOrchestrator = false ] && [ "`kubectl get AIOpsAnalyticsOrchestrator -A --output=json | jq -c -r '.items[].status.conditions[] | select( .type | contains( "Ready")) | .reason'`" == "Ready" ]; then
         echo "AIOpsAnalyticsOrchestrator is ready"
         is_complete_AIOpsAnalyticsOrchestrator=true
     fi
 
-    if [ $is_complete_lifecycleservice = false ] && [ "`oc get lifecycleservice -A --output=json | jq -c -r '.items[].status.conditions[] | select( .type | contains( "Lifecycle Service Ready")) | .reason'`" == "LifecycleService ready" ]; then
+    if [ $is_complete_lifecycleservice = false ] && [ "`kubectl get lifecycleservice -A --output=json | jq -c -r '.items[].status.conditions[] | select( .type | contains( "Lifecycle Service Ready")) | .reason'`" == "LifecycleService ready" ]; then
         echo "lifecycleservice is ready"
         is_complete_lifecycleservice=true
     fi
 
-    if [ $is_complete_BaseUI = false ] && [ "`oc get BaseUI -A --output=json | jq -c -r '.items[].status.conditions[] | select( .type | contains( "Ready")) | .reason'`" == "Ready" ]; then
+    if [ $is_complete_BaseUI = false ] && [ "`kubectl get BaseUI -A --output=json | jq -c -r '.items[].status.conditions[] | select( .type | contains( "Ready")) | .reason'`" == "Ready" ]; then
         echo "BaseUI is ready"
         is_complete_BaseUI=true
     fi
 
-    if [ $is_complete_AIManager = false ] && [ "`oc get AIManager -A --output=json | jq -c -r '.items[].status.phase'`" == "Completed" ]; then
+    if [ $is_complete_AIManager = false ] && [ "`kubectl get AIManager -A --output=json | jq -c -r '.items[].status.phase'`" == "Completed" ]; then
         echo "AIManager is ready"
         is_complete_AIManager=true
     fi
 
-    if [ $is_complete_aiopsedge = false ] && [ "`oc get aiopsedge -A --output=json | jq -c -r '.items[].status.phase'`" == "Configured" ]; then
+    if [ $is_complete_aiopsedge = false ] && [ "`kubectl get aiopsedge -A --output=json | jq -c -r '.items[].status.phase'`" == "Configured" ]; then
         echo "aiopsedge is ready"
         is_complete_aiopsedge=true
     fi
 
-    if [ $is_complete_asm = false ] && [ "`oc get asm -A --output=json | jq -c -r '.items[].status.phase'`" == "OK" ]; then
+    if [ $is_complete_asm = false ] && [ "`kubectl get asm -A --output=json | jq -c -r '.items[].status.phase'`" == "OK" ]; then
         echo "asm is ready"
         is_complete_asm=true
     fi
 
     # Every 10minutes, display status of installation
     if (($TIMEOUT_COUNT % 10 == 0)); then
-        oc get installations.orchestrator.aiops.ibm.com -A &&
-            echo "" && oc get ircore,AIOpsAnalyticsOrchestrator -A -o custom-columns="KIND:kind,NAMESPACE:metadata.namespace,NAME:metadata.name,STATUS:status.conditions[?(@.type==\"Ready\")].reason" &&
-            echo "" && oc get lifecycleservice -A -o custom-columns="KIND:kind,NAMESPACE:metadata.namespace,NAME:metadata.name,STATUS:status.conditions[?(@.type==\"Lifecycle Service Ready\")].reason" &&
-            echo "" && oc get BaseUI -A -o custom-columns="KIND:kind,NAMESPACE:metadata.namespace,NAME:metadata.name,STATUS:status.conditions[?(@.type==\"Ready\")].reason" &&
-            echo "" && oc get AIManager,aiopsedge,asm -A -o custom-columns="KIND:kind,NAMESPACE:metadata.namespace,NAME:metadata.name,STATUS:status.phase"
+        kubectl get installations.orchestrator.aiops.ibm.com -A &&
+            echo "" && kubectl get ircore,AIOpsAnalyticsOrchestrator -A -o custom-columns="KIND:kind,NAMESPACE:metadata.namespace,NAME:metadata.name,STATUS:status.conditions[?(@.type==\"Ready\")].reason" &&
+            echo "" && kubectl get lifecycleservice -A -o custom-columns="KIND:kind,NAMESPACE:metadata.namespace,NAME:metadata.name,STATUS:status.conditions[?(@.type==\"Lifecycle Service Ready\")].reason" &&
+            echo "" && kubectl get BaseUI -A -o custom-columns="KIND:kind,NAMESPACE:metadata.namespace,NAME:metadata.name,STATUS:status.conditions[?(@.type==\"Ready\")].reason" &&
+            echo "" && kubectl get AIManager,aiopsedge,asm -A -o custom-columns="KIND:kind,NAMESPACE:metadata.namespace,NAME:metadata.name,STATUS:status.phase"
     fi 
 
     echo "Sleeping $SLEEP_TIME seconds"

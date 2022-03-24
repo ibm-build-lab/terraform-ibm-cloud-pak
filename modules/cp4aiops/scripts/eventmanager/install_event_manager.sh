@@ -15,7 +15,7 @@ $PERSISTENCE_FLAG
 # $BACKUP_RESTORE_FLAG
 
 # Creates FQDN
-FQDN=apps.`oc get ingresses.config/cluster -o jsonpath={.spec.domain}`
+FQDN=apps.`kubectl get ingresses.config/cluster -o jsonpath={.spec.domain}`
 
 cat << EOF | kubectl apply -f -
 apiVersion: noi.ibm.com/v1beta1
@@ -137,7 +137,7 @@ evtTimeout=120 #2 hours
 SLEEP_TIME="60"
 while (( $evtCount < $evtTimeout )); do
 
-  STATUS=`oc get NOI -n ${NAMESPACE} evtmanager -o json | jq -c -r '.status.phase'`
+  STATUS=`kubectl get NOI -n ${NAMESPACE} evtmanager -o json | jq -c -r '.status.phase'`
   if [ "$STATUS" == "OK" ]; then
     break
   fi
