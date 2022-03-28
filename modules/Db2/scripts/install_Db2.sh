@@ -44,7 +44,10 @@ kubectl set data secret/pull-secret -n openshift-config --from-file=.dockerconfi
 
 echo
 echo "Installing the IBM Operator Catalog..."
-kubectl apply -f "${DB2_OPERATOR_CATALOG_FILE}"
+kubectl apply -f -<<EOF
+${DB2_OPERATOR_CATALOG_FILE}
+EOF
+#kubectl apply -f "${DB2_OPERATOR_CATALOG_FILE}"
 
 echo
 echo "You can get the Entitlement Registry key from here: https://myibm.ibm.com/products-services/containerlibrary"
@@ -67,7 +70,10 @@ echo
 if kubectl get catalogsource -n openshift-marketplace | grep ibm-operator-catalog ; then
         echo "Found ibm operator catalog source"
     else
-        kubectl apply -f "${DB2_OPERATOR_CATALOG_FILE}"
+        kubectl apply -f -<<EOF
+${DB2_OPERATOR_CATALOG_FILE}
+EOF
+#        kubectl apply -f "${DB2_OPERATOR_CATALOG_FILE}"
         if [ $? -eq 0 ]; then
           echo "IBM Operator Catalog source created!"
         else
@@ -100,14 +106,20 @@ echo
 
 ## Creating DB2 Operator Group
 echo "Creating Operator Group object for DB2 Operator ..."
-cat "${DB2_OPERATOR_GROUP_FILE}"
-kubectl apply -f "${DB2_OPERATOR_GROUP_FILE}"
+kubectl apply -f -<<EOF
+${DB2_OPERATOR_GROUP_FILE}
+EOF
+#cat "${DB2_OPERATOR_GROUP_FILE}"
+#kubectl apply -f "${DB2_OPERATOR_GROUP_FILE}"
 echo
 
 ###### Create subscription to Db2 Operator
 echo -e "\x1B[1m Creating Subscription object for DB2 Operator ... \x1B[0m"
-cat "${DB2_SUBSCRIPTION_FILE}"
-kubectl apply -f "${DB2_SUBSCRIPTION_FILE}"
+kubectl apply -f -<<EOF
+${DB2_SUBSCRIPTION_FILE}
+EOF
+#cat "${DB2_SUBSCRIPTION_FILE}"
+#kubectl apply -f "${DB2_SUBSCRIPTION_FILE}"
 echo
 
 waiting_time=20
@@ -142,8 +154,11 @@ fi
 
 echo
 echo "Deploying the Db2u-cluster ..."
-cat "${DB2U_CLUSTER_FILE}"
-kubectl apply -f "${DB2U_CLUSTER_FILE}"
+kubectl apply -f -<<EOF
+${DB2U_CLUSTER_FILE}
+EOF
+#cat "${DB2U_CLUSTER_FILE}"
+#kubectl apply -f "${DB2U_CLUSTER_FILE}"
 echo
 
 ## Wait for c-db2ucluster-db2u statefulset to be created so that we can apply requried patch.
