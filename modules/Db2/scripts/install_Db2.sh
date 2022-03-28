@@ -12,64 +12,62 @@
 ###############################################################################
 
 CUR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-OC_CMD=oc
 
 echo
 echo "Creating project ${DB2_PROJECT_NAME}..."
-${OC_CMD} new-project "${DB2_PROJECT_NAME}"
-${OC_CMD} project "${DB2_PROJECT_NAME}"
+kubectl new-project "${DB2_PROJECT_NAME}"
+kubectl project "${DB2_PROJECT_NAME}"
 echo
 
 #. ../../modules/Db2/scripts/common-ocp-utils.sh
 "${CUR_DIR}"/common-ocp-utils.sh
-#./scripts/common-ocp-utils.sh
 
 
 echo "Creating Storage Class ..."
-${OC_CMD} apply -f "${DB2_STORAGE_CLASS_FILE}"
+kubectl apply -f "${DB2_STORAGE_CLASS_FILE}"
 sleep 10
 
 echo "Docker username: ${DOCKER_USERNAME}"
-${OC_CMD} create secret docker-registry ibm-registry --docker-server="${DOCKER_SERVER}" --docker-username="${DOCKER_USERNAME}" --docker-password="${ENTITLED_REGISTRY_KEY}" --docker-email="${ENTITLEMENT_REGISTRY_USER_EMAIL}" --namespace="${DB2_PROJECT_NAME}"
+kubectl create secret docker-registry ibm-registry --docker-server="${DOCKER_SERVER}" --docker-username="${DOCKER_USERNAME}" --docker-password="${ENTITLED_REGISTRY_KEY}" --docker-email="${ENTITLEMENT_REGISTRY_USER_EMAIL}" --namespace="${DB2_PROJECT_NAME}"
 
 sleep 10
 
 kubectl patch storageclass ibmc-block-gold -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
 kubectl patch storageclass cp4a-file-retain-gold-gid -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 
-oc get no -l node-role.kubernetes.io/worker --no-headers -o name | xargs -I {} --  oc debug {} -- chroot /host sh -c 'grep "^Domain = slnfsv4.coms" /etc/idmapd.conf || ( sed -i.bak "s/.*Domain =.*/Domain = slnfsv4.com/g" /etc/idmapd.conf; nfsidmap -c; rpc.idmapd )'
+kubectl get no -l node-role.kubernetes.io/worker --no-headers -o name | xargs -I {} --  oc debug {} -- chroot /host sh -c 'grep "^Domain = slnfsv4.coms" /etc/idmapd.conf || ( sed -i.bak "s/.*Domain =.*/Domain = slnfsv4.com/g" /etc/idmapd.conf; nfsidmap -c; rpc.idmapd )'
 
 echo
 echo "Modifying the OpenShift Global Pull Secret (you need jq tool for that):"
-echo $(oc get secret pull-secret -n openshift-config --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode; oc get secret ibm-registry -n "${DB2_PROJECT_NAME}" --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode) | jq -s '.[0] * .[1]' > dockerconfig_merged
-oc set data secret/pull-secret -n openshift-config --from-file=.dockerconfigjson=dockerconfig_merged
+echo $(kubectl get secret pull-secret -n openshift-config --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode; kubectl get secret ibm-registry -n "${DB2_PROJECT_NAME}" --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode) | jq -s '.[0] * .[1]' > dockerconfig_merged
+kubectl set data secret/pull-secret -n openshift-config --from-file=.dockerconfigjson=dockerconfig_merged
 
 echo
 echo "Installing the IBM Operator Catalog..."
-${OC_CMD} apply -f "${DB2_OPERATOR_CATALOG_FILE}"
+kubectl apply -f "${DB2_OPERATOR_CATALOG_FILE}"
 
 echo
 echo "You can get the Entitlement Registry key from here: https://myibm.ibm.com/products-services/containerlibrary"
 echo
 
 echo "Docker username: ${DOCKER_USERNAME}"
-${OC_CMD} create secret docker-registry ibm-db2-registry --docker-server="${DOCKER_SERVER}" --docker-username="${DOCKER_USERNAME}" --docker-password="${ENTITLED_REGISTRY_KEY}" --docker-email="${ENTITLEMENT_REGISTRY_USER_EMAIL}" --namespace="${DB2_PROJECT_NAME}"
+kubectl create secret docker-registry ibm-db2-registry --docker-server="${DOCKER_SERVER}" --docker-username="${DOCKER_USERNAME}" --docker-password="${ENTITLED_REGISTRY_KEY}" --docker-email="${ENTITLEMENT_REGISTRY_USER_EMAIL}" --namespace="${DB2_PROJECT_NAME}"
 echo
 
 echo "Preparing the cluster for Db2..."
-${OC_CMD} get no -l node-role.kubernetes.io/worker --no-headers -o name | xargs -I {} --  oc debug {} -- chroot /host sh -c 'grep "^Domain = slnfsv4.coms" /etc/idmapd.conf || ( sed -i.bak "s/.*Domain =.*/Domain = slnfsv4.com/g" /etc/idmapd.conf; nfsidmap -c; rpc.idmapd )'
+kubectl get no -l node-role.kubernetes.io/worker --no-headers -o name | xargs -I {} --  oc debug {} -- chroot /host sh -c 'grep "^Domain = slnfsv4.coms" /etc/idmapd.conf || ( sed -i.bak "s/.*Domain =.*/Domain = slnfsv4.com/g" /etc/idmapd.conf; nfsidmap -c; rpc.idmapd )'
 
 echo
 echo "Modifying the OpenShift Global Pull Secret (you need jq tool for that):"
-echo $(${OC_CMD} get secret pull-secret -n openshift-config --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode; oc get secret ibm-db2-registry -n ${DB2_PROJECT_NAME} --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode) | jq -s '.[0] * .[1]' > dockerconfig_merged
-${OC_CMD} set data secret/pull-secret -n openshift-config --from-file=.dockerconfigjson=dockerconfig_merged
+echo $(kubectl get secret pull-secret -n openshift-config --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode; oc get secret ibm-db2-registry -n ${DB2_PROJECT_NAME} --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode) | jq -s '.[0] * .[1]' > dockerconfig_merged
+kubectl set data secret/pull-secret -n openshift-config --from-file=.dockerconfigjson=dockerconfig_merged
 
 echo
 
-if ${OC_CMD} get catalogsource -n openshift-marketplace | grep ibm-operator-catalog ; then
+if kubectl get catalogsource -n openshift-marketplace | grep ibm-operator-catalog ; then
         echo "Found ibm operator catalog source"
     else
-        ${OC_CMD} apply -f "${DB2_OPERATOR_CATALOG_FILE}"
+        kubectl apply -f "${DB2_OPERATOR_CATALOG_FILE}"
         if [ $? -eq 0 ]; then
           echo "IBM Operator Catalog source created!"
         else
@@ -82,7 +80,7 @@ if ${OC_CMD} get catalogsource -n openshift-marketplace | grep ibm-operator-cata
     for ((retry=0;retry<="${maxRetry}";retry++)); do
       echo "Waiting for Db2u Operator Catalog pod initialization"
 
-      isReady=$(${OC_CMD} get pod -n openshift-marketplace --no-headers | grep ibm-operator-catalog | grep "Running")
+      isReady=$(kubectl get pod -n openshift-marketplace --no-headers | grep ibm-operator-catalog | grep "Running")
       if [[ -z $isReady ]]; then
         if [[ $retry -eq "${maxRetry}" ]]; then
           echo "Timeout Waiting for  Db2u Operator Catalog pod to start"
@@ -126,7 +124,7 @@ fi
 
 echo
 echo "Approving DB2 Operator install plan."
-oc patch installplan "$installPlan" --namespace "${DB2_PROJECT_NAME}" --type merge --patch '{"spec":{"approved":true}}'
+kubectl patch installplan "$installPlan" --namespace "${DB2_PROJECT_NAME}" --type merge --patch '{"spec":{"approved":true}}'
 echo
 
 ## Waiting up to 5 minutes for DB2 Operator installation to complete.
@@ -163,7 +161,7 @@ fi
 echo
 echo "Patching c-db2ucluster-db2u statefulset."
 
-oc patch "$statefulsetQualifiedName" -n="${DB2_PROJECT_NAME}" -p='{"spec":{"template":{"spec":{"containers":[{"name":"db2u","tty":false}]}}}}}'
+kubectl patch "$statefulsetQualifiedName" -n="${DB2_PROJECT_NAME}" -p='{"spec":{"template":{"spec":{"containers":[{"name":"db2u","tty":false}]}}}}}'
 
 ## Wait for  c-db2ucluster-restore-morph job to complte. If this job completes successfully
 ## we can tell that the deployment was completed successfully.
@@ -181,39 +179,39 @@ fi
 ## This is done by updating the NUMDB property in the ConfigMap c-db2ucluster-db2dbmconfig
 echo
 echo "Updating number of databases allowed by DB2 installation from 8 to 20."
-oc get configmap c-db2ucluster-db2dbmconfig -n "$DB2_PROJECT_NAME" -o yaml | sed "s|NUMDB 8|NUMDB 20|" |  oc replace configmap -n "$DB2_PROJECT_NAME" --filename=-
+kubectl get configmap c-db2ucluster-db2dbmconfig -n "$DB2_PROJECT_NAME" -o yaml | sed "s|NUMDB 8|NUMDB 20|" |  oc replace configmap -n "$DB2_PROJECT_NAME" --filename=-
 
 echo
 echo "Updating database manager running configuration."
-oc exec c-db2ucluster-db2u-0 -it -- su - "$DB2_ADMIN_USERNAME" -c "db2 update dbm cfg using numdb 20"
+kubectl exec c-db2ucluster-db2u-0 -it -- su - "$DB2_ADMIN_USERNAME" -c "db2 update dbm cfg using numdb 20"
 sleep 10
-oc exec c-db2ucluster-db2u-0 -it -- su - "$DB2_ADMIN_USERNAME" -c "db2set DB2_WORKLOAD=FILENET_CM"
+kubectl exec c-db2ucluster-db2u-0 -it -- su - "$DB2_ADMIN_USERNAME" -c "db2set DB2_WORKLOAD=FILENET_CM"
 sleep 10
-oc exec c-db2ucluster-db2u-0 -it -- su - "$DB2_ADMIN_USERNAME" -c "set CUR_COMMIT=ON"
+kubectl exec c-db2ucluster-db2u-0 -it -- su - "$DB2_ADMIN_USERNAME" -c "set CUR_COMMIT=ON"
 sleep 10
 
 echo
 echo "Restarting DB2 instance."
-oc exec c-db2ucluster-db2u-0 -it -- su - "$DB2_ADMIN_USERNAME" -c "db2stop"
+kubectl exec c-db2ucluster-db2u-0 -it -- su - "$DB2_ADMIN_USERNAME" -c "db2stop"
 sleep 10
-oc exec c-db2ucluster-db2u-0 -it -- su - "$DB2_ADMIN_USERNAME" -c "db2start"
+kubectl exec c-db2ucluster-db2u-0 -it -- su - "$DB2_ADMIN_USERNAME" -c "db2start"
 sleep 10
 
 
 
 echo
 echo "Existing databases are:"
-${OC_CMD} exec c-db2ucluster-db2u-0 -it -- su - "${DB2_ADMIN_USER_NAME}" -c "db2 list database directory | grep \"Database name\""
+kubectlexec c-db2ucluster-db2u-0 -it -- su - "${DB2_ADMIN_USER_NAME}" -c "db2 list database directory | grep \"Database name\""
 
 echo
 echo "Use this hostname/IP to access the databases e.g. with IBM Data Studio."
 echo "\x1B[1mPls. also update in ${DB2_INPUT_PROPS_FILENAME} property \"db2HostName\" with this information (in Skytap, use the IP 10.0.0.10 instead).\x1B[0m"
-${OC_CMD} get route console -n openshift-console -o yaml | grep routerCanonicalHostname
+kubectl get route console -n openshift-console -o yaml | grep routerCanonicalHostname
 
 echo
 echo "Use one of these NodePorts to access the databases e.g. with IBM Data Studio (usually the first one is for legacy-server (Db2 port 50000), the second for ssl-server (Db2 port 50001))."
 echo "\x1B[1mPls. also update in ${DB2_INPUT_PROPS_FILENAME} property \"db2PortNumber\" with this information (legacy-server).\x1B[0m"
-${OC_CMD} get svc -n "${DB2_PROJECT_NAME}" c-db2ucluster-db2u-engn-svc -o json | grep nodePort
+kubectl get svc -n "${DB2_PROJECT_NAME}" c-db2ucluster-db2u-engn-svc -o json | grep nodePort
 
 echo
 echo "Use \"${DB2_ADMIN_USER_NAME}\" and password \"${DB2_ADMIN_USER_PASSWORD}\" to access the databases e.g. with IBM Data Studio."
@@ -225,24 +223,24 @@ echo "********* Installation and configuration of DB2 completed successfully! **
 echo "*********************************************************************************"
 echo
 echo "Removing BLUDB from system."
-oc exec c-db2ucluster-db2u-0 -it -- su - "${DB2_ADMIN_USER_NAME}" -c "db2 deactivate database BLUDB"
+kubectl exec c-db2ucluster-db2u-0 -it -- su - "${DB2_ADMIN_USER_NAME}" -c "db2 deactivate database BLUDB"
 sleep 10
-oc exec c-db2ucluster-db2u-0 -it -- su - "${DB2_ADMIN_USER_NAME}"  -c "db2 drop database BLUDB"
+kubectl exec c-db2ucluster-db2u-0 -it -- su - "${DB2_ADMIN_USER_NAME}"  -c "db2 drop database BLUDB"
 sleep 10
 echo
 echo "Existing databases are:"
-oc exec c-db2ucluster-db2u-0 -it -- su - "${DB2_ADMIN_USER_NAME}"  -c "db2 list database directory | grep \"Database name\" | cat"
+kubectl exec c-db2ucluster-db2u-0 -it -- su - "${DB2_ADMIN_USER_NAME}"  -c "db2 list database directory | grep \"Database name\" | cat"
 echo
 echo "Use this hostname/IP to access the databases e.g. with IBM Data Studio."
 echo -e "\x1B[1mPlease also update in ${DB2_INPUT_PROPS_FILENAME} property \"db2HostName\" with this information (in Skytap, use the IP 10.0.0.10 instead)\x1B[0m"
-routerCanonicalHostname=$(oc get route console -n openshift-console -o yaml | grep routerCanonicalHostname | cut -d ":" -f2)
+routerCanonicalHostname=$(kubectl get route console -n openshift-console -o yaml | grep routerCanonicalHostname | cut -d ":" -f2)
 workerNodeAddresses=$(get_worker_node_addresses_from_pod c-db2ucluster-db2u-0 "${PROJECT_NAME}" )
 echo -e "\tHostname:${routerCanonicalHostname}"
 echo -e "\tOther possible addresses(If hostname not available above): $workerNodeAddresses"
 echo
 echo "Use one of these NodePorts to access the databases e.g. with IBM Data Studio (usually the first one is for legacy-server (Db2 port 50000), the second for ssl-server (Db2 port 50001))."
 echo -e "\x1B[1mPlease also update in ${DB2_INPUT_PROPS_FILENAME} property \"db2PortNumber\" with this information (legacy-server).\x1B[0m"
-oc get svc -n "${DB2_PROJECT_NAME}" c-db2ucluster-db2u-engn-svc -o json | grep nodePort
+kubectl get svc -n "${DB2_PROJECT_NAME}" c-db2ucluster-db2u-engn-svc -o json | grep nodePort
 echo
 echo "Use \"${DB2_ADMIN_USER_NAME} \" and password \"${DB2_ADMIN_USER_PASSWORD} \" to access the databases e.g. with IBM Data Studio."
 echo

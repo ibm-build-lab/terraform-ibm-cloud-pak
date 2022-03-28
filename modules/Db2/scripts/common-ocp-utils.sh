@@ -39,7 +39,7 @@ function wait_for_operator_to_install_successfully {
 
   while [ $CURRENT_WAIT_TIME -lt $TOTAL_WAIT_TIME_SECS ]
   do
-    CSV_STATUS=$(oc get csv "$csvName" -o custom-columns=PHASE:.status.phase --no-headers -n "$namespace" 2>/dev/null | grep Succeeded | cat)
+    CSV_STATUS=$(kubectl get csv "$csvName" -o custom-columns=PHASE:.status.phase --no-headers -n "$namespace" 2>/dev/null | grep Succeeded | cat)
     if [ ! -z "$CSV_STATUS" ]
     then
       #Done waiting
@@ -75,7 +75,7 @@ function wait_for_install_plan {
 
   while [ $CURRENT_WAIT_TIME -lt $TOTAL_WAIT_TIME_SECS ]
   do
-    INSTALL_PLAN=$(oc get subscription "$subscriptionName" -o custom-columns=IPLAN:.status.installplan.name --no-headers -n "$namespace" 2>/dev/null | grep -v "<none>" | cat)
+    INSTALL_PLAN=$(kubectl get subscription "$subscriptionName" -o custom-columns=IPLAN:.status.installplan.name --no-headers -n "$namespace" 2>/dev/null | grep -v "<none>" | cat)
     
     echo "$INSTALL_PLAN"
 
@@ -115,7 +115,7 @@ function wait_for_resource_created_by_name {
 
   while [ $CURRENT_WAIT_TIME -lt $TOTAL_WAIT_TIME_SECS ]
   do
-    RESOURCE_FULLY_QUALIFIED_NAME=$(oc get "$resourceKind" "$name"  -o name --no-headers -n "$namespace" 2>/dev/null)
+    RESOURCE_FULLY_QUALIFIED_NAME=$(kubectl get "$resourceKind" "$name"  -o name --no-headers -n "$namespace" 2>/dev/null)
     if [ ! -z "$RESOURCE_FULLY_QUALIFIED_NAME" ] 
     then
       # Done waiting 
@@ -151,7 +151,7 @@ function wait_for_job_to_complete_by_name {
 
   while [ $CURRENT_WAIT_TIME -lt $TOTAL_WAIT_TIME_SECS ]
   do
-    JOB_STATUS=$(oc get job "$jobName" -n "$namespace" -o custom-columns=STATUS:'.status.conditions[*].type' 2>/dev/null | grep Complete | cat)
+    JOB_STATUS=$(kubectl get job "$jobName" -n "$namespace" -o custom-columns=STATUS:'.status.conditions[*].type' 2>/dev/null | grep Complete | cat)
     if [ ! -z "$JOB_STATUS" ] 
     then
       # Done waiting 
@@ -184,15 +184,15 @@ function get_worker_node_addresses_from_pod {
   local HOST_NODE=""
   local HOST_ADDRESSES=""
 
-  HOST_NODE=$(oc get pod "$podName" -o custom-columns=NODE:.spec.nodeName --no-headers 2>/dev/null)
+  HOST_NODE=$(kubectl get pod "$podName" -o custom-columns=NODE:.spec.nodeName --no-headers 2>/dev/null)
   ## This is using the filtering capabilities to find the ExternalIP of the worker node
   if [ ! -z "$typeFilter" ] 
   then 
-    HOST_ADDRESSES=$(oc get node "$HOST_NODE" -o custom-columns="ADDRESS":".status.addresses[?(@.type==\"${typeFilter}\")].address" --no-headers 2>/dev/null)
+    HOST_ADDRESSES=$(kubectl get node "$HOST_NODE" -o custom-columns="ADDRESS":".status.addresses[?(@.type==\"${typeFilter}\")].address" --no-headers 2>/dev/null)
     # Example: 
     # HOST_ADDRESSES=$(oc get node $HOST_NODE -o custom-columns="ADDRESS":'.status.addresses[?(@.type=="ExternalIP")].address' --no-headers 2>/dev/null)
   else
-    HOST_ADDRESSES=$(oc get node "$HOST_NODE" -o custom-columns="ADDRESSES":'.status.addresses[*].address' --no-headers 2>/dev/null)
+    HOST_ADDRESSES=$(kubectl get node "$HOST_NODE" -o custom-columns="ADDRESSES":'.status.addresses[*].address' --no-headers 2>/dev/null)
   fi
 
   echo "$HOST_ADDRESSES"
