@@ -1,4 +1,4 @@
-# Terraform DB2 Module toinstall and configure DB2 on Openshift
+# Terraform DB2 Module to install and configure DB2 on Openshift
 
 This Terraform Module installs **DB2** on an Openshift (ROKS) cluster on IBM Cloud.
 
