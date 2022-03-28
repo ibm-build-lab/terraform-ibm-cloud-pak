@@ -1,4 +1,4 @@
-# Terraform DB2 Module toinstall and configure DB2 on Openshift
+# Terraform DB2 Module to install and configure DB2 on Openshift
 
 This Terraform Module installs **DB2** on an Openshift (ROKS) cluster on IBM Cloud.
 
@@ -54,7 +54,7 @@ provider "ibm" {
 
 ### Setting up the OpenShift cluster
 
-NOTE: an OpenShift cluster is required to install the Cloud Pak. This can be an existing cluster or can be provisioned using our `roks` Terraform module.
+NOTE: an OpenShift cluster is required to install this module. This can be an existing cluster or can be provisioned using our `roks` Terraform module.
 
 To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script. The recommended size for an OpenShift cluster on IBM Cloud Classic contains `4` workers of flavor `b3c.16x64`, however read the [Db2 installation methods](https://www.ibm.com/docs/en/db2/11.1?topic=servers-db2-installation-methods) to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
 
