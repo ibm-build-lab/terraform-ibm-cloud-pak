@@ -35,6 +35,7 @@ resource "null_resource" "install_db2" {
     db2_subscription_file_sha1     = sha1(local.db2_subscription_file_content)
     db2_operator_catalog_file_sha1 = sha1(local.db2_operator_catalog_file)
     db2_storage_class_file_sha1    = sha1(local.db2_storage_class_file)
+    docker_credentials_sha1        = sha1(join("", [var.entitled_registry_key, var.entitled_registry_user_email, var.db2_project_name]))
   }
 
   # --------------- PROVISION DB2  ------------------
