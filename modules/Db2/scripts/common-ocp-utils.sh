@@ -10,7 +10,7 @@
 #
 ###############################################################################
 
-echo "common-ocp0utils.sh script is found. Now, it is running ..."
+echo "common-ocp-utils.sh script is found. Now, it is running ..."
 echo
 
 [ ! -z "$DEBUG" ] && set -x
