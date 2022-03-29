@@ -58,11 +58,11 @@ resource "null_resource" "install_db2" {
       DB2_STORAGE_SIZE         = var.db2_storage_size
       DB2_STORAGE_CLASS        = var.db2_storage_class
       # ------ FILES ASSIGNMENTS -----------
-      DB2_OPERATOR_GROUP_FILE   = local.db2_operator_group_file_content
-      DB2_SUBSCRIPTION_FILE     = local.db2_subscription_file_content
-      DB2_OPERATOR_CATALOG_FILE = local.db2_operator_catalog_file
-      DB2_STORAGE_CLASS_FILE    = local.db2_storage_class_file
-      DB2U_CLUSTER_FILE         = local.db2u_cluster_file
+      DB2_OPERATOR_CATALOG_FILE  = local.db2_operator_catalog_file
+      DB2_STORAGE_CLASS_FILE     = local.db2_storage_class_file
+      DB2U_CLUSTER_CONTENT       = local.db2u_cluster_file
+      DB2_OPERATOR_GROUP_CONTENT = local.db2_operator_group_file_content
+      DB2_SUBSCRIPTION_CONTENT   = local.db2_subscription_file_content
       # ------ Docker Information ----------
       ENTITLED_REGISTRY_KEY           = var.entitled_registry_key
       ENTITLEMENT_REGISTRY_USER_EMAIL = var.entitled_registry_user_email
@@ -80,5 +80,19 @@ data "external" "get_endpoints" {
   query = {
     kubeconfig    = var.cluster_config_path
     db2_namespace = var.db2_project_name
+  }
+}
+
+provisioner "local-exec" {
+    when        = destroy
+    command     = "./uninstall_db2.sh"
+    working_dir = "${path.module}/scripts"
+
+    environment = {
+      CLUSTER_ID        = var.cluster_id
+      API_KEY           = var.ibmcloud_api_key
+      KUBECONFIG        = null_resource.install_db2.provisioner.environment.KUBECONFIG
+      DB2_PROJECT_NAME  = null_resource.install_db2.provisioner.environment.DB2_PROJECT_NAME
+    }
   }
 }

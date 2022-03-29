@@ -15,8 +15,8 @@ CUR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 echo
 echo "Creating project ${DB2_PROJECT_NAME}..."
-kubectl new-project "${DB2_PROJECT_NAME}"
-kubectl project "${DB2_PROJECT_NAME}"
+kubectl create namespace "${DB2_PROJECT_NAME}"
+oc project "${DB2_PROJECT_NAME}"
 echo
 
 #. ../../modules/Db2/scripts/common-ocp-utils.sh
@@ -107,19 +107,15 @@ echo
 ## Creating DB2 Operator Group
 echo "Creating Operator Group object for DB2 Operator ..."
 kubectl apply -f -<<EOF
-${DB2_OPERATOR_GROUP_FILE}
+${DB2_OPERATOR_GROUP_CONTENT}
 EOF
-#cat "${DB2_OPERATOR_GROUP_FILE}"
-#kubectl apply -f "${DB2_OPERATOR_GROUP_FILE}"
 echo
 
 ###### Create subscription to Db2 Operator
 echo -e "\x1B[1m Creating Subscription object for DB2 Operator ... \x1B[0m"
 kubectl apply -f -<<EOF
-${DB2_SUBSCRIPTION_FILE}
+${DB2_SUBSCRIPTION_CONTENT}
 EOF
-#cat "${DB2_SUBSCRIPTION_FILE}"
-#kubectl apply -f "${DB2_SUBSCRIPTION_FILE}"
 echo
 
 waiting_time=20
@@ -155,10 +151,8 @@ fi
 echo
 echo "Deploying the Db2u-cluster ..."
 kubectl apply -f -<<EOF
-${DB2U_CLUSTER_FILE}
+${DB2U_CLUSTER_CONTENT}
 EOF
-#cat "${DB2U_CLUSTER_FILE}"
-#kubectl apply -f "${DB2U_CLUSTER_FILE}"
 echo
 
 ## Wait for c-db2ucluster-db2u statefulset to be created so that we can apply requried patch.

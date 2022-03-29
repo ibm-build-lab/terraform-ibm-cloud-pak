@@ -1,3 +1,11 @@
+variable "ibmcloud_api_key" {
+  description = "IBMCloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
+}
+
+variable "cluster_id" {
+  description = "Enter your cluster id or name to install the Cloud Pak."
+}
+
 variable "region" {
   default     = "us-south"
   description = "Region where the cluster is created."

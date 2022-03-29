@@ -2,13 +2,13 @@ apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
   name: db2u-operator
-  namespace: ${paramDB2Namespace}
+  namespace: ${ paramDB2Namespace }
   labels:
-    operators.coreos.com/db2u-operator.${paramDB2Namespace}: ''
+    operators.coreos.com/db2u-operator.${ paramDB2Namespace }: ''
 spec:
-  channel: ${paramDB2OperatorChannel}
+  channel: ${ paramDB2OperatorChannel }
   name: db2u-operator
   installPlanApproval: Manual
   source: ibm-operator-catalog
   sourceNamespace: openshift-marketplace
-  startingCSV: ${paramDB2OperatorVersion}
+  startingCSV: ${ paramDB2OperatorVersion }
