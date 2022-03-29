@@ -95,12 +95,8 @@ The Terraform code return the following output parameters:
 
 ## Clean up
 
-When you finish installing Db2, release the resources by executing the following command:: 
+When you finish with Db2, release the resources by executing the following command:: 
 ```
 terraform destroy
 ```
-
-
-## Uninstall
-
-**Note**: The uninstall or cleanup process is a work in progress at this time, we are identifying the objects that need to be deleted in order to have a successful re-installation.
+Additional resources are creating using scripts. The cleanup process for these additional resources is a work in progress at this time, we are identifying the objects that need to be deleted in order to have a successful re-installation.
