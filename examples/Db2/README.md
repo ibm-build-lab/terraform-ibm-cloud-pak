@@ -19,7 +19,7 @@ DB2:
 Part Number : CNB21ML
 Filename    : DB2_AWSE_Restricted_Activation_11.5.zip
 ```
-### Set the desired values in the `terraform.tfvars` file
+### Set the desired values in the terraform.tfvars file
 
 ```hcl
 ibmcloud_api_key             = "************"
@@ -35,7 +35,7 @@ db2_storage_size             = "************"
 entitled_registry_key        = "************"
 entitled_registry_user_email = "************"
 ``` 
-## Input Variables
+### Input Variables
 
 | Name                       | Description                                                            | Default                | Required |
 | ---------------------------|------------------------------------------------------------------------|------------------------|----------|
@@ -60,7 +60,7 @@ entitled_registry_user_email = "************"
 | `entitled_registry_user_email`| IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key. i.e: joe@ibm.com |              | Yes      |
 
 
-### Executing the Terraform Script
+### Execute the Terraform Script
 
 Execute the following Terraform commands:
 
@@ -70,7 +70,7 @@ terraform plan
 terraform apply --auto-approve
 ```
 
-### Verify
+## Verify
 
 If DB2 is successful and the process is completed, you should see the following similar outputs:
 ```
@@ -83,7 +83,7 @@ db2_ports =  00000,
  00001,
 ```
 
-## Output Parameters
+### Outputs
 
 The Terraform code return the following output parameters:
 
@@ -93,8 +93,7 @@ The Terraform code return the following output parameters:
 | `db2_ports`            | Port number for DB2 instance                                                                |
 
 
-
-### Clean up
+## Clean up
 
 When you finish installing Db2, release the resources by executing the following command:: 
 ```
