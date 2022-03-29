@@ -19,8 +19,7 @@ DB2:
 Part Number : CNB21ML
 Filename    : DB2_AWSE_Restricted_Activation_11.5.zip
 ```
-
-## Provisioning this module in a Terraform Script
+### Set the desired values in the `terraform.tfvars` file
 
 ```hcl
 ibmcloud_api_key             = "************"
@@ -36,9 +35,6 @@ db2_storage_size             = "************"
 entitled_registry_key        = "************"
 entitled_registry_user_email = "************"
 ``` 
-
-## Provisioning this module in a Terraform Script
-
 ## Input Variables
 
 | Name                       | Description                                                            | Default                | Required |
