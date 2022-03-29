@@ -70,6 +70,19 @@ resource "null_resource" "install_db2" {
       DOCKER_USERNAME                 = local.docker_username
     }
   }
+
+  provisioner "local-exec" {
+    when        = destroy
+    command     = "./uninstall_db2.sh"
+    working_dir = "${path.module}/scripts"
+
+    environment = {
+//      CLUSTER_ID        = var.cluster_id
+//      API_KEY           = var.ibmcloud_api_key
+      KUBECONFIG        = self.triggers.kubeconfig # null_resource.install_db2.provisioner.environment.KUBECONFIG
+      DB2_PROJECT_NAME  = self.triggers.namespace # null_resource.install_db2.provisioner.environment.DB2_PROJECT_NAME
+    }
+  }
 }
 
 
@@ -83,16 +96,5 @@ data "external" "get_endpoints" {
   }
 }
 
-provisioner "local-exec" {
-    when        = destroy
-    command     = "./uninstall_db2.sh"
-    working_dir = "${path.module}/scripts"
 
-    environment = {
-      CLUSTER_ID        = var.cluster_id
-      API_KEY           = var.ibmcloud_api_key
-      KUBECONFIG        = null_resource.install_db2.provisioner.environment.KUBECONFIG
-      DB2_PROJECT_NAME  = null_resource.install_db2.provisioner.environment.DB2_PROJECT_NAME
-    }
-  }
-}
+

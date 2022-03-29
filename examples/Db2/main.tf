@@ -3,7 +3,7 @@ provider "ibm" {
   ibmcloud_api_key = var.ibmcloud_api_key
 }
 
-data "ibm_resource_group" "group" {
+data "ibm_resource_group" "resource_group" {
   name = var.resource_group
 }
 
@@ -18,11 +18,9 @@ resource "null_resource" "mkdir_kubeconfig_dir" {
 data "ibm_container_cluster_config" "cluster_config" {
   depends_on        = [null_resource.mkdir_kubeconfig_dir]
   cluster_name_id   = var.cluster_id
-  resource_group_id = data.ibm_resource_group.group.id
-  download          = true
+  resource_group_id = data.ibm_resource_group.resource_group.id
   config_dir        = var.cluster_config_path
-  admin             = false
-  network           = false
+  download          = true
 }
 
 module "Db2" {
@@ -30,7 +28,10 @@ module "Db2" {
   enable_db2 = var.enable_db2
 
   # ----- Cluster -----
-  cluster_config_path      = data.ibm_container_cluster_config.cluster_config.config_file_path
+  ibmcloud_api_key         = var.ibmcloud_api_key
+  cluster_id               = data.ibm_container_cluster_config.cluster_config.cluster_name_id
+  cluster_config_path      = var.cluster_config_path
+  # data.ibm_container_cluster_config.cluster_config.config_dir
   resource_group           = var.resource_group
   db2_project_name         = var.db2_project_name
   db2_admin_username       = var.db2_admin_username
