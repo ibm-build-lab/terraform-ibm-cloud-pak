@@ -30,7 +30,7 @@ module "Db2" {
   # ----- Cluster -----
   ibmcloud_api_key         = var.ibmcloud_api_key
   cluster_id               = data.ibm_container_cluster_config.cluster_config.cluster_name_id
-  cluster_config_path      = var.cluster_config_path
+  cluster_config_path      = data.ibm_container_cluster_config.cluster_config.config_file_path
   # data.ibm_container_cluster_config.cluster_config.config_dir
   resource_group           = var.resource_group
   db2_project_name         = var.db2_project_name
