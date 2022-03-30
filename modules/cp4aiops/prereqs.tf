@@ -8,11 +8,13 @@ locals {
 
 resource "null_resource" "create_namespace" {
   provisioner "local-exec" {
+    command     = "./create_namespace.sh"
+    working_dir = "${path.module}/scripts/"
+
     environment = {
       KUBECONFIG = var.cluster_config_path
+      NAMESPACE  = var.namespace
     }
-    interpreter = ["/bin/bash", "-c"]
-    command     = "kubectl create namespace ${var.namespace}"
   }
 }
 
