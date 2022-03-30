@@ -60,10 +60,11 @@ kubectl get no -l node-role.kubernetes.io/worker --no-headers -o name | xargs -I
 echo
 echo "Modifying the OpenShift Global Pull Secret (you need jq tool for that):"
 echo $(kubectl get secret pull-secret -n openshift-config --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode; oc get secret ibm-db2-registry -n ${DB2_PROJECT_NAME} --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode) | jq -s '.[0] * .[1]' > dockerconfig_merged
-kubectl set data secret/pull-secret -n openshift-config --from-file=.dockerconfigjson=dockerconfig_merged
 
 echo
+oc set data secret/pull-secret -n openshift-config --from-file=.dockerconfigjson=dockerconfig_merged
 
+echo
 if kubectl get catalogsource -n openshift-marketplace | grep ibm-operator-catalog ; then
         echo "Found ibm operator catalog source"
 else
@@ -203,8 +204,8 @@ function wait_for_install_plan {
 ##  - Empty string if time out waiting
 ##  - Resource fully qualified name of the resource as returned by oc get -o name
 function wait_for_resource_created_by_name {
-  local resourceKind=$1
-  local name=$2
+  local resourceKind="statefulset"
+  local name="c-db2ucluster-db2u"
   local timeToWait=15
   local TOTAL_WAIT_TIME_SECS=$(( 60 * ${timeToWait}))
   local CURRENT_WAIT_TIME=0
@@ -303,7 +304,7 @@ fi
 
 echo
 echo "Approving DB2 Operator install plan."
-kubectl patch installplan "$installPlan" --namespace "${DB2_PROJECT_NAME}" --type merge --patch '{"spec":{"approved":true}}'
+oc patch installplan "$installPlan" --namespace "${DB2_PROJECT_NAME}" --type merge --patch '{"spec":{"approved":true}}'
 echo
 
 ## Waiting up to 5 minutes for DB2 Operator installation to complete.
@@ -331,7 +332,7 @@ echo
 echo
 echo "Waiting up to 15 minutes for c-db2ucluster-db2u statefulset to be created ..."
 date
-statefulsetQualifiedName=$(wait_for_resource_created_by_name statefulset c-db2ucluster-db2u )
+statefulsetQualifiedName=$(wait_for_resource_created_by_name)
 if [ -z "$statefulsetQualifiedName" ]
 then
   echo "Timed out waiting for c-db2ucluster-db2u statefulset to be created by DB2 operator"

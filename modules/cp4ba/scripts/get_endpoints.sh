@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#NAMESPACE=ibm-db2
 eval "$(jq -r '@sh "export KUBECONFIG=\(.kubeconfig) NAMESPACE=\(.namespace)"')"
 
 # Obtains the credentials and endpoints for the installed CP4I Dashboard
