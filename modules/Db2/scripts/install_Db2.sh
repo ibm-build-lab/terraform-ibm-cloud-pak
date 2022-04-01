@@ -114,7 +114,7 @@ ${DB2_SUBSCRIPTION_CONTENT}
 EOF
 echo
 
-waiting_time=20
+waiting_time=45
 echo
 echo "Waiting up to ${waiting_time} minutes for DB2 Operator install plan to be generated in $DB2_PROJECT_NAME"
 date
@@ -131,7 +131,7 @@ echo
 ##  - Succeeded string otherwise
 ##
 function wait_for_operator_to_install_successfully {
-  local waiting_time=20
+  local waiting_time=45
   local TOTAL_WAIT_TIME_SECS=$(( 60 * $waiting_time))
   local CURRENT_WAIT_TIME=0
   local CSV_STATUS=""
@@ -161,7 +161,7 @@ function wait_for_operator_to_install_successfully {
 ##  - Name of install plan otherwise
 
 function wait_for_install_plan {
-  local timeToWait=20
+  local timeToWait=45
   local TOTAL_WAIT_TIME_SECS=$(( 60 * ${timeToWait}))
   local CURRENT_WAIT_TIME=0
   local INSTALL_PLAN=""
@@ -192,7 +192,7 @@ function wait_for_install_plan {
 ##  - Resource fully qualified name of the resource as returned by oc get -o name
 function wait_for_resource_created_by_name {
   local resourceKind="statefulset"
-  local timeToWait=15
+  local timeToWait=45
   local TOTAL_WAIT_TIME_SECS=$(( 60 * ${timeToWait}))
   local CURRENT_WAIT_TIME=0
   local RESOURCE_FULLY_QUALIFIED_NAME=""
@@ -221,7 +221,7 @@ function wait_for_resource_created_by_name {
 ##  - Empty string if time out waiting
 ##  - Complete string if job is completed
 function wait_for_job_to_complete_by_name {
-  local timeToWait=15
+  local timeToWait=45
   local TOTAL_WAIT_TIME_SECS=$(( 60 * ${timeToWait}))
   local CURRENT_WAIT_TIME=0
   local JOB_STATUS=""
@@ -272,7 +272,7 @@ function get_worker_node_addresses_from_pod {
   echo "$HOST_ADDRESSES"
 }
 
-waiting_time=20
+waiting_time=45
 echo
 echo "Waiting up to ${waiting_time} minutes for DB2 Operator install plan to be generated. ${DB2_PROJECT_NAME}"
 date
