@@ -145,10 +145,8 @@ function wait_for_operator_to_install_successfully {
     CSV_STATUS=$(kubectl get csv "${DB2_OPERATOR_VERSION}" -o custom-columns=PHASE:.status.phase --no-headers -n "${DB2_PROJECT_NAME}" 2>/dev/null | grep Succeeded | cat)
     if [ ! -z "$CSV_STATUS" ]
     then
-      #Done waiting
       break
     fi
-    # Still waiting
     sleep 10
     CURRENT_WAIT_TIME=$(( $CURRENT_WAIT_TIME + 10 ))
   done
@@ -156,8 +154,6 @@ function wait_for_operator_to_install_successfully {
   echo "$CSV_STATUS"
 }
 
-
-##
 ## Description:
 ##  This function waits until an install plan is defined for an operator subscription.
 ## Parameters:
@@ -167,7 +163,7 @@ function wait_for_operator_to_install_successfully {
 ## Display:
 ##  - Empty string if time out waiting
 ##  - Name of install plan otherwise
-##
+
 function wait_for_install_plan {
   local timeToWait=20
   local TOTAL_WAIT_TIME_SECS=$(( 60 * ${timeToWait}))
@@ -177,15 +173,10 @@ function wait_for_install_plan {
   while [ $CURRENT_WAIT_TIME -lt $TOTAL_WAIT_TIME_SECS ]
   do
     INSTALL_PLAN=$(kubectl get subscription "${SUBCRIPTION_NAME}" -o custom-columns=IPLAN:.status.installplan.name --no-headers -n "${DB2_PROJECT_NAME}" 2>/dev/null | grep -v "<none>" | cat)
-
-    echo "$INSTALL_PLAN"
-
     if [ ! -z "$INSTALL_PLAN" ]
     then
-      # Done waiting
       break
     fi
-    # Still waiting
     sleep 10
     CURRENT_WAIT_TIME=$(( $CURRENT_WAIT_TIME + 10 ))
   done
@@ -296,8 +287,10 @@ date
 
 installPlan=$(wait_for_install_plan)
 
-if [ -z "$installPlan" ]
+if [ "$installPlan" ]
 then
+  echo $installPlan
+else
   echo "Timed out waiting for DB2 install plan. Check status for CSV $DB2_STARTING_CSV"
   exit 1
 fi
