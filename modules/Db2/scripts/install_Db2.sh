@@ -13,14 +13,15 @@
 
 CUR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+C_DB2UCLUSTER_DB2U="c-db2ucluster-db2u"
+C_DB2UCLUSTER_RESTORE_MORPH="c-db2ucluster-restore-morph"
+SUBCRIPTION_NAME="db2u-operator"
+
 echo
 echo "Creating project ${DB2_PROJECT_NAME}..."
 kubectl create namespace "${DB2_PROJECT_NAME}"
 oc project "${DB2_PROJECT_NAME}"
 echo
-
-#. ../../modules/Db2/scripts/common-ocp-utils.sh
-#"${CUR_DIR}"/common-ocp-utils.sh
 
 
 echo "Creating Storage Class ..."
@@ -120,17 +121,12 @@ date
 
 echo
 
-SUBCRIPTION_NAME="db2u-operator"
 ##
 ## Description:
 ##  This function waits until  specific operator reports successful installation.
 ##  The Operator is represented by its Cluster Service Version.
 ##  Once the CSV goes to Succeeded phase the function returns unless it times out.
-## Parameters:
-##  $1  Name of cluster service version for the operator
-##  $2  Time in minutes to wait for the operator to install properly
-##  $3  Namespace were operator is installed
-## Display:
+##  Display:
 ##  - Empty string if time out waiting
 ##  - Succeeded string otherwise
 ##
@@ -142,7 +138,7 @@ function wait_for_operator_to_install_successfully {
 
   while [ $CURRENT_WAIT_TIME -lt $TOTAL_WAIT_TIME_SECS ]
   do
-    CSV_STATUS=$(kubectl get csv "${DB2_OPERATOR_VERSION}" -o custom-columns=PHASE:.status.phase --no-headers -n "${DB2_PROJECT_NAME}" 2>/dev/null | grep Succeeded | cat)
+    CSV_STATUS=$(kubectl get csv -n "${DB2_PROJECT_NAME}" | grep "${DB2_OPERATOR_VERSION}" | grep Succeeded | cat)
     if [ ! -z "$CSV_STATUS" ]
     then
       break
@@ -196,7 +192,6 @@ function wait_for_install_plan {
 ##  - Resource fully qualified name of the resource as returned by oc get -o name
 function wait_for_resource_created_by_name {
   local resourceKind="statefulset"
-  local name="c-db2ucluster-db2u"
   local timeToWait=15
   local TOTAL_WAIT_TIME_SECS=$(( 60 * ${timeToWait}))
   local CURRENT_WAIT_TIME=0
@@ -204,7 +199,7 @@ function wait_for_resource_created_by_name {
 
   while [ $CURRENT_WAIT_TIME -lt $TOTAL_WAIT_TIME_SECS ]
   do
-    RESOURCE_FULLY_QUALIFIED_NAME=$(kubectl get "$resourceKind" "$name"  -o name --no-headers -n "${DB2_PROJECT_NAME}" 2>/dev/null)
+    RESOURCE_FULLY_QUALIFIED_NAME=$(kubectl get "$resourceKind" "${C_DB2UCLUSTER_DB2U}"  -o name --no-headers -n "${DB2_PROJECT_NAME}" 2>/dev/null)
     if [ ! -z "$RESOURCE_FULLY_QUALIFIED_NAME" ]
     then
       break
@@ -226,7 +221,6 @@ function wait_for_resource_created_by_name {
 ##  - Empty string if time out waiting
 ##  - Complete string if job is completed
 function wait_for_job_to_complete_by_name {
-  local jobName=$1
   local timeToWait=15
   local TOTAL_WAIT_TIME_SECS=$(( 60 * ${timeToWait}))
   local CURRENT_WAIT_TIME=0
@@ -234,13 +228,11 @@ function wait_for_job_to_complete_by_name {
 
   while [ $CURRENT_WAIT_TIME -lt $TOTAL_WAIT_TIME_SECS ]
   do
-    JOB_STATUS=$(kubectl get job "$jobName" -n "${DB2_PROJECT_NAME}" -o custom-columns=STATUS:'.status.conditions[*].type' 2>/dev/null | grep Complete | cat)
+    JOB_STATUS=$(kubectl get job "${C_DB2UCLUSTER_RESTORE_MORPH}" -n "${DB2_PROJECT_NAME}" -o custom-columns=STATUS:'.status.conditions[*].type' 2>/dev/null | grep Complete | cat)
     if [ ! -z "$JOB_STATUS" ]
     then
-      # Done waiting
       break
     fi
-    # Still waiting
     sleep 10
     CURRENT_WAIT_TIME=$(( $CURRENT_WAIT_TIME + 10 ))
   done
@@ -303,12 +295,14 @@ echo
 ## Waiting up to 5 minutes for DB2 Operator installation to complete.
 ## The CSV name for the DB2 operator is exactly the version of the CSV hence
 ## using db2OperatorVersion as the operator name.
-timer_2=10
-echo "Waiting up to 5 minutes for DB2 Operator to install."
+echo "Waiting for DB2 Operator to be installed. It may take up to 5 minutes or more ..."
 date
 operatorInstallStatus=$(wait_for_operator_to_install_successfully)
-if [ -z "$operatorInstallStatus" ]
+if [ "$operatorInstallStatus" ]
 then
+  echo "DB2 operator has been successfully installed."
+  echo "$operatorInstallStatus"
+else
   echo "Timed out waiting for DB2 operator to install.  Check status for CSV $DB2_STARTING_CSV"
   exit 1
 fi
@@ -323,29 +317,35 @@ echo
 ## Wait for c-db2ucluster-db2u statefulset to be created so that we can apply requried patch.
 ## This patch removes the issue that prevents the db2u pod from starting
 echo
-echo "Waiting up to 15 minutes for c-db2ucluster-db2u statefulset to be created ..."
+echo "Waiting up to 15 minutes for ${C_DB2UCLUSTER_DB2U} statefulset to be created ..."
 date
 statefulsetQualifiedName=$(wait_for_resource_created_by_name)
-if [ -z "$statefulsetQualifiedName" ]
+if [ "$statefulsetQualifiedName" ]
 then
-  echo "Timed out waiting for c-db2ucluster-db2u statefulset to be created by DB2 operator"
+  echo "The Statefulset has been successfully created."
+  echo "$statefulsetQualifiedName"
+else
+  echo "Timed out waiting for ${C_DB2UCLUSTER_DB2U} statefulset to be created by DB2 operator"
   exit 1
 fi
 
 echo
-echo "Patching c-db2ucluster-db2u statefulset."
+echo "Patching ${C_DB2UCLUSTER_DB2U} statefulset."
 
 kubectl patch "$statefulsetQualifiedName" -n="${DB2_PROJECT_NAME}" -p='{"spec":{"template":{"spec":{"containers":[{"name":"db2u","tty":false}]}}}}}'
 
 ## Wait for  c-db2ucluster-restore-morph job to complte. If this job completes successfully
 ## we can tell that the deployment was completed successfully.
 echo
-echo "Waiting up to 15 minutes for c-db2ucluster-restore-morph job to complete successfully."
+echo "Waiting up to 15 minutes for ${C_DB2UCLUSTER_RESTORE_MORPH} job to complete successfully."
 date
-jobStatus=$(wait_for_job_to_complete_by_name c-db2ucluster-restore-morph)
-if [ -z "$jobStatus" ]
+jobStatus=$(wait_for_job_to_complete_by_name)
+if [ "$jobStatus" ]
 then
-  echo "Timed out waiting for c-db2ucluster-restore-morph job to complete successfully."
+  echo "Job Status: ${jobStatus}"
+  echo "${C_DB2UCLUSTER_RESTORE_MORPH} job has been successfully completed."
+else
+  echo "Timed out waiting for ${C_DB2UCLUSTER_RESTORE_MORPH} job to complete successfully."
   exit 1
 fi
 
@@ -357,63 +357,64 @@ kubectl get configmap c-db2ucluster-db2dbmconfig -n "$DB2_PROJECT_NAME" -o yaml 
 
 echo
 echo "Updating database manager running configuration."
-kubectl exec c-db2ucluster-db2u-0 -it -- su - "$DB2_ADMIN_USERNAME" -c "db2 update dbm cfg using numdb 20"
+oc -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -it -- su - "$DB2_ADMIN_USERNAME" -c "db2 update dbm cfg using numdb 20"
 sleep 10
-kubectl exec c-db2ucluster-db2u-0 -it -- su - "$DB2_ADMIN_USERNAME" -c "db2set DB2_WORKLOAD=FILENET_CM"
+echo
+oc -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -it -- su - "$DB2_ADMIN_USERNAME" -c "db2set DB2_WORKLOAD=FILENET_CM"
 sleep 10
-kubectl exec c-db2ucluster-db2u-0 -it -- su - "$DB2_ADMIN_USERNAME" -c "set CUR_COMMIT=ON"
+echo
+oc -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -it -- su - "$DB2_ADMIN_USERNAME" -c "set CUR_COMMIT=ON"
 sleep 10
 
 echo
 echo "Restarting DB2 instance."
-kubectl exec c-db2ucluster-db2u-0 -it -- su - "$DB2_ADMIN_USERNAME" -c "db2stop"
+oc -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -it -- su - "$DB2_ADMIN_USERNAME" -c "db2stop"
 sleep 10
-kubectl exec c-db2ucluster-db2u-0 -it -- su - "$DB2_ADMIN_USERNAME" -c "db2start"
+echo
+oc -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -it -- su - "$DB2_ADMIN_USERNAME" -c "db2start"
 sleep 10
 
 echo
-echo "Existing databases are:"
-kubectlexec c-db2ucluster-db2u-0 -it -- su - "${DB2_ADMIN_USER_NAME}" -c "db2 list database directory | grep \"Database name\""
+echo
+echo "****************************************************************************"
+echo "********* USE THE FOLLOWING DB2 ENDPOINTS TO ACCESS THE DATABASE!!! *********"
+echo "****************************************************************************"
+echo
+echo "=> Use this db2_host_address/IP to access the databases e.g. with IBM Data Studio."
+routerCanonicalHostname=$(kubectl get route console -n openshift-console -o yaml | grep routerCanonicalHostname | cut -d ":" -f2)
+echo -e "\tdb2_host_address:${routerCanonicalHostname}"
 
 echo
-echo "Use this hostname/IP to access the databases e.g. with IBM Data Studio."
-echo "\x1B[1mPls. also update in ${DB2_INPUT_PROPS_FILENAME} property \"db2HostName\" with this information (in Skytap, use the IP 10.0.0.10 instead).\x1B[0m"
-kubectl get route console -n openshift-console -o yaml | grep routerCanonicalHostname
+echo "=> Use one of these NodePorts to access the databases e.g. with IBM Data Studio."
+db2_ports=$(kubectl get svc -n "${DB2_PROJECT_NAME}" "${C_DB2UCLUSTER_DB2U}"-engn-svc -o json | grep  nodePort | cut -d ":" -f2)
+echo -e "\tdb2_ports:${db2_ports}"
 
 echo
-echo "Use one of these NodePorts to access the databases e.g. with IBM Data Studio (usually the first one is for legacy-server (Db2 port 50000), the second for ssl-server (Db2 port 50001))."
-echo "\x1B[1mPls. also update in ${DB2_INPUT_PROPS_FILENAME} property \"db2PortNumber\" with this information (legacy-server).\x1B[0m"
-kubectl get svc -n "${DB2_PROJECT_NAME}" c-db2ucluster-db2u-engn-svc -o json | grep nodePort
+workerNodeAddresses=$(get_worker_node_addresses_from_pod "${C_DB2UCLUSTER_DB2U}"-0)
+echo "=> Other possible addresses(If hostname not available above):"
+echo "${workerNodeAddresses}"
 
 echo
-echo "Use \"${DB2_ADMIN_USER_NAME}\" and password \"${DB2_ADMIN_USER_PASSWORD}\" to access the databases e.g. with IBM Data Studio."
+echo "=> Use \"${DB2_ADMIN_USERNAME}\" and password \"${DB2_ADMIN_USER_PASSWORD}\" to access the databases e.g. with IBM Data Studio."
 
 set +e
-echo
-echo "*********************************************************************************"
-echo "********* Installation and configuration of DB2 completed successfully! *********"
-echo "*********************************************************************************"
+
 echo
 echo "Removing BLUDB from system."
-kubectl exec c-db2ucluster-db2u-0 -it -- su - "${DB2_ADMIN_USER_NAME}" -c "db2 deactivate database BLUDB"
+kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -it -- su - "${DB2_ADMIN_USERNAME}" -c "db2 deactivate database BLUDB"
 sleep 10
-kubectl exec c-db2ucluster-db2u-0 -it -- su - "${DB2_ADMIN_USER_NAME}"  -c "db2 drop database BLUDB"
+kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -it -- su - "${DB2_ADMIN_USERNAME}"  -c "db2 drop database BLUDB"
 sleep 10
 echo
 echo "Existing databases are:"
-kubectl exec c-db2ucluster-db2u-0 -it -- su - "${DB2_ADMIN_USER_NAME}"  -c "db2 list database directory | grep \"Database name\" | cat"
+kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -it -- su - "${DB2_ADMIN_USERNAME}"  -c "db2 list database directory | grep \"Database name\" | cat"
 echo
-echo "Use this hostname/IP to access the databases e.g. with IBM Data Studio."
-echo -e "\x1B[1mPlease also update in ${DB2_INPUT_PROPS_FILENAME} property \"db2HostName\" with this information (in Skytap, use the IP 10.0.0.10 instead)\x1B[0m"
-routerCanonicalHostname=$(kubectl get route console -n openshift-console -o yaml | grep routerCanonicalHostname | cut -d ":" -f2)
-workerNodeAddresses=$(get_worker_node_addresses_from_pod c-db2ucluster-db2u-0 )
-echo -e "\tHostname:${routerCanonicalHostname}"
-echo -e "\tOther possible addresses(If hostname not available above): $workerNodeAddresses"
+
+echo "Db2u installation complete! Congratulations. Exiting ..."
+date
+
 echo
-echo "Use one of these NodePorts to access the databases e.g. with IBM Data Studio (usually the first one is for legacy-server (Db2 port 50000), the second for ssl-server (Db2 port 50001))."
-echo -e "\x1B[1mPlease also update in ${DB2_INPUT_PROPS_FILENAME} property \"db2PortNumber\" with this information (legacy-server).\x1B[0m"
-kubectl get svc -n "${DB2_PROJECT_NAME}" c-db2ucluster-db2u-engn-svc -o json | grep nodePort
 echo
-echo "Use \"${DB2_ADMIN_USER_NAME} \" and password \"${DB2_ADMIN_USER_PASSWORD} \" to access the databases e.g. with IBM Data Studio."
-echo
-echo "Db2u installation complete! Congratulations. Exiting..."
+echo "*********************************************************************************"
+echo "******** Installation and configuration of DB2 completed successfully!!! ********"
+echo "*********************************************************************************"
