@@ -138,7 +138,7 @@ function wait_for_operator_to_install_successfully {
 
   while [ $CURRENT_WAIT_TIME -lt $TOTAL_WAIT_TIME_SECS ]
   do
-    CSV_STATUS=$(kubectl get csv -n "${DB2_PROJECT_NAME}" | grep "${DB2_OPERATOR_VERSION}" | grep Succeeded | cat)
+    CSV_STATUS=$(kubectl get csv -n "${DB2_PROJECT_NAME}" | grep db2u-operator.v1.1 | grep Succeeded | cat)
     if [ ! -z "$CSV_STATUS" ]
     then
       break
