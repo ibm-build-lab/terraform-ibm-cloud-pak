@@ -317,7 +317,7 @@ echo
 ## Wait for c-db2ucluster-db2u statefulset to be created so that we can apply requried patch.
 ## This patch removes the issue that prevents the db2u pod from starting
 echo
-echo "Waiting up to 15 minutes for ${C_DB2UCLUSTER_DB2U} statefulset to be created ..."
+echo "Waiting for ${C_DB2UCLUSTER_DB2U} statefulset to be created ..."
 date
 statefulsetQualifiedName=$(wait_for_resource_created_by_name)
 if [ "$statefulsetQualifiedName" ]
