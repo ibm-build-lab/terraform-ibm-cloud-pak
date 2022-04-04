@@ -71,6 +71,7 @@ resource "null_resource" "installing_cp4ba" {
     command = "${path.module}/scripts/install_cp4ba.sh"
 
     environment = {
+      ENABLE_CP4BA                  = var.enable_cp4ba
       # ---- Cluster ----
       KUBECONFIG                    = var.cluster_config_path
       # ---- Platform ----
@@ -83,15 +84,15 @@ resource "null_resource" "installing_cp4ba" {
       # ------- FILES ASSIGNMENTS --------
       AUTO_UI_CONFIG_FILE_CONTENT      = local.auto_ui_config_file_content
       CARTRIDGE_FILE_CONTENT           = local.cartridge_file_content
-      OPERATOR_SHARED_PV_FILE          = local.operator_shared_pv_file_content
-      SHARED_LOG_PV_FILE               = local.shared_log_pv_file_content
-      OPERATOR_SHARED_PVC_FILE         = local.operator_shared_pvc_file_content
-      SHARED_LOG_PVC_FILE              = local.shared_log_pvc_file_content
-      OPERATOR_GROUP_FILE              = local.operator_group_file_content
+      OPERATOR_SHARED_PV_CONTENT       = local.operator_shared_pv_file_content
+      SHARED_LOG_PV_CONTENT            = local.shared_log_pv_file_content
+      OPERATOR_SHARED_PVC_CONTENT      = local.operator_shared_pvc_file_content
+      SHARED_LOG_PVC_CONTENT           = local.shared_log_pvc_file_content
+      OPERATOR_GROUP_CONTENT           = local.operator_group_file_content
       CATALOG_SOURCE_FILE              = local.catalog_source_file
       COMMON_SERVICE_FILE              = local.common_service_file
-      CP4BA_SUBSCRIPTION_FILE          = local.cp4ba_subscription_file_content
-      CP4BA_DEPLOYMENT_CREDENTIALS_FILE = local.cp4ba_deployment_credentials_file_content
+      CP4BA_SUBSCRIPTION_CONTENT       = local.cp4ba_subscription_file_content
+      CP4BA_DEPLOYMENT_CREDENTIALS_CONTENT = local.cp4ba_deployment_credentials_file_content
       CP4BA_DEPLOYMENT_CONTENT         = local.cp4ba_deployment_file_content
       SECRETS_CONTENT                  = local.secrets_content
       ROLES_FILE                       = local.roles_file
@@ -101,7 +102,7 @@ resource "null_resource" "installing_cp4ba" {
       ldap_password           = var.ldap_admin_password
       ldap_host_ip            = var.ldap_host_ip
       # ----- DB2 Settings -----
-      db2_host_port           = var.db2_host_port # != null ? var.db2_ports : module.install_db2.db2_ports # var.db2_port_number
+      db2_host_port           = var.db2_host_port
       db2_host_address        = var.db2_host_address
       db2_admin               = var.db2_admin_username
       db2_password            = var.db2_admin_user_password
