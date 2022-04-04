@@ -107,12 +107,16 @@ ${DB2_OPERATOR_GROUP_CONTENT}
 EOF
 echo
 
+sleep 60
+
 ###### Create subscription to Db2 Operator
 echo -e "\x1B[1m Creating Subscription object for DB2 Operator ... \x1B[0m"
 kubectl apply -f -<<EOF
 ${DB2_SUBSCRIPTION_CONTENT}
 EOF
 echo
+
+sleep 100
 
 waiting_time=45
 echo
@@ -307,6 +311,8 @@ else
   exit 1
 fi
 
+sleep 60
+
 echo
 echo "Deploying the Db2u-cluster ..."
 kubectl apply -f -<<EOF
@@ -341,6 +347,9 @@ echo
 echo "Waiting up to 15 minutes for ${C_DB2UCLUSTER_RESTORE_MORPH} job to complete successfully."
 date
 jobStatus=$(wait_for_job_to_complete_by_name)
+
+sleep 100
+
 if [ "$jobStatus" ]
 then
   echo "Job Status: ${jobStatus}"

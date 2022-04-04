@@ -87,7 +87,7 @@ variable "db2_memory" {
 }
 
 variable "db2_storage_size" {
-  default     = "150Gi"
+  default     = "100Gi"
   description = "Storage size for the db2 databases"
 }
 
