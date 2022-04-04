@@ -46,6 +46,11 @@ variable "db2_admin_user_password" {
   description = "Db2 admin user password defined in LDAP"
 }
 
+variable "db2_name" {
+  description = "A name you would like to attribute to your Database. i.e: sample-db2"
+  default     = "sample-db2"
+}
+
 variable "db2_admin_username" {
   default     = "db2inst1"
   description = "Db2 default admin username."

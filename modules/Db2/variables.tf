@@ -35,10 +35,14 @@ variable "enable_db2" {
   description = "If set to true, it will install DB2 on the given cluster"
 }
 
- variable "db2_project_name" {
-   default     = "ibm-db2"
-   description = "The namespace or project for Db2"
- }
+variable "db2_project_name" {
+ default     = "ibm-db2"
+ description = "The namespace or project for Db2"
+}
+
+variable "db2_name" {
+  description = "A name you would like to attribute to your Database. i.e: sample-db2"
+}
 
 variable "db2_admin_user_password" {
   description = "Db2 admin user password defined in LDAP"

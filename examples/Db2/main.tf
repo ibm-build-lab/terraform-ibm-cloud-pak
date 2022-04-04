@@ -34,6 +34,7 @@ module "Db2" {
   # data.ibm_container_cluster_config.cluster_config.config_dir
   resource_group           = var.resource_group
   db2_project_name         = var.db2_project_name
+  db2_name                 = var.db2_name
   db2_admin_username       = var.db2_admin_username
   db2_admin_user_password  = var.db2_admin_user_password
   db2_standard_license_key = var.db2_standard_license_key

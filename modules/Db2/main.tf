@@ -16,6 +16,7 @@ locals {
 
   db2u_cluster_file       = templatefile("${path.module}/templates/db2u_cluster.yaml.tmpl", {
     db2OnOcpProjectName   = var.db2_project_name
+    db2_name              = var.db2_name
     db2AdminUserPassword  = var.db2_admin_user_password
     db2InstanceVersion    = var.db2_instance_version
     db2License            = var.db2_standard_license_key == "" ? "accept: true" : join("value: ", var.db2_standard_license_key)
@@ -47,6 +48,7 @@ resource "null_resource" "install_db2" {
       KUBECONFIG = var.cluster_config_path
       # ----- Platform -----
       DB2_PROJECT_NAME         = var.db2_project_name
+      DB2_NAME                 = var.db2_name
       DB2_ADMIN_USERNAME       = var.db2_admin_username
       DB2_ADMIN_USER_PASSWORD  = var.db2_admin_user_password
       DB2_STANDARD_LICENSE_KEY = var.db2_standard_license_key
