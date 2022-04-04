@@ -29,6 +29,7 @@ cluster_id                   = "************"
 cluster_config_path          = "************"
 enable_db2                   = "************"
 db2_project_name             = "************"
+db2_name                     = "************"
 db2_admin_username           = "************"
 db2_admin_user_password      = "************"
 db2_storage_size             = "************"
@@ -46,6 +47,7 @@ entitled_registry_user_email = "************"
 | `cluster_config_path`      | Path to the cluster configuration file to access your cluster          | `./.kube/config`        |   No     |
 | `enable_db2`               | If set to `false`, IBM DB2 will not be installed. Enabled by default   |  `true`                |   No     |
 | `db2_project_name`         | The namespace or project for Db2                                       | `ibm-db2`              |   Yes    |
+| `db2_name`                 | The name of your Database.                                             | `sample-db2`           | Yes      |
 | `db2_admin_username`       | Db2 default admin username                                              | `db2inst1`             |   Yes    |
 | `db2_admin_user_password`  | Db2 admin username defined in associated LDAP                          |                        |   Yes    |
 | `db2_standard_license_key` | The standard license key for the Db2 database product. **Note**: The license key is required only for an Advanced DB2 installation.|                       |   No    |
