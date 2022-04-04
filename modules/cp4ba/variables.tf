@@ -44,7 +44,6 @@ variable "cp4ba_project_name" {
 variable "enable_cp4ba" {
   description = "If set to true, it will install CP4BA on the given cluster"
   type = bool
-  default = true
 }
 
 # --- LDAP SETTINGS ---
