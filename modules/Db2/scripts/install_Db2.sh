@@ -314,6 +314,7 @@ ${DB2U_CLUSTER_CONTENT}
 EOF
 echo
 
+sleep 100
 ## Wait for c-db2ucluster-db2u statefulset to be created so that we can apply requried patch.
 ## This patch removes the issue that prevents the db2u pod from starting
 echo

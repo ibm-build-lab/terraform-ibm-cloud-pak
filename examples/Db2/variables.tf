@@ -62,7 +62,7 @@ variable "db2_standard_license_key" {
 }
 
 variable "operatorVersion" {
-  default     = "db2u-operator.v1.1.11"
+  default     = "db2u-operator.v1.1.12"
   description = "Operator version"
 }
 
@@ -72,7 +72,7 @@ variable "operatorChannel" {
 }
 
 variable "db2_instance_version" {
-  default     = "11.5.6.0"
+  default     = "11.5.7.0-cn3"
   description = "DB2 version to be installed"
 }
 
