@@ -4,18 +4,15 @@ metadata:
   name: db2ucluster
   namespace: ${db2OnOcpProjectName}
 spec:
-  size: 1
   license:
     ${db2License}
+    accept: true
   account:
+    privileged: true
     imagePullSecrets:
       - ibm-db2-registry
-    privileged: true
-  environment:
-    dbType: db2oltp
-    instance:
-      password: ${db2AdminUserPassword}
   version: ${db2InstanceVersion}
+  size: 1
   podConfig:
     db2u:
       resource:
@@ -26,13 +23,26 @@ spec:
           limits:
             cpu: ${db2Cpu}
             memory: ${db2Memory}
+  environment:
+    dbType: db2oltp
+    database:
+      name: ${db2_name}
+    instance:
+      password: ${db2AdminUserPassword}
+      registry:
+        DB2_4K_DEVICE_SUPPORT: "ON"
+  addOns:
+    rest:
+      enabled: false
+    graph:
+      enabled: false
   storage:
-    - name: share
-      type: create
+    - name: data
+      type: "create"
       spec:
+        storageClassName: ${db2OnOcpStorageClassName}
         accessModes:
           - ReadWriteMany
         resources:
           requests:
             storage: ${db2StorageSize}
-        storageClassName: ${db2OnOcpStorageClassName}

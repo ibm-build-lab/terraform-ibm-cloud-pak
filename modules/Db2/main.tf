@@ -16,6 +16,7 @@ locals {
 
   db2u_cluster_file       = templatefile("${path.module}/templates/db2u_cluster.yaml.tmpl", {
     db2OnOcpProjectName   = var.db2_project_name
+    db2_name              = var.db2_name
     db2AdminUserPassword  = var.db2_admin_user_password
     db2InstanceVersion    = var.db2_instance_version
     db2License            = var.db2_standard_license_key == "" ? "accept: true" : join("value: ", var.db2_standard_license_key)
@@ -35,6 +36,7 @@ resource "null_resource" "install_db2" {
     db2_subscription_file_sha1     = sha1(local.db2_subscription_file_content)
     db2_operator_catalog_file_sha1 = sha1(local.db2_operator_catalog_file)
     db2_storage_class_file_sha1    = sha1(local.db2_storage_class_file)
+    docker_credentials_sha1        = sha1(join("", [var.entitled_registry_key, var.entitled_registry_user_email, var.db2_project_name]))
   }
 
   # --------------- PROVISION DB2  ------------------
@@ -46,6 +48,7 @@ resource "null_resource" "install_db2" {
       KUBECONFIG = var.cluster_config_path
       # ----- Platform -----
       DB2_PROJECT_NAME         = var.db2_project_name
+      DB2_NAME                 = var.db2_name
       DB2_ADMIN_USERNAME       = var.db2_admin_username
       DB2_ADMIN_USER_PASSWORD  = var.db2_admin_user_password
       DB2_STANDARD_LICENSE_KEY = var.db2_standard_license_key
@@ -57,16 +60,27 @@ resource "null_resource" "install_db2" {
       DB2_STORAGE_SIZE         = var.db2_storage_size
       DB2_STORAGE_CLASS        = var.db2_storage_class
       # ------ FILES ASSIGNMENTS -----------
-      DB2_OPERATOR_GROUP_FILE   = local.db2_operator_group_file_content
-      DB2_SUBSCRIPTION_FILE     = local.db2_subscription_file_content
-      DB2_OPERATOR_CATALOG_FILE = local.db2_operator_catalog_file
-      DB2_STORAGE_CLASS_FILE    = local.db2_storage_class_file
-      DB2U_CLUSTER_FILE         = local.db2u_cluster_file
+      DB2_OPERATOR_CATALOG_FILE  = local.db2_operator_catalog_file
+      DB2_STORAGE_CLASS_FILE     = local.db2_storage_class_file
+      DB2U_CLUSTER_CONTENT       = local.db2u_cluster_file
+      DB2_OPERATOR_GROUP_CONTENT = local.db2_operator_group_file_content
+      DB2_SUBSCRIPTION_CONTENT   = local.db2_subscription_file_content
       # ------ Docker Information ----------
       ENTITLED_REGISTRY_KEY           = var.entitled_registry_key
       ENTITLEMENT_REGISTRY_USER_EMAIL = var.entitled_registry_user_email
       DOCKER_SERVER                   = local.docker_server
       DOCKER_USERNAME                 = local.docker_username
+    }
+  }
+
+  provisioner "local-exec" {
+    when        = destroy
+    command     = "./uninstall_db2.sh"
+    working_dir = "${path.module}/scripts"
+
+    environment = {
+      kubeconfig        = self.triggers.kubeconfig
+      db2_project_name  = self.triggers.namespace
     }
   }
 }
@@ -81,3 +95,6 @@ data "external" "get_endpoints" {
     db2_namespace = var.db2_project_name
   }
 }
+
+
+
