@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+metadata:
+  name: c-db2ucluster-db2u
+  namespace: ${db2OnOcpProjectName}
+spec:
+  selector:
+    matchLabels:
+      app: db2ucluster
+  serviceName: c-db2ucluster-db2u
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: db2ucluster
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: c-db2ucluster-share

@@ -320,6 +320,22 @@ ${DB2U_CLUSTER_CONTENT}
 EOF
 echo
 
+sleep 10
+
+echo "Creating c-db2ucluster-db2u ..."
+kubectl apply -f -<<EOF
+${C_DB2UCLUSTER_DB2U_FILE_CONTENT}
+EOF
+echo
+sleep 10
+
+echo "Creating c-db2ucluster-etcd ..."
+sleep 10
+kubectl apply -f -<<EOF
+${C_DB2UCLUSTER_ETCD_FILE_CONTENT}
+EOF
+
+
 sleep 100
 ## Wait for c-db2ucluster-db2u statefulset to be created so that we can apply requried patch.
 ## This patch removes the issue that prevents the db2u pod from starting

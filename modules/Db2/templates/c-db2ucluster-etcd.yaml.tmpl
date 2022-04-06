@@ -1,0 +1,19 @@
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name: c-db2ucluster-etcd
+  namespace: ${db2OnOcpProjectName}
+spec:
+  selector:
+    matchLabels:
+      app: db2ucluster
+  serviceName: c-db2ucluster-etcd
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: db2ucluster
+      volumes:
+        - name: etcd
+          persistentVolumeClaim:
+            claimName: c-db2ucluster-data
