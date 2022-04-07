@@ -8,11 +8,11 @@ locals {
     paramDB2Namespace = var.db2_project_name
   })
 
-    c_db2ucluster_db2u_file_content = templatefile("${path.module}/templates/c-db2ucluster-db2u.yaml.tmpl", {
+  c_db2ucluster_db2u_file_content = templatefile("${path.module}/templates/c-db2ucluster-db2u.yaml.tmpl", {
     paramDB2Namespace = var.db2_project_name
   })
 
-    c_db2ucluster_etcd_file_content = templatefile("${path.module}/templates/c-db2ucluster-etcd.yaml.tmpl", {
+  c_db2ucluster_etcd_file_content = templatefile("${path.module}/templates/c-db2ucluster-etcd.yaml.tmpl", {
     paramDB2Namespace = var.db2_project_name
   })
 
@@ -75,13 +75,13 @@ resource "null_resource" "install_db2" {
       DB2U_CLUSTER_CONTENT       = local.db2u_cluster_file
       DB2_OPERATOR_GROUP_CONTENT = local.db2_operator_group_file_content
       DB2_SUBSCRIPTION_CONTENT   = local.db2_subscription_file_content
+      C_DB2UCLUSTER_DB2U_FILE_CONTENT = local.c_db2ucluster_db2u_file_content
+      C_DB2UCLUSTER_ETCD_FILE_CONTENT = local.c_db2ucluster_etcd_file_content
       # ------ Docker Information ----------
       ENTITLED_REGISTRY_KEY           = var.entitled_registry_key
       ENTITLEMENT_REGISTRY_USER_EMAIL = var.entitled_registry_user_email
       DOCKER_SERVER                   = local.docker_server
       DOCKER_USERNAME                 = local.docker_username
-      C_DB2UCLUSTER_DB2U_FILE_CONTENT = local.c_db2ucluster_db2u_file_content
-      C_DB2UCLUSTER_ETCD_FILE_CONTENT = local.c_db2ucluster_etcd_file_content
     }
   }
 
