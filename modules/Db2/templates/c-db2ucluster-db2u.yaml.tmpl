@@ -1,4 +1,5 @@
 apiVersion: apps/v1
+kind: StatefulSet
 metadata:
   name: c-db2ucluster-db2u
   namespace: ${db2ProjectName}
@@ -12,7 +13,7 @@ spec:
     metadata:
       labels:
         app: db2ucluster
-      volumes:
-        - name: data
-          persistentVolumeClaim:
-            claimName: c-db2ucluster-share
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: c-db2ucluster-share
