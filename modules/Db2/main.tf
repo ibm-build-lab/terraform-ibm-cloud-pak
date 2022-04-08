@@ -8,22 +8,31 @@ locals {
     paramDB2Namespace = var.db2_project_name
   })
 
+<<<<<<< Updated upstream
   c_db2ucluster_db2u_file_content = templatefile("${path.module}/templates/c-db2ucluster-db2u.yaml.tmpl", {
     paramDB2Namespace = var.db2_project_name
   })
 
   c_db2ucluster_etcd_file_content = templatefile("${path.module}/templates/c-db2ucluster-etcd.yaml.tmpl", {
     paramDB2Namespace = var.db2_project_name
+=======
+    c_db2ucluster_db2u_file_content = templatefile("${path.module}/templates/c-db2ucluster-db2u.yaml.tmpl", {
+    db2ProjectName = var.db2_project_name
+  })
+
+    c_db2ucluster_etcd_file_content = templatefile("${path.module}/templates/c-db2ucluster-etcd.yaml.tmpl", {
+    db2ProjectName = var.db2_project_name
+>>>>>>> Stashed changes
   })
 
   db2_subscription_file_content = templatefile("${path.module}/templates/db2_subscription.yaml.tmpl", {
-    paramDB2Namespace       = var.db2_project_name
+    db2ProjectName          = var.db2_project_name
     paramDB2OperatorVersion = var.operatorVersion
     paramDB2OperatorChannel = var.operatorChannel
 })
 
   db2u_cluster_file       = templatefile("${path.module}/templates/db2u_cluster.yaml.tmpl", {
-    db2OnOcpProjectName   = var.db2_project_name
+    db2ProjectName        = var.db2_project_name
     db2_name              = var.db2_name
     db2AdminUserPassword  = var.db2_admin_user_password
     db2InstanceVersion    = var.db2_instance_version
