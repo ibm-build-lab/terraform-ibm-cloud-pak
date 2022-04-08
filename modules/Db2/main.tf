@@ -41,6 +41,8 @@ resource "null_resource" "install_db2" {
   count = var.enable_db2 ? 1 : 0
 
   triggers = {
+    kubeconfig                     = var.cluster_config_path
+    db2_project_name               = var.db2_project_name
     db2_file_sha1                  = sha1(local.db2u_cluster_file)
     db2_operator_group_file_sha1   = sha1(local.db2_operator_group_file_content)
     db2_subscription_file_sha1     = sha1(local.db2_subscription_file_content)
@@ -93,8 +95,8 @@ resource "null_resource" "install_db2" {
     working_dir = "${path.module}/scripts"
 
     environment = {
-      kubeconfig        = var.cluster_config_path
-      db2_project_name  = var.db2_project_name
+      kubeconfig        = self.triggers.kubeconfig
+      db2_project_name  = self.triggers.db2_project_name
     }
   }
 }
