@@ -5,24 +5,15 @@ locals {
   db2_storage_class_file_content = file(local.db2_storage_class_file)
 
   db2_operator_group_file_content = templatefile("${path.module}/templates/db2_operator_group.yaml.tmpl", {
-    paramDB2Namespace = var.db2_project_name
+    db2ProjectName = var.db2_project_name
   })
 
-<<<<<<< Updated upstream
-  c_db2ucluster_db2u_file_content = templatefile("${path.module}/templates/c-db2ucluster-db2u.yaml.tmpl", {
-    paramDB2Namespace = var.db2_project_name
-  })
-
-  c_db2ucluster_etcd_file_content = templatefile("${path.module}/templates/c-db2ucluster-etcd.yaml.tmpl", {
-    paramDB2Namespace = var.db2_project_name
-=======
     c_db2ucluster_db2u_file_content = templatefile("${path.module}/templates/c-db2ucluster-db2u.yaml.tmpl", {
     db2ProjectName = var.db2_project_name
   })
 
     c_db2ucluster_etcd_file_content = templatefile("${path.module}/templates/c-db2ucluster-etcd.yaml.tmpl", {
     db2ProjectName = var.db2_project_name
->>>>>>> Stashed changes
   })
 
   db2_subscription_file_content = templatefile("${path.module}/templates/db2_subscription.yaml.tmpl", {
