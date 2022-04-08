@@ -1,11 +1,12 @@
-#eval "$(jq -r '@sh "export KUBECONFIG=\(.kubeconfig) DB2_PROJECT_NAME=\(.db2_project_name)"')"
-DB2_PROJECT_NAME="ibm-db2"
+eval "$(jq -r '@sh "export KUBECONFIG=\(.kubeconfig) DB2_PROJECT_NAME=\(.db2_project_name)"')"
 
 echo "*********************************************************************************"
 echo "******************** Uninstalling DB2 from the Cluster ... **********************"
 echo "*********************************************************************************"
 
 
+echo
+echo
 
 echo "Setting project ${DB2_PROJECT_NAME} ..."
 kubectl get ns "${DB2_PROJECT_NAME}"
@@ -42,6 +43,8 @@ do
   echo "******************************************************************************************************************"
 done
 
+echo
+echo
 echo "*********************************************************************************"
 echo "**************** Uninstallation of DB2 completed successfully!!! ****************"
 echo "*********************************************************************************"
