@@ -4,16 +4,24 @@ metadata:
   name: c-db2ucluster-db2u
   namespace: ${db2ProjectName}
 spec:
+  serviceName: db2ucluster
+  replicas: 3
   selector:
     matchLabels:
       app: db2ucluster
-  serviceName: c-db2ucluster-db2u
-  replicas: 1
   template:
     metadata:
       labels:
         app: db2ucluster
-  volumes:
-    - name: data
-      persistentVolumeClaim:
-        claimName: c-db2ucluster-share
+    spec:
+      terminationGracePeriodSeconds: 10
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteMany
+        storageClassName: ${db2OnOcpStorageClassName}
+        resources:
+          requests:
+            storage: 10Gi
