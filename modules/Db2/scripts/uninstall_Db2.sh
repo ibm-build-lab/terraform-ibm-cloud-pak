@@ -1,27 +1,47 @@
-eval "$(jq -r '@sh "export KUBECONFIG=\(.kubeconfig) DB2_PROJECT_NAME=\(.db2_project_name)"')"
+#eval "$(jq -r '@sh "export KUBECONFIG=\(.kubeconfig) DB2_PROJECT_NAME=\(.db2_project_name)"')"
+DB2_PROJECT_NAME="ibm-db2"
 
-ibmcloud login -q -apikey "${API_KEY}"
-ibmcloud ks cluster config -c "${CLUSTER_ID}" --admin
+echo "*********************************************************************************"
+echo "******************** Uninstalling DB2 from the Cluster ... **********************"
+echo "*********************************************************************************"
 
-echo "Deleting Resources"
-kubectl delete APIConnectCluster -n "${DB2_PROJECT_NAME}" --all
-kubectl delete Dashboard -n "${DB2_PROJECT_NAME}" --all
-kubectl delete DataPowerService -n "${DB2_PROJECT_NAME}" --all
-kubectl delete DesignerAuthoring -n "${DB2_PROJECT_NAME}" --all
-kubectl delete EventStreams -n "${DB2_PROJECT_NAME}" --all
-kubectl delete QueueManager -n "${DB2_PROJECT_NAME}" --all
-kubectl delete OperationsDashboard -n "${DB2_PROJECT_NAME}" --all
-kubectl delete AssetRepository -n "${DB2_PROJECT_NAME}" --all
-kubectl delete PlatformNavigator -n "${DB2_PROJECT_NAME}" --all
-kubectl delete subscription -n "${DB2_PROJECT_NAME}" --all
-kubectl delete csv -n "${DB2_PROJECT_NAME}" --all
-kubectl delete OperatorGroup -n "${DB2_PROJECT_NAME}" --all
-kubectl delete jobs -n "${DB2_PROJECT_NAME}" --all
-kubectl delete pods -n "${DB2_PROJECT_NAME}" --all
-kubectl delete ConfigMap couchdb-release redis-release -n "${DB2_PROJECT_NAME}"
-kubectl delete catalogsource ibm-operator-catalog -n openshift-marketplace
-kubectl delete pv ibm-common-services/mongodbdir-icp-mongodb-0
-kubectl delete secret ibm-entitlement-key -n default
-kubectl delete secret ibm-entitlement-key -n openshift-operators
-kubectl delete secret ibm-entitlement-key -n "${DB2_PROJECT_NAME}"
-kubectl delete namespace "${DB2_PROJECT_NAME}"
+
+
+echo "Setting project ${DB2_PROJECT_NAME} ..."
+kubectl get ns "${DB2_PROJECT_NAME}"
+echo
+
+kubectl get db2ucluster -n ibm-db2 | awk '{print $1}'
+echo
+
+
+for resource in subscription deployments deploymentconfigs configmaps OperatorGroup statefulset EventStreams csv jobs pods secrets pv pvc services roles rolebindings namespaces ;
+do
+  echo " => Deleting the ${resource} ...";
+  resources=$(kubectl get "${resource}" -n "${DB2_PROJECT_NAME}" | grep db2 | awk '{print $1}'); # '
+  eval "elements=($resources)"
+  for element in "${elements[@]}"; do
+      check_resource=true
+      while ( $check_resource )
+      do
+        cmd=$(kubectl delete "${resource}"/"${element}" -n "${DB2_PROJECT_NAME}")
+        sleep 10
+        get_resource=$(kubectl get "${resource}" -n "${DB2_PROJECT_NAME}" | grep db2 | awk '{print $1}')
+        if [ "${get_resource}" == "${resource}" ]
+        then
+          continue
+        elif [ "${get_resource}" == "NotFound" ]; then
+          check_resource=false
+          break
+        else
+          check_resource=false
+          break
+        fi
+      done
+  done
+  echo "******************************************************************************************************************"
+done
+
+echo "*********************************************************************************"
+echo "**************** Uninstallation of DB2 completed successfully!!! ****************"
+echo "*********************************************************************************"

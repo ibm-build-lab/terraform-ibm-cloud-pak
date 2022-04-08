@@ -93,8 +93,8 @@ resource "null_resource" "install_db2" {
     working_dir = "${path.module}/scripts"
 
     environment = {
-      kubeconfig        = self.triggers.kubeconfig
-      db2_project_name  = self.triggers.namespace
+      kubeconfig        = var.cluster_config_path
+      db2_project_name  = var.db2_project_name
     }
   }
 }
@@ -107,6 +107,7 @@ data "external" "get_endpoints" {
   query = {
     kubeconfig    = var.cluster_config_path
     db2_namespace = var.db2_project_name
+    cluster_id    = var.cluster_id
   }
 }
 
