@@ -107,9 +107,9 @@ data "external" "get_endpoints" {
   depends_on      = [null_resource.install_db2]
   program         = ["/bin/bash", "${path.module}/scripts/get_db2_endpoints.sh"]
   query = {
-    kubeconfig    = var.cluster_config_path
+//    kubeconfig    = var.cluster_config_path
     db2_namespace = var.db2_project_name
-    cluster_id    = var.cluster_id
+//    cluster_id    = var.cluster_id
   }
 }
 
