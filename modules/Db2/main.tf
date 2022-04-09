@@ -4,16 +4,19 @@ locals {
   db2_storage_class_file = "${path.module}/files/storage_class.yaml"
   db2_storage_class_file_content = file(local.db2_storage_class_file)
 
+  db2_cr_file = "${path.module}/files/ibm-db2-cr.yaml"
+  db2_cr_file_content = file(local.db2_cr_file)
+
   db2_operator_group_file_content = templatefile("${path.module}/templates/db2_operator_group.yaml.tmpl", {
     db2ProjectName = var.db2_project_name
   })
 
-    c_db2ucluster_db2u_file_content = templatefile("${path.module}/templates/c-db2ucluster-db2u.yaml.tmpl", {
+  c_db2ucluster_db2u_file_content = templatefile("${path.module}/templates/c-db2ucluster-db2u.yaml.tmpl", {
     db2ProjectName           = var.db2_project_name
     db2OnOcpStorageClassName = var.db2_storage_class
   })
 
-    c_db2ucluster_etcd_file_content = templatefile("${path.module}/templates/c-db2ucluster-etcd.yaml.tmpl", {
+  c_db2ucluster_etcd_file_content = templatefile("${path.module}/templates/c-db2ucluster-etcd.yaml.tmpl", {
     db2ProjectName = var.db2_project_name
     db2OnOcpStorageClassName = var.db2_storage_class
   })
@@ -22,7 +25,7 @@ locals {
     db2ProjectName          = var.db2_project_name
     paramDB2OperatorVersion = var.operatorVersion
     paramDB2OperatorChannel = var.operatorChannel
-})
+  })
 
   db2u_cluster_file       = templatefile("${path.module}/templates/db2u_cluster.yaml.tmpl", {
     db2ProjectName        = var.db2_project_name
@@ -34,6 +37,10 @@ locals {
     db2Memory             = var.db2_memory
     db2StorageSize        = var.db2_storage_size
     db2OnOcpStorageClassName = var.db2_storage_class
+  })
+
+  security_context_file_content = templatefile("${path.module}/templates/SecurityContextConstraints.yaml.tmpl", {
+    db2ProjectName = var.db2_project_name
   })
 }
 
@@ -48,9 +55,11 @@ resource "null_resource" "install_db2" {
     db2_subscription_file_sha1     = sha1(local.db2_subscription_file_content)
     db2_operator_catalog_file_sha1 = sha1(local.db2_operator_catalog_file)
     db2_storage_class_file_sha1    = sha1(local.db2_storage_class_file)
+    db2_cr_file_content_sha1       = sha1(local.db2_cr_file_content)
     docker_credentials_sha1        = sha1(join("", [var.entitled_registry_key, var.entitled_registry_user_email, var.db2_project_name]))
     c_db2ucluster_db2u_file_content_sha1 = sha1(local.c_db2ucluster_db2u_file_content)
     c_db2ucluster_etcd_file_content_sha1 = sha1(local.c_db2ucluster_etcd_file_content)
+    security_context_file_content_sha1   = sha1(local.security_context_file_content)
   }
 
   # --------------- PROVISION DB2  ------------------
@@ -73,14 +82,17 @@ resource "null_resource" "install_db2" {
       DB2_MEMORY               = var.db2_memory
       DB2_STORAGE_SIZE         = var.db2_storage_size
       DB2_STORAGE_CLASS        = var.db2_storage_class
+
       # ------ FILES ASSIGNMENTS -----------
       DB2_OPERATOR_CATALOG_FILE  = local.db2_operator_catalog_file
       DB2_STORAGE_CLASS_FILE     = local.db2_storage_class_file
       DB2U_CLUSTER_CONTENT       = local.db2u_cluster_file
       DB2_OPERATOR_GROUP_CONTENT = local.db2_operator_group_file_content
       DB2_SUBSCRIPTION_CONTENT   = local.db2_subscription_file_content
+      DB2_CR_FILE                = local.db2_cr_file_content
       C_DB2UCLUSTER_DB2U_FILE_CONTENT = local.c_db2ucluster_db2u_file_content
       C_DB2UCLUSTER_ETCD_FILE_CONTENT = local.c_db2ucluster_etcd_file_content
+      SECURITY_CONTEXT_FILE_CONTENT   = local.security_context_file_content
       # ------ Docker Information ----------
       ENTITLED_REGISTRY_KEY           = var.entitled_registry_key
       ENTITLEMENT_REGISTRY_USER_EMAIL = var.entitled_registry_user_email

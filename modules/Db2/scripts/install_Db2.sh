@@ -14,8 +14,23 @@
 CUR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 C_DB2UCLUSTER_DB2U="c-db2ucluster-db2u"
-C_DB2UCLUSTER_RESTORE_MORPH="c-db2ucluster-restore-morph"
+C_DB2UCLUSTER_INSTDB="c-db2ucluster-instdb"
 SUBCRIPTION_NAME="db2u-operator"
+
+
+echo
+echo "Creating the Security Context Constraints Requirements ..."
+kubectl --validate=false apply -f -<<EOF
+${SECURITY_CONTEXT_FILE_CONTENT}
+EOF
+echo
+sleep 5
+
+echo
+echo "Creating Cluster Role ..."
+kubectl apply -f "${DB2_CR_FILE}"
+sleep 2
+
 
 echo
 echo "Creating project ${DB2_PROJECT_NAME}..."
@@ -232,7 +247,7 @@ function wait_for_job_to_complete_by_name {
 
   while [ $CURRENT_WAIT_TIME -lt $TOTAL_WAIT_TIME_SECS ]
   do
-    JOB_STATUS=$(kubectl get job "${C_DB2UCLUSTER_RESTORE_MORPH}" -n "${DB2_PROJECT_NAME}" -o custom-columns=STATUS:'.status.conditions[*].type' 2>/dev/null | grep Complete | cat)
+    JOB_STATUS=$(kubectl get job "${C_DB2UCLUSTER_INSTDB}" -n "${DB2_PROJECT_NAME}" -o custom-columns=STATUS:'.status.conditions[*].type' 2>/dev/null | grep Complete | cat)
     if [ ! -z "$JOB_STATUS" ]
     then
       break
@@ -313,6 +328,7 @@ fi
 
 sleep 60
 
+
 echo
 echo "Deploying the Db2u-cluster ..."
 kubectl apply -f -<<EOF
@@ -360,18 +376,18 @@ kubectl patch "$statefulsetQualifiedName" -n="${DB2_PROJECT_NAME}" -p='{"spec":{
 ## Wait for  c-db2ucluster-restore-morph job to complte. If this job completes successfully
 ## we can tell that the deployment was completed successfully.
 echo
-echo "Waiting up to 15 minutes for ${C_DB2UCLUSTER_RESTORE_MORPH} job to complete successfully."
+echo "Waiting up to 15 minutes for ${C_DB2UCLUSTER_INSTDB} job to complete successfully."
 date
 jobStatus=$(wait_for_job_to_complete_by_name)
 
-sleep 100
+sleep 50
 
 if [ "$jobStatus" ]
 then
   echo "Job Status: ${jobStatus}"
-  echo "${C_DB2UCLUSTER_RESTORE_MORPH} job has been successfully completed."
+  echo "${C_DB2UCLUSTER_INSTDB} job has been successfully completed."
 else
-  echo "Timed out waiting for ${C_DB2UCLUSTER_RESTORE_MORPH} job to complete successfully."
+  echo "Timed out waiting for ${C_DB2UCLUSTER_INSTDB} job to complete successfully."
   exit 1
 fi
 

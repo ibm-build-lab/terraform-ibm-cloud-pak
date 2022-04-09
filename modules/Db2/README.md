@@ -20,6 +20,12 @@ If running these modules from your local terminal, you need to set the credentia
 
 Go [here](../CREDENTIALS.md) for details.
 
+
+## Resources Required
+-   1 worker node
+-   Cores: 5.7 (2 for the Db2 engine and 3.7 for Db2 auxiliary services)
+-   Memory: 10.4 GiB (4 GiB for the Db2 engine and 6.4 GiB for Db2 auxiliary services)
+
 ## Download required license files
 
 Download required license files from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `../../modules/db2/files` folder on your local computer. 

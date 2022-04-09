@@ -5,7 +5,7 @@ metadata:
   namespace: ${db2ProjectName}
 spec:
   license:
-    ${db2License}
+    value: ${db2License}
     accept: true
   account:
     privileged: true
@@ -37,6 +37,15 @@ spec:
     graph:
       enabled: false
   storage:
+    - name: meta
+      type: "create"
+      spec:
+        storageClassName: ${db2OnOcpStorageClassName}
+        accessModes:
+          - ReadWriteMany
+        resources:
+          requests:
+            storage: ${db2StorageSize}
     - name: data
       type: "create"
       spec:
