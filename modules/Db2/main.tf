@@ -11,16 +11,6 @@ locals {
     db2ProjectName = var.db2_project_name
   })
 
-  c_db2ucluster_db2u_file_content = templatefile("${path.module}/templates/c-db2ucluster-db2u.yaml.tmpl", {
-    db2ProjectName           = var.db2_project_name
-    db2OnOcpStorageClassName = var.db2_storage_class
-  })
-
-  c_db2ucluster_etcd_file_content = templatefile("${path.module}/templates/c-db2ucluster-etcd.yaml.tmpl", {
-    db2ProjectName = var.db2_project_name
-    db2OnOcpStorageClassName = var.db2_storage_class
-  })
-
   db2_subscription_file_content = templatefile("${path.module}/templates/db2_subscription.yaml.tmpl", {
     db2ProjectName          = var.db2_project_name
     paramDB2OperatorVersion = var.operatorVersion
@@ -57,8 +47,6 @@ resource "null_resource" "install_db2" {
     db2_storage_class_file_sha1    = sha1(local.db2_storage_class_file)
     db2_cr_file_content_sha1       = sha1(local.db2_cr_file_content)
     docker_credentials_sha1        = sha1(join("", [var.entitled_registry_key, var.entitled_registry_user_email, var.db2_project_name]))
-    c_db2ucluster_db2u_file_content_sha1 = sha1(local.c_db2ucluster_db2u_file_content)
-    c_db2ucluster_etcd_file_content_sha1 = sha1(local.c_db2ucluster_etcd_file_content)
     security_context_file_content_sha1   = sha1(local.security_context_file_content)
   }
 
@@ -90,8 +78,6 @@ resource "null_resource" "install_db2" {
       DB2_OPERATOR_GROUP_CONTENT = local.db2_operator_group_file_content
       DB2_SUBSCRIPTION_CONTENT   = local.db2_subscription_file_content
       DB2_CR_FILE                = local.db2_cr_file_content
-      C_DB2UCLUSTER_DB2U_FILE_CONTENT = local.c_db2ucluster_db2u_file_content
-      C_DB2UCLUSTER_ETCD_FILE_CONTENT = local.c_db2ucluster_etcd_file_content
       SECURITY_CONTEXT_FILE_CONTENT   = local.security_context_file_content
       # ------ Docker Information ----------
       ENTITLED_REGISTRY_KEY           = var.entitled_registry_key
@@ -119,7 +105,7 @@ data "external" "get_endpoints" {
   depends_on      = [null_resource.install_db2]
   program         = ["/bin/bash", "${path.module}/scripts/get_db2_endpoints.sh"]
   query = {
-//    kubeconfig    = var.cluster_config_path
+    kubeconfig    = var.cluster_config_path
     db2_namespace = var.db2_project_name
 //    cluster_id    = var.cluster_id
   }

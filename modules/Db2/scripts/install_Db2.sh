@@ -240,7 +240,7 @@ function wait_for_resource_created_by_name {
 ##  - Empty string if time out waiting
 ##  - Complete string if job is completed
 function wait_for_job_to_complete_by_name {
-  local timeToWait=45
+  local timeToWait=60
   local TOTAL_WAIT_TIME_SECS=$(( 60 * ${timeToWait}))
   local CURRENT_WAIT_TIME=0
   local JOB_STATUS=""
@@ -326,33 +326,17 @@ else
   exit 1
 fi
 
-sleep 60
+sleep 30
 
 
 echo
 echo "Deploying the Db2u-cluster ..."
-kubectl apply -f -<<EOF
+kubectl --validate=false apply -f -<<EOF
 ${DB2U_CLUSTER_CONTENT}
 EOF
 echo
 
-sleep 10
-
-echo "Creating c-db2ucluster-db2u ..."
-kubectl apply -f -<<EOF
-${C_DB2UCLUSTER_DB2U_FILE_CONTENT}
-EOF
-echo
-sleep 10
-
-echo "Creating c-db2ucluster-etcd ..."
-sleep 10
-kubectl apply -f -<<EOF
-${C_DB2UCLUSTER_ETCD_FILE_CONTENT}
-EOF
-
-
-sleep 100
+sleep 50
 ## Wait for c-db2ucluster-db2u statefulset to be created so that we can apply requried patch.
 ## This patch removes the issue that prevents the db2u pod from starting
 echo
@@ -380,7 +364,7 @@ echo "Waiting up to 15 minutes for ${C_DB2UCLUSTER_INSTDB} job to complete succe
 date
 jobStatus=$(wait_for_job_to_complete_by_name)
 
-sleep 50
+sleep 40
 
 if [ "$jobStatus" ]
 then
