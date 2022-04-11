@@ -27,6 +27,7 @@ module "install_cp4ba" {
   source = "../../modules/cp4ba"
 //  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/cp4ba"
   enable_cp4ba           = true
+  enable_db2             = true
   ibmcloud_api_key       = var.ibmcloud_api_key
   region                 = var.region
   cluster_config_path    = data.ibm_container_cluster_config.cluster_config.config_file_path

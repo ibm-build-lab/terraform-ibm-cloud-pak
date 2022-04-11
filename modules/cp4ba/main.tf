@@ -48,6 +48,7 @@ locals {
 }
 
 resource "null_resource" "installing_cp4ba" {
+  count = var.enable_cp4ba ? 1 : 0
 
   triggers = {
     OPERATOR_SHARED_PV_FILE_sha1          = sha1(local.operator_shared_pv_file_content)
@@ -70,8 +71,8 @@ resource "null_resource" "installing_cp4ba" {
   provisioner "local-exec" {
     command = "${path.module}/scripts/install_cp4ba.sh"
 
+
     environment = {
-      ENABLE_CP4BA                  = var.enable_cp4ba
       # ---- Cluster ----
       KUBECONFIG                    = var.cluster_config_path
       # ---- Platform ----

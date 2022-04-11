@@ -70,7 +70,6 @@ variable "ldap_host_ip" {
 
 # --------- DB2 SETTINGS ----------
 variable "enable_db2" {
-  default     = true
   description = "If set to true, it will install DB2 on the given cluster"
 }
 
