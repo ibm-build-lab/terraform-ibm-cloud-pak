@@ -55,31 +55,54 @@ EOF
 #echo -e "\x1B[1mCreating storage classes...\x1B[0m"
 #kubectl apply -f ${CP4BA_STORAGE_CLASS_FILE}
 
-sleep 10
+sleep 5
 echo
 echo -e "\x1B[1m Creating the \"operator-shared-pv\" Persistent Volumes (PVs) ...\x1B[0m"
-CREATE_PVC_RESULT=$(kubectl --validate=false apply -f -<<EOF "${OPERATOR_SHARED_PV_CONTENT}"
+kubectl apply -f -<<EOF
+"${OPERATOR_SHARED_PV_CONTENT}"
 EOF
-)
 
-if [[ $CREATE_PVC_RESULT ]]; then
-    echo -e "\x1B[1;34m The \"operator-shared-pv\" Persistent Volume has been created.\x1B[0m"
-else
-    echo -e "\x1B[1;31mFailed\x1B[0m"
-fi
-
-sleep 10
+sleep 5
 echo
 echo -e "\x1B[1m Creating the \"cp4a-shared-log-pv\" Persistent Volumes (PVs) ...\x1B[0m"
-CREATE_PVC_RESULT=$(kubectl --validate=false apply -f -<<EOF "${SHARED_LOG_PV_CONTENT}"
+kubectl apply -f -<<EOF
+"${SHARED_LOG_PV_CONTENT}"
 EOF
-)
 
-if [[ $CREATE_PVC_RESULT ]]; then
-    echo -e "\x1B[1;34m The \"cp4a-shared-log-pv\" Persistent Volume has been created.\x1B[0m"
-else
-    echo -e "\x1B[1;31mFailed\x1B[0m"
-fi
+sleep 10
+
+echo
+echo -e "\x1B[1m Creating \"operator-shared-pvc\" Persistent Volume Claim (PVC) ...\x1B[0m"
+kubectl apply -f -<<EOF
+"${OPERATOR_SHARED_PVC_CONTENT}"
+EOF
+
+
+echo
+echo -e "\x1B[1m Creating \"cp4a-shared-log-pvc\" Persistent Volume Claim (PVC) ...\x1B[0m"
+kubectl apply -f -<<EOF
+"${SHARED_LOG_PVC_CONTENT}"
+EOF
+
+
+
+#if [[ $CREATE_PVC_RESULT ]]; then
+#    echo -e "\x1B[1;34m The \"operator-shared-pv\" Persistent Volume has been created.\x1B[0m"
+#else
+#    echo -e "\x1B[1;31mFailed\x1B[0m"
+#fi
+#
+#sleep 10
+#echo
+#echo -e "\x1B[1m Creating the \"cp4a-shared-log-pv\" Persistent Volumes (PVs) ...\x1B[0m"
+#CREATE_PVC_RESULT=$(
+#)
+#
+#if [[ $CREATE_PVC_RESULT ]]; then
+#    echo -e "\x1B[1;34m The \"cp4a-shared-log-pv\" Persistent Volume has been created.\x1B[0m"
+#else
+#    echo -e "\x1B[1;31mFailed\x1B[0m"
+#fi
 
 
 echo
@@ -96,7 +119,7 @@ fi
 
 echo
 echo -e "\x1B[1m Creating \"cp4a-shared-log-pvc\" Persistent Volume Claim (PVC) ...\x1B[0m"
-CREATE_PVC_RESULT=$(kubectl --validate=false apply -f -<<EOF "${SHARED_LOG_PVC_CONTENT}" 
+CREATE_PVC_RESULT=$(kubectl --validate=false apply -f -<<EOF "${SHARED_LOG_PVC_CONTENT}"
 EOF
 )
 
