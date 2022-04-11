@@ -11,16 +11,20 @@ For more information on IBM Schematics, refer [here](https://cloud.ibm.com/docs/
 
 For instructions to run using the local Terraform Client on your local machine go [here](../Using_Terraform.md). 
 
+### Resources Required
+-   1 worker node
+-   Cores: 5.7 (2 for the Db2 engine and 3.7 for Db2 auxiliary services)
+-   Memory: 10.4 GiB (4 GiB for the Db2 engine and 6.4 GiB for Db2 auxiliary services)
+
 ### Download required license files
 
-Download required license files from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `../../modules/db2/files` folder on your local computer. 
+Download required license file from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `../../modules/db2/files` folder on your local computer. 
 ```bash
 DB2:
 Part Number : CNB21ML
 Filename    : DB2_AWSE_Restricted_Activation_11.5.zip
 ```
-
-## Provisioning this module in a Terraform Script
+### Set the desired values in the terraform.tfvars file
 
 ```hcl
 ibmcloud_api_key             = "************"
@@ -30,16 +34,14 @@ cluster_id                   = "************"
 cluster_config_path          = "************"
 enable_db2                   = "************"
 db2_project_name             = "************"
+db2_name                     = "************"
 db2_admin_username           = "************"
 db2_admin_user_password      = "************"
 db2_storage_size             = "************"
 entitled_registry_key        = "************"
 entitled_registry_user_email = "************"
 ``` 
-
-## Provisioning this module in a Terraform Script
-
-## Input Variables
+### Input Variables
 
 | Name                       | Description                                                            | Default                | Required |
 | ---------------------------|------------------------------------------------------------------------|------------------------|----------|
@@ -50,6 +52,7 @@ entitled_registry_user_email = "************"
 | `cluster_config_path`      | Path to the cluster configuration file to access your cluster          | `./.kube/config`        |   No     |
 | `enable_db2`               | If set to `false`, IBM DB2 will not be installed. Enabled by default   |  `true`                |   No     |
 | `db2_project_name`         | The namespace or project for Db2                                       | `ibm-db2`              |   Yes    |
+| `db2_name`                 | The name of your Database.                                             | `sample-db2`           | Yes      |
 | `db2_admin_username`       | Db2 default admin username                                              | `db2inst1`             |   Yes    |
 | `db2_admin_user_password`  | Db2 admin username defined in associated LDAP                          |                        |   Yes    |
 | `db2_standard_license_key` | The standard license key for the Db2 database product. **Note**: The license key is required only for an Advanced DB2 installation.|                       |   No    |
@@ -64,7 +67,7 @@ entitled_registry_user_email = "************"
 | `entitled_registry_user_email`| IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key. i.e: joe@ibm.com |              | Yes      |
 
 
-### Executing the Terraform Script
+### Execute the Terraform Script
 
 Execute the following Terraform commands:
 
@@ -74,7 +77,7 @@ terraform plan
 terraform apply --auto-approve
 ```
 
-### Verify
+## Verify
 
 If DB2 is successful and the process is completed, you should see the following similar outputs:
 ```
@@ -87,7 +90,7 @@ db2_ports =  00000,
  00001,
 ```
 
-## Output Parameters
+### Outputs
 
 The Terraform code return the following output parameters:
 
@@ -97,15 +100,10 @@ The Terraform code return the following output parameters:
 | `db2_ports`            | Port number for DB2 instance                                                                |
 
 
+## Clean up
 
-### Clean up
-
-When you finish installing Db2, release the resources by executing the following command:: 
+When you finish with Db2, release the resources by executing the following command:: 
 ```
 terraform destroy
 ```
-
-
-## Uninstall
-
-**Note**: The uninstall or cleanup process is a work in progress at this time, we are identifying the objects that need to be deleted in order to have a successful re-installation.
+Additional resources are creating using scripts. The cleanup process for these additional resources is a work in progress at this time, we are identifying the objects that need to be deleted in order to have a successful re-installation.
