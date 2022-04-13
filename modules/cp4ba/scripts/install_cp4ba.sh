@@ -28,25 +28,25 @@ ${K8S_CMD} create namespace "${CP4BA_PROJECT_NAME}"
 echo
 
 ###### Create the secrets
-echo -e "\x1B[1mCreating secret \"admin.registrykey\" in ${CP4BA_PROJECT_NAME}...\n\x1B[0m"
+echo -e "Creating secret \"admin.registrykey\" in ${CP4BA_PROJECT_NAME}...\n"
 CREATE_SECRET_RESULT=$(${K8S_CMD} create secret docker-registry admin.registrykey -n "${CP4BA_PROJECT_NAME}" --docker-username="${DOCKER_USERNAME}" --docker-password="${ENTITLED_REGISTRY_KEY}" --docker-server="${DOCKER_SERVER}" --docker-email="${ENTITLED_REGISTRY_EMAIL}")
 sleep 5
 
 if [[ ${CREATE_SECRET_RESULT} ]]; then
-    echo -e "\033[1;32m \"admin.registrykey\" secret has been created\x1B[0m"
+    echo -e "\"admin.registrykey\" secret has been created."
 fi
 
 echo
-echo -e "\x1B[1mCreating secret \"ibm-entitlement-key\" in ${CP4BA_PROJECT_NAME}...\n\x1B[0m"
+echo -e "Creating secret \"ibm-entitlement-key\" in ${CP4BA_PROJECT_NAME}...\n"
 CREATE_SECRET_RESULT=$(${K8S_CMD} create secret docker-registry ibm-entitlement-key -n "${CP4BA_PROJECT_NAME}" --docker-username="${DOCKER_USERNAME}" --docker-password="${ENTITLED_REGISTRY_KEY}" --docker-server="${DOCKER_SERVER}" --docker-email="${ENTITLED_REGISTRY_EMAIL}")
 sleep 5
 
 if [[ ${CREATE_SECRET_RESULT} ]]; then
-    echo -e "\033[1;32m \"ibm-entitlement-key\" secret has been created\x1B[0m"
+    echo -e "\"ibm-entitlement-key\" secret has been created"
 fi
 echo
 
-echo -e "\x1B[1mCreating remaining secrets...\n\x1B[0m"
+echo -e "Creating remaining secrets...\n"
 kubectl apply -n "${CP4BA_PROJECT_NAME}" -f -<<EOF
 ${SECRETS_CONTENT}
 EOF
@@ -54,14 +54,14 @@ EOF
 
 sleep 5
 echo
-echo -e "\x1B[1m Creating the \"operator-shared-pv\" Persistent Volumes (PVs) ...\x1B[0m"
+echo -e "Creating the \"operator-shared-pv\" Persistent Volumes (PVs) ..."
 kubectl --validate=false apply -f -<<EOF
 ${OPERATOR_SHARED_PV_CONTENT}
 EOF
 
 sleep 5
 echo
-echo -e "\x1B[1m Creating the \"cp4a-shared-log-pv\" Persistent Volumes (PVs) ...\x1B[0m"
+echo -e "Creating the \"cp4a-shared-log-pv\" Persistent Volumes (PVs) ..."
 kubectl --validate=false apply -f -<<EOF
 ${SHARED_LOG_PV_CONTENT}
 EOF
@@ -69,14 +69,14 @@ EOF
 sleep 10
 
 echo
-echo -e "\x1B[1m Creating \"operator-shared-pvc\" Persistent Volume Claim (PVC) ...\x1B[0m"
+echo -e "Creating \"operator-shared-pvc\" Persistent Volume Claim (PVC) ..."
 kubectl --validate=false apply -f -<<EOF
 ${OPERATOR_SHARED_PVC_CONTENT}
 EOF
 
 
 echo
-echo -e "\x1B[1m Creating \"cp4a-shared-log-pvc\" Persistent Volume Claim (PVC) ...\x1B[0m"
+echo -e "Creating \"cp4a-shared-log-pvc\" Persistent Volume Claim (PVC) ..."
 kubectl --validate=false apply -f -<<EOF
 ${SHARED_LOG_PVC_CONTENT}
 EOF
@@ -88,13 +88,13 @@ function check_pvc() {
   echo "************** PVC **************"
 
   ATTEMPTS=0
-  TIMEOUT=3
+  TIMEOUT=100
 
   for name in operator-shared-pvc cp4a-shared-log-pvc;
   do
       if (kubectl get pvc -n "${CP4BA_PROJECT_NAME}" | grep $name | grep Bound)
       then
-        echo -e "\x1B[1;34m The \"$name\"  Persistent Volume Claim has been created.\x1B[0m"
+        echo -e "The \"$name\"  Persistent Volume Claim has been created."
         echo "$results"
         echo
         if [ "$name" == cp4a-shared-log-pvc ]
@@ -102,13 +102,13 @@ function check_pvc() {
           break
         fi
       else
-        echo -e "\x1B[1mWaiting for the Persistent Volume Claims to be ready...\x1B[0m"
+        echo -e "Waiting for the Persistent Volume Claims to be ready..."
         until (kubectl get pvc -n "${CP4BA_PROJECT_NAME}" | grep $name | grep "Bound") || [ $ATTEMPTS -eq $TIMEOUT ] ; do
             ATTEMPTS=$((ATTEMPTS + 1))
             echo -e "......"
             sleep 10
             if [ $ATTEMPTS -eq $TIMEOUT ] ; then
-                echo -e "\x1B[1;31mFailed! Please check the PVCs. You probably need to recreate the PVCs'\x1B[0m"
+                echo -e "Failed! Please check the PVCs. You probably need to recreate the PVCs."
                 break
             fi
         done
@@ -123,14 +123,14 @@ function check_pv() {
   echo "************** PV **************"
 
   ATTEMPTS=0
-  TIMEOUT=3
+  TIMEOUT=100
 
   for name in operator-shared-pvc cp4a-shared-log-pvc;
   do
       results=$(kubectl get pv -n "${CP4BA_PROJECT_NAME}" | grep $name | grep Bound)
       if [ "$results" ]
       then
-        echo -e "\x1B[1;34m The \"$name\"  Persistent Volume has been created.\x1B[0m"
+        echo -e "The \"$name\"  Persistent Volume has been created."
         echo "$results"
         echo
         if [ "$name" == "cp4a-shared-log-pvc" ]
@@ -139,13 +139,13 @@ function check_pv() {
           check_pvc
         fi
       else
-        echo -e "\x1B[1mWaiting for the Persistent Volumes to be ready...\x1B[0m"
+        echo -e "Waiting for the Persistent Volumes to be ready..."
         until (kubectl get pv -n "${CP4BA_PROJECT_NAME}" | grep $name | grep "Bound") || [ $ATTEMPTS -eq $TIMEOUT ] ; do
             ATTEMPTS=$((ATTEMPTS + 1))
             echo -e "......"
             sleep 10
             if [ $ATTEMPTS -eq $TIMEOUT ] ; then
-                echo -e "\x1B[1;31mFailed! Please check the PVs. You probably need to recreate the PVs'\x1B[0m"
+                echo -e "Failed! Please check the PVs. You probably need to recreate the PVs"
                 echo
                 echo
                 check_pvc
@@ -160,7 +160,7 @@ function check_pv() {
 check_pv
 
 # CREATING OPERATOR GROUP
-echo -e "\x1B[1m Creating Operator Group ...\x1B[0m"
+echo -e "Creating Operator Group ..."
 ${K8S_CMD} apply -f -<<EOF
 ${OPERATOR_GROUP_CONTENT}
 EOF
@@ -169,7 +169,7 @@ sleep 5
 
 ###### Add the CatalogSource resources to Operator Hub
 # Creating roles
-echo -e "\x1B[1mCreating roles ...\x1B[0m"
+echo -e "Creating roles ..."
 cat "${ROLES_FILE}"
 ${K8S_CMD} apply -f "${ROLES_FILE}" -n "${CP4BA_PROJECT_NAME}"
 echo
@@ -177,7 +177,7 @@ echo
 sleep 2
 
 # Creating roles
-echo -e "\x1B[1mCreating role binding ...\x1B[0m"
+echo -e "Creating role binding ..."
 cat "${ROLE_BINDING_FILE}"
 ${K8S_CMD} apply -f "${ROLE_BINDING_FILE}" -n "${CP4BA_PROJECT_NAME}"
 echo
@@ -185,13 +185,13 @@ echo
 sleep 2
 
 # Deploy common-service
-echo -e "\x1B[1m Creating common-service namespace ...\x1B[0m"
+echo -e "Creating common-service namespace ..."
 ${K8S_CMD} create namespace common-service
 echo
 
 
 # Add the CatalogSource resources to Operator Hub
-echo -e "\x1B[1m Creating the Catalog Source ...\x1B[0m"
+echo -e "Creating the Catalog Source ..."
 cat "${CATALOG_SOURCE_FILE}"
 ${K8S_CMD} apply -f "${CATALOG_SOURCE_FILE}"
 sleep 10
@@ -203,14 +203,14 @@ function check_catalogsources() {
   echo "************** Checking the IBM Catalog-Sources **************"
 
   ATTEMPTS=0
-  TIMEOUT=50
+  TIMEOUT=60
 
   for name in ibm-cp4a-operator-catalog ibm-operator-catalog opencloud-operators ;
   do
       results=$(kubectl get catalogsources -n openshift-marketplace | grep $name )
       if [ "$results" ]
       then
-        echo -e "\x1B[1;34m The \"$name\" has been created.\x1B[0m"
+        echo -e "The \"$name\" has been created."
         echo "$results"
         echo
         if [ "$name" == "opencloud-operators" ]
@@ -219,13 +219,13 @@ function check_catalogsources() {
           break
         fi
       else
-        echo -e "\x1B[1m Waiting for the Catalog-Sources to be created ...\x1B[0m"
+        echo -e "Waiting for the Catalog-Sources to be created ..."
         until (kubectl get catalogsources -n openshift-marketplace | grep $name ) || [ $ATTEMPTS -eq $TIMEOUT ] ; do
             ATTEMPTS=$((ATTEMPTS + 1))
             echo -e "......"
             sleep 10
             if [ $ATTEMPTS -eq $TIMEOUT ] ; then
-                echo -e "\x1B[1;31mFailed! Please check the Catalog-Sources. You probably need to recreate the Catalog-Sources'\x1B[0m"
+                echo -e "Failed! Please check the Catalog-Sources. You probably need to recreate the Catalog-Sources'."
                 echo
                 echo
             fi
@@ -238,34 +238,34 @@ function check_catalogsources() {
 check_catalogsources
 echo
 
-echo -e "\x1B[1m Deploying common-service ...\x1B[0m"
+echo -e "Deploying common-service ..."
 cat "${COMMON_SERVICE_FILE}"
 ${K8S_CMD} apply -f "${COMMON_SERVICE_FILE}"
 sleep 50
 echo
 
 # Create subscription to Business Automation Operator
-echo -e "\x1B[1m Creating the Subscription ...\x1B[0m"
+echo -e "Creating the Subscription ..."
 ${K8S_CMD} -n "${CP4BA_PROJECT_NAME}" apply -f -<<EOF
 ${CP4BA_SUBSCRIPTION_CONTENT}
 EOF
-sleep 50
+sleep 30
 echo
 
 function check_subscription() {
   echo
   echo
-  echo "************** Checking the IBM Operator Subscriptions **************"
+  echo "************** Checking the IBM CP4BA Operator Subscriptions **************"
 
   ATTEMPTS=0
-  TIMEOUT=50
+  TIMEOUT=100
 
   for name in ibm-automation-core ibm-common-service-operator ibm-cp4a-operator ;
   do
-      results=$(kubectl get subs -n cp4ba -n "${CP4BA_PROJECT_NAME}" | grep $name )
+      results=$(kubectl get subs -n "${CP4BA_PROJECT_NAME}" | grep $name )
       if [ "$results" ]
       then
-        echo -e "\x1B[1;34m The \"$name\" has been created.\x1B[0m"
+        echo -e "The \"$name\" has been created."
         echo "$results"
         echo
         if [ "$name" == "ibm-cp4a-operator" ]
@@ -274,13 +274,13 @@ function check_subscription() {
           break
         fi
       else
-        echo -e "\x1B[1m Waiting for the Operator Subscriptions to be ready ...\x1B[0m"
-        until (kubectl get subs -n cp4ba -n "${CP4BA_PROJECT_NAME}" | grep $name ) || [ $ATTEMPTS -eq $TIMEOUT ] ; do
+        echo -e "Waiting for the Operator Subscriptions to be ready ..."
+        until (kubectl get subs -n "${CP4BA_PROJECT_NAME}" | grep $name ) || [ $ATTEMPTS -eq $TIMEOUT ] ; do
             ATTEMPTS=$((ATTEMPTS + 1))
             echo -e "......"
             sleep 10
             if [ $ATTEMPTS -eq $TIMEOUT ] ; then
-                echo -e "\x1B[1;31mFailed! Please check the Catalog-Sources. You probably need to recreate the Operator Subscriptions'\x1B[0m"
+                echo -e "Failed! Please check the Operator Subscriptions. You probably need to recreate the 'cp4ba_subscription.yaml.tmpl'"
                 echo
                 echo
             fi
@@ -294,7 +294,7 @@ check_subscription
 echo
 
 # Create Deployment Credentials
-echo -e "\x1B[1mCreating the Deployment Credentials ...\x1B[0m"
+echo -e "Creating the Deployment Credentials ..."
 ${K8S_CMD} --validate=false -n "${CP4BA_PROJECT_NAME}" apply  -f -<<EOF
 ${CP4BA_DEPLOYMENT_CREDENTIALS_CONTENT}
 EOF
@@ -302,11 +302,11 @@ echo
 
 
 # Create Deployment
-echo -e "\x1B[1mCreating the Deployment ...\x1B[0m"
+echo -e "Creating the Deployment ..."
 ${K8S_CMD} --validate=false -n "${CP4BA_PROJECT_NAME}" apply -f -<<EOF
 ${CP4BA_DEPLOYMENT_CONTENT}
 EOF
-sleep 30
+sleep 20
 
 echo
 
@@ -316,14 +316,14 @@ function check_icp4adeploy() {
   echo "************** Checking the Deployment Pods 'icp4adeploy' **************"
 
   ATTEMPTS=0
-  TIMEOUT=50
+  TIMEOUT=100
 
   for name in icp4adeploy-rr-setup-pod ;
   do
       results=$(kubectl get pods -n "${CP4BA_PROJECT_NAME}" | grep $name | grep Completed)
       if [ "$results" ]
       then
-        echo -e "\x1B[1;34m Deployment Setup Pod \"$name\" has been completed.\x1B[0m"
+        echo -e "Deployment Setup Pod \"$name\" has been completed."
         echo "$results"
         echo
         kubectl get pods -n "${CP4BA_PROJECT_NAME}" | grep deploy
@@ -334,13 +334,13 @@ function check_icp4adeploy() {
           break
         fi
       else
-        echo -e "\x1B[1m Waiting for the Deployment Setup Pods to be ready ...\x1B[0m"
+        echo -e "Waiting for the Deployment Setup Pods to be ready ..."
         until (kubectl get pods -n "${CP4BA_PROJECT_NAME}" | grep $name | grep Completed) || [ $ATTEMPTS -eq $TIMEOUT ] ; do
             ATTEMPTS=$((ATTEMPTS + 1))
             echo -e "......"
             sleep 10
             if [ $ATTEMPTS -eq $TIMEOUT ] ; then
-                echo -e "\x1B[1;31mFailed! Please check the Deployment Setup Pod. You probably need to recreate the 'cp4ba_deployment.yaml.tmpl'\x1B[0m"
+                echo -e "Failed! Please check the Deployment Setup Pod. You probably need to recreate the 'cp4ba_deployment.yaml.tmpl'"
                 echo
                 echo
             fi
