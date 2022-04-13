@@ -316,7 +316,7 @@ function check_icp4adeploy() {
   echo "************** Checking the Deployment Pods 'icp4adeploy' **************"
 
   ATTEMPTS=0
-  TIMEOUT=100
+  TIMEOUT=600
 
   for name in icp4adeploy-rr-setup-pod ;
   do
