@@ -51,9 +51,6 @@ kubectl apply -n "${CP4BA_PROJECT_NAME}" -f -<<EOF
 ${SECRETS_CONTENT}
 EOF
 
-###### Create storage
-#echo -e "\x1B[1mCreating storage classes...\x1B[0m"
-#kubectl apply -f ${CP4BA_STORAGE_CLASS_FILE}
 
 sleep 5
 echo
@@ -161,49 +158,6 @@ function check_pv() {
 }
 
 check_pv
-
-
-
-
-## Check Operator Persistent Volume status every 5 seconds (max 10 minutes) until allocate.
-#ATTEMPTS=0
-#TIMEOUT=60
-#printf "\n"
-#echo -e "\x1B[1mWaiting for the persistent volumes to be ready...\x1B[0m"
-#until (${K8S_CMD} get pvc -n "${CP4BA_PROJECT_NAME}" | grep cp4a-shared-log-pvc | grep "Bound") || [ $ATTEMPTS -eq $TIMEOUT ] ; do
-#    ATTEMPTS=$((ATTEMPTS + 1))
-#    echo -e "......"
-#    sleep 10
-#    if [ $ATTEMPTS -eq $TIMEOUT ] ; then
-#        echo -e "\x1B[1;31mFailed: Run the following command to check the claim '${K8S_CMD} describe pvc cp4a-shared-log-pvc'\x1B[0m"
-#        exit 1
-#    fi
-#done
-#if [ $ATTEMPTS -lt $TIMEOUT ] ; then
-#    echo -e "\x1B[1;34m The Persistent Volume Claim is successfully bound\x1B[0m"
-#fi
-#echo
-#
-#ATTEMPTS=0
-#TIMEOUT=60
-#echo -e "\x1B[1mWaiting for the persistent volumes to be ready...\x1B[0m"
-#until (${K8S_CMD} get pvc -n "${CP4BA_PROJECT_NAME}" | grep operator-shared-pvc | grep "Bound") || [ $ATTEMPTS -eq $TIMEOUT ] ; do
-#    ATTEMPTS=$((ATTEMPTS + 1))
-#    echo -e "......"
-#    sleep 10
-#    if [ $ATTEMPTS -eq $TIMEOUT ] ; then
-#        echo -e "\x1B[1;31mFailed: Run the following command to check the claim '${K8S_CMD} describe pvc operator-shared-pvc'\x1B[0m"
-#        exit 1
-#    fi
-#done
-#if [ $ATTEMPTS -lt $TIMEOUT ] ; then
-#    echo -e "\x1B[1;34m The Persistent Volume Claim is successfully bound\x1B[0m"
-#fi
-#echo
-
-
-
-
 
 # CREATING OPERATOR GROUP
 echo -e "\x1B[1m Creating Operator Group ...\x1B[0m"
@@ -339,23 +293,6 @@ function check_subscription() {
 check_subscription
 echo
 
-
-
-
-#echo -e "\x1B[1m Creating the AutomationUIConfig ...\x1B[0m"
-#kubectl apply -f -<<EOF
-#${AUTO_UI_CONFIG_FILE_CONTENT}
-#EOF
-#sleep 10
-#echo
-
-#echo -e "\x1B[1m Creating the Cartridge ...\x1B[0m"
-#kubectl apply -f -<<EOF
-#${CARTRIDGE_FILE_CONTENT}
-#EOF
-#sleep 10
-#echo
-
 # Create Deployment Credentials
 echo -e "\x1B[1mCreating the Deployment Credentials ...\x1B[0m"
 ${K8S_CMD} --validate=false -n "${CP4BA_PROJECT_NAME}" apply  -f -<<EOF
@@ -369,8 +306,51 @@ echo -e "\x1B[1mCreating the Deployment ...\x1B[0m"
 ${K8S_CMD} --validate=false -n "${CP4BA_PROJECT_NAME}" apply -f -<<EOF
 ${CP4BA_DEPLOYMENT_CONTENT}
 EOF
+sleep 30
 
-sleep 50
+echo
+
+function check_icp4adeploy() {
+  echo
+  echo
+  echo "************** Checking the Deployment Pods 'icp4adeploy' **************"
+
+  ATTEMPTS=0
+  TIMEOUT=50
+
+  for name in icp4adeploy-rr-setup-pod ;
+  do
+      results=$(kubectl get pods -n "${CP4BA_PROJECT_NAME}" | grep $name | grep Completed)
+      if [ "$results" ]
+      then
+        echo -e "\x1B[1;34m Deployment Setup Pod \"$name\" has been completed.\x1B[0m"
+        echo "$results"
+        echo
+        kubectl get pods -n "${CP4BA_PROJECT_NAME}" | grep deploy
+        echo
+        if [ "$name" == "icp4adeploy-rr-setup-pod" ]
+        then
+          echo
+          break
+        fi
+      else
+        echo -e "\x1B[1m Waiting for the Deployment Setup Pods to be ready ...\x1B[0m"
+        until (kubectl get pods -n "${CP4BA_PROJECT_NAME}" | grep $name | grep Completed) || [ $ATTEMPTS -eq $TIMEOUT ] ; do
+            ATTEMPTS=$((ATTEMPTS + 1))
+            echo -e "......"
+            sleep 10
+            if [ $ATTEMPTS -eq $TIMEOUT ] ; then
+                echo -e "\x1B[1;31mFailed! Please check the Deployment Setup Pod. You probably need to recreate the 'cp4ba_deployment.yaml.tmpl'\x1B[0m"
+                echo
+                echo
+            fi
+        done
+        continue
+      fi
+  done
+}
+
+check_icp4adeploy
 
 echo
 
