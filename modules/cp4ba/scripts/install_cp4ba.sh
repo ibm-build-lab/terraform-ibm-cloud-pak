@@ -58,113 +58,160 @@ EOF
 sleep 5
 echo
 echo -e "\x1B[1m Creating the \"operator-shared-pv\" Persistent Volumes (PVs) ...\x1B[0m"
-kubectl apply -f -<<EOF
-"${OPERATOR_SHARED_PV_CONTENT}"
+kubectl --validate=false apply -f -<<EOF
+${OPERATOR_SHARED_PV_CONTENT}
 EOF
 
 sleep 5
 echo
 echo -e "\x1B[1m Creating the \"cp4a-shared-log-pv\" Persistent Volumes (PVs) ...\x1B[0m"
-kubectl apply -f -<<EOF
-"${SHARED_LOG_PV_CONTENT}"
+kubectl --validate=false apply -f -<<EOF
+${SHARED_LOG_PV_CONTENT}
 EOF
 
 sleep 10
 
 echo
 echo -e "\x1B[1m Creating \"operator-shared-pvc\" Persistent Volume Claim (PVC) ...\x1B[0m"
-kubectl apply -f -<<EOF
-"${OPERATOR_SHARED_PVC_CONTENT}"
+kubectl --validate=false apply -f -<<EOF
+${OPERATOR_SHARED_PVC_CONTENT}
 EOF
 
 
 echo
 echo -e "\x1B[1m Creating \"cp4a-shared-log-pvc\" Persistent Volume Claim (PVC) ...\x1B[0m"
-kubectl apply -f -<<EOF
-"${SHARED_LOG_PVC_CONTENT}"
+kubectl --validate=false apply -f -<<EOF
+${SHARED_LOG_PVC_CONTENT}
 EOF
+echo
+sleep 20
+
+function check_pvc() {
+
+  echo "************** PVC **************"
+
+  ATTEMPTS=0
+  TIMEOUT=3
+
+  for name in operator-shared-pvc cp4a-shared-log-pvc;
+  do
+      if (kubectl get pvc -n "${CP4BA_PROJECT_NAME}" | grep $name | grep Bound)
+      then
+        echo -e "\x1B[1;34m The \"$name\"  Persistent Volume Claim has been created.\x1B[0m"
+        echo "$results"
+        echo
+        if [ "$name" == cp4a-shared-log-pvc ]
+        then
+          break
+        fi
+      else
+        echo -e "\x1B[1mWaiting for the Persistent Volume Claims to be ready...\x1B[0m"
+        until (kubectl get pvc -n "${CP4BA_PROJECT_NAME}" | grep $name | grep "Bound") || [ $ATTEMPTS -eq $TIMEOUT ] ; do
+            ATTEMPTS=$((ATTEMPTS + 1))
+            echo -e "......"
+            sleep 10
+            if [ $ATTEMPTS -eq $TIMEOUT ] ; then
+                echo -e "\x1B[1;31mFailed! Please check the PVCs. You probably need to recreate the PVCs'\x1B[0m"
+                break
+            fi
+        done
+        continue
+      fi
+  done
+}
+
+function check_pv() {
+  echo
+  echo
+  echo "************** PV **************"
+
+  ATTEMPTS=0
+  TIMEOUT=3
+
+  for name in operator-shared-pvc cp4a-shared-log-pvc;
+  do
+      results=$(kubectl get pv -n "${CP4BA_PROJECT_NAME}" | grep $name | grep Bound)
+      if [ "$results" ]
+      then
+        echo -e "\x1B[1;34m The \"$name\"  Persistent Volume has been created.\x1B[0m"
+        echo "$results"
+        echo
+        if [ "$name" == "cp4a-shared-log-pvc" ]
+        then
+          echo
+          check_pvc
+        fi
+      else
+        echo -e "\x1B[1mWaiting for the Persistent Volumes to be ready...\x1B[0m"
+        until (kubectl get pv -n "${CP4BA_PROJECT_NAME}" | grep $name | grep "Bound") || [ $ATTEMPTS -eq $TIMEOUT ] ; do
+            ATTEMPTS=$((ATTEMPTS + 1))
+            echo -e "......"
+            sleep 10
+            if [ $ATTEMPTS -eq $TIMEOUT ] ; then
+                echo -e "\x1B[1;31mFailed! Please check the PVs. You probably need to recreate the PVs'\x1B[0m"
+                echo
+                echo
+                check_pvc
+            fi
+        done
+        continue
+      fi
+  done
+
+}
+
+check_pv
 
 
 
-#if [[ $CREATE_PVC_RESULT ]]; then
-#    echo -e "\x1B[1;34m The \"operator-shared-pv\" Persistent Volume has been created.\x1B[0m"
-#else
-#    echo -e "\x1B[1;31mFailed\x1B[0m"
+
+## Check Operator Persistent Volume status every 5 seconds (max 10 minutes) until allocate.
+#ATTEMPTS=0
+#TIMEOUT=60
+#printf "\n"
+#echo -e "\x1B[1mWaiting for the persistent volumes to be ready...\x1B[0m"
+#until (${K8S_CMD} get pvc -n "${CP4BA_PROJECT_NAME}" | grep cp4a-shared-log-pvc | grep "Bound") || [ $ATTEMPTS -eq $TIMEOUT ] ; do
+#    ATTEMPTS=$((ATTEMPTS + 1))
+#    echo -e "......"
+#    sleep 10
+#    if [ $ATTEMPTS -eq $TIMEOUT ] ; then
+#        echo -e "\x1B[1;31mFailed: Run the following command to check the claim '${K8S_CMD} describe pvc cp4a-shared-log-pvc'\x1B[0m"
+#        exit 1
+#    fi
+#done
+#if [ $ATTEMPTS -lt $TIMEOUT ] ; then
+#    echo -e "\x1B[1;34m The Persistent Volume Claim is successfully bound\x1B[0m"
 #fi
-#
-#sleep 10
 #echo
-#echo -e "\x1B[1m Creating the \"cp4a-shared-log-pv\" Persistent Volumes (PVs) ...\x1B[0m"
-#CREATE_PVC_RESULT=$(
-#)
 #
-#if [[ $CREATE_PVC_RESULT ]]; then
-#    echo -e "\x1B[1;34m The \"cp4a-shared-log-pv\" Persistent Volume has been created.\x1B[0m"
-#else
-#    echo -e "\x1B[1;31mFailed\x1B[0m"
+#ATTEMPTS=0
+#TIMEOUT=60
+#echo -e "\x1B[1mWaiting for the persistent volumes to be ready...\x1B[0m"
+#until (${K8S_CMD} get pvc -n "${CP4BA_PROJECT_NAME}" | grep operator-shared-pvc | grep "Bound") || [ $ATTEMPTS -eq $TIMEOUT ] ; do
+#    ATTEMPTS=$((ATTEMPTS + 1))
+#    echo -e "......"
+#    sleep 10
+#    if [ $ATTEMPTS -eq $TIMEOUT ] ; then
+#        echo -e "\x1B[1;31mFailed: Run the following command to check the claim '${K8S_CMD} describe pvc operator-shared-pvc'\x1B[0m"
+#        exit 1
+#    fi
+#done
+#if [ $ATTEMPTS -lt $TIMEOUT ] ; then
+#    echo -e "\x1B[1;34m The Persistent Volume Claim is successfully bound\x1B[0m"
 #fi
+#echo
 
 
-echo
-echo -e "\x1B[1m Creating \"operator-shared-pvc\" Persistent Volume Claim (PVC) ...\x1B[0m"
-CREATE_PVC_RESULT=$(kubectl --validate=false apply -f -<<EOF "${OPERATOR_SHARED_PVC_CONTENT}"
+
+
+
+# CREATING OPERATOR GROUP
+echo -e "\x1B[1m Creating Operator Group ...\x1B[0m"
+${K8S_CMD} apply -f -<<EOF
+${OPERATOR_GROUP_CONTENT}
 EOF
-)
-
-if [[ $CREATE_PVC_RESULT ]]; then
-    echo -e "\x1B[1;34m The \"operator-shared-pvc\"  Persistent Volume Claims has been created.\x1B[0m"
-else
-    echo -e "\x1B[1;31mFailed\x1B[0m"
-fi
-
 echo
-echo -e "\x1B[1m Creating \"cp4a-shared-log-pvc\" Persistent Volume Claim (PVC) ...\x1B[0m"
-CREATE_PVC_RESULT=$(kubectl --validate=false apply -f -<<EOF "${SHARED_LOG_PVC_CONTENT}"
-EOF
-)
-
-if [[ $CREATE_PVC_RESULT ]]; then
-    echo -e "\x1B[1;34m The \"cp4a-shared-log-pvc\" Persistent Volume Claim has been created.\x1B[0m"
-else
-    echo -e "\x1B[1;31mFailed\x1B[0m"
-fi
-
-
-# Check Operator Persistent Volume status every 5 seconds (max 10 minutes) until allocate.
-ATTEMPTS=0
-TIMEOUT=60
-printf "\n"
-echo -e "\x1B[1mWaiting for the persistent volumes to be ready...\x1B[0m"
-until (${K8S_CMD} get pvc -n "${CP4BA_PROJECT_NAME}" | grep cp4a-shared-log-pvc | grep "Bound") || [ $ATTEMPTS -eq $TIMEOUT ] ; do
-    ATTEMPTS=$((ATTEMPTS + 1))
-    echo -e "......"
-    sleep 10
-    if [ $ATTEMPTS -eq $TIMEOUT ] ; then
-        echo -e "\x1B[1;31mFailed: Run the following command to check the claim '${K8S_CMD} describe pvc cp4a-shared-log-pvc'\x1B[0m"
-        exit 1
-    fi
-done
-if [ $ATTEMPTS -lt $TIMEOUT ] ; then
-    echo -e "\x1B[1;34m The Persistent Volume Claim is successfully bound\x1B[0m"
-fi
-echo
-
-ATTEMPTS=0
-TIMEOUT=60
-echo -e "\x1B[1mWaiting for the persistent volumes to be ready...\x1B[0m"
-until (${K8S_CMD} get pvc -n "${CP4BA_PROJECT_NAME}" | grep operator-shared-pvc | grep "Bound") || [ $ATTEMPTS -eq $TIMEOUT ] ; do
-    ATTEMPTS=$((ATTEMPTS + 1))
-    echo -e "......"
-    sleep 10
-    if [ $ATTEMPTS -eq $TIMEOUT ] ; then
-        echo -e "\x1B[1;31mFailed: Run the following command to check the claim '${K8S_CMD} describe pvc operator-shared-pvc'\x1B[0m"
-        exit 1
-    fi
-done
-if [ $ATTEMPTS -lt $TIMEOUT ] ; then
-    echo -e "\x1B[1;34m The Persistent Volume Claim is successfully bound\x1B[0m"
-fi
-echo
+sleep 5
 
 ###### Add the CatalogSource resources to Operator Hub
 # Creating roles
@@ -173,11 +220,15 @@ cat "${ROLES_FILE}"
 ${K8S_CMD} apply -f "${ROLES_FILE}" -n "${CP4BA_PROJECT_NAME}"
 echo
 
+sleep 2
+
 # Creating roles
 echo -e "\x1B[1mCreating role binding ...\x1B[0m"
 cat "${ROLE_BINDING_FILE}"
 ${K8S_CMD} apply -f "${ROLE_BINDING_FILE}" -n "${CP4BA_PROJECT_NAME}"
 echo
+
+sleep 2
 
 # Deploy common-service
 echo -e "\x1B[1m Creating common-service namespace ...\x1B[0m"
@@ -185,56 +236,141 @@ ${K8S_CMD} create namespace common-service
 echo
 
 
-# CREATING OPERATOR GROUP
-echo -e "\x1B[1m Creating Operator Group ...\x1B[0m"
-${K8S_CMD} apply -f "${OPERATOR_GROUP_CONTENT}"
-echo
-
 # Add the CatalogSource resources to Operator Hub
 echo -e "\x1B[1m Creating the Catalog Source ...\x1B[0m"
 cat "${CATALOG_SOURCE_FILE}"
 ${K8S_CMD} apply -f "${CATALOG_SOURCE_FILE}"
 sleep 10
-echo ""
+echo
+
+function check_catalogsources() {
+  echo
+  echo
+  echo "************** Checking the IBM Catalog-Sources **************"
+
+  ATTEMPTS=0
+  TIMEOUT=50
+
+  for name in ibm-cp4a-operator-catalog ibm-operator-catalog opencloud-operators ;
+  do
+      results=$(kubectl get catalogsources -n openshift-marketplace | grep $name )
+      if [ "$results" ]
+      then
+        echo -e "\x1B[1;34m The \"$name\" has been created.\x1B[0m"
+        echo "$results"
+        echo
+        if [ "$name" == "opencloud-operators" ]
+        then
+          echo
+          break
+        fi
+      else
+        echo -e "\x1B[1m Waiting for the Catalog-Sources to be created ...\x1B[0m"
+        until (kubectl get catalogsources -n openshift-marketplace | grep $name ) || [ $ATTEMPTS -eq $TIMEOUT ] ; do
+            ATTEMPTS=$((ATTEMPTS + 1))
+            echo -e "......"
+            sleep 10
+            if [ $ATTEMPTS -eq $TIMEOUT ] ; then
+                echo -e "\x1B[1;31mFailed! Please check the Catalog-Sources. You probably need to recreate the Catalog-Sources'\x1B[0m"
+                echo
+                echo
+            fi
+        done
+        continue
+      fi
+  done
+}
+
+check_catalogsources
+echo
 
 echo -e "\x1B[1m Deploying common-service ...\x1B[0m"
 cat "${COMMON_SERVICE_FILE}"
 ${K8S_CMD} apply -f "${COMMON_SERVICE_FILE}"
-sleep 100
+sleep 50
 echo
-
-echo -e "\x1B[1m Creating the AutomationUIConfig ...\x1B[0m"
-kubectl apply -f -<<EOF
-${AUTO_UI_CONFIG_FILE_CONTENT}
-EOF
-sleep 10
-echo
-
-echo -e "\x1B[1m Creating the Cartridge ...\x1B[0m"
-kubectl apply -f -<<EOF
-${CARTRIDGE_FILE_CONTENT}
-EOF
-sleep 10
-echo
-
 
 # Create subscription to Business Automation Operator
 echo -e "\x1B[1m Creating the Subscription ...\x1B[0m"
-${K8S_CMD} apply -f -<<EOF "${CP4BA_SUBSCRIPTION_CONTENT}" -n "${CP4BA_PROJECT_NAME}"
+${K8S_CMD} -n "${CP4BA_PROJECT_NAME}" apply -f -<<EOF
+${CP4BA_SUBSCRIPTION_CONTENT}
 EOF
-sleep 100
+sleep 50
 echo
+
+function check_subscription() {
+  echo
+  echo
+  echo "************** Checking the IBM Operator Subscriptions **************"
+
+  ATTEMPTS=0
+  TIMEOUT=50
+
+  for name in ibm-automation-core ibm-common-service-operator ibm-cp4a-operator ;
+  do
+      results=$(kubectl get subs -n cp4ba -n "${CP4BA_PROJECT_NAME}" | grep $name )
+      if [ "$results" ]
+      then
+        echo -e "\x1B[1;34m The \"$name\" has been created.\x1B[0m"
+        echo "$results"
+        echo
+        if [ "$name" == "ibm-cp4a-operator" ]
+        then
+          echo
+          break
+        fi
+      else
+        echo -e "\x1B[1m Waiting for the Operator Subscriptions to be ready ...\x1B[0m"
+        until (kubectl get subs -n cp4ba -n "${CP4BA_PROJECT_NAME}" | grep $name ) || [ $ATTEMPTS -eq $TIMEOUT ] ; do
+            ATTEMPTS=$((ATTEMPTS + 1))
+            echo -e "......"
+            sleep 10
+            if [ $ATTEMPTS -eq $TIMEOUT ] ; then
+                echo -e "\x1B[1;31mFailed! Please check the Catalog-Sources. You probably need to recreate the Operator Subscriptions'\x1B[0m"
+                echo
+                echo
+            fi
+        done
+        continue
+      fi
+  done
+}
+
+check_subscription
+echo
+
+
+
+
+#echo -e "\x1B[1m Creating the AutomationUIConfig ...\x1B[0m"
+#kubectl apply -f -<<EOF
+#${AUTO_UI_CONFIG_FILE_CONTENT}
+#EOF
+#sleep 10
+#echo
+
+#echo -e "\x1B[1m Creating the Cartridge ...\x1B[0m"
+#kubectl apply -f -<<EOF
+#${CARTRIDGE_FILE_CONTENT}
+#EOF
+#sleep 10
+#echo
 
 # Create Deployment Credentials
 echo -e "\x1B[1mCreating the Deployment Credentials ...\x1B[0m"
-${K8S_CMD} apply -n "${CP4BA_PROJECT_NAME}" -f -<<EOF "${CP4BA_DEPLOYMENT_CREDENTIALS_CONTENT}"
+${K8S_CMD} --validate=false -n "${CP4BA_PROJECT_NAME}" apply  -f -<<EOF
+${CP4BA_DEPLOYMENT_CREDENTIALS_CONTENT}
 EOF
 echo
 
+
 # Create Deployment
 echo -e "\x1B[1mCreating the Deployment ...\x1B[0m"
-${K8S_CMD} apply -n "${CP4BA_PROJECT_NAME}" -f -<<EOF "${CP4BA_DEPLOYMENT_CONTENT}" --validate=false
+${K8S_CMD} --validate=false -n "${CP4BA_PROJECT_NAME}" apply -f -<<EOF
+${CP4BA_DEPLOYMENT_CONTENT}
 EOF
+
+sleep 50
 
 echo
 

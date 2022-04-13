@@ -10,7 +10,7 @@ locals {
   cartridge_file_content                = templatefile("${path.module}/templates/cartridge.yaml.tmpl", {
     cp4ba_project_name = var.cp4ba_project_name
   })
-  auto_ui_config_file_content             = templatefile("${path.module}/templates/automationUIConfig.yaml.tmpl", {
+  auto_ui_config_file_content           = templatefile("${path.module}/templates/automationUIConfig.yaml.tmpl", {
     cp4ba_project_name = var.cp4ba_project_name
   })
   operator_group_file_content           = templatefile("${path.module}/templates/operator-group.yaml.tmpl", {
