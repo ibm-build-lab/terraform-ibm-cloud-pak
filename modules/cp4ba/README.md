@@ -72,30 +72,27 @@ Output:
 Use a `module` block assigning the `source` parameter to the location of this module `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4ba`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Business Automation.
 
 ```hcl
-module "cp4ba" {
+module "install_cp4ba" {
   source = "../../modules/cp4ba"
-  enable = true
-
-  # ---- Cluster settings ----
-  cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
-  ingress_subdomain = var.ingress_subdomain
-
-  # ---- Cloud Pak settings ----
-  cp4ba_project_name      = "cp4ba"
-  entitled_registry_user  = var.entitled_registry_user
-  entitlement_key         = var.entitlement_key
-
-  # ----- DB2 Settings -----
-  db2_host_name           = var.db2_host_name
-  db2_host_port           = var.db2_host_port
-  db2_admin               = var.db2_admin
-  db2_user                = var.db2_user
-  db2_password            = var.db2_password
-
+  enable_cp4ba           = true
+  enable_db2             = true
+  ibmcloud_api_key       = var.ibmcloud_api_key
+  region                 = var.region
+  cluster_config_path    = data.ibm_container_cluster_config.cluster_config.config_file_path
+  ingress_subdomain      = var.ingress_subdomain
+  # ---- Platform ----
+  cp4ba_project_name     = var.cp4ba_project_name
+  entitled_registry_user_email = var.entitled_registry_user_email
+  entitled_registry_key        = var.entitled_registry_key
   # ----- LDAP Settings -----
-  ldap_admin              = var.ldap_admin
-  ldap_password           = var.ldap_password
+  ldap_admin_name         = var.ldap_admin_name
+  ldap_admin_password     = var.ldap_admin_password
   ldap_host_ip            = var.ldap_host_ip
+  # ----- DB2 Settings -----
+  db2_host_port           = var.db2_host_port 
+  db2_host_address        = var.db2_host_address
+  db2_admin_username      = var.db2_admin_username
+  db2_admin_user_password = var.db2_admin_user_password
 }
 ```
 

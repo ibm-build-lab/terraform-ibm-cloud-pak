@@ -25,7 +25,6 @@ data "ibm_container_cluster_config" "cluster_config" {
 
 module "install_cp4ba" {
   source = "../../modules/cp4ba"
-//  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/cp4ba"
   enable_cp4ba           = true
   enable_db2             = true
   ibmcloud_api_key       = var.ibmcloud_api_key
@@ -41,11 +40,10 @@ module "install_cp4ba" {
   ldap_admin_password     = var.ldap_admin_password
   ldap_host_ip            = var.ldap_host_ip
   # ----- DB2 Settings -----
-  db2_host_port           = var.db2_host_port # != null ? var.db2_ports : module.install_db2.db2_ports # var.db2_port_number
+  db2_host_port           = var.db2_host_port
   db2_host_address        = var.db2_host_address
   db2_admin_username      = var.db2_admin_username
   db2_admin_user_password = var.db2_admin_user_password
-
 }
 
 

@@ -17,18 +17,23 @@ For instructions to run using the local Terraform Client on your local machine g
 Set the desired values in the `terraform.tfvars` file. These are examples:
 
 ```hcl
-cluster_name_or_id = "********************"
-resource_group = "cloud-pak-sandbox-ibm"
-entitlement_key = "*********************"
-entitled_registry_user = "john.doe@ibm.com"
-ldap_admin = "cn=root"
-ldap_password = "Passw0rd"
-ldap_host_ip = "xx.xx.xxx.xxx"
-db2_admin = "cpadmin"
-db2_user = "db2inst1"
-db2_password = "Passw0rd"
-db2_host_name = "db2testhost.us-south.containers.appdomain.cloud"
-db2_host_port = "30788"
+ibmcloud_api_key   = "********************"
+resource_group     = "********************"
+region             = "********************"
+cluster_id         = "********************"
+entitled_registry_key = "*********************"
+entitled_registry_user_email = "john.doe@ibm.com"
+ldap_admin_name     = "cn=root"
+ldap_admin_password = "Passw0rd"
+ldap_host_ip        = "xx.xx.xxx.xxx"
+cp4ba_project_name  = "*********************"
+enable_cp4ba        = true
+enable_db2          = true
+db2_admin           = "cpadmin"
+db2_user            = "db2inst1"
+db2_admin_user_password = "********************"
+db2_host_name       = "********************"
+db2_port_number     = "12345"
 ```
 
 These parameters are:
