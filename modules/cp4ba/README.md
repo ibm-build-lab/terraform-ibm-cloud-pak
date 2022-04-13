@@ -11,8 +11,7 @@ If running these modules from your local terminal, you need to set the credentia
 Go [here](../CREDENTIALS.md) for details.
 
 ## Provisioning this module in a Terraform Script
-
-You will need a versions.tf file containing the `ibm` provisioner block with the `version`. Here is an example:
+In your Terraform script define the `ibm` provisioner block with the `version`.
 
 ```hcl
 terraform {
@@ -27,6 +26,11 @@ terraform {
     }
   }
 }
+
+provider "ibm" {
+  region           = var.region
+  ibmcloud_api_key = var.ibmcloud_api_key
+}
 ```
 
 ### Setting up the OpenShift cluster
@@ -38,7 +42,7 @@ To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-i
 Add the following code to get the OpenShift cluster (new or existing) configuration:
 
 ```hcl
-data "ibm_resource_group" "group" {
+data "ibm_resource_group" "resource_group" {
   name = var.resource_group
 }
 
@@ -46,20 +50,23 @@ resource "null_resource" "mkdir_kubeconfig_dir" {
   triggers = { always_run = timestamp() }
 
   provisioner "local-exec" {
-    command = "mkdir -p ./.kube/config"
+    command = "mkdir -p ${var.cluster_config_path}"
   }
 }
 
 data "ibm_container_cluster_config" "cluster_config" {
-  depends_on = [null_resource.mkdir_kubeconfig_dir]
-  cluster_name_id   = var.cluster_name_id
-  resource_group_id = data.ibm_resource_group.group.id
-  config_dir        = "./.kube/config"
+  depends_on        = [null_resource.mkdir_kubeconfig_dir]
+  cluster_name_id   = var.cluster_id
+  resource_group_id = data.ibm_resource_group.resource_group.id
+  config_dir        = var.cluster_config_path
 }
 ```
+
+**NOTE**: Create the `./kube/config` directory if it doesn't exist.
+
 Input:
 
-- `cluster_name_id`: either the cluster name or ID.
+- `cluster_d`: either the cluster name or ID.
 
 - `ibm_resource_group`:  resource group where the cluster is running
 
@@ -89,7 +96,7 @@ module "install_cp4ba" {
   ldap_admin_password     = var.ldap_admin_password
   ldap_host_ip            = var.ldap_host_ip
   # ----- DB2 Settings -----
-  db2_host_port           = var.db2_host_port 
+  db2_ports               = var.db2_ports
   db2_host_address        = var.db2_host_address
   db2_admin_username      = var.db2_admin_username
   db2_admin_user_password = var.db2_admin_user_password
@@ -98,86 +105,60 @@ module "install_cp4ba" {
 
 ## Input Variables
 
-| Name                               | Description                                                                                                                                                                                                                | Default                     | Required |
-| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | -------- |
-| `enable`                           | If set to `false` does not install the cloud pak on the given cluster. By default it's enabled  | `true`                      | No       |
-| `cluster_config_path`              | Path to the Kubernetes configuration file to access your cluster | `./.kube/config`                      | No       |
-| `ingress_subdomain`                | Run the command `ibmcloud ks cluster get -c <cluster_name_or_id>` to get the Ingress Subdomain value |  | No       |
-| `cp4ba_project_name`               | Namespace to install for Cloud Pak for Integration | `cp4ba`                      | No       |
-| `entitled_registry_key`            | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
-| `entitled_registry_user_email`     | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key |  | Yes      |
-| `ldap_admin`     | LDAP Admin user name | `cn=root`  | Yes      |
-| `ldap_password`     | LDAP Admin password | `Passw0rd` | Yes      |
-| `ldap_host_ip`     | LDAP server IP address |  | Yes      |
-| `db2_host_name`     | Host for DB2 instance |  | Yes      |
-| `db2_host_port`     | Port for DB2 instance |  | Yes      |
-| `db2_admin`     | Admin user name defined in associated LDAP| `cpadmin` | Yes      |
-| `db2_user`     | User name defined in associated LDAP | `db2inst1` | Yes      |
-| `db2_password`     | Password defined in associated LDAP | `passw0rd` | Yes      |
+| Name                       | Description                                                            | Default                | Required |
+| ---------------------------|------------------------------------------------------------------------|------------------------|----------|
+| `ibmcloud_api_key`         | IBM Cloud API key: https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key                                                    |                        | Yes      |
+| `resource_group`           | Region where the cluster is created. Managing resource groups: https://cloud.ibm.com/docs/account?topic=account-rgs&interface=ui | `cloud-pak-sandbox` | Yes      |
+| `region`                   | Region code: https://cloud.ibm.com/docs/codeengine?topic=codeengine-regions                                                            | `us-south`             | No       |
+| `cluster_id`               | Add cluster id to install the Cloud Pak on.   |          |   No   |
+| `cluster_config_path`      | Path to the cluster configuration file to access your cluster          | `./.kube/config`        |   No     |
+| `ldap_admin`               | LDAP Admin user name | `cn=root`  | Yes      |
+| `ldap_password`            | LDAP Admin password | `Passw0rd` | Yes      |
+| `ldap_host_ip`             | LDAP server IP address |  | Yes      |
+| `enable_db2`               | If set to `false`, IBM DB2 will not be installed. Enabled by default   |  `true`                |   No     |
+| `db2_project_name`         | The namespace or project for Db2                                       | `ibm-db2`              |   Yes    |
+| `db2_user `                | Db2 instance user name defined in LDAP.                                | `db2inst1`             |   Yes    |
+| `db2_admin_username`       | Db2 default admin username                                             | `cpadmin`              |   Yes    |
+| `db2_admin_user_password`  | Db2 admin username defined in associated LDAP                          |                        |   Yes    |
+| `db2_host_address  `       | DB2 instance host name which will be used in ICP4ACluster to access the Db2. |                  |   No     |
+| `db2_ports`                | Port number for DB2 instance                                                 |                  |   Yes    |
+| `enable_cp4ba`             | It enables the installation of CP4BA. If set to false, CP4BA will not be installed. | `true`    |   No     |
+| `cp4ba_project_name`       | The namespace or project for CP4BA                                     | `cp4ba`                |   Yes    |
+| `entitled_registry_key`    | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
+| `entitled_registry_user_email`| IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key. i.e: joe@ibm.com |              | Yes      |
 
-For an example of how to put all this together, refer to our [Cloud Pak for Business Automation Terraform example](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform/cp4ba).
+### Executing the Terraform Script
 
-## Executing the Terraform Script
+Follow this link to execute this CP4BA module: [Install IBM Cloud Pak Business Automation (CP4BA) Terraform Example](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/examples/cp4ba)
 
-Execute the following commands to install the Cloud Pak:
-
-```bash
-terraform init
-terraform plan
-terraform apply
+### Verify
+If CP4BA is successful and the process is completed, you should see the following similar outputs:
 ```
 
+Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
 
-## Output Parameters
+Outputs:
 
-The Terraform code return the following output parameters.
-
-| Name               | Description                                                                                                                         |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `cp4ba_endpoint`  | URL of the CP4BA dashboard                                                                                                         |
-| `cp4ba_user`      | Username to login to the CP4BA dashboard                                                                                           |
-| `cp4ba_password`  | Password to login to the CP4BA dashboard                                                                                           |
-
-## Validation
-
-### Namespace
-```
-kubectl get namespaces cp4ba
-```
-### All resources
-```
-kubectl get all --namespace cp4ba
-```
-### Get route
-```
-oc get route |grep "^cpd"
+cp4ba_admin_password = ********************************
+cp4ba_admin_username = admin
+cp4ba_endpoint =  j@@@@@@@@@@@@-clust-c0b572361ba41c9eef42d4d51297b04b-0000.us-south.containers.appdomain.cloud
 ```
 
-Using the following credentials:
+### Outputs
 
-```bash
-terraform output cp4ba_user
-terraform output cp4ba_password
+The Terraform code return the following output parameters:
+
+| Name                   | Description                                                                                 |
+|------------------------|---------------------------------------------------------------------------------------------|
+| `cp4ba_endpoint`       | Host name for CP4BA                                                                         |
+| `cp4ba_admin_username` | CP4BA identification used to login in CP4BA online service.                                 |
+| `cp4ba_admin_password` | A passcode that will allowed a user with an admin priviledge to gain admission to the CP4BA online service.|
+
+
+## Clean up or Uninstall CP4BA
+
+When you finish with CP4BA, release the resources by executing the following command:: 
 ```
-
-Log into the 
-## Uninstall
-
-To uninstall CP4BA and its dependencies from a cluster, execute the following commands:
-
-```bash
-kubectl get ICP4ACluster
-kubectl get subscription ibm-common-service-operator -n openshift-operators
-kubectl get subscription ibm-common-service-operator -n opencloud-operators
-kubectl delete namespace cp4ba
-```
-
-## Clean up
-
-When you finish using the cluster, release the resources by executing the following command:
-
-```bash
 terraform destroy
 ```
-
-**Note**: The uninstall/cleanup process is a work in progress at this time, we are identifying the objects that need to be deleted in order to have a successful re-installation.
+Additional resources are creating using scripts. The cleanup process for these additional resources is a work in progress at this time, we are identifying the objects that need to be deleted in order to have a successful re-installation.

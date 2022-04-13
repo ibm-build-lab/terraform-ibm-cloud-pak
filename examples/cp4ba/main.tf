@@ -40,7 +40,7 @@ module "install_cp4ba" {
   ldap_admin_password     = var.ldap_admin_password
   ldap_host_ip            = var.ldap_host_ip
   # ----- DB2 Settings -----
-  db2_host_port           = var.db2_host_port
+  db2_ports               = var.db2_ports
   db2_host_address        = var.db2_host_address
   db2_admin_username      = var.db2_admin_username
   db2_admin_user_password = var.db2_admin_user_password

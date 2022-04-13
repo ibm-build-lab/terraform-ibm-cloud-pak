@@ -30,7 +30,7 @@ locals {
   cp4ba_deployment_file_content             = templatefile("${path.module}/templates/cp4ba_deployment.yaml.tmpl", {
     ldap_host_ip     = var.ldap_host_ip,
     db2_host_address = var.db2_host_address,
-    db2_host_port    = var.db2_host_port,
+    db2_host_port     = var.db2_ports,
     ingress_subdomain = var.ingress_subdomain
   })
   secrets_content    = templatefile("${path.module}/templates/secrets.yaml.tmpl", {
@@ -96,7 +96,7 @@ resource "null_resource" "installing_cp4ba" {
       ldap_password           = var.ldap_admin_password
       ldap_host_ip            = var.ldap_host_ip
       # ----- DB2 Settings -----
-      db2_host_port           = var.db2_host_port
+      db2_host_port           = var.db2_ports
       db2_host_address        = var.db2_host_address
       db2_admin               = var.db2_admin_username
       db2_password            = var.db2_admin_user_password

@@ -96,7 +96,7 @@ variable "db2_host_address" {
   description = "Host name for DB2 instance. Ignore if there is not an existing Db2."
 }
 
-variable "db2_host_port" {
+variable "db2_ports" {
   description = "Port number for DB2 instance. Ignore if there is not an existing Db2."
   default = ""
 }
