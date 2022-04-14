@@ -36,6 +36,7 @@ echo
 echo "Creating project ${DB2_PROJECT_NAME}..."
 kubectl create namespace "${DB2_PROJECT_NAME}"
 kubectl get ns "${DB2_PROJECT_NAME}"
+
 echo
 
 echo "Docker username: ${DOCKER_USERNAME}"
@@ -70,6 +71,7 @@ echo
 echo
 echo "Modifying the OpenShift Global Pull Secret (you need jq tool for that):"
 echo $(kubectl get secret pull-secret -n openshift-config --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode; kubectl get secret ibm-db2-registry -n "${DB2_PROJECT_NAME}" --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode) | jq -s '.[0] * .[1]' > dockerconfig_merged
+
 
 echo
 kubectl edit secret/pull-secret -n openshift-config --from-file=.dockerconfigjson=dockerconfig_merged
@@ -437,8 +439,3 @@ echo "**************************************************************************
 echo "******** Installation and configuration of DB2 completed successfully!!! ********"
 echo "*********************************************************************************"
 
-echo
-echo
-echo "****************************************************************************"
-echo "*********************** DB2 ENDPOINTS USED FOR CP4BA ***********************"
-echo "****************************************************************************"

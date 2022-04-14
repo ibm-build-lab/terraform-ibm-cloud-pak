@@ -1,7 +1,6 @@
 locals {
   db2_operator_catalog_file = "${path.module}/files/ibm_operator_catalog.yaml"
   db2_operator_catalog_file_content = file(local.db2_operator_catalog_file)
-
   db2_cr_file = "${path.module}/files/ibm-db2-cr.yaml"
   db2_cr_file_content = file(local.db2_cr_file)
 
@@ -103,6 +102,7 @@ data "external" "get_endpoints" {
   query = {
     kubeconfig    = var.cluster_config_path
     db2_namespace = var.db2_project_name
+//    cluster_id    = var.cluster_id
   }
 }
 
