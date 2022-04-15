@@ -67,7 +67,7 @@ resource "null_resource" "configure_cert_nginx" {
 
   provisioner "local-exec" {
     command     = "./update_cert.sh"
-    working_dir = "${path.module}/scripts"
+    working_dir = "${path.module}/scripts/aimanager"
 
     environment = {
       KUBECONFIG                    = var.cluster_config_path
