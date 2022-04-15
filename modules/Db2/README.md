@@ -1,4 +1,4 @@
-# Terraform DB2 Module toinstall and configure DB2 on Openshift
+# Terraform DB2 Module to install and configure DB2 on Openshift
 
 This Terraform Module installs **DB2** on an Openshift (ROKS) cluster on IBM Cloud.
 
@@ -20,9 +20,15 @@ If running these modules from your local terminal, you need to set the credentia
 
 Go [here](../CREDENTIALS.md) for details.
 
-## Download required license files
 
-Download required license files from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `../../modules/db2/files` folder on your local computer. 
+## Resources Required
+-   1 worker node
+-   Cores: 5.7 (2 for the Db2 engine and 3.7 for Db2 auxiliary services)
+-   Memory: 10.4 GiB (4 GiB for the Db2 engine and 6.4 GiB for Db2 auxiliary services)
+
+## Download required license file
+
+Download required license file from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `../../modules/db2/files` folder on your local computer. 
 ```bash
 DB2:
 Part Number : CNB21ML
@@ -100,6 +106,7 @@ module "Db2" {
   # ----- Cluster -----
   cluster_config_path      = data.ibm_container_cluster_config.cluster_config.config_file_path
   db2_project_name         = var.db2_project_name
+  db2_name                 = var.db2_name
   db2_admin_username       = var.db2_admin_username
   db2_admin_user_password  = var.db2_admin_user_password
   db2_standard_license_key = var.db2_standard_license_key
@@ -125,6 +132,7 @@ module "Db2" {
 | `cluster_config_path`      | Path to the cluster configuration file to access your cluster          | `./.kube/config`       |   No     |
 | `enable_db2`               | If set to `false`, IBM DB2 will not be installed. Enabled by default   |  `true`                |   No     |
 | `db2_project_name`         | The namespace or project for Db2                                       | `ibm-db2`              |   Yes    |
+| `db2_name`                 | The name of your Database.                                             | `sample-db2`           | Yes      |
 | `db2_admin_username`       | Db2 default admin username                                             | `db2inst1`             |   Yes    |
 | `db2_admin_user_password`  | Db2 admin username defined in associated LDAP                          |                        |   Yes    |
 | `db2_standard_license_key` | The standard license key for the Db2 database product. **Note**: The license key is required only for an Advanced DB2 installation.|                       |   No    |

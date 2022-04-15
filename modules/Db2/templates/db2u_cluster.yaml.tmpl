@@ -2,19 +2,33 @@ apiVersion: db2u.databases.ibm.com/v1
 kind: Db2uCluster
 metadata:
   name: db2ucluster
-  namespace: ${db2OnOcpProjectName}
+  namespace: ${db2ProjectName}
+  labels:
+    app.kubernetes.io/instance: db2u-operator
+    app.kubernetes.io/managed-by: Db2U-Team
+    app.kubernetes.io/name: db2u-operator
 spec:
   size: 1
   license:
-    ${db2License}
+     accept: true
+     ${db2License}
   account:
     imagePullSecrets:
       - ibm-db2-registry
     privileged: true
   environment:
     dbType: db2oltp
+    database:
+      name: ${db2_name}
     instance:
       password: ${db2AdminUserPassword}
+      registry:
+        DB2_4K_DEVICE_SUPPORT: "ON"
+  addOns:
+    rest:
+      enabled: false
+    graph:
+      enabled: false
   version: ${db2InstanceVersion}
   podConfig:
     db2u:
@@ -27,12 +41,21 @@ spec:
             cpu: ${db2Cpu}
             memory: ${db2Memory}
   storage:
-    - name: share
-      type: create
+    - name: meta
+      type: "create"
       spec:
+        storageClassName: ${db2OnOcpStorageClassName}
         accessModes:
           - ReadWriteMany
         resources:
           requests:
             storage: ${db2StorageSize}
+    - name: data
+      type: "create"
+      spec:
         storageClassName: ${db2OnOcpStorageClassName}
+        accessModes:
+          - ReadWriteMany
+        resources:
+          requests:
+            storage: ${db2StorageSize}
