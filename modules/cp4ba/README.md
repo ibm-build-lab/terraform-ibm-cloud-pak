@@ -66,7 +66,7 @@ data "ibm_container_cluster_config" "cluster_config" {
 
 Input:
 
-- `cluster_d`: either the cluster name or ID.
+- `cluster_id`: either the cluster name or ID.
 
 - `ibm_resource_group`:  resource group where the cluster is running
 

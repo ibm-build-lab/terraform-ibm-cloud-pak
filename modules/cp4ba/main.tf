@@ -117,7 +117,7 @@ resource "null_resource" "installing_cp4ba" {
 }
 
 data "external" "get_endpoints" {
-  count = 1
+  count = var.enable_cp4ba ? 1 : 0
 
   depends_on = [
     null_resource.installing_cp4ba

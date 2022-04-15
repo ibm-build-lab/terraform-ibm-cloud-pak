@@ -3,17 +3,14 @@ variable "ibmcloud_api_key" {
 }
 
 variable "cluster_id" {
-  default     = ""
   description = "Set your cluster ID to install the Cloud Pak for Business Automation. Leave blank to provision a new OpenShift cluster."
 }
 
 variable "ingress_subdomain" {
-  default     = ""
   description = "Run the command `ibmcloud ks cluster get -c <cluster_name_or_id>` to get the Ingress Subdomain value"
 }
 
 variable "resource_group" {
-  default     = "Default"
   description = "Resource group name where the cluster is hosted."
 }
 
@@ -22,7 +19,6 @@ variable "region" {
 }
 
 variable "cluster_config_path" {
-  default     = "./.kube/config"
   description = "directory to store the kubeconfig file"
 }
 
@@ -37,7 +33,6 @@ variable "entitled_registry_user_email" {
 }
 
 variable "cp4ba_project_name" {
-  default     = "cp4ba"
   description = "Namespace or project for cp4ba"
 }
 
@@ -47,7 +42,6 @@ variable "enable_cp4ba" {
 }
 
 # --- LDAP SETTINGS ---
-# Password for LDAP Admin User (ldapAdminName name see below), for example passw0rd - use the password that you specified when setting up LDAP
 variable "ldap_admin_name" {
   default = "cn=root"
   description = "The LDAP root administrator account to access the directory. To learn more: https://www.ibm.com/docs/en/sva/7.0.0?topic=tuning-ldap-root-administrator-account-cnroot"
@@ -63,7 +57,6 @@ variable "hostname" {
 }
 
 variable "ldap_host_ip" {
-  default     = ""
   description = "LDAP server IP address"
 }
 
@@ -74,8 +67,7 @@ variable "enable_db2" {
 }
 
 variable "db2_project_name" {
- default     = "ibm-db2"
- description = "The namespace/project for Db2"
+ description = "The namespace or name project where Db2 operator will be installed."
 }
 
 variable "db2_admin_username" {
@@ -97,13 +89,10 @@ variable "db2_host_address" {
 }
 
 variable "db2_ports" {
-  description = "Port number for DB2 instance. Ignore if there is not an existing Db2."
-  default = ""
+  description = "List of Port numbers of DB2 instances. Ignore if there is not an existing Db2."
 }
 
 locals {
-  cluster_config_path = "./.kube/config"
-  namespace           = "cp4ba"
   docker_server       = "cp.icr.io"
   docker_username     = "cp"
 }

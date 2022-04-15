@@ -4,7 +4,7 @@ variable "ibmcloud_api_key" {
 
 variable "cluster_id" {
   default     = ""
-  description = "Enter your cluster id or name to install the Cloud Pak. Leave blank to provision a new Openshift cluster."
+  description = "Enter your cluster id or name to install the Cloud Pak."
 }
 
 variable "ingress_subdomain" {
@@ -100,7 +100,7 @@ variable "cluster_config_path" {
 }
 
 locals {
-  namespace           = "cp4ba"
+//  namespace           = "cp4ba"
   docker_server       = "cp.icr.io"
   docker_username     = "cp"
 }
