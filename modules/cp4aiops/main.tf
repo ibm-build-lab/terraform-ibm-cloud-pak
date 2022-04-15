@@ -58,6 +58,24 @@ resource "null_resource" "install_cp4aiops" {
   }
 }
 
+resource "null_resource" "configure_cert_nginx" {
+  count = var.enable ? 1 : 0
+
+  depends_on = [
+    null_resource.install_cp4aiops
+  ]
+
+  provisioner "local-exec" {
+    command     = "./update_cert.sh"
+    working_dir = "${path.module}/scripts"
+
+    environment = {
+      KUBECONFIG                    = var.cluster_config_path
+      NAMESPACE                     = var.namespace
+    }
+  }
+}
+
 ###########################################
 # Installation Steps for AIOPS - EventManager
 ###########################################
@@ -67,7 +85,7 @@ resource "null_resource" "install_event_manager_operator" {
   depends_on = [
     local.on_vpc_ready,
     null_resource.prereqs_checkpoint,
-    null_resource.install_cp4aiops
+    null_resource.configure_cert_nginx
   ]
 
   provisioner "local-exec" {
@@ -116,21 +134,5 @@ data "external" "get_endpoints" {
     NAMESPACE  = var.namespace
   }
 }
-# Documentation is out of date, waiting to update.
-# resource "null_resource" "configure_cert_nginx" {
-#   count = var.enable ? 1 : 0
 
-#   depends_on = [
-#     null_resource.install_cp4aiops
-#   ]
 
-#   provisioner "local-exec" {
-#     command     = "./update_cert.sh"
-#     working_dir = "${path.module}/scripts"
-
-#     environment = {
-#       KUBECONFIG                    = var.cluster_config_path
-#       NAMESPACE                     = var.namespace
-#     }
-#   }
-# }
