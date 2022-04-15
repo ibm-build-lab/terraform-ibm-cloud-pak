@@ -36,12 +36,7 @@ echo
 echo "Creating project ${DB2_PROJECT_NAME}..."
 kubectl create namespace "${DB2_PROJECT_NAME}"
 kubectl get ns "${DB2_PROJECT_NAME}"
-echo
 
-
-echo "Creating Storage Class ..."
-kubectl apply -f "${DB2_STORAGE_CLASS_FILE}"
-sleep 10
 echo
 
 echo "Docker username: ${DOCKER_USERNAME}"
@@ -50,7 +45,7 @@ sleep 10
 echo
 kubectl patch storageclass ibmc-block-gold -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
 echo
-kubectl patch storageclass cp4a-file-retain-gold-gid -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+kubectl patch storageclass "${DB2_STORAGE_CLASS}" -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 echo
 #kubectl get no -l node-role.kubernetes.io/worker --no-headers -o name | xargs -I {} --  oc debug {} -- chroot /host sh -c 'grep "^Domain = slnfsv4.coms" /etc/idmapd.conf || ( sed -i.bak "s/.*Domain =.*/Domain = slnfsv4.com/g" /etc/idmapd.conf; nfsidmap -c; rpc.idmapd )'
 
@@ -75,7 +70,8 @@ echo
 
 echo
 echo "Modifying the OpenShift Global Pull Secret (you need jq tool for that):"
-echo $(kubectl get secret pull-secret -n openshift-config --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode; kubectl get secret ibm-db2-registry -n ${DB2_PROJECT_NAME} --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode) | jq -s '.[0] * .[1]' > dockerconfig_merged
+echo $(kubectl get secret pull-secret -n openshift-config --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode; kubectl get secret ibm-db2-registry -n "${DB2_PROJECT_NAME}" --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode) | jq -s '.[0] * .[1]' > dockerconfig_merged
+
 
 echo
 kubectl edit secret/pull-secret -n openshift-config --from-file=.dockerconfigjson=dockerconfig_merged
@@ -282,8 +278,6 @@ function get_worker_node_addresses_from_pod {
   if [ ! -z "$typeFilter" ]
   then
     HOST_ADDRESSES=$(kubectl get node "$HOST_NODE" -o custom-columns="ADDRESS":".status.addresses[?(@.type==\"${typeFilter}\")].address" --no-headers 2>/dev/null)
-    # Example:
-    # HOST_ADDRESSES=$(oc get node $HOST_NODE -o custom-columns="ADDRESS":'.status.addresses[?(@.type=="ExternalIP")].address' --no-headers 2>/dev/null)
   else
     HOST_ADDRESSES=$(kubectl get node "$HOST_NODE" -o custom-columns="ADDRESSES":'.status.addresses[*].address' --no-headers 2>/dev/null)
   fi
@@ -445,8 +439,3 @@ echo "**************************************************************************
 echo "******** Installation and configuration of DB2 completed successfully!!! ********"
 echo "*********************************************************************************"
 
-echo
-echo
-echo "****************************************************************************"
-echo "*********************** DB2 ENDPOINTS USED FOR CP4BA ***********************"
-echo "****************************************************************************"

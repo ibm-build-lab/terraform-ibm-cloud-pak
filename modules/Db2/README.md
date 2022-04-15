@@ -20,7 +20,6 @@ If running these modules from your local terminal, you need to set the credentia
 
 Go [here](../CREDENTIALS.md) for details.
 
-
 ## Resources Required
 -   1 worker node
 -   Cores: 5.7 (2 for the Db2 engine and 3.7 for Db2 auxiliary services)

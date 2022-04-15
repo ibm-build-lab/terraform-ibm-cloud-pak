@@ -1,9 +1,6 @@
 locals {
   db2_operator_catalog_file = "${path.module}/files/ibm_operator_catalog.yaml"
   db2_operator_catalog_file_content = file(local.db2_operator_catalog_file)
-  db2_storage_class_file = "${path.module}/files/storage_class.yaml"
-  db2_storage_class_file_content = file(local.db2_storage_class_file)
-
   db2_cr_file = "${path.module}/files/ibm-db2-cr.yaml"
   db2_cr_file_content = file(local.db2_cr_file)
 
@@ -44,7 +41,6 @@ resource "null_resource" "install_db2" {
     db2_operator_group_file_sha1   = sha1(local.db2_operator_group_file_content)
     db2_subscription_file_sha1     = sha1(local.db2_subscription_file_content)
     db2_operator_catalog_file_sha1 = sha1(local.db2_operator_catalog_file)
-    db2_storage_class_file_sha1    = sha1(local.db2_storage_class_file)
     db2_cr_file_content_sha1       = sha1(local.db2_cr_file_content)
     docker_credentials_sha1        = sha1(join("", [var.entitled_registry_key, var.entitled_registry_user_email, var.db2_project_name]))
     security_context_file_content_sha1   = sha1(local.security_context_file_content)
@@ -73,7 +69,6 @@ resource "null_resource" "install_db2" {
 
       # ------ FILES ASSIGNMENTS -----------
       DB2_OPERATOR_CATALOG_FILE  = local.db2_operator_catalog_file
-      DB2_STORAGE_CLASS_FILE     = local.db2_storage_class_file
       DB2U_CLUSTER_CONTENT       = local.db2u_cluster_file
       DB2_OPERATOR_GROUP_CONTENT = local.db2_operator_group_file_content
       DB2_SUBSCRIPTION_CONTENT   = local.db2_subscription_file_content
