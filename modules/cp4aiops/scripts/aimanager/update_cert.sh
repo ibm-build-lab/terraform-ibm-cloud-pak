@@ -9,7 +9,7 @@
 # Check for external-tls-secret before the start of updating cert
 if [ "`kubectl get secret -n $NAMESPACE external-tls-secret --ignore-not-found`" == "" ]; then
   # Creates external-tls-secret if it's missing
-  oc get secret internal-nginx-svc-tls --namespace=${NAMESPACE}  -o yaml | sed -e "s/internal-nginx-svc-tls/external-tls-secret/g" | kubectl apply -n ${NAMESPACE} -f -
+  kubectl get secret internal-nginx-svc-tls --namespace=${NAMESPACE}  -o yaml | sed -e "s/internal-nginx-svc-tls/external-tls-secret/g" | kubectl apply -n ${NAMESPACE} -f -
 fi
 
 AUTO_UI_INSTANCE=$(kubectl get AutomationUIConfig -n $NAMESPACE --no-headers -o custom-columns=":metadata.name")
