@@ -4,13 +4,14 @@
 
 locals {
   installation_content = templatefile("${path.module}/templates/install_odf.yaml.tmpl", {
-    monSize = var.monSize,
-    monStorageClassName = var.monStorageClassName,
+    #monSize = var.monSize,
+    #monStorageClassName = var.monStorageClassName,
     osdStorageClassName = var.osdStorageClassName,
     osdSize = var.osdSize,
     numOfOsd = var.numOfOsd, 
     billingType = var.billingType,
-    ocsUpgrade = var.ocsUpgrade
+    ocsUpgrade = var.ocsUpgrade,
+    clusterEncryption = var.clusterEncryption
   })
 }
 

@@ -3,10 +3,9 @@ kind: OcsCluster
 metadata:
   name: ocscluster-vpc
 spec:
-  monSize: ${ monSize }
-  monStorageClassName: ${ monStorageClassName }
   osdStorageClassName: ${ osdStorageClassName }
-  osdSize: ${ osdSize }
+  osdSize: "${ osdSize }"
   numOfOsd: ${ numOfOsd }
   billingType: ${ billingType }
   ocsUpgrade: ${ ocsUpgrade }
+  clusterEncryption: ${ clusterEncryption }
