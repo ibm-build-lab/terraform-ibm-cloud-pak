@@ -1,12 +1,16 @@
 #!/bin/sh
 
-# NAMESPACE="cp4aiops"
-
 ########################
 #
 # A signed certificate is needed on the NGNIX pods for the Slack and Teams integrations.
 #
 #######################
+
+# Check for external-tls-secret before the start of updating cert
+if [ "`kubectl get secret -n $NAMESPACE external-tls-secret --ignore-not-found`" == "" ]; then
+  # Creates external-tls-secret if it's missing
+  kubectl get secret internal-nginx-svc-tls --namespace=${NAMESPACE}  -o yaml | sed -e "s/internal-nginx-svc-tls/external-tls-secret/g" | kubectl apply -n ${NAMESPACE} -f -
+fi
 
 AUTO_UI_INSTANCE=$(kubectl get AutomationUIConfig -n $NAMESPACE --no-headers -o custom-columns=":metadata.name")
 IAF_STORAGE=$(kubectl get AutomationUIConfig -n $NAMESPACE -o jsonpath='{ .items[*].spec.storage.class }')
@@ -47,8 +51,11 @@ kubectl delete secret -n $NAMESPACE external-tls-secret
 # Create the new secret with the AI Manager ingress certificate.
 kubectl create secret generic -n $NAMESPACE external-tls-secret --from-file=cert.crt=cert.crt --from-file=cert.key=cert.key --dry-run=client -o yaml | kubectl apply -f -
 
-REPLICAS=$(kubectl get pods -l component=ibm-nginx -o jsonpath='{ .items[*].metadata.name }' | wc -w)
-kubectl scale Deployment/ibm-nginx --replicas=0
+REPLICAS=$(kubectl get pods -l component=ibm-nginx -o jsonpath='{ .items[*].metadata.name }' -n $NAMESPACE | wc -w | tr -d ' ')
+kubectl scale Deployment/ibm-nginx --replicas=0 -n ${NAMESPACE}
 
 sleep 3
-kubectl scale Deployment/ibm-nginx --replicas=${REPLICAS}
+kubectl scale Deployment/ibm-nginx --replicas=${REPLICAS} -n ${NAMESPACE}
+
+# Remove backup
+rm -f external-tls-secret.yaml cert.crt cert.key
