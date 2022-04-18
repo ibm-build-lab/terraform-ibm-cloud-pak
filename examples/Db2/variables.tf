@@ -46,6 +46,11 @@ variable "db2_admin_user_password" {
   description = "Db2 admin user password defined in LDAP"
 }
 
+variable "db2_name" {
+  description = "A name you would like to attribute to your Database. i.e: sample-db2"
+  default     = "sample-db2"
+}
+
 variable "db2_admin_username" {
   default     = "db2inst1"
   description = "Db2 default admin username."
@@ -57,7 +62,7 @@ variable "db2_standard_license_key" {
 }
 
 variable "operatorVersion" {
-  default     = "db2u-operator.v1.1.11"
+  default     = "db2u-operator.v1.1.12"
   description = "Operator version"
 }
 
@@ -67,7 +72,7 @@ variable "operatorChannel" {
 }
 
 variable "db2_instance_version" {
-  default     = "11.5.6.0"
+  default     = "11.5.7.0-cn3"
   description = "DB2 version to be installed"
 }
 
@@ -82,7 +87,7 @@ variable "db2_memory" {
 }
 
 variable "db2_storage_size" {
-  default     = "150Gi"
+  default     = "100Gi"
   description = "Storage size for the db2 databases"
 }
 

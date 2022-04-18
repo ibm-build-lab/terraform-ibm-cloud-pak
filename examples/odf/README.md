@@ -1,4 +1,5 @@
-# Test ODF Terraform Module
+
+# OpenShift Data Foundation Terraform Module Example
 
 ## 1. Set up access to IBM Cloud
 
@@ -8,7 +9,11 @@ You can define the IBM Cloud credentials in the IBM provider block but it is rec
 
 Go [here](../../CREDENTIALS.md) for details.
 
-**NOTE**: These credentials are not required if running this Terraform code within an **IBM Cloud Schematics** workspace. They are automatically set from your account.
+You also need to install the [IBM Cloud cli](https://cloud.ibm.com/docs/cli?topic=cli-install-ibmcloud-cli) as well as the [OpenShift cli](https://cloud.ibm.com/docs/openshift?topic=openshift-openshift-cli)
+
+Make sure you have the latest updates for all IBM Cloud plugins by running `ibmcloud plugin update`.  
+
+**NOTE**: These requirements are not required if running this Terraform code within an **IBM Cloud Schematics** workspace. They are automatically set from your account.
 
 ## 2. Test
 
@@ -16,30 +21,20 @@ Go [here](../../CREDENTIALS.md) for details.
 
 Follow these instructions to test the Terraform Module manually
 
-Create the file `test.auto.tfvars` with the following input variables, these values are fake examples:
+Create a file `terraform.tfvars` with the following input variables:
 
 ```hcl
-enable                  = true
+is_enable               = true
 ibmcloud_api_key        = "<api-key>"
-
-// Cluster parameters
-kube_config_path        = ".kube/config"
-worker_nodes            = 2  // Number of workers
-
-// ODF parameters
-resource_group_name     = "default"
-region                  = "us-east"
-cluster_id              = "<cluster-id>"
+cluster                 = "<cluster-id>"
 ```
 
 These parameters are:
 
+- `is_enable`: Variable to enable ODF install
 - `ibmcloud_api_key`: IBM Cloud Key needed to provision resources.
-- `config_dir`: Directory to download the kubeconfig file. Default value is `./.kube/config`
-- `worker_nodes`: Number of worker nodes in the cluster
-- `resource_group_name`: Resource group where the cluster is running. Default value is `Default`
-- `region`: Region that the resources are in
-- `cluster_id`: Cluster ID of the OpenShift cluster where to install IAF
+- `cluster`: Cluster ID of the OpenShift cluster where to install IAF
+
 
 Execute the following Terraform commands:
 
@@ -71,4 +66,21 @@ This should produce output like:
 
 ## 4. Cleanup
 
-WIP
+
+When the cluster is no longer needed, run `terraform destroy` if this was created using your local Terraform client with `terraform apply`. 
+
+If this cluster was created using `schematics`, just delete the schematics workspace and specify to delete all created resources.
+
+<b>For ODF:</b>
+
+To uninstall ODF and its dependencies from a cluster, execute the following commands:
+
+While logged into the cluster
+
+```bash
+terraform destroy -target null_resource.enable_odf
+```
+This will disable the ODF on the cluster
+
+Once this completes, execute: `terraform destroy` if this was create locally using Terraform or remove the Schematic's workspace.
+

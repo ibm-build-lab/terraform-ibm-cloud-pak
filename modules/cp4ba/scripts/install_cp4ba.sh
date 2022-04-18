@@ -46,7 +46,8 @@ if [[ ${CREATE_SECRET_RESULT} ]]; then
 fi
 echo
 
-echo -e "Creating remaining secrets...\n"
+# echo -e "\x1B[1mCreating remaining secrets \n${SECRETS_CONTENT}...\n\x1B[0m"
+echo -e "\x1B[1mCreating remaining secrets...\n\x1B[0m"
 kubectl apply -n "${CP4BA_PROJECT_NAME}" -f -<<EOF
 ${SECRETS_CONTENT}
 EOF
@@ -169,7 +170,7 @@ sleep 5
 
 ###### Add the CatalogSource resources to Operator Hub
 # Creating roles
-echo -e "Creating roles ..."
+echo -e "\x1B[1mCreating roles ...\x1B[0m"
 cat "${ROLES_FILE}"
 ${K8S_CMD} apply -f "${ROLES_FILE}" -n "${CP4BA_PROJECT_NAME}"
 echo
@@ -177,7 +178,7 @@ echo
 sleep 2
 
 # Creating roles
-echo -e "Creating role binding ..."
+echo -e "\x1B[1mCreating role binding ...\x1B[0m"
 cat "${ROLE_BINDING_FILE}"
 ${K8S_CMD} apply -f "${ROLE_BINDING_FILE}" -n "${CP4BA_PROJECT_NAME}"
 echo
@@ -190,8 +191,14 @@ ${K8S_CMD} create namespace common-service
 echo
 
 
+# CREATING OPERATOR GROUP
+echo -e "\x1B[1m Creating Operator Group ...\x1B[0m"
+cat "${OPERATOR_GROUP_FILE}"
+${K8S_CMD} apply -f "${OPERATOR_GROUP_FILE}"
+echo
+
 # Add the CatalogSource resources to Operator Hub
-echo -e "Creating the Catalog Source ..."
+echo -e "\x1B[1m Creating the Catalog Source ...\x1B[0m"
 cat "${CATALOG_SOURCE_FILE}"
 ${K8S_CMD} apply -f "${CATALOG_SOURCE_FILE}"
 sleep 10
@@ -243,6 +250,19 @@ cat "${COMMON_SERVICE_FILE}"
 ${K8S_CMD} apply -f "${COMMON_SERVICE_FILE}"
 sleep 50
 echo
+
+echo -e "\x1B[1m Creating the AutomationUIConfig ...\x1B[0m"
+kubectl apply -f "${AUTO_UI_CONFIG_FILE_CONTENT}"
+cat "${AUTO_UI_CONFIG_FILE_CONTENT}"
+sleep 10
+echo
+
+echo -e "\x1B[1m Creating the Cartridge ...\x1B[0m"
+kubectl apply -f "${CARTRIDGE_FILE_CONTENT}"
+cat "${CARTRIDGE_FILE_CONTENT}"
+sleep 10
+echo
+
 
 # Create subscription to Business Automation Operator
 echo -e "Creating the Subscription ..."

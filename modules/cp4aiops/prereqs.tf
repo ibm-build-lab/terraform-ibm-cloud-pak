@@ -1,17 +1,76 @@
 locals {
-  setOpenshiftServerless_file = "openshift-serverless.yaml"
-  setKnativeServing_file = "knative-serving.yaml"
-  setKnativeEventing_file = "knative-eventing.yaml"
-  setStrimzi_file = "strimzi-subscription.yaml"
-
+  setAIOPS_catalog_source = "aiops-catalog.yaml"
 }
 
 ###########################################
-# Create Knative Options and disable route
+# Preinstallation Steps for AIOPS - AIManager
 ###########################################
 
-resource "null_resource" "openshift_serverless" {
-  depends_on = [var.portworx_is_ready]
+resource "null_resource" "create_namespace" {
+  provisioner "local-exec" {
+    command     = "./create_namespace.sh"
+    working_dir = "${path.module}/scripts/"
+
+    environment = {
+      KUBECONFIG = var.cluster_config_path
+      NAMESPACE  = var.namespace
+    }
+  }
+}
+
+resource "null_resource" "create_entitlement_account" {
+  count = var.enable_aimanager ? 1 : 0
+  depends_on = [null_resource.create_namespace]
+
+  provisioner "local-exec" {
+    command     = "./create_entitlement.sh"
+    working_dir = "${path.module}/scripts/aimanager"
+
+    environment = {
+      KUBECONFIG                    = var.cluster_config_path
+      NAMESPACE                     = var.namespace
+      ENTITLEMENT_KEY               = var.entitled_registry_key
+    }
+  }
+}
+
+resource "null_resource" "configure_network_policies" {
+  depends_on = [null_resource.create_entitlement_account]
+  
+  provisioner "local-exec" {
+    environment = {
+      KUBECONFIG = var.cluster_config_path
+    }
+    interpreter = ["/bin/bash", "-c"]
+    command     = "if [ $(kubectl get ingresscontroller default -n openshift-ingress-operator -o jsonpath='{.status.endpointPublishingStrategy.type}') = \"HostNetwork\" ]; then kubectl patch namespace default --type=json -p '[{\"op\":\"add\",\"path\":\"/metadata/labels\",\"value\":{\"network.openshift.io/policy-group\":\"ingress\"}}]'; fi"
+  }
+}
+
+###########################################
+# Preinstallation Steps for AIOPS - EventManager
+###########################################
+
+resource "null_resource" "event_man_prereq_install" {
+  count = var.enable_event_manager ? 1 : 0
+  depends_on = [null_resource.create_namespace, null_resource.configure_network_policies]
+
+  provisioner "local-exec" {
+    command     = "./em_prereq.sh"
+    working_dir = "${path.module}/scripts/eventmanager"
+
+    environment = {
+      KUBECONFIG                    = var.cluster_config_path
+      NAMESPACE                     = var.namespace
+      ENTITLEMENT_KEY               = var.entitled_registry_key
+    }
+  }
+}
+
+###########################################
+# Used in either installation
+###########################################
+resource "null_resource" "create_catalog_source" {
+  depends_on = [null_resource.event_man_prereq_install, null_resource.configure_network_policies]
   
   provisioner "local-exec" {
     environment = {
@@ -19,61 +78,7 @@ resource "null_resource" "openshift_serverless" {
     }
     working_dir = "${path.module}/files/"
     interpreter = ["/bin/bash", "-c"]
-    command = "oc apply -f ${local.setOpenshiftServerless_file} && sleep 120"
-  }
-}
-
-resource "null_resource" "knative_serving" {
-  depends_on = [null_resource.openshift_serverless]
-  
-  provisioner "local-exec" {
-    environment = {
-      KUBECONFIG = var.cluster_config_path
-    }
-    working_dir = "${path.module}/files/"
-    interpreter = ["/bin/bash", "-c"]
-    command = "oc apply -f ${local.setKnativeServing_file} && sleep 60"
-  }
-}
-
-resource "null_resource" "knative_eventing" {
-  depends_on = [null_resource.knative_serving]
-  
-  provisioner "local-exec" {
-    environment = {
-      KUBECONFIG = var.cluster_config_path
-    }
-    working_dir = "${path.module}/files/"
-    interpreter = ["/bin/bash", "-c"]
-    command = "oc apply -f ${local.setKnativeEventing_file} && sleep 60"
-  }
-}
-
-resource "null_resource" "disable_knative_route" {
-  depends_on = [null_resource.knative_eventing]
-
-  provisioner "local-exec" {
-    environment = {
-      KUBECONFIG = var.cluster_config_path
-    }
-    interpreter = ["/bin/bash", "-c"]
-    command = "oc annotate service.serving.knative.dev/kn-cli -n knative-serving serving.knative.openshift.io/disableRoute=true && sleep 30"
-  }
-}
-
-###########################################
-# Install Strimzi
-###########################################
-resource "null_resource" "strimzi_subscription" {
-  depends_on = [null_resource.knative_eventing]
-  
-  provisioner "local-exec" {
-    environment = {
-      KUBECONFIG = var.cluster_config_path
-    }
-    working_dir = "${path.module}/files/"
-    interpreter = ["/bin/bash", "-c"]
-    command = "oc apply -f ${local.setStrimzi_file} && sleep 120"
+    command     = "kubectl apply -f ${local.setAIOPS_catalog_source}"
   }
 }
 
@@ -81,7 +86,7 @@ resource "null_resource" "strimzi_subscription" {
 # Create and configure storage
 ###########################################
 resource "null_resource" "install_portworx_sc" {
-  depends_on = [null_resource.strimzi_subscription]
+  depends_on = [null_resource.create_catalog_source]
 
   # Install portworx storage classes on cluster if it's VPC
   count = var.on_vpc ? 1 : 0
@@ -96,32 +101,21 @@ resource "null_resource" "install_portworx_sc" {
   }
 }
 
-resource "null_resource" "install_db2_local" {
-  depends_on = [null_resource.strimzi_subscription]
-
-  provisioner "local-exec" {
-    command     = "./install_db2_local.sh"
-    working_dir = "${path.module}/scripts"
-
-    environment = {
-      KUBECONFIG = var.cluster_config_path
-    }
-  }
-}
-
 #######################
 # Catch-all checkpoint
 #######################
 resource "null_resource" "prereqs_checkpoint" {
   depends_on = [
     var.portworx_is_ready,
-    null_resource.openshift_serverless,
-    null_resource.knative_serving,
-    null_resource.knative_eventing,
-    null_resource.disable_knative_route,
-    null_resource.strimzi_subscription,
-    null_resource.install_portworx_sc,
-    null_resource.install_db2_local,
+    null_resource.create_namespace,
+
+    null_resource.create_entitlement_account,
+    null_resource.configure_network_policies,
+
+    null_resource.event_man_prereq_install,
+
+    null_resource.create_catalog_source,
+    null_resource.install_portworx_sc
   ]
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]

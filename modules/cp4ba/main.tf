@@ -7,7 +7,6 @@ locals {
   roles_file_content                    = file(local.roles_file)
   role_binding_file                     = "${path.module}/files/role_binding.yaml"
   role_binding_content                  = file(local.role_binding_file)
-
   operator_group_file_content           = templatefile("${path.module}/templates/operator-group.yaml.tmpl", {
     cp4ba_project_name = var.cp4ba_project_name
   })

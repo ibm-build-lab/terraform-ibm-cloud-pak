@@ -11,7 +11,8 @@ If running these modules from your local terminal, you need to set the credentia
 Go [here](../CREDENTIALS.md) for details.
 
 ## Provisioning this module in a Terraform Script
-In your Terraform script define the `ibm` provisioner block with the `version`.
+
+You will need a `versions.tf` file containing the terraform version:
 
 ```hcl
 terraform {
@@ -26,7 +27,11 @@ terraform {
     }
   }
 }
+```
 
+And `provider.tf` file containing the  `ibm` provisioner block:
+
+```hcl
 provider "ibm" {
   region           = var.region
   ibmcloud_api_key = var.ibmcloud_api_key
@@ -132,8 +137,10 @@ module "install_cp4ba" {
 Follow this link to execute this CP4BA module: [Install IBM Cloud Pak Business Automation (CP4BA) Terraform Example](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/examples/cp4ba)
 
 ### Verify
+
 If CP4BA is successful and the process is completed, you should see the following similar outputs:
-```
+
+```console
 
 Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
 
@@ -157,8 +164,10 @@ The Terraform code return the following output parameters:
 
 ## Clean up or Uninstall CP4BA
 
-When you finish with CP4BA, release the resources by executing the following command:: 
-```
+When you finish with CP4BA, release the resources by executing the following command:
+
+```bash
 terraform destroy
 ```
+
 Additional resources are creating using scripts. The cleanup process for these additional resources is a work in progress at this time, we are identifying the objects that need to be deleted in order to have a successful re-installation.
