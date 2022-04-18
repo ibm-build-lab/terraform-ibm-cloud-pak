@@ -89,11 +89,7 @@ variable "db2_host_address" {
   default     = ""
 }
 
-<<<<<<< HEAD
 variable "db2_ports" {
-=======
-variable "db2_host_port" {
->>>>>>> main
   description = "Port number for DB2 instance. Ignore if there is not an existing Db2."
   default = ""
 }
@@ -104,11 +100,6 @@ variable "cluster_config_path" {
 }
 
 locals {
-<<<<<<< HEAD
-//  namespace           = "cp4ba"
-=======
-  namespace           = "cp4ba"
->>>>>>> main
   docker_server       = "cp.icr.io"
   docker_username     = "cp"
 }
