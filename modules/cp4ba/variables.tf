@@ -96,14 +96,11 @@ variable "db2_host_address" {
   description = "Host name for DB2 instance. Ignore if there is not an existing Db2."
 }
 
-variable "db2_host_port" {
-  description = "Port number for DB2 instance. Ignore if there is not an existing Db2."
-  default = ""
+variable "db2_ports" {
+  description = "List of Port numbers of DB2 instances. Ignore if there is not an existing Db2."
 }
 
 locals {
-  cluster_config_path = "./.kube/config"
-  namespace           = "cp4ba"
   docker_server       = "cp.icr.io"
   docker_username     = "cp"
 }
