@@ -4,15 +4,19 @@ This Terraform Module installs **DB2** on an Openshift (ROKS) cluster on IBM Clo
 
 **Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/Db2`
 
-- [Terraform DB2 Module toinstall and configure DB2 on Openshift](#terraform-db2-module-toinstall-and-configure-db2-on-openshift)
+- [Terraform DB2 Module to install and configure DB2 on Openshift](#terraform-db2-module-to-install-and-configure-db2-on-openshift)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
-  - [Download required license files](#download-required-license-files)
+  - [Resources Required](#resources-required)
+  - [Download required license file](#download-required-license-file)
   - [Provisioning this module in a Terraform Script](#provisioning-this-module-in-a-terraform-script)
     - [Setting up the OpenShift cluster](#setting-up-the-openshift-cluster)
-    - [Using the Db2 Module](#using-the-Db2-module)
+    - [Using the DB2 Module](#using-the-db2-module)
   - [Input Variables](#input-variables)
-  - [Executing the Terraform Script](#executing-the-terraform-script)
-  - [Clean up](#clean-up)
+    - [Executing the Terraform Script](#executing-the-terraform-script)
+    - [Verify](#verify)
+  - [Output Parameters](#output-parameters)
+    - [Clean up](#clean-up)
+  - [Uninstall](#uninstall)
 
 ## Set up access to IBM Cloud
 
@@ -27,7 +31,8 @@ Go [here](../CREDENTIALS.md) for details.
 
 ## Download required license file
 
-Download required license file from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `../../modules/db2/files` folder on your local computer. 
+Download required license file from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `../../modules/db2/files` folder on your local computer.
+
 ```bash
 DB2:
 Part Number : CNB21ML
@@ -35,6 +40,7 @@ Filename    : DB2_AWSE_Restricted_Activation_11.5.zip
 ```
 
 ## Provisioning this module in a Terraform Script
+
 In your Terraform script define the `ibm` provisioner block with the `version`.
 
 ```hcl
@@ -59,7 +65,7 @@ provider "ibm" {
 
 ### Setting up the OpenShift cluster
 
-NOTE: an OpenShift cluster is required to install the Cloud Pak. This can be an existing cluster or can be provisioned using our `roks` Terraform module.
+NOTE: an OpenShift cluster is required to install this module. This can be an existing cluster or can be provisioned using our `roks` Terraform module.
 
 To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script. The recommended size for an OpenShift cluster on IBM Cloud Classic contains `4` workers of flavor `b3c.16x64`, however read the [Db2 installation methods](https://www.ibm.com/docs/en/db2/11.1?topic=servers-db2-installation-methods) to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
 

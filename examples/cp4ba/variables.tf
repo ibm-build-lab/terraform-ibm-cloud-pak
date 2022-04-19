@@ -4,7 +4,7 @@ variable "ibmcloud_api_key" {
 
 variable "cluster_id" {
   default     = ""
-  description = "Enter your cluster id or name to install the Cloud Pak. Leave blank to provision a new Openshift cluster."
+  description = "Enter your cluster id or name to install the Cloud Pak."
 }
 
 variable "ingress_subdomain" {
@@ -89,7 +89,7 @@ variable "db2_host_address" {
   default     = ""
 }
 
-variable "db2_host_port" {
+variable "db2_ports" {
   description = "Port number for DB2 instance. Ignore if there is not an existing Db2."
   default = ""
 }
@@ -100,7 +100,6 @@ variable "cluster_config_path" {
 }
 
 locals {
-  namespace           = "cp4ba"
   docker_server       = "cp.icr.io"
   docker_username     = "cp"
 }

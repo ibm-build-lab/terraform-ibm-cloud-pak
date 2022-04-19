@@ -7,12 +7,6 @@ locals {
   roles_file_content                    = file(local.roles_file)
   role_binding_file                     = "${path.module}/files/role_binding.yaml"
   role_binding_content                  = file(local.role_binding_file)
-  cartridge_file_content                = templatefile("${path.module}/templates/cartridge.yaml.tmpl", {
-    cp4ba_project_name = var.cp4ba_project_name
-  })
-  auto_ui_config_file_content             = templatefile("${path.module}/templates/automationUIConfig.yaml.tmpl", {
-    cp4ba_project_name = var.cp4ba_project_name
-  })
   operator_group_file_content           = templatefile("${path.module}/templates/operator-group.yaml.tmpl", {
     cp4ba_project_name = var.cp4ba_project_name
   })
@@ -35,7 +29,7 @@ locals {
   cp4ba_deployment_file_content             = templatefile("${path.module}/templates/cp4ba_deployment.yaml.tmpl", {
     ldap_host_ip     = var.ldap_host_ip,
     db2_host_address = var.db2_host_address,
-    db2_host_port    = var.db2_host_port,
+    db2_host_port     = var.db2_ports,
     ingress_subdomain = var.ingress_subdomain
   })
   secrets_content    = templatefile("${path.module}/templates/secrets.yaml.tmpl", {
@@ -48,27 +42,29 @@ locals {
 }
 
 resource "null_resource" "installing_cp4ba" {
+  count = var.enable_cp4ba ? 1 : 0
 
   triggers = {
-    OPERATOR_SHARED_PV_FILE_sha1          = sha1(local.operator_shared_pv_file_content)
-    SHARED_LOG_PV_FILE_sha1               = sha1(local.shared_log_pv_file_content)
-    AUTO_UI_CONFIG_FILE_CONTENT_sha1      = sha1(local.auto_ui_config_file_content)
-    CARTRIDGE_FILE_CONTENT_sha1           = sha1(local.cartridge_file_content)
-    OPERATOR_SHARED_PVC_FILE_sha1         = sha1(local.operator_shared_pvc_file_content)
-    SHARED_LOG_PVC_FILE_sha1              = sha1(local.shared_log_pvc_file_content)
-    OPERATOR_GROUP_sha1                   = sha1(local.operator_group_file_content)
-    CATALOG_SOURCE_FILE_sha1              = sha1(local.catalog_source_file_content)
-    CP4BA_SUBSCRIPTION_FILE_sha1          = sha1(local.cp4ba_subscription_file_content)
-    cp4ba_deployment_credentials_sha1     = sha1(local.cp4ba_deployment_credentials_file_content)
-    CP4BA_DEPLOYMENT_sha1                 = sha1(local.cp4ba_deployment_file_content)
-    SECRET_sha1                           = sha1(local.secrets_content)
-    ROLES_sha1                            = sha1(local.roles_file_content)
-    ROLE_BINDING_sha1                     = sha1(local.role_binding_content)
-    COMMON_SERVICE_FILE_sha1              = sha1(local.common_service_file_content)
+    kubeconfig                        = var.cluster_config_path
+    cp4ba_project_name                = var.cp4ba_project_name
+    OPERATOR_SHARED_PV_FILE_sha1      = sha1(local.operator_shared_pv_file_content)
+    SHARED_LOG_PV_FILE_sha1           = sha1(local.shared_log_pv_file_content)
+    OPERATOR_SHARED_PVC_FILE_sha1     = sha1(local.operator_shared_pvc_file_content)
+    SHARED_LOG_PVC_FILE_sha1          = sha1(local.shared_log_pvc_file_content)
+    OPERATOR_GROUP_sha1               = sha1(local.operator_group_file_content)
+    CATALOG_SOURCE_FILE_sha1          = sha1(local.catalog_source_file_content)
+    CP4BA_SUBSCRIPTION_FILE_sha1      = sha1(local.cp4ba_subscription_file_content)
+    cp4ba_deployment_credentials_sha1 = sha1(local.cp4ba_deployment_credentials_file_content)
+    CP4BA_DEPLOYMENT_sha1             = sha1(local.cp4ba_deployment_file_content)
+    SECRET_sha1                       = sha1(local.secrets_content)
+    ROLES_sha1                        = sha1(local.roles_file_content)
+    ROLE_BINDING_sha1                 = sha1(local.role_binding_content)
+    COMMON_SERVICE_FILE_sha1          = sha1(local.common_service_file_content)
   }
 
   provisioner "local-exec" {
     command = "${path.module}/scripts/install_cp4ba.sh"
+
 
     environment = {
       # ---- Cluster ----
@@ -81,17 +77,15 @@ resource "null_resource" "installing_cp4ba" {
       DOCKER_SERVER                 = local.docker_server
       DOCKER_USERNAME               = local.docker_username
       # ------- FILES ASSIGNMENTS --------
-      AUTO_UI_CONFIG_FILE_CONTENT      = local.auto_ui_config_file_content
-      CARTRIDGE_FILE_CONTENT           = local.cartridge_file_content
-      OPERATOR_SHARED_PV_FILE          = local.operator_shared_pv_file_content
-      SHARED_LOG_PV_FILE               = local.shared_log_pv_file_content
-      OPERATOR_SHARED_PVC_FILE         = local.operator_shared_pvc_file_content
-      SHARED_LOG_PVC_FILE              = local.shared_log_pvc_file_content
-      OPERATOR_GROUP_FILE              = local.operator_group_file_content
+      OPERATOR_SHARED_PV_CONTENT       = local.operator_shared_pv_file_content
+      SHARED_LOG_PV_CONTENT            = local.shared_log_pv_file_content
+      OPERATOR_SHARED_PVC_CONTENT      = local.operator_shared_pvc_file_content
+      SHARED_LOG_PVC_CONTENT           = local.shared_log_pvc_file_content
+      OPERATOR_GROUP_CONTENT           = local.operator_group_file_content
       CATALOG_SOURCE_FILE              = local.catalog_source_file
       COMMON_SERVICE_FILE              = local.common_service_file
-      CP4BA_SUBSCRIPTION_FILE          = local.cp4ba_subscription_file_content
-      CP4BA_DEPLOYMENT_CREDENTIALS_FILE = local.cp4ba_deployment_credentials_file_content
+      CP4BA_SUBSCRIPTION_CONTENT       = local.cp4ba_subscription_file_content
+      CP4BA_DEPLOYMENT_CREDENTIALS_CONTENT = local.cp4ba_deployment_credentials_file_content
       CP4BA_DEPLOYMENT_CONTENT         = local.cp4ba_deployment_file_content
       SECRETS_CONTENT                  = local.secrets_content
       ROLES_FILE                       = local.roles_file
@@ -101,17 +95,28 @@ resource "null_resource" "installing_cp4ba" {
       ldap_password           = var.ldap_admin_password
       ldap_host_ip            = var.ldap_host_ip
       # ----- DB2 Settings -----
-      db2_host_port           = var.db2_host_port # != null ? var.db2_ports : module.install_db2.db2_ports # var.db2_port_number
+      db2_host_port           = var.db2_ports
       db2_host_address        = var.db2_host_address
       db2_admin               = var.db2_admin_username
       db2_password            = var.db2_admin_user_password
       db2_user                = var.db2_user
     }
   }
+
+  provisioner "local-exec" {
+    when        = destroy
+    command     = "./uninstall_cp4ba.sh"
+    working_dir = "${path.module}/scripts"
+
+    environment = {
+      kubeconfig       = self.triggers.kubeconfig
+      cp4ba_project_name = self.triggers.cp4ba_project_name
+    }
+  }
 }
 
 data "external" "get_endpoints" {
-  count = 1
+  count = var.enable_cp4ba ? 1 : 0
 
   depends_on = [
     null_resource.installing_cp4ba

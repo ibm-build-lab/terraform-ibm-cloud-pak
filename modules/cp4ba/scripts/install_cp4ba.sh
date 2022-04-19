@@ -13,28 +13,36 @@ CUR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PARENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 K8S_CMD=kubectl
 
-###### Create the namespace
+
+echo
+echo
+echo "*********************************************************************************"
+echo "******************** Installating and configuring CP4BA ... *********************"
+echo "*********************************************************************************"
+
+
+  ###### Create the namespace
 echo
 echo "Creating \"${CP4BA_PROJECT_NAME}\" project ... "
 ${K8S_CMD} create namespace "${CP4BA_PROJECT_NAME}"
 echo
 
 ###### Create the secrets
-echo -e "\x1B[1mCreating secret \"admin.registrykey\" in ${CP4BA_PROJECT_NAME}...\n\x1B[0m"
+echo -e "Creating secret \"admin.registrykey\" in ${CP4BA_PROJECT_NAME}...\n"
 CREATE_SECRET_RESULT=$(${K8S_CMD} create secret docker-registry admin.registrykey -n "${CP4BA_PROJECT_NAME}" --docker-username="${DOCKER_USERNAME}" --docker-password="${ENTITLED_REGISTRY_KEY}" --docker-server="${DOCKER_SERVER}" --docker-email="${ENTITLED_REGISTRY_EMAIL}")
 sleep 5
 
 if [[ ${CREATE_SECRET_RESULT} ]]; then
-    echo -e "\033[1;32m \"admin.registrykey\" secret has been created\x1B[0m"
+    echo -e "\"admin.registrykey\" secret has been created."
 fi
 
 echo
-echo -e "\x1B[1mCreating secret \"ibm-entitlement-key\" in ${CP4BA_PROJECT_NAME}...\n\x1B[0m"
+echo -e "Creating secret \"ibm-entitlement-key\" in ${CP4BA_PROJECT_NAME}...\n"
 CREATE_SECRET_RESULT=$(${K8S_CMD} create secret docker-registry ibm-entitlement-key -n "${CP4BA_PROJECT_NAME}" --docker-username="${DOCKER_USERNAME}" --docker-password="${ENTITLED_REGISTRY_KEY}" --docker-server="${DOCKER_SERVER}" --docker-email="${ENTITLED_REGISTRY_EMAIL}")
 sleep 5
 
 if [[ ${CREATE_SECRET_RESULT} ]]; then
-    echo -e "\033[1;32m \"ibm-entitlement-key\" secret has been created\x1B[0m"
+    echo -e "\"ibm-entitlement-key\" secret has been created"
 fi
 echo
 
@@ -44,93 +52,121 @@ kubectl apply -n "${CP4BA_PROJECT_NAME}" -f -<<EOF
 ${SECRETS_CONTENT}
 EOF
 
-###### Create storage
-#echo -e "\x1B[1mCreating storage classes...\x1B[0m"
-#kubectl apply -f ${CP4BA_STORAGE_CLASS_FILE}
 
-#! PVs
+sleep 5
 echo
-echo -e "\x1B[1m Creating the \"operator-shared-pv\" Persistent Volumes (PVs) ...\x1B[0m"
-cat "${OPERATOR_SHARED_PV_FILE}"
-CREATE_PVC_RESULT=$(kubectl apply -f "${OPERATOR_SHARED_PV_FILE}" --validate=false)
+echo -e "Creating the \"operator-shared-pv\" Persistent Volumes (PVs) ..."
+kubectl --validate=false apply -f -<<EOF
+${OPERATOR_SHARED_PV_CONTENT}
+EOF
 
-if [[ $CREATE_PVC_RESULT ]]; then
-    echo -e "\x1B[1;34m The \"operator-shared-pv\" Persistent Volume has been created.\x1B[0m"
-else
-    echo -e "\x1B[1;31mFailed\x1B[0m"
-fi
-
+sleep 5
 echo
-echo -e "\x1B[1m Creating the \"cp4a-shared-log-pv\" Persistent Volumes (PVs) ...\x1B[0m"
-cat "${SHARED_LOG_PV_FILE}"
-CREATE_PVC_RESULT=$(kubectl apply -f "${SHARED_LOG_PV_FILE}" --validate=false)
+echo -e "Creating the \"cp4a-shared-log-pv\" Persistent Volumes (PVs) ..."
+kubectl --validate=false apply -f -<<EOF
+${SHARED_LOG_PV_CONTENT}
+EOF
 
-if [[ $CREATE_PVC_RESULT ]]; then
-    echo -e "\x1B[1;34m The \"cp4a-shared-log-pv\" Persistent Volume has been created.\x1B[0m"
-else
-    echo -e "\x1B[1;31mFailed\x1B[0m"
-fi
-
-
-#!    PVCs
-echo
-echo -e "\x1B[1m Creating \"operator-shared-pvc\" Persistent Volume Claim (PVC) ...\x1B[0m"
-cat "${OPERATOR_SHARED_PVC_FILE}"
-CREATE_PVC_RESULT=$(kubectl apply -f "${OPERATOR_SHARED_PVC_FILE}" --validate=false)
-
-if [[ $CREATE_PVC_RESULT ]]; then
-    echo -e "\x1B[1;34m The \"operator-shared-pvc\"  Persistent Volume Claims has been created.\x1B[0m"
-else
-    echo -e "\x1B[1;31mFailed\x1B[0m"
-fi
+sleep 10
 
 echo
-echo -e "\x1B[1m Creating \"cp4a-shared-log-pvc\" Persistent Volume Claim (PVC) ...\x1B[0m"
-cat "${SHARED_LOG_PVC_FILE}"
-CREATE_PVC_RESULT=$(kubectl apply -f "${SHARED_LOG_PVC_FILE}" --validate=false)
-
-if [[ $CREATE_PVC_RESULT ]]; then
-    echo -e "\x1B[1;34m The \"cp4a-shared-log-pvc\" Persistent Volume Claim has been created.\x1B[0m"
-else
-    echo -e "\x1B[1;31mFailed\x1B[0m"
-fi
+echo -e "Creating \"operator-shared-pvc\" Persistent Volume Claim (PVC) ..."
+kubectl --validate=false apply -f -<<EOF
+${OPERATOR_SHARED_PVC_CONTENT}
+EOF
 
 
-# Check Operator Persistent Volume status every 5 seconds (max 10 minutes) until allocate.
-ATTEMPTS=0
-TIMEOUT=60
-printf "\n"
-echo -e "\x1B[1mWaiting for the persistent volumes to be ready...\x1B[0m"
-until (${K8S_CMD} get pvc -n "${CP4BA_PROJECT_NAME}" | grep cp4a-shared-log-pvc | grep "Bound") || [ $ATTEMPTS -eq $TIMEOUT ] ; do
-    ATTEMPTS=$((ATTEMPTS + 1))
-    echo -e "......"
-    sleep 10
-    if [ $ATTEMPTS -eq $TIMEOUT ] ; then
-        echo -e "\x1B[1;31mFailed: Run the following command to check the claim '${K8S_CMD} describe pvc cp4a-shared-log-pvc'\x1B[0m"
-        exit 1
-    fi
-done
-if [ $ATTEMPTS -lt $TIMEOUT ] ; then
-    echo -e "\x1B[1;34m The Persistent Volume Claim is successfully bound\x1B[0m"
-fi
 echo
-
-ATTEMPTS=0
-TIMEOUT=60
-echo -e "\x1B[1mWaiting for the persistent volumes to be ready...\x1B[0m"
-until (${K8S_CMD} get pvc -n "${CP4BA_PROJECT_NAME}" | grep operator-shared-pvc | grep "Bound") || [ $ATTEMPTS -eq $TIMEOUT ] ; do
-    ATTEMPTS=$((ATTEMPTS + 1))
-    echo -e "......"
-    sleep 10
-    if [ $ATTEMPTS -eq $TIMEOUT ] ; then
-        echo -e "\x1B[1;31mFailed: Run the following command to check the claim '${K8S_CMD} describe pvc operator-shared-pvc'\x1B[0m"
-        exit 1
-    fi
-done
-if [ $ATTEMPTS -lt $TIMEOUT ] ; then
-    echo -e "\x1B[1;34m The Persistent Volume Claim is successfully bound\x1B[0m"
-fi
+echo -e "Creating \"cp4a-shared-log-pvc\" Persistent Volume Claim (PVC) ..."
+kubectl --validate=false apply -f -<<EOF
+${SHARED_LOG_PVC_CONTENT}
+EOF
 echo
+sleep 20
+
+function check_pvc() {
+
+  echo "************** PVC **************"
+
+  ATTEMPTS=0
+  TIMEOUT=100
+
+  for name in operator-shared-pvc cp4a-shared-log-pvc;
+  do
+      if (kubectl get pvc -n "${CP4BA_PROJECT_NAME}" | grep $name | grep Bound)
+      then
+        echo -e "The \"$name\"  Persistent Volume Claim has been created."
+        echo "$results"
+        echo
+        if [ "$name" == cp4a-shared-log-pvc ]
+        then
+          break
+        fi
+      else
+        echo -e "Waiting for the Persistent Volume Claims to be ready..."
+        until (kubectl get pvc -n "${CP4BA_PROJECT_NAME}" | grep $name | grep "Bound") || [ $ATTEMPTS -eq $TIMEOUT ] ; do
+            ATTEMPTS=$((ATTEMPTS + 1))
+            echo -e "......"
+            sleep 10
+            if [ $ATTEMPTS -eq $TIMEOUT ] ; then
+                echo -e "Failed! Please check the PVCs. You probably need to recreate the PVCs."
+                break
+            fi
+        done
+        continue
+      fi
+  done
+}
+
+function check_pv() {
+  echo
+  echo
+  echo "************** PV **************"
+
+  ATTEMPTS=0
+  TIMEOUT=100
+
+  for name in operator-shared-pvc cp4a-shared-log-pvc;
+  do
+      results=$(kubectl get pv -n "${CP4BA_PROJECT_NAME}" | grep $name | grep Bound)
+      if [ "$results" ]
+      then
+        echo -e "The \"$name\"  Persistent Volume has been created."
+        echo "$results"
+        echo
+        if [ "$name" == "cp4a-shared-log-pvc" ]
+        then
+          echo
+          check_pvc
+        fi
+      else
+        echo -e "Waiting for the Persistent Volumes to be ready..."
+        until (kubectl get pv -n "${CP4BA_PROJECT_NAME}" | grep $name | grep "Bound") || [ $ATTEMPTS -eq $TIMEOUT ] ; do
+            ATTEMPTS=$((ATTEMPTS + 1))
+            echo -e "......"
+            sleep 10
+            if [ $ATTEMPTS -eq $TIMEOUT ] ; then
+                echo -e "Failed! Please check the PVs. You probably need to recreate the PVs"
+                echo
+                echo
+                check_pvc
+            fi
+        done
+        continue
+      fi
+  done
+
+}
+
+check_pv
+
+# CREATING OPERATOR GROUP
+echo -e "Creating Operator Group ..."
+${K8S_CMD} apply -f -<<EOF
+${OPERATOR_GROUP_CONTENT}
+EOF
+echo
+sleep 5
 
 ###### Add the CatalogSource resources to Operator Hub
 # Creating roles
@@ -139,14 +175,18 @@ cat "${ROLES_FILE}"
 ${K8S_CMD} apply -f "${ROLES_FILE}" -n "${CP4BA_PROJECT_NAME}"
 echo
 
+sleep 2
+
 # Creating roles
 echo -e "\x1B[1mCreating role binding ...\x1B[0m"
 cat "${ROLE_BINDING_FILE}"
 ${K8S_CMD} apply -f "${ROLE_BINDING_FILE}" -n "${CP4BA_PROJECT_NAME}"
 echo
 
+sleep 2
+
 # Deploy common-service
-echo -e "\x1B[1m Creating common-service namespace ...\x1B[0m"
+echo -e "Creating common-service namespace ..."
 ${K8S_CMD} create namespace common-service
 echo
 
@@ -162,44 +202,163 @@ echo -e "\x1B[1m Creating the Catalog Source ...\x1B[0m"
 cat "${CATALOG_SOURCE_FILE}"
 ${K8S_CMD} apply -f "${CATALOG_SOURCE_FILE}"
 sleep 10
-echo ""
+echo
 
-echo -e "\x1B[1m Deploying common-service ...\x1B[0m"
+function check_catalogsources() {
+  echo
+  echo
+  echo "************** Checking the IBM Catalog-Sources **************"
+
+  ATTEMPTS=0
+  TIMEOUT=60
+
+  for name in ibm-cp4a-operator-catalog ibm-operator-catalog opencloud-operators ;
+  do
+      results=$(kubectl get catalogsources -n openshift-marketplace | grep $name )
+      if [ "$results" ]
+      then
+        echo -e "The \"$name\" has been created."
+        echo "$results"
+        echo
+        if [ "$name" == "opencloud-operators" ]
+        then
+          echo
+          break
+        fi
+      else
+        echo -e "Waiting for the Catalog-Sources to be created ..."
+        until (kubectl get catalogsources -n openshift-marketplace | grep $name ) || [ $ATTEMPTS -eq $TIMEOUT ] ; do
+            ATTEMPTS=$((ATTEMPTS + 1))
+            echo -e "......"
+            sleep 10
+            if [ $ATTEMPTS -eq $TIMEOUT ] ; then
+                echo -e "Failed! Please check the Catalog-Sources. You probably need to recreate the Catalog-Sources'."
+                echo
+                echo
+            fi
+        done
+        continue
+      fi
+  done
+}
+
+check_catalogsources
+echo
+
+echo -e "Deploying common-service ..."
 cat "${COMMON_SERVICE_FILE}"
 ${K8S_CMD} apply -f "${COMMON_SERVICE_FILE}"
-sleep 100
-echo
-
-echo -e "\x1B[1m Creating the AutomationUIConfig ...\x1B[0m"
-kubectl apply -f "${AUTO_UI_CONFIG_FILE_CONTENT}"
-cat "${AUTO_UI_CONFIG_FILE_CONTENT}"
-sleep 10
-echo
-
-echo -e "\x1B[1m Creating the Cartridge ...\x1B[0m"
-kubectl apply -f "${CARTRIDGE_FILE_CONTENT}"
-cat "${CARTRIDGE_FILE_CONTENT}"
-sleep 10
+sleep 50
 echo
 
 
 # Create subscription to Business Automation Operator
-echo -e "\x1B[1m Creating the Subscription ...\x1B[0m"
-cat "${CP4BA_SUBSCRIPTION_FILE}"
-${K8S_CMD} apply -f "${CP4BA_SUBSCRIPTION_FILE}" -n "${CP4BA_PROJECT_NAME}"
-sleep 100
+echo -e "Creating the Subscription ..."
+${K8S_CMD} -n "${CP4BA_PROJECT_NAME}" apply -f -<<EOF
+${CP4BA_SUBSCRIPTION_CONTENT}
+EOF
+sleep 30
+echo
+
+function check_subscription() {
+  echo
+  echo
+  echo "************** Checking the IBM CP4BA Operator Subscriptions **************"
+
+  ATTEMPTS=0
+  TIMEOUT=100
+
+  for name in ibm-automation-core ibm-common-service-operator ibm-cp4a-operator ;
+  do
+      results=$(kubectl get subs -n "${CP4BA_PROJECT_NAME}" | grep $name )
+      if [ "$results" ]
+      then
+        echo -e "The \"$name\" has been created."
+        echo "$results"
+        echo
+        if [ "$name" == "ibm-cp4a-operator" ]
+        then
+          echo
+          break
+        fi
+      else
+        echo -e "Waiting for the Operator Subscriptions to be ready ..."
+        until (kubectl get subs -n "${CP4BA_PROJECT_NAME}" | grep $name ) || [ $ATTEMPTS -eq $TIMEOUT ] ; do
+            ATTEMPTS=$((ATTEMPTS + 1))
+            echo -e "......"
+            sleep 10
+            if [ $ATTEMPTS -eq $TIMEOUT ] ; then
+                echo -e "Failed! Please check the Operator Subscriptions. You probably need to recreate the 'cp4ba_subscription.yaml.tmpl'"
+                echo
+                echo
+            fi
+        done
+        continue
+      fi
+  done
+}
+
+check_subscription
 echo
 
 # Create Deployment Credentials
-echo -e "\x1B[1mCreating the Deployment Credentials ...\x1B[0m"
-cat "${CP4BA_DEPLOYMENT_CREDENTIALS_FILE}"
-${K8S_CMD} apply -n "${CP4BA_PROJECT_NAME}" -f "${CP4BA_DEPLOYMENT_CREDENTIALS_FILE}"
+echo -e "Creating the Deployment Credentials ..."
+${K8S_CMD} --validate=false -n "${CP4BA_PROJECT_NAME}" apply  -f -<<EOF
+${CP4BA_DEPLOYMENT_CREDENTIALS_CONTENT}
+EOF
 echo
 
+
 # Create Deployment
-echo -e "\x1B[1mCreating the Deployment ...\x1B[0m"
-${K8S_CMD} apply -n "${CP4BA_PROJECT_NAME}" -f "${CP4BA_DEPLOYMENT_CONTENT}" --validate=false
-cat "${CP4BA_DEPLOYMENT_CONTENT}"
+echo -e "Creating the Deployment ..."
+${K8S_CMD} --validate=false -n "${CP4BA_PROJECT_NAME}" apply -f -<<EOF
+${CP4BA_DEPLOYMENT_CONTENT}
+EOF
+sleep 20
+
+echo
+
+function check_icp4adeploy() {
+  echo
+  echo
+  echo "************** Checking the Deployment Pods 'icp4adeploy' **************"
+
+  ATTEMPTS=0
+  TIMEOUT=800
+
+  for name in icp4adeploy-rr-setup-pod ;
+  do
+      results=$(kubectl get pods -n "${CP4BA_PROJECT_NAME}" | grep $name | grep Completed)
+      if [ "$results" ]
+      then
+        echo -e "Deployment Setup Pod \"$name\" has been completed."
+        echo "$results"
+        echo
+        kubectl get pods -n "${CP4BA_PROJECT_NAME}" | grep deploy
+        echo
+        if [ "$name" == "icp4adeploy-rr-setup-pod" ]
+        then
+          echo
+          break
+        fi
+      else
+        echo -e "Waiting for the Deployment Setup Pods to be ready ..."
+        until (kubectl get pods -n "${CP4BA_PROJECT_NAME}" | grep $name | grep Completed) || [ $ATTEMPTS -eq $TIMEOUT ] ; do
+            ATTEMPTS=$((ATTEMPTS + 1))
+            echo -e "......"
+            sleep 10
+            if [ $ATTEMPTS -eq $TIMEOUT ] ; then
+                echo -e "Failed! Please check the Deployment Setup Pod. You probably need to recreate the 'cp4ba_deployment.yaml.tmpl'"
+                echo
+                echo
+            fi
+        done
+        continue
+      fi
+  done
+}
+
+check_icp4adeploy
 
 echo
 
@@ -218,6 +377,22 @@ do
     ${K8S_CMD} get pods -n openshift-marketplace | grep ibm-cp4a-operator
     result=$?
 done
+
+echo
+echo
+echo "*********************************************************************************"
+echo "******* Installation and configuration of CP4BA completed successfully!!! *******"
+echo "*********************************************************************************"
+
+echo
+echo
+echo "****************************************************************************"
+echo "****************** USE THESE ENDPOINTS TO ACCESS CP4BA *********************"
+echo "****************************************************************************"
+
+
+
+
 
 
 
