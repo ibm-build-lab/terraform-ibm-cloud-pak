@@ -7,3 +7,8 @@ output "db2_ports" {
   description = "Use these Ports for Db2 instance to update in  property \"db2PortNumber\" with this information (legacy-server)."
   value = module.Db2.db2_ports
 }
+
+output "db2_pod_name" {
+  description = "This pod for deploying Db2 schemas."
+  value = module.Db2.db2_pod_name
+}
