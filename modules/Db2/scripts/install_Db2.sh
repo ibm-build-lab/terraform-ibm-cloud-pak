@@ -11,6 +11,13 @@
 #
 ###############################################################################
 
+echo
+echo
+echo "*********************************************************************************"
+echo "************************** Installing DB2 Module ... ****************************"
+echo "*********************************************************************************"
+
+
 CUR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 C_DB2UCLUSTER_DB2U="c-db2ucluster-db2u"
@@ -136,11 +143,11 @@ echo
 
 function wait_for_operator_to_install_successfully {
   local waiting_time=45
-  local TOTAL_WAIT_TIME_SECS=$(( 60 * $waiting_time))
-  local CURRENT_WAIT_TIME=0
+  local max_waiting_time=$(( 60 * $waiting_time))
+  local current_time=0
   local CSV_STATUS=""
 
-  while [ $CURRENT_WAIT_TIME -lt $TOTAL_WAIT_TIME_SECS ]
+  while [ $current_time -lt $max_waiting_time ]
   do
     CSV_STATUS=$(kubectl get csv -n "${DB2_PROJECT_NAME}" | grep db2u-operator.v1.1 | grep Succeeded | cat)
     if [ ! -z "$CSV_STATUS" ]
@@ -148,7 +155,7 @@ function wait_for_operator_to_install_successfully {
       break
     fi
     sleep 10
-    CURRENT_WAIT_TIME=$(( $CURRENT_WAIT_TIME + 10 ))
+    current_time=$(( $current_time + 10 ))
   done
 
   echo "$CSV_STATUS"
@@ -157,11 +164,11 @@ function wait_for_operator_to_install_successfully {
 
 function wait_for_install_plan {
   local timeToWait=45
-  local TOTAL_WAIT_TIME_SECS=$(( 60 * ${timeToWait}))
-  local CURRENT_WAIT_TIME=0
+  local max_waiting_time=$(( 60 * ${timeToWait}))
+  local current_time=0
   local INSTALL_PLAN=""
 
-  while [ $CURRENT_WAIT_TIME -lt $TOTAL_WAIT_TIME_SECS ]
+  while [ $current_time -lt $max_waiting_time ]
   do
     INSTALL_PLAN=$(kubectl get subscription "${SUBCRIPTION_NAME}" -o custom-columns=IPLAN:.status.installplan.name --no-headers -n "${DB2_PROJECT_NAME}" 2>/dev/null | grep -v "<none>" | cat)
     if [ ! -z "$INSTALL_PLAN" ]
@@ -169,7 +176,7 @@ function wait_for_install_plan {
       break
     fi
     sleep 10
-    CURRENT_WAIT_TIME=$(( $CURRENT_WAIT_TIME + 10 ))
+    current_time=$(( $current_time + 10 ))
   done
 
   echo "$INSTALL_PLAN"
@@ -179,11 +186,11 @@ function wait_for_install_plan {
 function wait_for_resource_created_by_name {
   local resourceKind="statefulset"
   local timeToWait=45
-  local TOTAL_WAIT_TIME_SECS=$(( 60 * ${timeToWait}))
-  local CURRENT_WAIT_TIME=0
+  local max_waiting_time=$(( 60 * ${timeToWait}))
+  local current_time=0
   local RESOURCE_FULLY_QUALIFIED_NAME=""
 
-  while [ $CURRENT_WAIT_TIME -lt $TOTAL_WAIT_TIME_SECS ]
+  while [ $current_time -lt $max_waiting_time ]
   do
     RESOURCE_FULLY_QUALIFIED_NAME=$(kubectl get "$resourceKind" "${C_DB2UCLUSTER_DB2U}"  -o name --no-headers -n "${DB2_PROJECT_NAME}" 2>/dev/null)
     if [ ! -z "$RESOURCE_FULLY_QUALIFIED_NAME" ]
@@ -191,31 +198,10 @@ function wait_for_resource_created_by_name {
       break
     fi
     sleep 10
-    CURRENT_WAIT_TIME=$(( $CURRENT_WAIT_TIME + 10 ))
+    current_time=$(( $current_time + 10 ))
   done
 
   echo "$RESOURCE_FULLY_QUALIFIED_NAME"
-}
-
-
-function wait_for_job_to_complete_by_name {
-  local timeToWait=300
-  local TOTAL_WAIT_TIME_SECS=$(( 60 * ${timeToWait}))
-  local CURRENT_WAIT_TIME=0
-  local JOB_STATUS=""
-
-  while [ $CURRENT_WAIT_TIME -lt $TOTAL_WAIT_TIME_SECS ]
-  do
-    JOB_STATUS=$(kubectl get job "${C_DB2UCLUSTER_INSTDB}" -n "${DB2_PROJECT_NAME}" -o custom-columns=STATUS:'.status.conditions[*].type' 2>/dev/null | grep Complete | cat)
-    if [ ! -z "$JOB_STATUS" ]
-    then
-      break
-    fi
-    sleep 10
-    CURRENT_WAIT_TIME=$(( $CURRENT_WAIT_TIME + 10 ))
-  done
-
-  echo "$JOB_STATUS"
 }
 
 
@@ -305,34 +291,19 @@ kubectl patch "$statefulsetQualifiedName" -n="${DB2_PROJECT_NAME}" -p='{"spec":{
 
 ## Wait for  c-db2ucluster-restore-morph job to complte. If this job completes successfully
 ## we can tell that the deployment was completed successfully.
-echo
-echo "Waiting up to 15 minutes for ${C_DB2UCLUSTER_INSTDB} job to complete successfully."
-date
-jobStatus=$(wait_for_job_to_complete_by_name)
 
-sleep 40
+function wait_for_job_to_complete_by_name {
 
-if [ "$jobStatus" ]
-then
-  echo "Job Status: ${jobStatus}"
-  echo "${C_DB2UCLUSTER_INSTDB} job has been successfully completed."
-else
-  echo "Timed out waiting for ${C_DB2UCLUSTER_INSTDB} job to complete successfully."
-  exit 1
-fi
+  local current_time=0
+  local max_waiting_time=300
 
-
-function wait_for_c_db2ucluster_db2u_pod {
-  local TIME_TO_WAIT=0
-  local TOTAL_WAIT_TIME_SECS=300
-
-  until (kubectl get pods -n "${CP4BA_PROJECT_NAME}" | grep "${C_DB2UCLUSTER_DB2U}" | grep Running) || [ "${TIME_TO_WAIT}" -eq "${TOTAL_WAIT_TIME_SECS}" ] ;
+  until (kubectl get job "${C_DB2UCLUSTER_INSTDB}" -n "${DB2_PROJECT_NAME}" | grep Complete | cat) || [ "${current_time}" -eq "${max_waiting_time}" ] ;
   do
-      TIME_TO_WAIT=$((TIME_TO_WAIT + 1))
+      current_time=$((current_time + 1))
       echo -e "......"
       sleep 10
-      if [ "${TIME_TO_WAIT}" -eq "${TOTAL_WAIT_TIME_SECS}" ] ; then
-          echo -e "Failed! Please check the PVCs. You probably need to recreate the PVCs."
+      if [ "${current_time}" -eq "${max_waiting_time}" ] ; then
+          echo -e "Timed out waiting for ${C_DB2UCLUSTER_DB2U}-0 pod to complete successfully."
           break
       fi
   done
@@ -340,20 +311,56 @@ function wait_for_c_db2ucluster_db2u_pod {
 
 
 echo
-echo "Waiting up to 15 minutes for "${C_DB2UCLUSTER_DB2U}"-0 job to complete successfully."
-date
-jobStatus=$(wait_for_c_db2ucluster_db2u_pod)
-
+echo "Waiting for ${C_DB2UCLUSTER_INSTDB} job to complete successfully."
 sleep 40
+date
+wait_for_job_to_complete_by_name
 
-if [ "$jobStatus" ]
-then
-  echo "Job Status: ${jobStatus}"
-  echo "${C_DB2UCLUSTER_DB2U}-0 job has been successfully completed."
-else
-  echo "Timed out waiting for ${C_DB2UCLUSTER_DB2U}-0 job to complete successfully."
-  exit 1
-fi
+
+#
+#if [ "$jobStatus" ]
+#then
+#  echo "Job Status: ${jobStatus}"
+#  echo "${C_DB2UCLUSTER_INSTDB} job has been successfully completed."
+#else
+#  echo "Timed out waiting for ${C_DB2UCLUSTER_INSTDB} job to complete successfully."
+#  exit 1
+#fi
+
+
+function wait_for_c_db2ucluster_db2u_pod {
+  local current_time=0
+  local max_waiting_time=300 total_wait_time
+
+  until (kubectl get pods -n "${DB2_PROJECT_NAME}" | grep "${C_DB2UCLUSTER_DB2U}" | grep Running) || [ "${current_time}" -eq "${max_waiting_time}" ] ;
+  do
+      current_time=$((current_time + 1))
+      echo -e "......"
+      sleep 10
+      if [ "${current_time}" -eq "${max_waiting_time}" ] ; then
+          echo -e "Timed out waiting for ${C_DB2UCLUSTER_DB2U}-0 pod to complete successfully."
+          break
+      fi
+  done
+}
+
+
+echo
+echo "Waiting for "${C_DB2UCLUSTER_DB2U}"-0 pod to complete successfully."
+date
+sleep 20
+wait_for_c_db2ucluster_db2u_pod
+
+
+
+#if [ "$jobStatus" ]
+#then
+#  echo "Job Status: ${jobStatus}"
+#  echo "${C_DB2UCLUSTER_DB2U}-0 job has been successfully completed."
+#else
+#  echo "Timed out waiting for ${C_DB2UCLUSTER_DB2U}-0 job to complete successfully."
+#  exit 1
+#fi
 
 
 ## Now that DB2 is running let's update the number of databases allowed 
