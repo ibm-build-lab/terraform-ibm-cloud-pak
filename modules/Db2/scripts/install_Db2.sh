@@ -31,7 +31,6 @@ echo "Creating Cluster Role ..."
 kubectl apply -f "${DB2_CR_FILE}"
 sleep 2
 
-
 echo
 echo "Creating project ${DB2_PROJECT_NAME}..."
 kubectl create namespace "${DB2_PROJECT_NAME}"
