@@ -147,3 +147,28 @@ variable "cluster_config_path" {
   description = "Directory to store the kubeconfig file, set the value to empty string to not download the config. If running on Schematics, use `/tmp/.schematics/.kube/config`"
 }
 
+variable "storage_option" {
+  type    = string
+  default = "portworx"
+}
+
+variable "cpd_storageclass" {
+  type = map(any)
+
+  default = {
+    "portworx" = "portworx-shared-gp3"
+    "ocs"      = "ocs-storagecluster-cephfs"
+    "nfs"      = "nfs"
+  }
+}
+
+variable "rwo_cpd_storageclass" {
+  type = map(any)
+
+  default = {
+    "portworx" = "portworx-metastoredb-sc"
+    "ocs"      = "ocs-storagecluster-ceph-rbd"
+    "nfs"      = "nfs"
+  }
+}
+
