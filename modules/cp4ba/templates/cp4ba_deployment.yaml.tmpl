@@ -19,7 +19,7 @@ metadata:
     release: 21.0.1
 
 spec:
-  appVersion: 21.0.1
+  appVersion: 21.0.2
   ibm_license: accept
 
   shared_configuration:
@@ -101,14 +101,14 @@ spec:
 
     dc_ums_datasource:
       dc_ums_oauth_type: "db2"
-      dc_ums_oauth_host: "${ db2_host_name }"
+      dc_ums_oauth_host: "${ db2_host_address}"
       dc_ums_oauth_port: "${ db2_host_port }"
       dc_ums_oauth_name: "UMSDB"
       dc_ums_oauth_schema: OAuthDBSchema
       dc_ums_oauth_ssl: false
 
       dc_ums_teamserver_type: "db2"
-      dc_ums_teamserver_host: "${ db2_host_name }"
+      dc_ums_teamserver_host: "${ db2_host_address }"
       dc_ums_teamserver_port: "${ db2_host_port }"
       dc_ums_teamserver_name: "UMSDB"
       dc_ums_teamserver_ssl: false
@@ -116,7 +116,7 @@ spec:
     dc_icn_datasource:
       dc_database_type: "db2"
       dc_common_icn_datasource_name: "ECMClientDS"
-      database_servername: "${ db2_host_name }"
+      database_servername: "${ db2_host_address }"
       database_port: "${ db2_host_port }"
       database_name: "ICNDB"
 
@@ -124,7 +124,7 @@ spec:
       dc_database_type: "db2"
       dc_common_gcd_datasource_name: "FNGCDDS"
       dc_common_gcd_xa_datasource_name: "FNGCDDSXA"
-      database_servername: "${ db2_host_name }"
+      database_servername: "${ db2_host_address }"
       database_name: "GCDDB"
       database_port: "${ db2_host_port }"
 
@@ -133,10 +133,9 @@ spec:
         dc_os_label: "devos1"
         dc_common_os_datasource_name: "DEVOS1DS"
         dc_common_os_xa_datasource_name: "DEVOS1DSXA"
-        database_servername: "${ db2_host_name }"
+        database_servername: "${ db2_host_address }"
         database_name: "DEVOS1"
         database_port: "${ db2_host_port }"
-
   ##################################################################
   ########   Resource Registry configuration                ########
   ##################################################################

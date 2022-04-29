@@ -66,7 +66,8 @@ These parameters are:
 - `install_db2_data_gate`: Install DB2 Data_Gate module. By default it's not installed.
 - `install_big_sql`: Install Big SQL module. By default it's not installed.
 - `install_rstudio`: Install RStudio module. By default it's not installed.
-- `install_db2_data_management`: Install DB2 Data Management module. By default it's not installed.                                
+- `install_db2_data_management`: Install DB2 Data Management module. By default it's not installed.        
+- `cluster_config_path`: Directory to place kube config. For Schematic, it's recommended to use `/tmp/.schematics/.kube/config`                        
 
 ### Execute the example
 

@@ -8,5 +8,5 @@ spec:
   license:
     accept: true
     license: Enterprise     # Specify the license you purchased
-  version: 4.0.2
+  version: 4.0.5
   storageClass: portworx-shared-gp3      #if you use a different storage class, replace it with the appropriate storage class 

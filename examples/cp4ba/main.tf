@@ -12,42 +12,41 @@ resource "null_resource" "mkdir_kubeconfig_dir" {
   triggers = { always_run = timestamp() }
 
   provisioner "local-exec" {
-    command = "mkdir -p ${local.cluster_config_path}"
+    command = "mkdir -p ${var.cluster_config_path}"
   }
 }
 
 data "ibm_container_cluster_config" "cluster_config" {
   depends_on        = [null_resource.mkdir_kubeconfig_dir]
-  cluster_name_id   = var.cluster_name_or_id
+  cluster_name_id   = var.cluster_id
   resource_group_id = data.ibm_resource_group.resource_group.id
-  config_dir        = local.cluster_config_path
+  config_dir        = var.cluster_config_path
 }
 
-module "cp4ba" {
-  source = "../../modules/cp4ba"
-//  source = "git::https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/cp4ba"
-  enable = true
-
-  # ---- Cluster settings ----
-  cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
-  ingress_subdomain = var.ingress_subdomain
-
-  # ---- Cloud Pak settings ----
-  cp4ba_project_name      = "cp4ba"
-  entitled_registry_user  = var.entitled_registry_user
-  entitlement_key         = var.entitlement_key
-
-  # ----- DB2 Settings -----
-  db2_host_name = var.db2_host_name
-  db2_host_port = var.db2_host_port
-  db2_admin     = var.db2_admin
-  db2_user      = var.db2_user
-  db2_password  = var.db2_password
-
+module "install_cp4ba" {
+  source     = "../../modules/cp4ba"
+  enable_cp4ba           = true
+  enable_db2             = true
+  ibmcloud_api_key       = var.ibmcloud_api_key
+  region                 = var.region
+  resource_group         = var.resource_group
+  cluster_id             = var.cluster_id
+  cluster_config_path    = data.ibm_container_cluster_config.cluster_config.config_file_path
+  ingress_subdomain      = var.ingress_subdomain
+  # ---- Platform ----
+  cp4ba_project_name           = var.cp4ba_project_name
+  entitled_registry_user_email = var.entitled_registry_user_email
+  entitled_registry_key        = var.entitled_registry_key
   # ----- LDAP Settings -----
-  ldap_admin    = var.ldap_admin
-  ldap_password = var.ldap_password
-  ldap_host_ip  = var.ldap_host_ip
+  ldap_admin_name         = var.ldap_admin_name
+  ldap_admin_password     = var.ldap_admin_password
+  ldap_host_ip            = var.ldap_host_ip
+  # ----- DB2 Settings -----
+  db2_project_name        = var.db2_project_name
+  db2_admin_username      = var.db2_admin_username
+  db2_admin_user_password = var.db2_admin_user_password
+  db2_host_address        = var.db2_host_address
+  db2_ports               = var.db2_ports
 }
 
 

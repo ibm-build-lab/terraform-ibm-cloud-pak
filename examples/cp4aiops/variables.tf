@@ -1,4 +1,4 @@
-variable "cluster_id" {
+variable "cluster_name_or_id" {
   description = "Id of cluster for AIOps to be installed on"
 }
 
@@ -10,7 +10,7 @@ variable "region" {
   description = "Region that cluster resides in"
 }
 
-variable "resource_group" {
+variable "resource_group_name" {
   default     = "cloud-pak-sandbox-ibm"
   description = "Resource group that cluster resides in"
 }
@@ -31,11 +31,14 @@ variable "entitled_registry_user_email" {
   description = "Docker email address"
 }
 
-locals {
-  cluster_config_path = "./.kube/config"
+variable "cluster_config_path" {
+  default     = "./.kube/config"
+  type        = string
+  description = "Defaulted to `./.kube/config` but for schematics, use `/tmp/.schematic/.kube/config"
 }
 
-variable "cp4aiops_namespace" {
-  default = "cpaiops"
-  description = "Namespace for Cloud Pak for AIOps"
+variable "accept_aiops_license" {
+  default     = false
+  type        = bool
+  description = "Do you accept the aiops licensing? Default is `false`"
 }

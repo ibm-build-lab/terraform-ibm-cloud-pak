@@ -8,4 +8,3 @@ module "odf" {
   cluster = var.cluster
   ibmcloud_api_key = var.ibmcloud_api_key
 }
-

@@ -8,27 +8,19 @@
 # disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
 #
 ###############################################################################
-
-apiVersion: operators.coreos.com/v1alpha1
-kind: Subscription
+apiVersion: v1
+kind: PersistentVolume
 metadata:
-  name: "ibm-db2"
-  namespace: ibm-db2
+  labels:
+    type: local
+  name: cp4a-shared-log-pv
+  namespace: ${cp4ba_project_name}
 spec:
-  channel: v1.1
-  name: db2u-operator
-  source: ibm-operator-catalog
-  sourceNamespace: openshift-marketplace
-
-
-
-
-
-
-
-
-
-
-
-
-
+  capacity:
+    storage: 100Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /shared/logs
+    server:
+  persistentVolumeReclaimPolicy: Delete

@@ -87,7 +87,7 @@ variable "force_delete_storage" {
 
 variable "datacenter" {
   description = "On IBM Cloud Classic, this is the datacenter where the cluster will be provisioned. List all available datacenters/zones with: `ibmcloud ks zone ls --provider classic`"
-  default     = ""
+  default     = "dal12"
 }
 
 variable "private_vlan_number" {
@@ -102,7 +102,7 @@ variable "public_vlan_number" {
 
 variable "vpc_zone_names" {
   type        = list(string)
-  default     = []
+  default     = ["us-south-1"]
   description = "VPC only. Array with the subzones in the region to create the workers groups. List all the zones with: `ibmcloud ks zone ls --provider vpc-gen2`. Example [\"us-south-1\", \"us-south-2\", \"us-south-3\"]"
 }
 
