@@ -70,7 +70,8 @@ These parameters are:
 - `install_db2oltp`: Install Db2oltp module. By default it's not installed.
 - `install_db2wh`: Install Db2 Warehouse module. By default it's not installed.         
 - `install_big_sql`: Install Db2 Big SQL module. By default it's not installed.
-- `install_wsruntime`: Install Jupyter Python 3.7 Runtime Addon. By default it's not installed.                                
+- `install_wsruntime`: Install Jupyter Python 3.7 Runtime Addon. By default it's not installed.
+- `cluster_config_path`: Directory to place kube config. For Schematic, it's recommended to use `/tmp/.schematics/.kube/config`                                
 
 ### Execute the example
 

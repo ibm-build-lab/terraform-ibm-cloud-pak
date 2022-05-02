@@ -56,3 +56,4 @@ done
 kubectl apply -f -<<EOF
 ${ODF_CR_CONTENT}
 EOF
+

@@ -80,3 +80,4 @@ terraform destroy -target null_resource.enable_odf
 This will disable the ODF on the cluster
 
 Once this completes, execute: `terraform destroy` if this was create locally using Terraform or remove the Schematic's workspace.
+

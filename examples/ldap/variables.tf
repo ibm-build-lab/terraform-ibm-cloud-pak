@@ -29,7 +29,7 @@ variable "ibmcloud_domain" {
 
 variable "os_reference_code" {
   default     = null
-  description = "The Operating System Reference Code, for example `CentOS_8_64` (see https://cloud.ibm.com/docs/ibm-cloud-provider-for-terraform)"
+  description = "The Operating System Reference Code, for example `CentOS_7_64` (run command `ibmcloud sl hardware create-options` to see options)"
 
 }
 
