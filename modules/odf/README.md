@@ -2,7 +2,7 @@
 
 This Terraform Module installs the **ODF Service** on an Openshift (ROKS) cluster on IBM Cloud.
 
-A VPC cluster is required with at least three worker nodes. Each worker node must have a minimum of 16 CPUs and 64 GB RAM. https://cloud.ibm.com/docs/openshift?topic=openshift-deploy-odf-vpc for more information.
+A ROKS cluster is required with at least three worker nodes. Each worker node must have a minimum of 16 CPUs and 64 GB RAM. https://cloud.ibm.com/docs/openshift?topic=openshift-deploy-odf-vpc for more information.
 
 **Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/odf`
 
@@ -48,7 +48,7 @@ module "odf" {
 | `is_enable`                       | If set to `false` does not install OpenShift Data Foundation on the given cluster. Enabled by default | `true`  | No       |
 | `ibmcloud_api_key`             | This requires an ibmcloud api key found here: `https://cloud.ibm.com/iam/apikeys`    |         | Yes       |
 | `cluster`                   | The id of the OpenShift cluster to be installed on |  | Yes       |
-
+| `roks_version`                   | ROKS Cluster version (4.7 or higher) |  | Yes       |
 **NOTE** The boolean input variable `is_enable` is used to enable/disable the module. 
 
 ## Output Variable
