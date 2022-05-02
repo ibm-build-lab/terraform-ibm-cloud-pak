@@ -87,4 +87,6 @@ module "cp4data" {
   install_big_sql     = var.install_big_sql
   install_wsruntime   = var.install_wsruntime
 
+  storage_option      = var.storage_option
+
 }
