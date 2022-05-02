@@ -11,6 +11,13 @@
 #
 ###############################################################################
 
+echo
+echo
+echo "*********************************************************************************"
+echo "************************** Installing DB2 Module ... ****************************"
+echo "*********************************************************************************"
+
+
 CUR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 C_DB2UCLUSTER_DB2U="c-db2ucluster-db2u"
@@ -31,7 +38,6 @@ echo "Creating Cluster Role ..."
 kubectl apply -f "${DB2_CR_FILE}"
 sleep 2
 
-
 echo
 echo "Creating project ${DB2_PROJECT_NAME}..."
 kubectl create namespace "${DB2_PROJECT_NAME}"
@@ -47,7 +53,7 @@ kubectl patch storageclass ibmc-block-gold -p '{"metadata": {"annotations":{"sto
 echo
 kubectl patch storageclass "${DB2_STORAGE_CLASS}" -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 echo
-#kubectl get no -l node-role.kubernetes.io/worker --no-headers -o name | xargs -I {} --  oc debug {} -- chroot /host sh -c 'grep "^Domain = slnfsv4.coms" /etc/idmapd.conf || ( sed -i.bak "s/.*Domain =.*/Domain = slnfsv4.com/g" /etc/idmapd.conf; nfsidmap -c; rpc.idmapd )'
+
 
 echo
 echo "Modifying the OpenShift Global Pull Secret (you need jq tool for that):"
@@ -65,8 +71,6 @@ echo "Docker username: ${DOCKER_USERNAME}"
 kubectl create secret docker-registry ibm-db2-registry --docker-server="${DOCKER_SERVER}" --docker-username="${DOCKER_USERNAME}" --docker-password="${ENTITLED_REGISTRY_KEY}" --docker-email="${ENTITLEMENT_REGISTRY_USER_EMAIL}" --namespace="${DB2_PROJECT_NAME}"
 echo
 
-#echo "Preparing the cluster for Db2..."
-#kubectl get no -l node-role.kubernetes.io/worker --no-headers -o name | xargs -I {} --  oc debug {} -- chroot /host sh -c 'grep "^Domain = slnfsv4.coms" /etc/idmapd.conf || ( sed -i.bak "s/.*Domain =.*/Domain = slnfsv4.com/g" /etc/idmapd.conf; nfsidmap -c; rpc.idmapd )'
 
 echo
 echo "Modifying the OpenShift Global Pull Secret (you need jq tool for that):"
@@ -136,22 +140,14 @@ date
 
 echo
 
-##
-## Description:
-##  This function waits until  specific operator reports successful installation.
-##  The Operator is represented by its Cluster Service Version.
-##  Once the CSV goes to Succeeded phase the function returns unless it times out.
-##  Display:
-##  - Empty string if time out waiting
-##  - Succeeded string otherwise
-##
+
 function wait_for_operator_to_install_successfully {
   local waiting_time=45
-  local TOTAL_WAIT_TIME_SECS=$(( 60 * $waiting_time))
-  local CURRENT_WAIT_TIME=0
+  local max_waiting_time=$(( 60 * $waiting_time))
+  local current_time=0
   local CSV_STATUS=""
 
-  while [ $CURRENT_WAIT_TIME -lt $TOTAL_WAIT_TIME_SECS ]
+  while [ $current_time -lt $max_waiting_time ]
   do
     CSV_STATUS=$(kubectl get csv -n "${DB2_PROJECT_NAME}" | grep db2u-operator.v1.1 | grep Succeeded | cat)
     if [ ! -z "$CSV_STATUS" ]
@@ -159,29 +155,20 @@ function wait_for_operator_to_install_successfully {
       break
     fi
     sleep 10
-    CURRENT_WAIT_TIME=$(( $CURRENT_WAIT_TIME + 10 ))
+    current_time=$(( $current_time + 10 ))
   done
 
   echo "$CSV_STATUS"
 }
 
-## Description:
-##  This function waits until an install plan is defined for an operator subscription.
-## Parameters:
-##  $1  Name of subscription for the operator
-##  $2  Time in minutes to wait for the install plan to be ready
-##  $3  Namespace were subscription was created
-## Display:
-##  - Empty string if time out waiting
-##  - Name of install plan otherwise
 
 function wait_for_install_plan {
   local timeToWait=45
-  local TOTAL_WAIT_TIME_SECS=$(( 60 * ${timeToWait}))
-  local CURRENT_WAIT_TIME=0
+  local max_waiting_time=$(( 60 * ${timeToWait}))
+  local current_time=0
   local INSTALL_PLAN=""
 
-  while [ $CURRENT_WAIT_TIME -lt $TOTAL_WAIT_TIME_SECS ]
+  while [ $current_time -lt $max_waiting_time ]
   do
     INSTALL_PLAN=$(kubectl get subscription "${SUBCRIPTION_NAME}" -o custom-columns=IPLAN:.status.installplan.name --no-headers -n "${DB2_PROJECT_NAME}" 2>/dev/null | grep -v "<none>" | cat)
     if [ ! -z "$INSTALL_PLAN" ]
@@ -189,30 +176,21 @@ function wait_for_install_plan {
       break
     fi
     sleep 10
-    CURRENT_WAIT_TIME=$(( $CURRENT_WAIT_TIME + 10 ))
+    current_time=$(( $current_time + 10 ))
   done
 
   echo "$INSTALL_PLAN"
 }
 
-## Description:
-##   This function waits until a kubernetes resource exist
-## Parameters:
-##  $1  Kind of resource to wait for
-##  $2  Name of the resource to wait for
-##  $3  Time in minutes to wait for the install plan to be ready
-##  $4  Namespace were resource is located
-## Display:
-##  - Empty string if time out waiting
-##  - Resource fully qualified name of the resource as returned by oc get -o name
+
 function wait_for_resource_created_by_name {
   local resourceKind="statefulset"
   local timeToWait=45
-  local TOTAL_WAIT_TIME_SECS=$(( 60 * ${timeToWait}))
-  local CURRENT_WAIT_TIME=0
+  local max_waiting_time=$(( 60 * ${timeToWait}))
+  local current_time=0
   local RESOURCE_FULLY_QUALIFIED_NAME=""
 
-  while [ $CURRENT_WAIT_TIME -lt $TOTAL_WAIT_TIME_SECS ]
+  while [ $current_time -lt $max_waiting_time ]
   do
     RESOURCE_FULLY_QUALIFIED_NAME=$(kubectl get "$resourceKind" "${C_DB2UCLUSTER_DB2U}"  -o name --no-headers -n "${DB2_PROJECT_NAME}" 2>/dev/null)
     if [ ! -z "$RESOURCE_FULLY_QUALIFIED_NAME" ]
@@ -220,53 +198,13 @@ function wait_for_resource_created_by_name {
       break
     fi
     sleep 10
-    CURRENT_WAIT_TIME=$(( $CURRENT_WAIT_TIME + 10 ))
+    current_time=$(( $current_time + 10 ))
   done
 
   echo "$RESOURCE_FULLY_QUALIFIED_NAME"
 }
 
-## Description:
-##  This function waits for a job to go into Complete state
-## Parameters:
-##  $1  Name of the job to wait for
-##  $2  Time in minutes to wait for the install plan to be ready
-##  $3  Namespace were job is located
-## Display:
-##  - Empty string if time out waiting
-##  - Complete string if job is completed
-function wait_for_job_to_complete_by_name {
-  local timeToWait=60
-  local TOTAL_WAIT_TIME_SECS=$(( 60 * ${timeToWait}))
-  local CURRENT_WAIT_TIME=0
-  local JOB_STATUS=""
 
-  while [ $CURRENT_WAIT_TIME -lt $TOTAL_WAIT_TIME_SECS ]
-  do
-    JOB_STATUS=$(kubectl get job "${C_DB2UCLUSTER_INSTDB}" -n "${DB2_PROJECT_NAME}" -o custom-columns=STATUS:'.status.conditions[*].type' 2>/dev/null | grep Complete | cat)
-    if [ ! -z "$JOB_STATUS" ]
-    then
-      break
-    fi
-    sleep 10
-    CURRENT_WAIT_TIME=$(( $CURRENT_WAIT_TIME + 10 ))
-  done
-
-  echo "$JOB_STATUS"
-}
-
-
-##
-## Description:
-##  Get the address or addresses associated with the worker node hosting a POD
-## Parameters:
-##  $1  Pod name
-##  $2  namepsace where the pod is located
-##  $3  Type filter for address entry.  The values depend on the cluster (i.e ROKS vs OCP) but could include ExternalIP, InternalIP, Hostname
-## Display:
-##  - If filter provided, address for the specific filter
-##  - If not filter provided, all addresses associated with worker node
-##
 function get_worker_node_addresses_from_pod {
   local podName=$1
   local typeFilter=$3
@@ -274,7 +212,7 @@ function get_worker_node_addresses_from_pod {
   local HOST_ADDRESSES=""
 
   HOST_NODE=$(kubectl get pod "$podName" -o custom-columns=NODE:.spec.nodeName --no-headers 2>/dev/null)
-  ## This is using the filtering capabilities to find the ExternalIP of the worker node
+
   if [ ! -z "$typeFilter" ]
   then
     HOST_ADDRESSES=$(kubectl get node "$HOST_NODE" -o custom-columns="ADDRESS":".status.addresses[?(@.type==\"${typeFilter}\")].address" --no-headers 2>/dev/null)
@@ -353,21 +291,77 @@ kubectl patch "$statefulsetQualifiedName" -n="${DB2_PROJECT_NAME}" -p='{"spec":{
 
 ## Wait for  c-db2ucluster-restore-morph job to complte. If this job completes successfully
 ## we can tell that the deployment was completed successfully.
+
+function wait_for_job_to_complete_by_name {
+
+  local current_time=0
+  local max_waiting_time=300
+
+  until (kubectl get job "${C_DB2UCLUSTER_INSTDB}" -n "${DB2_PROJECT_NAME}" | grep Complete | cat) || [ "${current_time}" -eq "${max_waiting_time}" ] ;
+  do
+      current_time=$((current_time + 1))
+      echo -e "......"
+      sleep 10
+      if [ "${current_time}" -eq "${max_waiting_time}" ] ; then
+          echo -e "Timed out waiting for ${C_DB2UCLUSTER_DB2U}-0 pod to complete successfully."
+          break
+      fi
+  done
+}
+
+
 echo
-echo "Waiting up to 15 minutes for ${C_DB2UCLUSTER_INSTDB} job to complete successfully."
-date
-jobStatus=$(wait_for_job_to_complete_by_name)
-
+echo "Waiting for ${C_DB2UCLUSTER_INSTDB} job to complete successfully."
 sleep 40
+date
+wait_for_job_to_complete_by_name
 
-if [ "$jobStatus" ]
-then
-  echo "Job Status: ${jobStatus}"
-  echo "${C_DB2UCLUSTER_INSTDB} job has been successfully completed."
-else
-  echo "Timed out waiting for ${C_DB2UCLUSTER_INSTDB} job to complete successfully."
-  exit 1
-fi
+
+#
+#if [ "$jobStatus" ]
+#then
+#  echo "Job Status: ${jobStatus}"
+#  echo "${C_DB2UCLUSTER_INSTDB} job has been successfully completed."
+#else
+#  echo "Timed out waiting for ${C_DB2UCLUSTER_INSTDB} job to complete successfully."
+#  exit 1
+#fi
+
+
+function wait_for_c_db2ucluster_db2u_pod {
+  local current_time=0
+  local max_waiting_time=300 total_wait_time
+
+  until (kubectl get pods -n "${DB2_PROJECT_NAME}" | grep "${C_DB2UCLUSTER_DB2U}" | grep Running) || [ "${current_time}" -eq "${max_waiting_time}" ] ;
+  do
+      current_time=$((current_time + 1))
+      echo -e "......"
+      sleep 10
+      if [ "${current_time}" -eq "${max_waiting_time}" ] ; then
+          echo -e "Timed out waiting for ${C_DB2UCLUSTER_DB2U}-0 pod to complete successfully."
+          break
+      fi
+  done
+}
+
+
+echo
+echo "Waiting for "${C_DB2UCLUSTER_DB2U}"-0 pod to complete successfully."
+date
+sleep 20
+wait_for_c_db2ucluster_db2u_pod
+
+
+
+#if [ "$jobStatus" ]
+#then
+#  echo "Job Status: ${jobStatus}"
+#  echo "${C_DB2UCLUSTER_DB2U}-0 job has been successfully completed."
+#else
+#  echo "Timed out waiting for ${C_DB2UCLUSTER_DB2U}-0 job to complete successfully."
+#  exit 1
+#fi
+
 
 ## Now that DB2 is running let's update the number of databases allowed 
 ## This is done by updating the NUMDB property in the ConfigMap c-db2ucluster-db2dbmconfig
@@ -377,21 +371,21 @@ kubectl get configmap c-db2ucluster-db2dbmconfig -n "$DB2_PROJECT_NAME" -o yaml 
 
 echo
 echo "Updating database manager running configuration."
-kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -it -- su - "$DB2_ADMIN_USERNAME" -c "db2 update dbm cfg using numdb 20"
+kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -- su - "$DB2_ADMIN_USERNAME" -c "db2 update dbm cfg using numdb 20"
 sleep 10
 echo
-kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -it -- su - "$DB2_ADMIN_USERNAME" -c "db2set DB2_WORKLOAD=FILENET_CM"
+kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -- su - "$DB2_ADMIN_USERNAME" -c "db2set DB2_WORKLOAD=FILENET_CM"
 sleep 10
 echo
-kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -it -- su - "$DB2_ADMIN_USERNAME" -c "set CUR_COMMIT=ON"
+kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -- su - "$DB2_ADMIN_USERNAME" -c "set CUR_COMMIT=ON"
 sleep 10
 
 echo
 echo "Restarting DB2 instance."
-kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -it -- su - "$DB2_ADMIN_USERNAME" -c "db2stop"
+kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -- su - "$DB2_ADMIN_USERNAME" -c "db2stop"
 sleep 10
 echo
-kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -it -- su - "$DB2_ADMIN_USERNAME" -c "db2start"
+kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -- su - "$DB2_ADMIN_USERNAME" -c "db2start"
 sleep 10
 
 echo
@@ -421,13 +415,13 @@ set +e
 
 echo
 echo "Removing BLUDB from system."
-kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -it -- su - "${DB2_ADMIN_USERNAME}" -c "db2 deactivate database BLUDB"
+kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -- su - "${DB2_ADMIN_USERNAME}" -c "db2 deactivate database BLUDB"
 sleep 10
-kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -it -- su - "${DB2_ADMIN_USERNAME}"  -c "db2 drop database BLUDB"
+kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -- su - "${DB2_ADMIN_USERNAME}" -c "db2 drop database BLUDB"
 sleep 10
 echo
 echo "Existing databases are:"
-kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -it -- su - "${DB2_ADMIN_USERNAME}"  -c "db2 list database directory | grep \"Database name\" | cat"
+kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -- su - "${DB2_ADMIN_USERNAME}" -c "db2 list database directory | grep \"Database name\" | cat"
 echo
 
 echo "Db2u installation complete! Congratulations. Exiting ..."
