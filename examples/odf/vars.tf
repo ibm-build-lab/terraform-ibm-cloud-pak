@@ -10,3 +10,8 @@ variable "ibmcloud_api_key" {
 variable "cluster" {
     description = "The id of the cluster"
 }
+
+variable "roks_version" {
+  type = string
+  description = "ROKS Cluster version (4.7 or higher)"
+}

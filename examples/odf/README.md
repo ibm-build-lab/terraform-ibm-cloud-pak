@@ -26,6 +26,7 @@ Create a file `terraform.tfvars` with the following input variables:
 is_enable               = true
 ibmcloud_api_key        = "<api-key>"
 cluster                 = "<cluster-id>"
+roks_version            = "<cluster version>"
 ```
 
 These parameters are:
@@ -33,6 +34,7 @@ These parameters are:
 - `is_enable`: Variable to enable ODF install
 - `ibmcloud_api_key`: IBM Cloud Key needed to provision resources.
 - `cluster`: Cluster ID of the OpenShift cluster where to install IAF
+- `roks_version`: ROKS Cluster version (4.7 or higher)
 
 Execute the following Terraform commands:
 
