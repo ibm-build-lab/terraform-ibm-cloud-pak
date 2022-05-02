@@ -3,8 +3,12 @@ kind: OcsCluster
 metadata:
   name: ocscluster-vpc
 spec:
+%{ if roks_version == "4.7" ~}
+  monStorageClassName: ${ monStorageClassName }
+  monSize: ${ monSize }
+%{ endif ~}
   osdStorageClassName: ${ osdStorageClassName }
-  osdSize: "${ osdSize }"
+  osdSize: ${ osdSize }
   numOfOsd: ${ numOfOsd }
   billingType: ${ billingType }
   ocsUpgrade: ${ ocsUpgrade }
