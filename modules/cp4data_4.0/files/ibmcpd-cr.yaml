@@ -8,4 +8,4 @@ spec:
     accept: true
     license: Enterprise
   storageClass: portworx-shared-gp3
-  zenCoreMetadbStorageClass: portworx-shared-gp3
+  zenCoreMetadbStorageClass: RWO_STORAGE

@@ -19,6 +19,8 @@ resource "null_resource" "bedrock_zen_operator" {
       NAMESPACE        = var.cpd_project_name
       OP_NAMESPACE     = var.operator_namespace
       ON_VPC           = var.on_vpc
+      STORAGE          = var.cpd_storageclass
+      RWO_STORAGE      = var.rwo_cpd_storageclass
     }
 
     working_dir = "${path.module}/scripts/"
@@ -42,6 +44,8 @@ resource "null_resource" "install_wsl" {
       OP_NAMESPACE = var.operator_namespace
       NAMESPACE    = var.cpd_project_name
       ON_VPC       = var.on_vpc
+      STORAGE      = var.cpd_storageclass
+      RWO_STORAGE  = var.rwo_cpd_storageclass
     }
 
     working_dir = "${path.module}/scripts/"
@@ -66,6 +70,8 @@ resource "null_resource" "install_aiopenscale" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = var.cpd_storageclass
+      RWO_STORAGE  = var.rwo_cpd_storageclass
     }
 
     working_dir = "${path.module}/scripts/"
@@ -91,6 +97,8 @@ resource "null_resource" "install_wml" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = var.cpd_storageclass
+      RWO_STORAGE  = var.rwo_cpd_storageclass
     }
 
     working_dir = "${path.module}/scripts/"
@@ -117,6 +125,8 @@ resource "null_resource" "install_wkc" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = var.cpd_storageclass
+      RWO_STORAGE  = var.rwo_cpd_storageclass
     }
 
     working_dir = "${path.module}/scripts/"
@@ -144,6 +154,8 @@ resource "null_resource" "install_dv" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = var.cpd_storageclass
+      RWO_STORAGE  = var.rwo_cpd_storageclass
     }
 
     working_dir = "${path.module}/scripts/"
@@ -172,6 +184,8 @@ resource "null_resource" "install_spss" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = var.cpd_storageclass
+      RWO_STORAGE  = var.rwo_cpd_storageclass
     }
 
     working_dir = "${path.module}/scripts/"
@@ -201,6 +215,8 @@ resource "null_resource" "install_cde" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = var.cpd_storageclass
+      RWO_STORAGE  = var.rwo_cpd_storageclass
     }
 
     working_dir = "${path.module}/scripts/"
@@ -231,6 +247,8 @@ resource "null_resource" "install_spark" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = var.cpd_storageclass
+      RWO_STORAGE  = var.rwo_cpd_storageclass
     }
 
     working_dir = "${path.module}/scripts/"
@@ -262,6 +280,8 @@ resource "null_resource" "install_dods" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = var.cpd_storageclass
+      RWO_STORAGE  = var.rwo_cpd_storageclass
     }
 
     working_dir = "${path.module}/scripts/"
@@ -294,6 +314,8 @@ resource "null_resource" "install_ca" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = var.cpd_storageclass
+      RWO_STORAGE  = var.rwo_cpd_storageclass
     }
 
     working_dir = "${path.module}/scripts/"
@@ -327,6 +349,8 @@ resource "null_resource" "install_ds" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = var.cpd_storageclass
+      RWO_STORAGE  = var.rwo_cpd_storageclass
     }
 
     working_dir = "${path.module}/scripts/"
@@ -361,6 +385,8 @@ resource "null_resource" "install_db2oltp" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = var.cpd_storageclass
+      RWO_STORAGE  = var.rwo_cpd_storageclass
     }
 
     working_dir = "${path.module}/scripts/"
@@ -396,6 +422,8 @@ resource "null_resource" "install_db2wh" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = var.cpd_storageclass
+      RWO_STORAGE  = var.rwo_cpd_storageclass
     }
 
     working_dir = "${path.module}/scripts/"
@@ -432,6 +460,8 @@ resource "null_resource" "install_big_sql" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = var.cpd_storageclass
+      RWO_STORAGE  = var.rwo_cpd_storageclass
     }
 
     working_dir = "${path.module}/scripts/"
@@ -469,6 +499,8 @@ resource "null_resource" "install_wsruntime" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = var.cpd_storageclass
+      RWO_STORAGE  = var.rwo_cpd_storageclass
     }
 
     working_dir = "${path.module}/scripts/"

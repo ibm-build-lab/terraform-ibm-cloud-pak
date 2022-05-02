@@ -33,6 +33,8 @@ echo $result
 # ****** sed command for classic goes here *******
 if [[ ${ON_VPC} == false ]] ; then
     sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" wkc-cr.yaml #storageClass
+else
+    sed -i -e "s/portworx-shared-gp3/${STORAGE}/g" wkc-cr.yaml
 fi
 
 sed -i -e "s/REPLACE_NAMESPACE/${NAMESPACE}/g" wkc-cr.yaml

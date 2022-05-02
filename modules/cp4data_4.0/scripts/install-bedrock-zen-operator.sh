@@ -252,6 +252,9 @@ sleep 30
 # ****** sed command for classic goes here *******
 if [[ ${ON_VPC} == false ]] ; then
     sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" ibmcpd-cr.yaml
+else
+    sed -i -e "s/portworx-shared-gp3/${STORAGE}/g" ibmcpd-cr.yaml
+    sed -i -e "s/RWO_STORAGE/${RWO_STORAGE}/g" ibmcpd-cr.yaml
 fi
 
 # Create lite CR: 

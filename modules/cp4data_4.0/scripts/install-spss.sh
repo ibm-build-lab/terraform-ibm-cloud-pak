@@ -29,6 +29,8 @@ cd ../files
 # ****** sed command for classic goes here *******
 if [[ ${ON_VPC} == false ]] ; then
     sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" spss-cr.yaml
+else
+    sed -i -e "s/portworx-shared-gp3/${STORAGE}/g" spss-cr.yaml
 fi
 
 sed -i -e "s/REPLACE_NAMESPACE/${NAMESPACE}/g" spss-cr.yaml
