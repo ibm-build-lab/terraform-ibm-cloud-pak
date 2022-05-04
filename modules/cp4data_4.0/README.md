@@ -146,9 +146,7 @@ module "cp4data" {
 | `install_big_sql`                  | Install Db2 Big SQL module. By default it's not installed.                                                                                                                                                                     | `false`                     | No       |
 | `install_wsruntime`      | Install Jupyter Python 3.7 Runtime Addon. By default it's not installed.                                                                                                                                                         | `false`                     | No       |
 | `storage_option`     | Define the storage option. For now it's `portworx`                                                                                                    |         `portworx`                    | Yes      |
-
-| `storage_class`     | Do not modify for viewing purposes only. Choose with `storage_option`                                                                                                    |         `portworx`                    | No      |
-
+| `storage_class`      | Do not modify for viewing purposes only. Choose with `storage_option`                                                                                                    |         `portworx`                    | No      |
 | `rwo_storage_class`     | Do not modify for viewing purposes only. Choose with `storage_option`                                                                                  |         `portworx`                    | No      |
 
 
