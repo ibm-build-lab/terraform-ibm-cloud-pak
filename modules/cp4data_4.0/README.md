@@ -91,6 +91,8 @@ module "cp4data" {
   // CP4D License Acceptance
   accept_cpd_license = var.accept_cpd_license
 
+  storage_option            = var.storage_option
+
   // CP4D Info
   cpd_project_name = var.cpd_project_name
 
@@ -143,6 +145,12 @@ module "cp4data" {
 | `install_db2wh`                  | Install Db2 Warehouse module. By default it's not installed.                                                                                                                                                                     | `false`                     | No       |
 | `install_big_sql`                  | Install Db2 Big SQL module. By default it's not installed.                                                                                                                                                                     | `false`                     | No       |
 | `install_wsruntime`      | Install Jupyter Python 3.7 Runtime Addon. By default it's not installed.                                                                                                                                                         | `false`                     | No       |
+| `storage_option`     | Define the storage option. For now it's `portworx`                                                                                                    |         `portworx`                    | Yes      |
+
+| `storage_class`     | Do not modify for viewing purposes only. Choose with `storage_option`                                                                                                    |         `portworx`                    | No      |
+
+| `rwo_storage_class`     | Do not modify for viewing purposes only. Choose with `storage_option`                                                                                  |         `portworx`                    | No      |
+
 
 **NOTE** The boolean input variable `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
 

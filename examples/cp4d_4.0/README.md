@@ -29,6 +29,8 @@ entitled_registry_user_email = "john.doe@email.com"
 // CP4D License Acceptance
 accept_cpd_license = true
 
+storage_option = "portworx"
+
 // Parameters to install submodules
 install_wsl         = false
 install_aiopenscale = false
@@ -56,6 +58,7 @@ These parameters are:
 - `entitled_registry_user_email`: IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key
 - `resource_group_name`: Resource group that the cluster is provisioned in
 - `accept_cpd_license`: If set to `true`, you accept all cpd license agreements including additional modules installed. By default, it's `false`
+- `storage_option`: Define the storage option. For now it's `portworx`. (ocs, nfs, portworx)
 - `install_wsl`:  Install Watson Studio module. By default it's not installed. 
 - `install_aiopenscale`: Install  Watson AI OpenScale module. By default it's not installed. 
 - `install_wml`: Install Watson Machine Learning module. By default it's not installed.
