@@ -23,17 +23,17 @@ data "ibm_container_cluster_config" "cluster_config" {
   config_dir        = var.cluster_config_path
 }
 
-# # Get classic cluster ingress_hostname for output
-# data "ibm_container_cluster" "cluster" {
-#   count           = ! var.on_vpc ? 1 : 0
-#   cluster_name_id = var.cluster_id
-# }
+# Get classic cluster ingress_hostname for output
+data "ibm_container_cluster" "cluster" {
+  count           = ! var.on_vpc ? 1 : 0
+  cluster_name_id = var.cluster_id
+}
 
-# # Get vpc cluster ingress_hostname for output
-# data "ibm_container_vpc_cluster" "cluster" {
-#   count           = var.on_vpc ? 1 : 0
-#   cluster_name_id = var.cluster_id
-# }
+# Get vpc cluster ingress_hostname for output
+data "ibm_container_vpc_cluster" "cluster" {
+  count           = var.on_vpc ? 1 : 0
+  cluster_name_id = var.cluster_id
+}
 
 // Module:
 module "cp4data" {
