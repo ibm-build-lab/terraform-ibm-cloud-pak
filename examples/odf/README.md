@@ -35,6 +35,14 @@ These parameters are:
 - `ibmcloud_api_key`: IBM Cloud Key needed to provision resources.
 - `cluster`: Cluster ID of the OpenShift cluster where to install IAF
 - `roks_version`: ROKS Cluster version (4.7 or higher)
+- `osdStorageClassName`: Storage class that you want to use for your OSD devices
+- `osdSize`: Size of your storage devices. The total storage capacity of your ODF cluster is equivalent to the osdSize x 3 divided by the numOfOsd
+- `numOfOsd`: Number object storage daemons (OSDs) that you want to create. ODF creates three times the numOfOsd value
+- `billingType`: Billing Type for your ODF deployment ('essentials' or 'advanced')
+- `ocsUpgrade`: Whether to upgrade the major version of your ODF deployment
+- `clusterEncryption`: Enable encryption of storage cluster
+- `monSize`:Size of the storage devices that you want to provision for the monitor pods. The devices must be at least 20Gi each (Only roks 4.7)
+- `monStorageClassName`: Storage class to use for your Monitor pods. For VPC clusters you must specify a block storage class (Only roks 4.7)
 
 Execute the following Terraform commands:
 
