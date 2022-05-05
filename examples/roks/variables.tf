@@ -7,7 +7,7 @@ variable "on_vpc" {
 
 variable "entitlement" {
   default     = "cloud_pak"
-  description = "OCP entitlement: leave blank if OCP, set it to `cloud-pak` if cloud pak entitlement"
+  description = "OCP entitlement: leave blank if OCP, set it to `cloud_pak` if cloud pak entitlement"
 }
 
 variable "region" {
