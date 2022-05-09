@@ -18,7 +18,6 @@ locals {
 
 # Install ODF if the rocks version is v4.7 or newer
 resource "null_resource" "enable_odf" {
-  count = var.is_enable ? 1 : 0
   
   triggers = {
     IC_API_KEY = var.ibmcloud_api_key

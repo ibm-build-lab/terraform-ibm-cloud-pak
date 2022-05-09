@@ -23,15 +23,23 @@ Follow these instructions to test the Terraform Module manually
 Create a file `terraform.tfvars` with the following input variables:
 
 ```hcl
-is_enable               = true
 ibmcloud_api_key        = "<api-key>"
 cluster                 = "<cluster-id>"
 roks_version            = "<cluster version>"
+
+// ODF Parameters
+monSize = "20Gi"
+monStorageClassName = "ibmc-vpc-block-10iops-tier"
+osdStorageClassName = "ibmc-vpc-block-10iops-tier"
+osdSize = "100Gi"
+numOfOsd = 1
+billingType = "advanced"
+ocsUpgrade = false
+clusterEncryption = false
 ```
 
 These parameters are:
 
-- `is_enable`: Variable to enable ODF install
 - `ibmcloud_api_key`: IBM Cloud Key needed to provision resources.
 - `cluster`: Cluster ID of the OpenShift cluster where to install IAF
 - `roks_version`: ROKS Cluster version (4.7 or higher)

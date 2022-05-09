@@ -35,9 +35,17 @@ provider "ibm" {
 // Module:
 module "odf" {
   source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/odf"
-  is_enable = var.is_enable
   cluster = var.cluster
   ibmcloud_api_key = var.ibmcloud_api_key
+
+  monSize = var.monSize
+  monStorageClassName = var.monStorageClassName
+  osdStorageClassName = var.osdStorageClassName
+  osdSize = var.osdSize
+  numOfOsd = var.numOfOsd
+  billingType = var.billingType
+  ocsUpgrade = var.ocsUpgrade
+  clusterEncryption = var.clusterEncryption
 }
 ```
 
@@ -45,7 +53,6 @@ module "odf" {
 
 | Name                           | Description                                                                                                                                                                                                                | Default | Required |
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | -------- |
-| `is_enable`                       | If set to `false` does not install OpenShift Data Foundation on the given cluster. Enabled by default | `true`  | No       |
 | `ibmcloud_api_key`             | This requires an ibmcloud api key found here: `https://cloud.ibm.com/iam/apikeys`    |         | Yes       |
 | `cluster`                   | The id of the OpenShift cluster to be installed on |  | Yes       |
 | `roks_version`                   | ROKS Cluster version (4.7 or higher) |  | Yes       |

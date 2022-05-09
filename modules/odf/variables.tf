@@ -1,7 +1,3 @@
-variable "is_enable" {
-    default     = true
-}
-
 variable "cluster" {
   type = string
   description = "Cluster name on which ODF is to be enabled"
