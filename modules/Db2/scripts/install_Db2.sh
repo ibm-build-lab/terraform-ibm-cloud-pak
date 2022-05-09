@@ -21,7 +21,7 @@ echo "**************************************************************************
 CUR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 C_DB2UCLUSTER_DB2U="c-db2ucluster-db2u"
-C_DB2UCLUSTER_INSTDB="c-db2ucluster-instdb"
+C_DB2UCLUSTER_INSTDB="c-db2ucluster-"
 SUBCRIPTION_NAME="db2u-operator"
 
 
