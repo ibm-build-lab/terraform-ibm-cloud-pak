@@ -54,13 +54,6 @@ echo
 kubectl patch storageclass "${DB2_STORAGE_CLASS}" -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 echo
 
-
-echo
-echo "Modifying the OpenShift Global Pull Secret (you need jq tool for that):"
-echo $(kubectl get secret pull-secret -n openshift-config --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode; kubectl get secret ibm-registry -n "${DB2_PROJECT_NAME}" --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode) | jq -s '.[0] * .[1]' > dockerconfig_merged
-echo
-kubectl set data secret/pull-secret -n openshift-config --from-file=.dockerconfigjson=dockerconfig_merged
-
 echo
 echo "Installing the IBM Operator Catalog..."
 cat "${DB2_OPERATOR_CATALOG_FILE}"
@@ -73,12 +66,26 @@ echo
 
 
 echo
-echo "Modifying the OpenShift Global Pull Secret (you need jq tool for that):"
-echo $(kubectl get secret pull-secret -n openshift-config --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode; kubectl get secret ibm-db2-registry -n "${DB2_PROJECT_NAME}" --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode) | jq -s '.[0] * .[1]' > dockerconfig_merged
-
+echo "Modifying the OpenShift Global Pull Secret:"
+echo $(kubectl get secret pull-secret -n openshift-config --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode; kubectl get secret ibm-registry -n "${DB2_PROJECT_NAME}" --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode) | jq -s '.[0] * .[1]' > dockerconfig_merged
+echo
 
 echo
-kubectl edit secret/pull-secret -n openshift-config --from-file=.dockerconfigjson=dockerconfig_merged
+echo "Setting Pull Secret"
+# Extract secret
+kubectl get secret/pull-secret -n openshift-config -o json > pull-secret.json
+cat pull-secret.json | jq '.data[".dockerconfigjson"]' | sed -e 's/"//g' | base64 -d > dockerconfigjson
+
+API_KEY=$(printf "%s:%s" "${ENTITLEMENT_REGISTRY_USER_EMAIL}" "${ENTITLED_REGISTRY_KEY}" | base64 | tr -d '[:space:]')
+NEW_SECRET_VALUE=$(jq --arg apikey "${API_KEY}" --arg registry "${ENTITLED_REGISTRY_KEY}" '.auths += {($registry): {"auth":$apikey}}' dockerconfigjson | base64)
+jq --arg value "$NEW_SECRET_VALUE" '.data[".dockerconfigjson"] = $value' pull-secret.json > pull-secret-new.json
+
+# Update Secret
+kubectl apply -f pull-secret-new.json
+
+echo
+echo "Modifying the OpenShift Global Pull Secret:"
+echo $(kubectl get secret pull-secret -n openshift-config --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode; kubectl get secret ibm-db2-registry -n "${DB2_PROJECT_NAME}" --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode) | jq -s '.[0] * .[1]' > dockerconfig_merged
 
 echo
 if kubectl get catalogsource -n openshift-marketplace | grep ibm-operator-catalog ; then
@@ -316,18 +323,6 @@ sleep 40
 date
 wait_for_job_to_complete_by_name
 
-
-#
-#if [ "$jobStatus" ]
-#then
-#  echo "Job Status: ${jobStatus}"
-#  echo "${C_DB2UCLUSTER_INSTDB} job has been successfully completed."
-#else
-#  echo "Timed out waiting for ${C_DB2UCLUSTER_INSTDB} job to complete successfully."
-#  exit 1
-#fi
-
-
 function wait_for_c_db2ucluster_db2u_pod {
   local current_time=0
   local max_waiting_time=300 total_wait_time
@@ -350,17 +345,6 @@ echo "Waiting for "${C_DB2UCLUSTER_DB2U}"-0 pod to complete successfully."
 date
 sleep 20
 wait_for_c_db2ucluster_db2u_pod
-
-
-
-#if [ "$jobStatus" ]
-#then
-#  echo "Job Status: ${jobStatus}"
-#  echo "${C_DB2UCLUSTER_DB2U}-0 job has been successfully completed."
-#else
-#  echo "Timed out waiting for ${C_DB2UCLUSTER_DB2U}-0 job to complete successfully."
-#  exit 1
-#fi
 
 
 ## Now that DB2 is running let's update the number of databases allowed 
@@ -424,6 +408,10 @@ echo "Existing databases are:"
 kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -- su - "${DB2_ADMIN_USERNAME}" -c "db2 list database directory | grep \"Database name\" | cat"
 echo
 
+echo "Deleting the files: dockerconfigjson, pull-secret-new.json, pull-secret.json, dockerconfig_merged ..."
+rm dockerconfigjson pull-secret-new.json pull-secret.json dockerconfig_merged
+
+echo
 echo "Db2u installation complete! Congratulations. Exiting ..."
 date
 
