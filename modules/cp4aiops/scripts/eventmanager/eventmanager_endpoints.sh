@@ -1,9 +1,6 @@
 #!/bin/bash
 
-K8s_CMD=kubectl
-# eval "$(jq -r '@sh "export KUBECONFIG=\(.kubeconfig) NAMESPACE=\(.namespace)"')"
-NAMESPACE="aiops"
-
+eval "$(jq -r '@sh "export KUBECONFIG=\(.kubeconfig) NAMESPACE=\(.namespace)"')"
 
 # Obtains the credentials and endpoints for the installed CP4I Dashboard
 results() {
@@ -24,8 +21,9 @@ results() {
   exit 0
 }
 
-route=$(${K8s_CMD} get route -n ${NAMESPACE} cpd -o jsonpath='{.spec.host}')
-pass=$(${K8s_CMD} -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d && echo)
-user=$(${K8s_CMD} -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_username}' | base64 -d && echo)
+route=$(kubectl get route -n ${NAMESPACE} evtmanager-ibm-hdm-common-ui -o jsonpath='{.spec.host}')
+pass=$(kubectl -n ${NAMESPACE} get secret evtmanager-icpadmin-secret -o jsonpath='{.data.ICP_ADMIN_PASSWORD}' | base64 -d && echo)
+user="icpadmin"
+
 
 results "${route}" "${pass}" "${user}"

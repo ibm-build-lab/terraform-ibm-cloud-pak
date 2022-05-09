@@ -109,10 +109,74 @@ resource "null_resource" "install_event_manager" {
       KUBECONFIG                    = var.cluster_config_path
       NAMESPACE                     = var.namespace
       ACCEPT_LICENSE                = var.accept_aiops_license
-      PERSISTENT_SC                 = local.storageclass["persistence"]
-      TOPOLOGY_SC                   = local.storageclass["topology"]
-      LDAP_SC                       = local.storageclass["ldap"]
+      
       ENABLE_PERSISTENCE            = var.enable_persistence
+      PERSISTENT_SC                 = local.storageclass["persistence"]
+      
+      HUMIO_REPO                    = var.humio_repo
+      HUMIO_URL                     = var.humio_url
+      
+      LDAP_PORT                     = var.ldap_port
+      LDAP_MODE                     = var.ldap_mode
+      LDAP_SC                       = local.storageclass["ldap"]
+      LDAP_USER_FILTER              = var.ldap_user_filter
+      LDAP_BIND_DN                  = var.ldap_bind_dn
+      LDAP_SSL_PORT                 = var.ldap_ssl_port
+      LDAP_URL                      = var.ldap_url
+      LDAP_SUFFIX                   = var.ldap_suffix
+      LDAP_GROUP_FILTER             = var.ldap_group_filter
+      LDAP_BASE_DN                  = var.ldap_base_dn
+      LDAP_SERVER_TYPE              = var.ldap_server_type
+
+      CAC                           = var.continuous_analytics_correlation
+      BACKUP_DEPLOYMENT             = var.backup_deployment
+
+      ENABLE_ZEN_DEPLOY             = var.zen_deploy
+      ENABLE_ZEN_IGNORE_READY       = var.zen_ignore_ready
+      ZEN_INSTANCE_NAME             = var.zen_instance_name
+      ZEN_INSTANCE_ID               = var.zen_instance_id
+      ZEN_INSTANCE_ID               = var.zen_namespace
+      ZEN_STORAGE                   = var.zen_storage
+
+      ENABLE_APP_DISC               = var.enable_app_discovery
+      AP_CERT_SECRET                = var.ap_cert_secret
+      AP_DB_SECRET                  = var.ap_db_secret
+      AP_DB_HOST_URL                  = var.ap_db_host_url
+      AP_SECURE_DB                  = var.ap_secure_db
+
+      TOPOLOGY_SC                   = local.storageclass["topology"]
+      ENABLE_NETWORK_DISCOVERY      = var.enable_network_discovery
+
+      OBV_DOCKER                    = var.obv_docker
+      OBV_TADDM                     = var.obv_taddm
+      OBV_SERVICENOW                = var.obv_servicenow
+      OBV_IBMCLOUD                  = var.obv_ibmcloud
+      OBV_ALM                       = var.obv_alm
+      OBV_CONTRAIL                  = var.obv_contrail
+      OBV_CIENABLUEPLANET           = var.obv_cienablueplanet
+      OBV_KUBERNETES                = var.obv_kubernetes
+      OBV_BIGFIXINVENTORY           = var.obv_bigfixinventory
+      OBV_JUNIPERCSO                = var.obv_junipercso
+      OBV_DNS                       = var.obv_dns
+      OBV_ITNM                      = var.obv_itnm
+      OBV_ANSIBLEAWX                = var.obv_ansibleawx
+      OBV_CISCOACI                  = var.obv_ciscoaci
+      OBV_AZURE                     = var.obv_azure
+      OBV_RANCHER                   = var.obv_rancher
+      OBV_NEWRELIC                  = var.obv_newrelic
+      OBV_VMVCENTER                 = var.obv_vmvcenter
+      OBV_REST                      = var.obv_rest
+      OBV_APPDYNAMICS               = var.obv_appdynamics
+      OBV_JENKINS                   = var.obv_jenkins
+      OBV_ZABBIX                    = var.obv_zabbix
+      OBV_FILE                      = var.obv_file
+      OBV_GOOGLECLOUD               = var.obv_googlecloud
+      OBV_DYNATRACE                 = var.obv_dynatrace
+      OBV_AWS                       = var.obv_aws
+      OBV_OPENSTACK                 = var.obv_openstack
+      OBV_VMWARENSX                 = var.obv_vmwarensx
+
+      ENABLE_BACKUP_RESTORE         = var.enable_backup_restore
     }
   }
 
@@ -121,18 +185,30 @@ resource "null_resource" "install_event_manager" {
   ]
 }
 
-data "external" "get_endpoints" {
+data "external" "get_aiman_endpoints" {
   depends_on = [
-    null_resource.install_cp4aiops,
+    null_resource.configure_cert_nginx,
     null_resource.install_event_manager
   ]
 
-  program = ["/bin/bash", "${path.module}/scripts/aimanager/get_endpoints.sh"]
+  program = ["/bin/bash", "${path.module}/scripts/aimanager/aimanager_endpoints.sh"]
 
   query = {
-    KUBECONFIG = var.cluster_config_path
-    NAMESPACE  = var.namespace
+    kubeconfig = var.cluster_config_path
+    namespace  = var.namespace
   }
 }
 
+data "external" "get_evtman_endpoints" {
+  depends_on = [
+    null_resource.configure_cert_nginx,
+    null_resource.install_event_manager
+  ]
 
+  program = ["/bin/bash", "${path.module}/scripts/eventmanager/eventmanager_endpoints.sh"]
+
+  query = {
+    kubeconfig = data.ibm_container_cluster_config.cluster_config.config_file_path
+    namespace  = var.namespace
+  }
+}

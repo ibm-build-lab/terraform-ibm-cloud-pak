@@ -1,21 +1,31 @@
 #!/bin/sh
 
 # Set defaults
-PERSISTENCE_FLAG=${INSTALL_PERSISTENCE:-true}
+ENABLE_PERSISTENCE=${ENABLE_PERSISTENCE:-true}
 
 echo "=== installing event manager ==="
 
-# $ADVANCED_FLAG
-# $LDAP_FLAG
-# $INTEGRATIONS_FLAG
-$PERSISTENCE_FLAG
-# $SERVICE_CONT_FLAG
-# $TOPOLOGY_FLAG
-# $ZEN_FLAG
-# $BACKUP_RESTORE_FLAG
-
 # Creates FQDN
 FQDN=apps.`kubectl get ingresses.config/cluster -o jsonpath={.spec.domain}`
+
+# Integrations
+SET_HUMIO_REPO=${HUMIO_REPO:-''}
+SET_HUMIO_URL=${HUMIO_URL:-''}
+
+# Service Continuity (continuousAnalyticsCorrelation)
+SET_CAC=${CAC:-false}
+SET_BACKUP_DEPLOYMENT=${BACKUP_DEPLOYMENT:-false}
+
+# Topologies
+ENABLE_APP_DISC=${ENABLE_APP_DISC:-false}
+SET_AP_CERT_SECRET=${AP_CERT_SECRET:-''}
+SET_AP_DB_SECRET=${AP_DB_SECRET:-''}
+SET_AP_DB_HOST_URL=${AP_DB_HOST_URL:-''}
+
+
+# Backup Restore
+ENABLE_BACKUP_RESTORE=${ENABLE_BACKUP_RESTORE:-false}
+
 
 cat << EOF | kubectl apply -f -
 apiVersion: noi.ibm.com/v1beta1
@@ -31,25 +41,31 @@ spec:
     imagePullPolicy: IfNotPresent
     imagePullRepository: cp.icr.io/cp/noi
   zen:
-    serviceInstanceName: iaf-zen-cpdservice
+    deploy: ${ENABLE_ZEN_DEPLOY}
+    ignoreReady: ${ENABLE_ZEN_IGNORE_READY}
+    instanceId: ${ZEN_INSTANCE_ID}
+    serviceNamespace: ${ZEN_NAMESPACE}
+    storage:
+      storageClassName: ${ZEN_STORAGE}
+    serviceInstanceName: ${ZEN_INSTANCE_NAME}
   serviceContinuity:
-    continuousAnalyticsCorrelation: false
-    isBackupDeployment: false
+    continuousAnalyticsCorrelation: ${SET_CAC}
+    isBackupDeployment: ${SET_BACKUP_DEPLOYMENT}
   ldap:
-    port: '3389'
-    mode: standalone
-    userFilter: 'uid=%s,ou=users'
-    bindDN: 'cn=admin,dc=mycluster,dc=icp'
-    sslPort: '3636'
-    url: 'ldap://localhost:3389'
-    suffix: 'dc=mycluster,dc=icp'
-    groupFilter: 'cn=%s,ou=groups'
-    baseDN: 'dc=mycluster,dc=icp'
+    port: "${LDAP_PORT}"
+    mode: ${LDAP_MODE}
+    userFilter: ${LDAP_USER_FILTER}
+    bindDN: ${LDAP_BIND_DN}
+    sslPort: "${LDAP_SSL_PORT}"
+    url: ${LDAP_URL}
+    suffix: ${LDAP_SUFFIX}
+    groupFilter: ${LDAP_GROUP_FILTER}
+    baseDN: ${LDAP_BASE_DN}
     storageSize: 1Gi
-    serverType: CUSTOM
+    serverType: ${LDAP_SERVER_TYPE}
     storageClass: ${LDAP_SC}
   backupRestore:
-    enableAnalyticsBackups: false
+    enableAnalyticsBackups: ${ENABLE_BACKUP_RESTORE}
   topology:
     storageClassElasticTopology: ${TOPOLOGY_SC}
     storageSizeElasticTopology: 75Gi
@@ -57,56 +73,56 @@ spec:
     storageClassFileObserver: ${TOPOLOGY_SC}
     iafCartridgeRequirementsName: ''
     appDisco:
-      enabled: false
+      enabled: ${ENABLE_APP_DISC}
       scaleSSS: '1'
       tlsSecret: ''
-      dbsecret: ''
+      dbsecret: ${SET_AP_DB_SECRET}
       db2database: taddm
-      dburl: ''
-      certSecret: ''
+      dburl: ${SET_AP_DB_HOST_URL}
+      certSecret: ${SET_AP_CERT_SECRET}
       db2archuser: archuser
-      secure: false
+      secure: ${AP_SECURE_DB} 
       scaleDS: '1'
       db2user: db2inst1
       dbport: '50000'
     observers:
-      docker: false
-      taddm: false
-      servicenow: true
-      ibmcloud: false
-      alm: false
-      contrail: false
-      cienablueplanet: false
-      kubernetes: true
-      bigfixinventory: false
-      junipercso: false
-      dns: false
-      itnm: false
-      ansibleawx: false
-      ciscoaci: false
-      azure: false
-      rancher: false
-      newrelic: false
-      vmvcenter: true
-      rest: true
-      appdynamics: false
-      jenkins: false
-      zabbix: false
-      file: true
-      googlecloud: false
-      dynatrace: false
-      aws: false
-      openstack: false
-      vmwarensx: false
-    netDisco: false
+      docker: ${OBV_DOCKER}
+      taddm: ${OBV_TADDM}
+      servicenow: ${OBV_SERVICENOW}
+      ibmcloud: ${OBV_IBMCLOUD}
+      alm: ${OBV_ALM}
+      contrail: ${OBV_CONTRAIL}
+      cienablueplanet: ${OBV_CIENABLUEPLANET}
+      kubernetes: ${OBV_KUBERNETES}
+      bigfixinventory: ${OBV_BIGFIXINVENTORY}
+      junipercso: ${OBV_JUNIPERCSO}
+      dns: ${OBV_DNS}
+      itnm: ${OBV_ITNM}
+      ansibleawx: ${OBV_ANSIBLEAWX}
+      ciscoaci: ${OBV_CISCOACI}
+      azure: ${OBV_AZURE}
+      rancher: ${OBV_RANCHER}
+      newrelic: ${OBV_NEWRELIC}
+      vmvcenter: ${OBV_VMVCENTER}
+      rest: ${OBV_REST}
+      appdynamics: ${OBV_APPDYNAMICS}
+      jenkins: ${OBV_JENKINS}
+      zabbix: ${OBV_ZABBIX}
+      file: ${OBV_FILE}
+      googlecloud: ${OBV_GOOGLECLOUD}
+      dynatrace: ${OBV_DYNATRACE}
+      aws: ${OBV_AWS}
+      openstack: ${OBV_OPENSTACK}
+      vmwarensx: ${OBV_VMWARENSX}
+    netDisco: ${ENABLE_NETWORK_DISCOVERY}
   version: 1.6.3.2
   entitlementSecret: noi-registry-secret
   clusterDomain: >-
     ${FQDN}
   integrations:
     humio:
-      repository: ''
-      url: ''
+      repository: ${HUMIO_REPO}
+      url: ${HUMIO_URL}
   persistence:
     storageSizeNCOBackup: 5Gi
     enabled: ${ENABLE_PERSISTENCE}
