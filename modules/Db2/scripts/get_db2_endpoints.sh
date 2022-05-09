@@ -18,6 +18,6 @@ results() {
 echo
 route=$(${K8s_CMD} get route console -n openshift-console -o yaml | grep routerCanonicalHostname | cut -d ":" -f2)
 nodePort=$(${K8s_CMD} get svc -n $NAMESPACE c-db2ucluster-db2u-engn-svc -o json | grep nodePort | cut -d ":" -f2)
-db2_pod_name=$(${K8s_CMD} get pods -n ibm-db2 | grep c-db2ucluster-db2u-0 | grep Running | awk '{print $1}')
+db2_pod_name=$(${K8s_CMD} get pods -n $NAMESPACE | grep c-db2ucluster-db2u-0 | grep Running | awk '{print $1}')
 results "${route}" "${nodePort}" "${db2_pod_name}"
 
