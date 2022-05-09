@@ -208,7 +208,7 @@ data "external" "get_evtman_endpoints" {
   program = ["/bin/bash", "${path.module}/scripts/eventmanager/eventmanager_endpoints.sh"]
 
   query = {
-    kubeconfig = data.ibm_container_cluster_config.cluster_config.config_file_path
+    kubeconfig = var.cluster_config_path
     namespace  = var.namespace
   }
 }
