@@ -1,6 +1,6 @@
 #!/bin/bash
-#eval "$(jq -r '@sh "export KUBECONFIG=\(.kubeconfig) NAMESPACE=\(.db2_namespace)"')"
-NAMESPACE=ibm-db2
+eval "$(jq -r '@sh "export KUBECONFIG=\(.kubeconfig) NAMESPACE=\(.db2_namespace)"')"
+#NAMESPACE=ibm-db2
 K8s_CMD=kubectl
 echo
 # Obtains the credentials and endpoints for the installed CP4BA Dashboard
