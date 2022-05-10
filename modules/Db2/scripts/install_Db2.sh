@@ -11,6 +11,7 @@
 #
 ###############################################################################
 
+date
 echo
 echo
 echo "*********************************************************************************"
@@ -395,29 +396,16 @@ echo "${workerNodeAddresses}"
 echo
 echo "=> Use \"${DB2_ADMIN_USERNAME}\" and password \"${DB2_ADMIN_USER_PASSWORD}\" to access the databases e.g. with IBM Data Studio."
 
-set +e
-
-echo
-echo "Removing BLUDB from system."
-kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -- su - "${DB2_ADMIN_USERNAME}" -c "db2 deactivate database BLUDB"
-sleep 10
-kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -- su - "${DB2_ADMIN_USERNAME}" -c "db2 drop database BLUDB"
-sleep 10
-echo
-echo "Existing databases are:"
-kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -- su - "${DB2_ADMIN_USERNAME}" -c "db2 list database directory | grep \"Database name\" | cat"
-echo
-
 echo "Deleting the files: dockerconfigjson, pull-secret-new.json, pull-secret.json, dockerconfig_merged ..."
 rm dockerconfigjson pull-secret-new.json pull-secret.json dockerconfig_merged
 
 echo
 echo "Db2u installation complete! Congratulations. Exiting ..."
-date
 
 echo
 echo
 echo "*********************************************************************************"
 echo "******** Installation and configuration of DB2 completed successfully!!! ********"
 echo "*********************************************************************************"
-
+echo
+date

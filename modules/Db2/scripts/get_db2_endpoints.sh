@@ -1,5 +1,10 @@
 #!/bin/bash
 eval "$(jq -r '@sh "export KUBECONFIG=\(.kubeconfig) NAMESPACE=\(.db2_namespace)"')"
+echo
+echo "Cluster config ..."
+echo "${KUBECONFIG}"
+echo
+
 #NAMESPACE=ibm-db2
 K8s_CMD=kubectl
 echo
