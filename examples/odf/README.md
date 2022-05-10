@@ -1,4 +1,3 @@
-
 # OpenShift Data Foundation Terraform Module Example
 
 ## 1. Set up access to IBM Cloud
@@ -24,17 +23,34 @@ Follow these instructions to test the Terraform Module manually
 Create a file `terraform.tfvars` with the following input variables:
 
 ```hcl
-is_enable               = true
 ibmcloud_api_key        = "<api-key>"
 cluster                 = "<cluster-id>"
+roks_version            = "<cluster version>"
+
+// ODF Parameters
+monSize = "20Gi"
+monStorageClassName = "ibmc-vpc-block-10iops-tier"
+osdStorageClassName = "ibmc-vpc-block-10iops-tier"
+osdSize = "100Gi"
+numOfOsd = 1
+billingType = "advanced"
+ocsUpgrade = false
+clusterEncryption = false
 ```
 
 These parameters are:
 
-- `is_enable`: Variable to enable ODF install
 - `ibmcloud_api_key`: IBM Cloud Key needed to provision resources.
 - `cluster`: Cluster ID of the OpenShift cluster where to install IAF
-
+- `roks_version`: ROKS Cluster version (4.7 or higher)
+- `osdStorageClassName`: Storage class that you want to use for your OSD devices
+- `osdSize`: Size of your storage devices. The total storage capacity of your ODF cluster is equivalent to the osdSize x 3 divided by the numOfOsd
+- `numOfOsd`: Number object storage daemons (OSDs) that you want to create. ODF creates three times the numOfOsd value
+- `billingType`: Billing Type for your ODF deployment ('essentials' or 'advanced')
+- `ocsUpgrade`: Whether to upgrade the major version of your ODF deployment
+- `clusterEncryption`: Enable encryption of storage cluster
+- `monSize`:Size of the storage devices that you want to provision for the monitor pods. The devices must be at least 20Gi each (Only roks 4.7)
+- `monStorageClassName`: Storage class to use for your Monitor pods. For VPC clusters you must specify a block storage class (Only roks 4.7)
 
 Execute the following Terraform commands:
 
@@ -65,7 +81,6 @@ This should produce output like:
     kube-system              ibm-ocs-operator-controller-manager-58fcf45bd6-68pq5              1/1     Running            0          5d22h
 
 ## 4. Cleanup
-
 
 When the cluster is no longer needed, run `terraform destroy` if this was created using your local Terraform client with `terraform apply`. 
 
