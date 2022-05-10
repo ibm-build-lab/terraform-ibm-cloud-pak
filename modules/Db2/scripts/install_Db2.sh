@@ -11,7 +11,10 @@
 #
 ###############################################################################
 
+echo
+
 date
+
 echo
 echo
 echo "*********************************************************************************"
@@ -22,7 +25,8 @@ echo "**************************************************************************
 CUR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 C_DB2UCLUSTER_DB2U="c-db2ucluster-db2u"
-C_DB2UCLUSTER_INSTDB="c-db2ucluster-"
+C_DB2UCLUSTER_DB2U_0="c-db2ucluster-db2u-0"
+C_DB2UCLUSTER_INSTDB="c-db2ucluster-instdb"
 SUBCRIPTION_NAME="db2u-operator"
 
 
@@ -311,7 +315,7 @@ function wait_for_job_to_complete_by_name {
       echo -e "......"
       sleep 10
       if [ "${current_time}" -eq "${max_waiting_time}" ] ; then
-          echo -e "Timed out waiting for ${C_DB2UCLUSTER_DB2U}-0 pod to complete successfully."
+          echo -e "Timed out waiting for ${C_DB2UCLUSTER_DB2U_0} pod to complete successfully."
           break
       fi
   done
@@ -326,7 +330,7 @@ wait_for_job_to_complete_by_name
 
 function wait_for_c_db2ucluster_db2u_pod {
   local current_time=0
-  local max_waiting_time=300 total_wait_time
+  local max_waiting_time=300
 
   until (kubectl get pods -n "${DB2_PROJECT_NAME}" | grep "${C_DB2UCLUSTER_DB2U}" | grep Running) || [ "${current_time}" -eq "${max_waiting_time}" ] ;
   do
@@ -334,7 +338,7 @@ function wait_for_c_db2ucluster_db2u_pod {
       echo -e "......"
       sleep 10
       if [ "${current_time}" -eq "${max_waiting_time}" ] ; then
-          echo -e "Timed out waiting for ${C_DB2UCLUSTER_DB2U}-0 pod to complete successfully."
+          echo -e "Timed out waiting for ${C_DB2UCLUSTER_DB2U_0} pod to complete successfully."
           break
       fi
   done
@@ -342,7 +346,7 @@ function wait_for_c_db2ucluster_db2u_pod {
 
 
 echo
-echo "Waiting for "${C_DB2UCLUSTER_DB2U}"-0 pod to complete successfully."
+echo "Waiting for "${C_DB2UCLUSTER_DB2U_0}" pod to complete successfully."
 date
 sleep 20
 wait_for_c_db2ucluster_db2u_pod
@@ -356,22 +360,22 @@ kubectl get configmap c-db2ucluster-db2dbmconfig -n "$DB2_PROJECT_NAME" -o yaml 
 
 echo
 echo "Updating database manager running configuration."
-kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -- su - "$DB2_ADMIN_USERNAME" -c "db2 update dbm cfg using numdb 20"
-sleep 10
+kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U_0}" -- su - "$DB2_ADMIN_USERNAME" -c "db2 update dbm cfg using numdb 20"
+sleep 5
 echo
-kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -- su - "$DB2_ADMIN_USERNAME" -c "db2set DB2_WORKLOAD=FILENET_CM"
-sleep 10
+kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U_0}" -- su - "$DB2_ADMIN_USERNAME" -c "db2set DB2_WORKLOAD=FILENET_CM"
+sleep 5
 echo
-kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -- su - "$DB2_ADMIN_USERNAME" -c "set CUR_COMMIT=ON"
-sleep 10
+kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U_0}" -- su - "$DB2_ADMIN_USERNAME" -c "set CUR_COMMIT=ON"
+sleep 5
 
 echo
 echo "Restarting DB2 instance."
-kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -- su - "$DB2_ADMIN_USERNAME" -c "db2stop"
-sleep 10
+kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U_0}" -- su - "$DB2_ADMIN_USERNAME" -c "db2stop"
+sleep 5
 echo
-kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -- su - "$DB2_ADMIN_USERNAME" -c "db2start"
-sleep 10
+kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U_0}" -- su - "$DB2_ADMIN_USERNAME" -c "db2start"
+
 
 echo
 echo
@@ -389,7 +393,7 @@ db2_ports=$(kubectl get svc -n "${DB2_PROJECT_NAME}" "${C_DB2UCLUSTER_DB2U}"-eng
 echo -e "\tdb2_ports:${db2_ports}"
 
 echo
-workerNodeAddresses=$(get_worker_node_addresses_from_pod "${C_DB2UCLUSTER_DB2U}"-0)
+workerNodeAddresses=$(get_worker_node_addresses_from_pod "${C_DB2UCLUSTER_DB2U_0}")
 echo "=> Other possible addresses(If hostname not available above):"
 echo "${workerNodeAddresses}"
 
