@@ -1,6 +1,5 @@
 #!/bin/sh
 
-NAMESPACE="cp4aiops"
 ########################
 #
 # A signed certificate is needed on the NGNIX pods for the Slack and Teams integrations.
