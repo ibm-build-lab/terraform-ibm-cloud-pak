@@ -2,6 +2,8 @@
 
 This Terraform Module installs the **ODF Service** on an Openshift (ROKS) cluster on IBM Cloud.
 
+A ROKS cluster is required with at least three worker nodes. Each worker node must have a minimum of 16 CPUs and 64 GB RAM. https://cloud.ibm.com/docs/openshift?topic=openshift-deploy-odf-vpc for more information.
+
 **Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/odf`
 
 ## Set up access to IBM Cloud
@@ -33,9 +35,17 @@ provider "ibm" {
 // Module:
 module "odf" {
   source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/odf"
-  is_enable = var.is_enable
   cluster = var.cluster
   ibmcloud_api_key = var.ibmcloud_api_key
+
+  monSize = var.monSize
+  monStorageClassName = var.monStorageClassName
+  osdStorageClassName = var.osdStorageClassName
+  osdSize = var.osdSize
+  numOfOsd = var.numOfOsd
+  billingType = var.billingType
+  ocsUpgrade = var.ocsUpgrade
+  clusterEncryption = var.clusterEncryption
 }
 ```
 
@@ -43,9 +53,17 @@ module "odf" {
 
 | Name                           | Description                                                                                                                                                                                                                | Default | Required |
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | -------- |
-| `is_enable`                       | If set to `false` does not install OpenShift Data Foundation on the given cluster. Enabled by default | `true`  | No       |
 | `ibmcloud_api_key`             | This requires an ibmcloud api key found here: `https://cloud.ibm.com/iam/apikeys`    |         | Yes       |
 | `cluster`                   | The id of the OpenShift cluster to be installed on |  | Yes       |
+| `roks_version`                   | ROKS Cluster version (4.7 or higher) |  | Yes       |
+| `osdStorageClassName`                   | Storage class that you want to use for your OSD devices | ibmc-vpc-block-10iops-tier | Yes       |
+| `osdSize`                   | Size of your storage devices. The total storage capacity of your ODF cluster is equivalent to the osdSize x 3 divided by the numOfOsd | 100Gi | Yes       |
+| `numOfOsd`                   | Number object storage daemons (OSDs) that you want to create. ODF creates three times the numOfOsd value | 1 | Yes       |
+| `billingType`                   | Billing Type for your ODF deployment (`essentials` or `advanced`) | advanced | Yes       |
+| `ocsUpgrade`                   | Whether to upgrade the major version of your ODF deployment | false | Yes       |
+| `clusterEncryption`                   | Enable encryption of storage cluster | false | Yes       |
+| `monSize`                   | Size of the storage devices that you want to provision for the monitor pods. The devices must be at least 20Gi each | 20Gi | Yes (Only roks 4.7)       |
+| `monStorageClassName`                   | Storage class to use for your Monitor pods. For VPC clusters you must specify a block storage class | ibmc-vpc-block-10iops-tier | Yes (Only roks 4.7)       |
 
 **NOTE** The boolean input variable `is_enable` is used to enable/disable the module. 
 

@@ -12,6 +12,10 @@
 ###############################################################################
 
 echo
+
+date
+
+echo
 echo
 echo "*********************************************************************************"
 echo "************************** Installing DB2 Module ... ****************************"
@@ -21,6 +25,7 @@ echo "**************************************************************************
 CUR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 C_DB2UCLUSTER_DB2U="c-db2ucluster-db2u"
+C_DB2UCLUSTER_DB2U_0="c-db2ucluster-db2u-0"
 C_DB2UCLUSTER_INSTDB="c-db2ucluster-instdb"
 SUBCRIPTION_NAME="db2u-operator"
 
@@ -54,13 +59,6 @@ echo
 kubectl patch storageclass "${DB2_STORAGE_CLASS}" -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 echo
 
-
-echo
-echo "Modifying the OpenShift Global Pull Secret (you need jq tool for that):"
-echo $(kubectl get secret pull-secret -n openshift-config --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode; kubectl get secret ibm-registry -n "${DB2_PROJECT_NAME}" --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode) | jq -s '.[0] * .[1]' > dockerconfig_merged
-echo
-kubectl set data secret/pull-secret -n openshift-config --from-file=.dockerconfigjson=dockerconfig_merged
-
 echo
 echo "Installing the IBM Operator Catalog..."
 cat "${DB2_OPERATOR_CATALOG_FILE}"
@@ -73,12 +71,26 @@ echo
 
 
 echo
-echo "Modifying the OpenShift Global Pull Secret (you need jq tool for that):"
-echo $(kubectl get secret pull-secret -n openshift-config --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode; kubectl get secret ibm-db2-registry -n "${DB2_PROJECT_NAME}" --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode) | jq -s '.[0] * .[1]' > dockerconfig_merged
-
+echo "Modifying the OpenShift Global Pull Secret:"
+echo $(kubectl get secret pull-secret -n openshift-config --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode; kubectl get secret ibm-registry -n "${DB2_PROJECT_NAME}" --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode) | jq -s '.[0] * .[1]' > dockerconfig_merged
+echo
 
 echo
-kubectl edit secret/pull-secret -n openshift-config --from-file=.dockerconfigjson=dockerconfig_merged
+echo "Setting Pull Secret"
+# Extract secret
+kubectl get secret/pull-secret -n openshift-config -o json > pull-secret.json
+cat pull-secret.json | jq '.data[".dockerconfigjson"]' | sed -e 's/"//g' | base64 -d > dockerconfigjson
+
+API_KEY=$(printf "%s:%s" "${ENTITLEMENT_REGISTRY_USER_EMAIL}" "${ENTITLED_REGISTRY_KEY}" | base64 | tr -d '[:space:]')
+NEW_SECRET_VALUE=$(jq --arg apikey "${API_KEY}" --arg registry "${ENTITLED_REGISTRY_KEY}" '.auths += {($registry): {"auth":$apikey}}' dockerconfigjson | base64)
+jq --arg value "$NEW_SECRET_VALUE" '.data[".dockerconfigjson"] = $value' pull-secret.json > pull-secret-new.json
+
+# Update Secret
+kubectl apply -f pull-secret-new.json
+
+echo
+echo "Modifying the OpenShift Global Pull Secret:"
+echo $(kubectl get secret pull-secret -n openshift-config --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode; kubectl get secret ibm-db2-registry -n "${DB2_PROJECT_NAME}" --output="jsonpath={.data.\.dockerconfigjson}" | base64 --decode) | jq -s '.[0] * .[1]' > dockerconfig_merged
 
 echo
 if kubectl get catalogsource -n openshift-marketplace | grep ibm-operator-catalog ; then
@@ -303,7 +315,7 @@ function wait_for_job_to_complete_by_name {
       echo -e "......"
       sleep 10
       if [ "${current_time}" -eq "${max_waiting_time}" ] ; then
-          echo -e "Timed out waiting for ${C_DB2UCLUSTER_DB2U}-0 pod to complete successfully."
+          echo -e "Timed out waiting for ${C_DB2UCLUSTER_DB2U_0} pod to complete successfully."
           break
       fi
   done
@@ -316,21 +328,9 @@ sleep 40
 date
 wait_for_job_to_complete_by_name
 
-
-#
-#if [ "$jobStatus" ]
-#then
-#  echo "Job Status: ${jobStatus}"
-#  echo "${C_DB2UCLUSTER_INSTDB} job has been successfully completed."
-#else
-#  echo "Timed out waiting for ${C_DB2UCLUSTER_INSTDB} job to complete successfully."
-#  exit 1
-#fi
-
-
 function wait_for_c_db2ucluster_db2u_pod {
   local current_time=0
-  local max_waiting_time=300 total_wait_time
+  local max_waiting_time=300
 
   until (kubectl get pods -n "${DB2_PROJECT_NAME}" | grep "${C_DB2UCLUSTER_DB2U}" | grep Running) || [ "${current_time}" -eq "${max_waiting_time}" ] ;
   do
@@ -338,7 +338,7 @@ function wait_for_c_db2ucluster_db2u_pod {
       echo -e "......"
       sleep 10
       if [ "${current_time}" -eq "${max_waiting_time}" ] ; then
-          echo -e "Timed out waiting for ${C_DB2UCLUSTER_DB2U}-0 pod to complete successfully."
+          echo -e "Timed out waiting for ${C_DB2UCLUSTER_DB2U_0} pod to complete successfully."
           break
       fi
   done
@@ -346,21 +346,10 @@ function wait_for_c_db2ucluster_db2u_pod {
 
 
 echo
-echo "Waiting for "${C_DB2UCLUSTER_DB2U}"-0 pod to complete successfully."
+echo "Waiting for "${C_DB2UCLUSTER_DB2U_0}" pod to complete successfully."
 date
 sleep 20
 wait_for_c_db2ucluster_db2u_pod
-
-
-
-#if [ "$jobStatus" ]
-#then
-#  echo "Job Status: ${jobStatus}"
-#  echo "${C_DB2UCLUSTER_DB2U}-0 job has been successfully completed."
-#else
-#  echo "Timed out waiting for ${C_DB2UCLUSTER_DB2U}-0 job to complete successfully."
-#  exit 1
-#fi
 
 
 ## Now that DB2 is running let's update the number of databases allowed 
@@ -371,22 +360,22 @@ kubectl get configmap c-db2ucluster-db2dbmconfig -n "$DB2_PROJECT_NAME" -o yaml 
 
 echo
 echo "Updating database manager running configuration."
-kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -- su - "$DB2_ADMIN_USERNAME" -c "db2 update dbm cfg using numdb 20"
-sleep 10
+kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U_0}" -- su - "$DB2_ADMIN_USERNAME" -c "db2 update dbm cfg using numdb 20"
+sleep 5
 echo
-kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -- su - "$DB2_ADMIN_USERNAME" -c "db2set DB2_WORKLOAD=FILENET_CM"
-sleep 10
+kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U_0}" -- su - "$DB2_ADMIN_USERNAME" -c "db2set DB2_WORKLOAD=FILENET_CM"
+sleep 5
 echo
-kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -- su - "$DB2_ADMIN_USERNAME" -c "set CUR_COMMIT=ON"
-sleep 10
+kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U_0}" -- su - "$DB2_ADMIN_USERNAME" -c "set CUR_COMMIT=ON"
+sleep 5
 
 echo
 echo "Restarting DB2 instance."
-kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -- su - "$DB2_ADMIN_USERNAME" -c "db2stop"
-sleep 10
+kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U_0}" -- su - "$DB2_ADMIN_USERNAME" -c "db2stop"
+sleep 5
 echo
-kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -- su - "$DB2_ADMIN_USERNAME" -c "db2start"
-sleep 10
+kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U_0}" -- su - "$DB2_ADMIN_USERNAME" -c "db2start"
+
 
 echo
 echo
@@ -404,32 +393,23 @@ db2_ports=$(kubectl get svc -n "${DB2_PROJECT_NAME}" "${C_DB2UCLUSTER_DB2U}"-eng
 echo -e "\tdb2_ports:${db2_ports}"
 
 echo
-workerNodeAddresses=$(get_worker_node_addresses_from_pod "${C_DB2UCLUSTER_DB2U}"-0)
+workerNodeAddresses=$(get_worker_node_addresses_from_pod "${C_DB2UCLUSTER_DB2U_0}")
 echo "=> Other possible addresses(If hostname not available above):"
 echo "${workerNodeAddresses}"
 
 echo
 echo "=> Use \"${DB2_ADMIN_USERNAME}\" and password \"${DB2_ADMIN_USER_PASSWORD}\" to access the databases e.g. with IBM Data Studio."
 
-set +e
+echo "Deleting the files: dockerconfigjson, pull-secret-new.json, pull-secret.json, dockerconfig_merged ..."
+rm dockerconfigjson pull-secret-new.json pull-secret.json dockerconfig_merged
 
 echo
-echo "Removing BLUDB from system."
-kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -- su - "${DB2_ADMIN_USERNAME}" -c "db2 deactivate database BLUDB"
-sleep 10
-kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -- su - "${DB2_ADMIN_USERNAME}" -c "db2 drop database BLUDB"
-sleep 10
-echo
-echo "Existing databases are:"
-kubectl -n "${DB2_PROJECT_NAME}" exec "${C_DB2UCLUSTER_DB2U}"-0 -- su - "${DB2_ADMIN_USERNAME}" -c "db2 list database directory | grep \"Database name\" | cat"
-echo
-
 echo "Db2u installation complete! Congratulations. Exiting ..."
-date
 
 echo
 echo
 echo "*********************************************************************************"
 echo "******** Installation and configuration of DB2 completed successfully!!! ********"
 echo "*********************************************************************************"
-
+echo
+date

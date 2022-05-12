@@ -72,7 +72,7 @@ resource "null_resource" "install_db2" {
       DB2U_CLUSTER_CONTENT       = local.db2u_cluster_file
       DB2_OPERATOR_GROUP_CONTENT = local.db2_operator_group_file_content
       DB2_SUBSCRIPTION_CONTENT   = local.db2_subscription_file_content
-      DB2_CR_FILE                = local.db2_cr_file_content
+      DB2_CR_FILE                = local.db2_cr_file
       SECURITY_CONTEXT_FILE_CONTENT   = local.security_context_file_content
       # ------ Docker Information ----------
       ENTITLED_REGISTRY_KEY           = var.entitled_registry_key
