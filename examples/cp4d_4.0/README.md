@@ -24,7 +24,6 @@ worker_node_flavor = "b3c.16x64"
 
 // Entitled Registry parameters:
 entitled_registry_key        = "******************"
-entitled_registry_user_email = "john.doe@email.com"
 
 // CP4D License Acceptance
 accept_cpd_license = true
@@ -55,7 +54,6 @@ These parameters are:
 - `on_vpc`: If set to `false`, it will set the install do classic ROKS. By default it's disabled
 - `openshift_version`: Openshift version installed in the cluster
 - `entitled_registry_key`: Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key
-- `entitled_registry_user_email`: IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key
 - `resource_group_name`: Resource group that the cluster is provisioned in
 - `accept_cpd_license`: If set to `true`, you accept all cpd license agreements including additional modules installed. By default, it's `false`
 - `storage_option`: Define the storage option. For now it's `portworx`. (ocs, nfs, portworx)

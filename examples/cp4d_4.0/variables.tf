@@ -44,12 +44,6 @@ variable "entitled_registry_key" {
   description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
 }
 
-variable "entitled_registry_user_email" {
-  type        = string
-  description = "CPD Registry Username default is cp for bedrock script setup."
-  default     = "cp"
-}
-
 // Modules available to install on CP4D
 
 variable "install_wsl" {
@@ -150,25 +144,6 @@ variable "cluster_config_path" {
 variable "storage_option" {
   type    = string
   default = "portworx"
-}
-
-variable "cpd_storageclass" {
-  type = map(any)
-
-  default = {
-    "portworx" = "portworx-shared-gp3"
-    "ocs"      = "ocs-storagecluster-cephfs"
-    "nfs"      = "nfs"
-  }
-}
-
-variable "rwo_cpd_storageclass" {
-  type = map(any)
-
-  default = {
-    "portworx" = "portworx-metastoredb-sc"
-    "ocs"      = "ocs-storagecluster-ceph-rbd"
-    "nfs"      = "nfs"
-  }
+  description = "Choose storage type `portworx`, `odf`, or `nfs`."
 }
 

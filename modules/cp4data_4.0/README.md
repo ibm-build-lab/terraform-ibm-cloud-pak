@@ -86,7 +86,6 @@ module "cp4data" {
 
   // Entitled Registry parameters:
   entitled_registry_key        = var.entitled_registry_key
-  entitled_registry_user_email = var.entitled_registry_user_email
 
   // CP4D License Acceptance
   accept_cpd_license = var.accept_cpd_license
@@ -127,7 +126,6 @@ module "cp4data" {
 | `on_vpc`                           | If set to `false`, it will set the install do classic ROKS. By default it's disabled                                                                                                                        | `false`                      | No       |
 | `openshift_version`                | Openshift version installed in the cluster                                                                                                                                                                                 | `4.7`                       | No       |
 | `entitled_registry_key`            | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
-| `entitled_registry_user_email`     | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key                                                                                                                 |                             | Yes      |
 | `worker_node_flavor`          | Flavor used to determine worker node hardware for the cluster |  | Yes       |
 | `accept_cpd_license`          | If set to `true`, you accept all cpd license agreements including additional modules installed. By default, it's `false` | `false` | Yes       |
 | `install_wsl` | Install Watson Studio module. By default it's not installed.                                                                                                                                                    | `false`                     | No       |

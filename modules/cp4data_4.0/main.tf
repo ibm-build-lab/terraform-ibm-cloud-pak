@@ -9,7 +9,7 @@ resource "null_resource" "bedrock_zen_operator" {
 
   provisioner "local-exec" {
     environment = {
-      ENTITLEMENT_USER = var.entitled_registry_user_email
+      ENTITLEMENT_USER = local.entitled_registry_user
       ENTITLEMENT_KEY  = var.entitled_registry_key
       CLUSTER_NAME     = var.cluster_id
       KUBECONFIG       = var.cluster_config_path

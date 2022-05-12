@@ -24,16 +24,16 @@ data "ibm_container_cluster_config" "cluster_config" {
 }
 
 # Get classic cluster ingress_hostname for output
-data "ibm_container_cluster" "cluster" {
-  count           = ! var.on_vpc ? 1 : 0
-  cluster_name_id = var.cluster_id
-}
+# data "ibm_container_cluster" "cluster" {
+#   count           = ! var.on_vpc ? 1 : 0
+#   cluster_name_id = var.cluster_id
+# }
 
 # Get vpc cluster ingress_hostname for output
-data "ibm_container_vpc_cluster" "cluster" {
-  count           = var.on_vpc ? 1 : 0
-  cluster_name_id = var.cluster_id
-}
+# data "ibm_container_vpc_cluster" "cluster" {
+#   count           = var.on_vpc ? 1 : 0
+#   cluster_name_id = var.cluster_id
+# }
 
 // Module:
 module "cp4data" {
@@ -52,7 +52,6 @@ module "cp4data" {
 
   // Entitled Registry parameters:
   entitled_registry_key        = var.entitled_registry_key
-  entitled_registry_user_email = var.entitled_registry_user_email
 
   // CP4D License Acceptance
   accept_cpd_license = var.accept_cpd_license
