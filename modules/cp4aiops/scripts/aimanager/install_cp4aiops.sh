@@ -60,11 +60,13 @@ while true; do
     exit 1
   fi
   # Check to make sure it exists:
-  ## TODO: Capture error when the AIOpsAnalyticsOrchestrator resource hasn't been created yet.
-  if [ "`kubectl get AIOpsAnalyticsOrchestrator aiops -n ${NAMESPACE} --ignore-not-found=true`" != "" ]; then
-    break
+  # Wait for AIOpsAnalyticsOrchestrator resource creation and then check for the instance creation.
+  if [ "`kubectl api-resources | grep AIOpsAnalyticsOrchestrator`" != "" ]; then
+    if [ "`kubectl get AIOpsAnalyticsOrchestrator aiops -n ${NAMESPACE} --ignore-not-found=true`" != "" ]; then
+      break
+    fi
   fi
-  echo "Waiting for AIOpsAnalyticsOrchestrator, sleeping ${SLEEP_TIME} seconds"
+  echo "Waiting for AIOpsAnalyticsOrchestrator resource, sleeping ${SLEEP_TIME} seconds"
   sleep $SLEEP_TIME
   evtCount=$(( evtCount+1 ))
 done
@@ -148,37 +150,37 @@ while true; do
         break
     fi
 
-    if [ $is_complete_ircore = false ] && [ "`kubectl get ircore -A --output=json --ignore-not-found=true | jq -c -r '.items[].status.conditions[] | select( .type | contains( "Ready")) | .reason'`" == "Ready" ]; then
+    if [ $is_complete_ircore = false ] && [ "`kubectl get ircore -A --output='jsonpath={.items[*].status.conditions[?(@.type=="Ready")].reason}'`" == "Ready"  ]; then
         echo "ircore is ready"
         is_complete_ircore=true
     fi
 
-    if [ $is_complete_AIOpsAnalyticsOrchestrator = false ] && [ "`kubectl get AIOpsAnalyticsOrchestrator -A --output=json | jq -c -r '.items[].status.conditions[] | select( .type | contains( "Ready")) | .reason'`" == "Ready" ]; then
+    if [ $is_complete_AIOpsAnalyticsOrchestrator = false ] && [ "`kubectl get AIOpsAnalyticsOrchestrator -A --output='jsonpath={.items[].status.conditions[?(@.type=="Ready")].reason}'`" == "Ready" ]; then
         echo "AIOpsAnalyticsOrchestrator is ready"
         is_complete_AIOpsAnalyticsOrchestrator=true
     fi
 
-    if [ $is_complete_lifecycleservice = false ] && [ "`kubectl get lifecycleservice -A --output=json | jq -c -r '.items[].status.conditions[] | select( .type | contains( "Lifecycle Service Ready")) | .reason'`" == "LifecycleService ready" ]; then
+    if [ $is_complete_lifecycleservice = false ] && [ "`kubectl get lifecycleservice -A --output='jsonpath={.items[].status.conditions[?(@.type=="Lifecycle Service Ready")].reason}'`" == "Ready" ]; then
         echo "lifecycleservice is ready"
         is_complete_lifecycleservice=true
     fi
 
-    if [ $is_complete_BaseUI = false ] && [ "`kubectl get BaseUI -A --output=json | jq -c -r '.items[].status.conditions[] | select( .type | contains( "Ready")) | .reason'`" == "Ready" ]; then
+    if [ $is_complete_BaseUI = false ] && [ "`kubectl get BaseUI -A --output='jsonpath={.items[].status.conditions[?(@.type=="Ready")].reason}'`" == "Ready" ]; then
         echo "BaseUI is ready"
         is_complete_BaseUI=true
     fi
 
-    if [ $is_complete_AIManager = false ] && [ "`kubectl get AIManager -A --output=json | jq -c -r '.items[].status.phase'`" == "Completed" ]; then
+    if [ $is_complete_AIManager = false ] && [ "`kubectl get AIManager -A --output='jsonpath={.items[].status.phase}'`" == "Completed" ]; then
         echo "AIManager is ready"
         is_complete_AIManager=true
     fi
 
-    if [ $is_complete_aiopsedge = false ] && [ "`kubectl get aiopsedge -A --output=json | jq -c -r '.items[].status.phase'`" == "Configured" ]; then
+    if [ $is_complete_aiopsedge = false ] && [ "`kubectl get aiopsedge -A --output='jsonpath={.items[].status.phase}'`" == "Configured" ]; then
         echo "aiopsedge is ready"
         is_complete_aiopsedge=true
     fi
 
-    if [ $is_complete_asm = false ] && [ "`kubectl get asm -A --output=json | jq -c -r '.items[].status.phase'`" == "OK" ]; then
+    if [ $is_complete_asm = false ] && [ "`kubectl get asm -A --output='jsonpath={.items[].status.phase}'`" == "OK" ]; then
         echo "asm is ready"
         is_complete_asm=true
     fi

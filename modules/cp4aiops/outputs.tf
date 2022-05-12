@@ -1,18 +1,18 @@
-output "cp4aiops_endpoint" {
+output "ai_manager_endpoint" {
   depends_on = [
     data.external.get_aiman_endpoints,
   ]
   value = var.enable && length(data.external.get_aiman_endpoints) > 0 ? data.external.get_aiman_endpoints.result.endpoint : ""
 }
 
-output "cp4aiops_user" {
+output "ai_manager_user" {
   depends_on = [
     data.external.get_aiman_endpoints,
   ]
   value = var.enable && length(data.external.get_aiman_endpoints) > 0 ? data.external.get_aiman_endpoints.result.username : ""
 }
 
-output "cp4aiops_password" {
+output "ai_manager_password" {
   depends_on = [
     data.external.get_aiman_endpoints,
   ]
