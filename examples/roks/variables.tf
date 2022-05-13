@@ -6,8 +6,8 @@ variable "on_vpc" {
 }
 
 variable "entitlement" {
-  default     = ""
-  description = "OCP entitlement: leave blank if OCP, set it to `cloud-pak` if cloud pak entitlement"
+  default     = "cloud_pak"
+  description = "OCP entitlement: leave blank if OCP, set it to `cloud_pak` if cloud pak entitlement"
 }
 
 variable "region" {
@@ -35,7 +35,7 @@ variable "resource_group" {
 }
 
 variable "roks_version" {
-  default     = "4.7"
+  default     = "4.8"
   description = "List available versions: ibmcloud ks versions"
 }
 
