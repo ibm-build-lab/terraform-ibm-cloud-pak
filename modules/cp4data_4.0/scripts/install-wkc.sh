@@ -47,8 +47,8 @@ echo $result
 
 
 # check the iis cr status
-./../check-cr-status.sh iis iis-cr ${NAMESPACE} iisStatus
+# ./../check-cr-status.sh iis iis-cr ${NAMESPACE} iisStatus
 
 
 # check the ug cr status
-./../check-cr-status.sh ug ug-cr ${NAMESPACE} ugStatus
+# ./../check-cr-status.sh ug ug-cr ${NAMESPACE} ugStatus

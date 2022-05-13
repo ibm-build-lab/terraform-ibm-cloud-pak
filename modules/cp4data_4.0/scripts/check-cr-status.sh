@@ -9,13 +9,14 @@ STATUS=$(oc get $SERVICE $CRNAME -n $NAMESPACE -o json | jq .status.$SERVICE_STA
 ATTEMPTS=0
 TIMEOUT=300 # 5 hours
 
-while  [[ ! $STATUS =~ ^(Completed|Complete)$ ]]; do
+# while  [[ ! $STATUS =~ ^(Completed|Complete)$ ]]; do
+while [[ $STATUS != "Complete" && $STATUS != "Completed" ]];do
     if [ $ATTEMPTS -eq $TIMEOUT ] ; then
         echo "Took longer than 5 hours: Waiting for check cr status $CRNAME"
         exit 1
     fi
     echo "$CRNAME is Installing!!!!"
-    sleep 60 
+    sleep 120 
     STATUS=$(oc get $SERVICE $CRNAME -n $NAMESPACE -o json | jq .status.$SERVICE_STATUS | xargs) 
     if [ " $STATUS" == "Failed" ]
     then
