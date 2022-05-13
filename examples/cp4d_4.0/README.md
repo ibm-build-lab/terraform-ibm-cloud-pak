@@ -56,7 +56,7 @@ These parameters are:
 - `entitled_registry_key`: Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key
 - `resource_group_name`: Resource group that the cluster is provisioned in
 - `accept_cpd_license`: If set to `true`, you accept all cpd license agreements including additional modules installed. By default, it's `false`
-- `storage_option`: Define the storage option. For now it's `portworx`. (ocs, nfs, portworx)
+- `storage_option`: Define the storage option. For now it's `portworx`. (odf, nfs, portworx)
 - `install_wsl`:  Install Watson Studio module. By default it's not installed. 
 - `install_aiopenscale`: Install  Watson AI OpenScale module. By default it's not installed. 
 - `install_wml`: Install Watson Machine Learning module. By default it's not installed.
