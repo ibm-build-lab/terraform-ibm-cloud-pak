@@ -13,7 +13,8 @@ if [ "`kubectl get secret -n $NAMESPACE external-tls-secret --ignore-not-found`"
 fi
 
 AUTO_UI_INSTANCE=$(kubectl get AutomationUIConfig -n $NAMESPACE --no-headers -o custom-columns=":metadata.name")
-IAF_STORAGE=$(kubectl get AutomationUIConfig -n $NAMESPACE -o jsonpath='{ .items[*].spec.storage.class }')
+IAF_STORAGE=$(kubectl get AutomationUIConfig -n $NAMESPACE -o jsonpath='{ .items[*].spec.zenService.storageClass }')
+ZEN_STORAGE=$(kubectl get AutomationUIConfig -n $NAMESPACE -o jsonpath='{ .items[*].spec.zenService.zenCoreMetaDbStorageClass }')
 kubectl delete -n $NAMESPACE AutomationUIConfig $AUTO_UI_INSTANCE
 
 cat <<EOF | kubectl apply -f -
@@ -26,15 +27,18 @@ spec:
   description: AutomationUIConfig for cp4waiops
   license:
     accept: true
-  version: v1.0
-  storage:
-    class: $IAF_STORAGE
+  version: v1.3
   tls:
     caSecret:
       key: ca.crt
       secretName: external-tls-secret
     certificateSecret:
       secretName: external-tls-secret
+  zen: true
+  zenService:
+    storageClass: $IAF_STORAGE
+    zenCoreMetaDbStorageClass: $ZEN_STORAGE
+    iamIntegration: true
 EOF
 
 

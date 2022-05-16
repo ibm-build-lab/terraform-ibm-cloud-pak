@@ -21,7 +21,7 @@ metadata:
   name: ibm-aiops-orchestrator
   namespace: ${NAMESPACE}
 spec:
-  channel: v3.2
+  channel: v3.3
   installPlanApproval: Automatic
   name: ibm-aiops-orchestrator
   source: ibm-operator-catalog
