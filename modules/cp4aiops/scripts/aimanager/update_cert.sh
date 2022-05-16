@@ -42,7 +42,7 @@ spec:
 EOF
 
 
-ingress_pod=$(oc get secrets -n openshift-ingress | grep tls | grep -v router-metrics-certs-default | awk '{print $1}')
+ingress_pod=$(kubectl get secrets -n openshift-ingress | grep tls | grep -v router-metrics-certs-default | awk '{print $1}')
 kubectl get secret -n openshift-ingress -o 'go-template={{index .data "tls.crt"}}' ${ingress_pod} | base64 -d > cert.crt
 kubectl get secret -n openshift-ingress -o 'go-template={{index .data "tls.key"}}' ${ingress_pod} | base64 -d > cert.key
 
