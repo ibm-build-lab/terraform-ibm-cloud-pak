@@ -51,12 +51,6 @@ variable "entitled_registry_key" {
   description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
 }
 
-variable "entitled_registry_user_email" {
-  type        = string
-  description = "CPD Registry Username default is cp for bedrock script setup."
-  default     = "cp"
-}
-
 variable "accept_cpd_license" {
   type        = bool
   description = "Do you accept the cpd license agreements? This includes any modules chosen as well. `true` or `false`"
@@ -175,14 +169,43 @@ variable "install_wsruntime" {
   description = "Install WS Runtime. Only for Cloud Pak for Data v4.0"
 }
 
+
+variable "storage_option" {
+  type    = string
+  default = "portworx"
+  description = "Choose storage type `portworx`, `odf`, or `nfs`."
+}
+
+variable "cpd_storageclass" {
+  type = map(any)
+
+  default = {
+    "portworx" = "portworx-shared-gp3"
+    "odf"      = "ocs-storagecluster-cephfs"
+    "nfs"      = "nfs"
+  }
+}
+
+variable "rwo_cpd_storageclass" {
+  type = map(any)
+
+  default = {
+    "portworx" = "portworx-metastoredb-sc"
+    "odf"      = "ocs-storagecluster-ceph-rbd"
+    "nfs"      = "nfs"
+  }
+}
+
 locals {
   namespace              = "default"
   entitled_registry      = "cp.icr.io"
   entitled_registry_user = "cp"
-  docker_registry        = "cp.icr.io" // Staging: "cp.stg.icr.io/cp/cpd"
-  docker_username        = "cp"        // "ekey"
   entitled_registry_key  = chomp(var.entitled_registry_key)
   # ibmcloud_api_key         = chomp(var.ibmcloud_api_key)
   openshift_version_regex  = regex("(\\d+).(\\d+)(.\\d+)*(_openshift)*", var.openshift_version)
   openshift_version_number = local.openshift_version_regex[3] == "_openshift" ? tonumber("${local.openshift_version_regex[0]}.${local.openshift_version_regex[1]}") : 0
+  storage_class      = lookup(var.cpd_storageclass, var.storage_option)
+  rwo_storage_class  = lookup(var.rwo_cpd_storageclass, var.storage_option)
 }
+
+

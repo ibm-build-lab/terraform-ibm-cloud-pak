@@ -28,6 +28,8 @@ cd ../files
 # ****** sed command for classic goes here *******
 if [[ ${ON_VPC} == false ]] ; then
     sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" cde-cr.yaml
+else
+    sed -i -e "s/portworx-shared-gp3/${STORAGE}/g" cde-cr.yaml
 fi
 
 sed -i -e "s/REPLACE_NAMESPACE/${NAMESPACE}/g" cde-cr.yaml

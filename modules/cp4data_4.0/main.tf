@@ -9,7 +9,7 @@ resource "null_resource" "bedrock_zen_operator" {
 
   provisioner "local-exec" {
     environment = {
-      ENTITLEMENT_USER = var.entitled_registry_user_email
+      ENTITLEMENT_USER = local.entitled_registry_user
       ENTITLEMENT_KEY  = var.entitled_registry_key
       CLUSTER_NAME     = var.cluster_id
       KUBECONFIG       = var.cluster_config_path
@@ -19,6 +19,8 @@ resource "null_resource" "bedrock_zen_operator" {
       NAMESPACE        = var.cpd_project_name
       OP_NAMESPACE     = var.operator_namespace
       ON_VPC           = var.on_vpc
+      STORAGE          = local.storage_class
+      RWO_STORAGE      = local.rwo_storage_class
     }
 
     working_dir = "${path.module}/scripts/"
@@ -42,6 +44,8 @@ resource "null_resource" "install_wsl" {
       OP_NAMESPACE = var.operator_namespace
       NAMESPACE    = var.cpd_project_name
       ON_VPC       = var.on_vpc
+      STORAGE      = local.storage_class
+      RWO_STORAGE  = local.rwo_storage_class
     }
 
     working_dir = "${path.module}/scripts/"
@@ -66,6 +70,8 @@ resource "null_resource" "install_aiopenscale" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = local.storage_class
+      RWO_STORAGE  = local.rwo_storage_class
     }
 
     working_dir = "${path.module}/scripts/"
@@ -91,6 +97,8 @@ resource "null_resource" "install_wml" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = local.storage_class
+      RWO_STORAGE  = local.rwo_storage_class
     }
 
     working_dir = "${path.module}/scripts/"
@@ -103,7 +111,6 @@ resource "null_resource" "install_wml" {
     null_resource.prereqs_checkpoint,
     null_resource.bedrock_zen_operator,
     null_resource.install_wsl,
-    null_resource.install_aiopenscale,
   ]
 }
 
@@ -117,6 +124,8 @@ resource "null_resource" "install_wkc" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = local.storage_class
+      RWO_STORAGE  = local.rwo_storage_class
     }
 
     working_dir = "${path.module}/scripts/"
@@ -131,6 +140,8 @@ resource "null_resource" "install_wkc" {
     null_resource.install_wsl,
     null_resource.install_aiopenscale,
     null_resource.install_wml,
+    null_resource.install_dv,
+    null_resource.install_cde,
   ]
 }
 
@@ -144,6 +155,8 @@ resource "null_resource" "install_dv" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = local.storage_class
+      RWO_STORAGE  = local.rwo_storage_class
     }
 
     working_dir = "${path.module}/scripts/"
@@ -158,7 +171,7 @@ resource "null_resource" "install_dv" {
     null_resource.install_wsl,
     null_resource.install_aiopenscale,
     null_resource.install_wml,
-    null_resource.install_wkc,
+    null_resource.install_spss,
   ]
 }
 
@@ -172,6 +185,8 @@ resource "null_resource" "install_spss" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = local.storage_class
+      RWO_STORAGE  = local.rwo_storage_class
     }
 
     working_dir = "${path.module}/scripts/"
@@ -186,8 +201,6 @@ resource "null_resource" "install_spss" {
     null_resource.install_wsl,
     null_resource.install_aiopenscale,
     null_resource.install_wml,
-    null_resource.install_wkc,
-    null_resource.install_dv,
   ]
 }
 
@@ -201,6 +214,8 @@ resource "null_resource" "install_cde" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = local.storage_class
+      RWO_STORAGE  = local.rwo_storage_class
     }
 
     working_dir = "${path.module}/scripts/"
@@ -215,7 +230,6 @@ resource "null_resource" "install_cde" {
     null_resource.install_wsl,
     null_resource.install_aiopenscale,
     null_resource.install_wml,
-    null_resource.install_wkc,
     null_resource.install_dv,
     null_resource.install_spss,
   ]
@@ -231,6 +245,8 @@ resource "null_resource" "install_spark" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = local.storage_class
+      RWO_STORAGE  = local.rwo_storage_class
     }
 
     working_dir = "${path.module}/scripts/"
@@ -262,6 +278,8 @@ resource "null_resource" "install_dods" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = local.storage_class
+      RWO_STORAGE  = local.rwo_storage_class
     }
 
     working_dir = "${path.module}/scripts/"
@@ -274,13 +292,7 @@ resource "null_resource" "install_dods" {
     null_resource.prereqs_checkpoint,
     null_resource.bedrock_zen_operator,
     null_resource.install_wsl,
-    null_resource.install_aiopenscale,
     null_resource.install_wml,
-    null_resource.install_wkc,
-    null_resource.install_dv,
-    null_resource.install_spss,
-    null_resource.install_cde,
-    null_resource.install_spark,
   ]
 }
 
@@ -294,6 +306,8 @@ resource "null_resource" "install_ca" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = local.storage_class
+      RWO_STORAGE  = local.rwo_storage_class
     }
 
     working_dir = "${path.module}/scripts/"
@@ -313,7 +327,6 @@ resource "null_resource" "install_ca" {
     null_resource.install_spss,
     null_resource.install_cde,
     null_resource.install_spark,
-    null_resource.install_dods,
   ]
 }
 
@@ -327,6 +340,8 @@ resource "null_resource" "install_ds" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = local.storage_class
+      RWO_STORAGE  = local.rwo_storage_class
     }
 
     working_dir = "${path.module}/scripts/"
@@ -345,9 +360,6 @@ resource "null_resource" "install_ds" {
     null_resource.install_dv,
     null_resource.install_spss,
     null_resource.install_cde,
-    null_resource.install_spark,
-    null_resource.install_dods,
-    null_resource.install_ca,
   ]
 }
 
@@ -361,6 +373,8 @@ resource "null_resource" "install_db2oltp" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = local.storage_class
+      RWO_STORAGE  = local.rwo_storage_class
     }
 
     working_dir = "${path.module}/scripts/"
@@ -372,17 +386,6 @@ resource "null_resource" "install_db2oltp" {
     var.portworx_is_ready,
     null_resource.prereqs_checkpoint,
     null_resource.bedrock_zen_operator,
-    null_resource.install_wsl,
-    null_resource.install_aiopenscale,
-    null_resource.install_wml,
-    null_resource.install_wkc,
-    null_resource.install_dv,
-    null_resource.install_spss,
-    null_resource.install_cde,
-    null_resource.install_spark,
-    null_resource.install_dods,
-    null_resource.install_ca,
-    null_resource.install_ds,
   ]
 }
 
@@ -396,6 +399,8 @@ resource "null_resource" "install_db2wh" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = local.storage_class
+      RWO_STORAGE  = local.rwo_storage_class
     }
 
     working_dir = "${path.module}/scripts/"
@@ -407,18 +412,6 @@ resource "null_resource" "install_db2wh" {
     var.portworx_is_ready,
     null_resource.prereqs_checkpoint,
     null_resource.bedrock_zen_operator,
-    null_resource.install_wsl,
-    null_resource.install_aiopenscale,
-    null_resource.install_wml,
-    null_resource.install_wkc,
-    null_resource.install_dv,
-    null_resource.install_spss,
-    null_resource.install_cde,
-    null_resource.install_spark,
-    null_resource.install_dods,
-    null_resource.install_ca,
-    null_resource.install_ds,
-    null_resource.install_db2oltp,
   ]
 }
 
@@ -432,6 +425,8 @@ resource "null_resource" "install_big_sql" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = local.storage_class
+      RWO_STORAGE  = local.rwo_storage_class
     }
 
     working_dir = "${path.module}/scripts/"
@@ -446,16 +441,7 @@ resource "null_resource" "install_big_sql" {
     null_resource.install_wsl,
     null_resource.install_aiopenscale,
     null_resource.install_wml,
-    null_resource.install_wkc,
-    null_resource.install_dv,
     null_resource.install_spss,
-    null_resource.install_cde,
-    null_resource.install_spark,
-    null_resource.install_dods,
-    null_resource.install_ca,
-    null_resource.install_ds,
-    null_resource.install_db2oltp,
-    null_resource.install_db2wh,
   ]
 }
 
@@ -469,6 +455,8 @@ resource "null_resource" "install_wsruntime" {
       NAMESPACE    = var.cpd_project_name
       OP_NAMESPACE = var.operator_namespace
       ON_VPC       = var.on_vpc
+      STORAGE      = local.storage_class
+      RWO_STORAGE  = local.rwo_storage_class
     }
 
     working_dir = "${path.module}/scripts/"
@@ -480,20 +468,6 @@ resource "null_resource" "install_wsruntime" {
     var.portworx_is_ready,
     null_resource.prereqs_checkpoint,
     null_resource.bedrock_zen_operator,
-    null_resource.install_wsl,
-    null_resource.install_aiopenscale,
-    null_resource.install_wml,
-    null_resource.install_wkc,
-    null_resource.install_dv,
-    null_resource.install_spss,
-    null_resource.install_cde,
-    null_resource.install_spark,
-    null_resource.install_dods,
-    null_resource.install_ca,
-    null_resource.install_ds,
-    null_resource.install_db2oltp,
-    null_resource.install_db2wh,
-    null_resource.install_big_sql,
   ]
 }
 

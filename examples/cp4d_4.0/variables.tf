@@ -44,12 +44,6 @@ variable "entitled_registry_key" {
   description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
 }
 
-variable "entitled_registry_user_email" {
-  type        = string
-  description = "CPD Registry Username default is cp for bedrock script setup."
-  default     = "cp"
-}
-
 // Modules available to install on CP4D
 
 variable "install_wsl" {
@@ -145,5 +139,11 @@ variable "install_wsruntime" {
 variable "cluster_config_path" {
   default     = "./.kube/config"
   description = "Directory to store the kubeconfig file, set the value to empty string to not download the config. If running on Schematics, use `/tmp/.schematics/.kube/config`"
+}
+
+variable "storage_option" {
+  type    = string
+  default = "portworx"
+  description = "Choose storage type `portworx`, `odf`, or `nfs`."
 }
 

@@ -31,6 +31,8 @@ cd ../files
 if [[ ${ON_VPC} == false ]] ; then
     sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" wml-cr.yaml
     sed -i -e "/storageVendor/d" wml-cr.yaml #storageVendor
+else
+    sed -i -e "s/portworx-shared-gp3/${STORAGE}/g" wml-cr.yaml
 fi
 
 sed -i -e s#CPD_NAMESPACE#${NAMESPACE}#g wml-cr.yaml

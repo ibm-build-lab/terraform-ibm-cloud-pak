@@ -38,4 +38,4 @@ echo $result
 cd ../scripts
 
 # check the dv cr status
-./check-cr-status.sh dvservice dv-service ${NAMESPACE} reconcileStatus
+./check-cr-status.sh DvService dv-service ${NAMESPACE} reconcileStatus

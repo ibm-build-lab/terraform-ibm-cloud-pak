@@ -28,6 +28,8 @@ oc project ${NAMESPACE}
 # ****** sed command for classic goes here *******
 if [[ ${ON_VPC} == false ]] ; then
     sed -i -e "s/portworx-shared-gp3/ibmc-file-gold-gid/g" wsl-cr.yaml
+else
+    sed -i -e "s/portworx-shared-gp3/${STORAGE}/g" wsl-cr.yaml
 fi
 
 # Create wsl CR: 
