@@ -18,7 +18,7 @@ variable "cluster_id" {
 
 variable "cluster_config_path" {
   default     = "./.kube/config"
-  description = "Path to the cluster configuration file to access your cluster"
+  description = "Directory to store the kubeconfig file, set the value to empty string to not download the config. If running on Schematics, use `/tmp/.schematics/.kube/config`"
 }
 
 variable "entitled_registry_user_email" {
