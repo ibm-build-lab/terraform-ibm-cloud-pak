@@ -87,12 +87,6 @@ variable "ldap_mode" {
   description = "Choose `standalone` for a built-in LDAP server or `proxy` and connect to an external organization LDAP server. See http://ibm.biz/install_noi_icp."
 }
 
-variable "ldap_storage_class" {
-  default = ""
-  type = string
-  description = "LDAP Storage class - note: only needed for `standalone` mode"
-}
-
 variable "ldap_user_filter" {
   default = "uid=%s,ou=users"
   type = string
