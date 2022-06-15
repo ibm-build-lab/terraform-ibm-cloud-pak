@@ -31,10 +31,16 @@ variable "namespace" {
   description = "Namespace for Cloud Pak for AIOps"
 }
 
-variable "accept_aiops_license" {
+variable "accept_aimanager_license" {
   default = false
   type = bool
-  description = "Do you accept the licensing agreement for aiops? `T/F`"
+  description = "Do you accept the licensing agreement for AIManager? `T/F`"
+}
+
+variable "accept_event_manager_license" {
+  default = false
+  type = bool
+  description = "Do you accept the licensing agreement for EventManager? `T/F`"
 }
 
 variable "enable_aimanager" {

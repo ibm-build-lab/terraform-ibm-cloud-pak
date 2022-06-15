@@ -1,3 +1,15 @@
+variable "accept_aimanager_license" {
+  default = false
+  type = bool
+  description = "Do you accept the licensing agreement for AIManager? `T/F`"
+}
+
+variable "accept_event_manager_license" {
+  default = false
+  type = bool
+  description = "Do you accept the licensing agreement for EventManager? `T/F`"
+}
+
 variable "cluster_name_or_id" {
   description = "Id of cluster for AIOps to be installed on"
 }
@@ -34,13 +46,7 @@ variable "entitled_registry_user_email" {
 variable "cluster_config_path" {
   default     = "./.kube/config"
   type        = string
-  description = "Defaulted to `./.kube/config` but for schematics, use `/tmp/.schematic/.kube/config"
-}
-
-variable "accept_aiops_license" {
-  default     = false
-  type        = bool
-  description = "Do you accept the aiops licensing? Default is `false`"
+  description = "Defaulted to `./.kube/config` but for schematics, use `/tmp/.schematic/.kube/config`"
 }
 
 #############################################
