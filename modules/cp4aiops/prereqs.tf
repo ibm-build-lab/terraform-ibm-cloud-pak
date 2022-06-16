@@ -2,11 +2,41 @@ locals {
   setAIOPS_catalog_source = "aiops-catalog.yaml"
 }
 
-###########################################
+#############################################
+# Checking for Licensing Agreements
+#############################################
+
+resource "null_resource" "check_aimanager_licensing" {  
+  provisioner "local-exec" {
+    environment = {
+      LICENSING        = var.accept_aimanager_license
+      ENABLE_AIMANAGER = var.enable_aimanager
+    }
+    interpreter = ["/bin/bash", "-c"]
+    command     = "if [ $ENABLE_AIMANAGER == true ] && [ $LICENSING == false ]; then echo \"\n\"; echo \"Please accept the AIManager licensing agreement.\"; exit 1; fi"
+  }
+}
+
+resource "null_resource" "check_evtmanager_licensing" {  
+  provisioner "local-exec" {
+    environment = {
+      LICENSING         = var.accept_event_manager_license
+      ENABLE_EVTMANAGER = var.enable_event_manager
+    }
+    interpreter = ["/bin/bash", "-c"]
+    command     = "if [ $ENABLE_EVTMANAGER == true ] && [ $LICENSING == false ]; then echo \"\n\"; echo \"Please accept the EventManager licensing agreement.\"; exit 1; fi"
+  }
+}
+
+#############################################
 # Preinstallation Steps for AIOPS - AIManager
-###########################################
+#############################################
 
 resource "null_resource" "create_namespace" {
+  depends_on = [
+    null_resource.check_aimanager_licensing,
+    null_resource.check_evtmanager_licensing ]
+
   provisioner "local-exec" {
     command     = "./create_namespace.sh"
     working_dir = "${path.module}/scripts/"

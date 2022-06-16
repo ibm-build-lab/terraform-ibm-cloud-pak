@@ -16,8 +16,6 @@ else
   storage_block_class="ibmc-file-gold-gid"
 fi
 
-# TODO:
-# Create license var for T/F
 cat << EOF | kubectl apply -f -
 apiVersion: orchestrator.aiops.ibm.com/v1alpha1
 kind: Installation
@@ -30,7 +28,7 @@ spec:
   storageClassLargeBlock: ${storage_block_class}
   imagePullSecret: ibm-entitlement-key
   license:
-    accept: true
+    accept: ${ACCEPT_LICENSE}
   pakModules:
   - name: aiopsFoundation
     enabled: true

@@ -31,10 +31,16 @@ variable "namespace" {
   description = "Namespace for Cloud Pak for AIOps"
 }
 
-variable "accept_aiops_license" {
+variable "accept_aimanager_license" {
   default = false
   type = bool
-  description = "Do you accept the licensing agreement for aiops? `T/F`"
+  description = "Do you accept the licensing agreement for AIManager? `T/F`"
+}
+
+variable "accept_event_manager_license" {
+  default = false
+  type = bool
+  description = "Do you accept the licensing agreement for EventManager? `T/F`"
 }
 
 variable "enable_aimanager" {
@@ -85,12 +91,6 @@ variable "ldap_mode" {
   default = "standalone"
   type = string
   description = "Choose `standalone` for a built-in LDAP server or `proxy` and connect to an external organization LDAP server. See http://ibm.biz/install_noi_icp."
-}
-
-variable "ldap_storage_class" {
-  default = ""
-  type = string
-  description = "LDAP Storage class - note: only needed for `standalone` mode"
 }
 
 variable "ldap_user_filter" {

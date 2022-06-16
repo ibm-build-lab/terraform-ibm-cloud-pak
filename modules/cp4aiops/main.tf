@@ -49,6 +49,7 @@ resource "null_resource" "install_cp4aiops" {
     environment = {
       KUBECONFIG                    = var.cluster_config_path
       NAMESPACE                     = var.namespace
+      ACCEPT_LICENSE                = var.accept_aimanager_license
       ON_VPC                        = var.on_vpc
       DOCKER_REGISTRY_PASS          = var.entitled_registry_key
       DOCKER_USER_EMAIL             = var.entitled_registry_user_email
@@ -108,7 +109,7 @@ resource "null_resource" "install_event_manager" {
     environment = {
       KUBECONFIG                    = var.cluster_config_path
       NAMESPACE                     = var.namespace
-      ACCEPT_LICENSE                = var.accept_aiops_license
+      ACCEPT_LICENSE                = var.accept_event_manager_license
       
       ENABLE_PERSISTENCE            = var.enable_persistence
       PERSISTENT_SC                 = local.storageclass["persistence"]
