@@ -1,8 +1,3 @@
-variable "enable" {
-  default     = true
-  description = "If set to true installs Cloud-Pak for Integration on the given cluster"
-}
-
 variable "cluster_config_path" {
   default     = "./.kube/config"
   description = "Path to the Kubernetes configuration file to access your cluster"
@@ -27,8 +22,3 @@ variable "namespace" {
   description = "Namespace for Cloud Pak for Integration"
 }
 
-locals {
-  entitled_registry      = "cp.icr.io"
-  entitled_registry_user = "cp"
-  entitled_registry_key  = chomp(var.entitled_registry_key)
-}
