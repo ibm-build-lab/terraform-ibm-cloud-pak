@@ -38,6 +38,7 @@ export RESOURCE_GROUP=<resource group to create cluster and install cp4i>
 // run commands: `ibmcloud target -g <resource_group>`; `ibmcloud ks vlan ls --zone tor01` to get the vlans
 export PRIVATE_VLAN=<private vlan for zone and resource group>
 export PUBLIC_VLAN=<public vlan for zone and resource group>
+export ROKS_VERSION=<version of OpenShift to provision>
 ```
 
 ## 4. Run the test:
