@@ -7,8 +7,9 @@ https://github.com/terraform-ibm-modules/terraform-ibm-function/blob/main/test/c
 package test
 
 import (
- 	"testing"
-    	"os"
+	"os"
+	"testing"
+
 	/*"fmt"*/
 	"github.com/gruntwork-io/terratest/modules/terraform"
 )
@@ -21,25 +22,26 @@ func TestAccIBMCP4I(t *testing.T) {
 	// terraform testing.
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		// The path to where our Terraform code is located
-		TerraformDir: "../examples/roks_classic_with_cp4i",
+		TerraformDir: "../../../examples/cp4i_on_roks_classic",
 
 		// Variables to pass to our Terraform code using -var options
-		// Settings are for cloud account Humio 2129514
+		// Ensure valid settings for resource_group, private_vlan, public_vlan for the 
+		// cloud account this test will be running in.
 		Vars: map[string]interface{}{
-			"region":     		"ca-tor",
-			"worker_zone":		"tor01",
-			"resource_group":	"cloud-pak-sandbox-ibm",
-			"workers_count":	4,
-			"worker_pool_flavor":	"b3c.16x64",
-			"public_vlan":		"3225444",
-			"private_vlan":		"3225446",
-			"force_delete_storage":	true,
-			"project_name":		"ann-cp4i",
-			"environment":		"test",
-			"owner":		"terratest",
-			"roks_version":		4.7,
-			"entitled_registry_key":	os.Getenv("CP_ENTITLEMENT"), //pragma: allowlist secret
-			"entitled_registry_user_email":	os.Getenv("CP_ENTITLEMENT_EMAIL"),
+			"region":                       "ca-tor",
+			"worker_zone":                  "tor01",
+			"resource_group":               "ann-rg",
+			"workers_count":                4,
+			"worker_pool_flavor":           "b3c.16x64",
+			"private_vlan":                 "3239974",
+			"public_vlan":                  "3239972",
+			"force_delete_storage":         true,
+			"project_name":                 "cp4i",
+			"environment":                  "test",
+			"owner":                        "terratest",
+			"roks_version":                 4.7,
+			"entitled_registry_key":        os.Getenv("CP_ENTITLEMENT"), //pragma: allowlist secret
+			"entitled_registry_user_email": os.Getenv("CP_ENTITLEMENT_EMAIL"),
 		},
 	})
 
@@ -66,3 +68,4 @@ func TestAccIBMCP4I(t *testing.T) {
 	}
 	fmt.Println("Cloud Pak for Integration Console Password", password)*/
 }
+
