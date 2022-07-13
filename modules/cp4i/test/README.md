@@ -1,6 +1,6 @@
 # Steps to run cloudpak_integration_test.go
 
-This test case creates a ROKS classic cluster and installs Cloud Pak for Integration onto it.  You will need to manually delete the cluster when finished with your test.
+This test case creates a ROKS classic cluster and installs Cloud Pak for Integration onto it.
 
 ## 1. Set up go environment
 
@@ -12,21 +12,23 @@ export PATH=/usr/local/go/bin:$PATH
 
 ## 2. Clone the respository
 
-Clone into `$GOPATH/src`.
-```
+Clone into `$GOPATH/src`:
+
+```bash
+mkdir -p $GOPATH/src/github.com/ibm-hcbt
 cd $GOPATH/src/github.com/ibm-hcbt
 git clone https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git
 cd terraform-ibm-cloud-pak
 ```
 
-## 3. Initialize go
+## 3. Initialize go in the clone tree
 
 ```bash
 go mod init
 go mod tidy
 ```
 
-## 3. Set variables
+## 4. Set variables
 
 export required Environment variables
 
@@ -41,7 +43,7 @@ export PUBLIC_VLAN=<public vlan for zone and resource group>
 export ROKS_VERSION=<version of OpenShift to provision>
 ```
 
-## 4. Run the test:
+## 5. Run the test:
 
 ```bash
 cd $GOPATH/srcgithub.com/ibm-hcbt/terraform-ibm-cloud-pak/modules/cp4i/test
