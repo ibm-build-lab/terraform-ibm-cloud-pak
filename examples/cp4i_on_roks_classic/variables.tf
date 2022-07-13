@@ -87,7 +87,7 @@ variable "force_delete_storage" {
 variable "roks_version" {
   description = "The OpenShift version that you want to set up in your cluster."
   type        = string
-  default     = "4.9"
+  default     = "4.7"
 }
 
 variable "storage_class" {
