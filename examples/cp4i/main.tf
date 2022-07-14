@@ -19,7 +19,7 @@ data "ibm_container_cluster_config" "cluster_config" {
 // Module:
 module "cp4i" {
   source = "../../modules/cp4i"
-  enable = true
+  //enable = true
 
   // ROKS cluster parameters:
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
