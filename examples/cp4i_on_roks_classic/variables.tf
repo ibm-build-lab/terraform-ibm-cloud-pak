@@ -108,7 +108,7 @@ variable "entitled_registry_key" {
 
 variable "config_dir" {
   type        = string
-  description = "Path to store cluster config file"
+  description = "Directory to store the kubeconfig file, set the value to empty string to not download the config. If running on Schematics, set to `/tmp/.schematics/.kube/config`"
   default     = "./.kube/config"
 }
 
