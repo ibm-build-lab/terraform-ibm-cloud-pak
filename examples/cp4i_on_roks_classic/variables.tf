@@ -20,6 +20,7 @@ variable "owner" {
 
 variable "region" {
   description = "The region where the cluster will be created. List all available regions with: `ibmcloud regions`"
+  default     = "ca-tor"
   type        = string
 }
 
@@ -31,7 +32,7 @@ variable "resource_group" {
 
 variable "worker_zone" {
   description = "The data center where the worker node is created. List all available zones with `ibmcloud ks locations`"
-  default     = "us-south"
+  default     = "tor01"
   type        = string
 }
 
@@ -80,13 +81,13 @@ variable "entitlement" {
 variable "force_delete_storage" {
   description = "force the removal of persistent storage associated with the cluster during cluster deletion."
   type        = bool
-  default     = null
+  default     = true
 }
 
 variable "roks_version" {
   description = "The OpenShift version that you want to set up in your cluster."
   type        = string
-  default     = null
+  default     = "4.7"
 }
 
 variable "storage_class" {
@@ -107,7 +108,7 @@ variable "entitled_registry_key" {
 
 variable "config_dir" {
   type        = string
-  description = "Path to store cluster config file"
+  description = "Directory to store the kubeconfig file. If running on Schematics, set to `/tmp/.schematics/.kube/config`"
   default     = "./.kube/config"
 }
 
