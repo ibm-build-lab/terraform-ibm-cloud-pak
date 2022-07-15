@@ -49,3 +49,5 @@ export ROKS_VERSION=<version of OpenShift to provision>
 cd $GOPATH/srcgithub.com/ibm-hcbt/terraform-ibm-cloud-pak/modules/cp4i/test
 go test  -timeout 2h -v -run .
 ```
+
+This will allow for the test to take up to 2 hours to run.  If it times out, restart command and change the `-timeout` value.
