@@ -10,7 +10,6 @@ import (
 	"os"
 	"testing"
 
-	/*"fmt"*/
 	"github.com/gruntwork-io/terratest/modules/terraform"
 )
 
@@ -25,21 +24,21 @@ func TestAccIBMCP4I(t *testing.T) {
 		TerraformDir: "../../../examples/cp4i_on_roks_classic",
 
 		// Variables to pass to our Terraform code using -var options
-		// Ensure valid settings for resource_group, private_vlan, public_vlan for the 
+		// Ensure valid settings for resource_group, private_vlan, public_vlan for the
 		// cloud account this test will be running in.
 		Vars: map[string]interface{}{
 			"region":                       "ca-tor",
 			"worker_zone":                  "tor01",
-			"resource_group":               "ann-rg",
+			"resource_group":               os.Getenv("RESOURCE_GROUP"),
 			"workers_count":                4,
 			"worker_pool_flavor":           "b3c.16x64",
-			"private_vlan":                 "3239974",
-			"public_vlan":                  "3239972",
+			"private_vlan":                 os.Getenv("PRIVATE_VLAN"),
+			"public_vlan":                  os.Getenv("PUBLIC_VLAN"),
 			"force_delete_storage":         true,
 			"project_name":                 "cp4i",
 			"environment":                  "test",
 			"owner":                        "terratest",
-			"roks_version":                 4.7,
+			"roks_version":                 os.Getenv("ROKS_VERSION"),
 			"entitled_registry_key":        os.Getenv("CP_ENTITLEMENT"), //pragma: allowlist secret
 			"entitled_registry_user_email": os.Getenv("CP_ENTITLEMENT_EMAIL"),
 		},
@@ -68,4 +67,3 @@ func TestAccIBMCP4I(t *testing.T) {
 	}
 	fmt.Println("Cloud Pak for Integration Console Password", password)*/
 }
-
