@@ -1,27 +1,29 @@
 
 # Example to provision LDAP Terraform Module
 
-1. Download required license files from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `../../modules/ldap/files` folder
+### 1. Clone the https://github.com/ibm-hcbt/terraform-ibm-cloud-pak repo
 
-    ```console
-    DB2:
-    Part Number : CNB21ML
-    Filename : DB2_AWSE_Restricted_Activation_11.1.zip
+### 2. Download required license files from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `../../modules/ldap/files` folder
 
-    IBM SDS:
-    Part Number : CRV3IML
-    Filename : sds64-premium-feature-act-pkg.zip
-    ```
+```console
+DB2:
+Part Number : CNB21ML
+Filename : DB2_AWSE_Restricted_Activation_11.1.zip
 
- 2. Update the ldif file
+IBM SDS:
+Part Number : CRV3IML
+Filename : sds64-premium-feature-act-pkg.zip
+```
 
-    Update the `../../modules/files/cp.ldif` file as needed to change the Directory Structure and user information.  For information on LDIF format, go [here](https://www.ibm.com/docs/en/i/7.4?topic=reference-ldap-data-interchange-format-ldif)
+### 3. Update the ldif file
 
-## Run using local Terraform Client
+Update the `../../modules/files/cp.ldif` file as needed to change the Directory Structure and user information.  For information on LDIF format, go [here](https://www.ibm.com/docs/en/i/7.4?topic=reference-ldap-data-interchange-format-ldif)
+
+### 4. Run using local Terraform Client
 
 For instructions to run using the local Terraform Client on your local machine go [here](../Using_Terraform.md).
 
-Set required values in a `terraform.tfvars` file.  Here are some examples:
+#### Set required values in a `terraform.tfvars` file.  Here are some examples:
 
 ```bash
 ibmcloud_api_key      = "*******************"
@@ -61,7 +63,7 @@ These parameters are:
 - `ldapBindDN`              : LDAP Bind DN
 - `ldapBindDNPassword`      : LDAP Bind DN password
 
-## Execute the example
+#### Execute the example
 
 Execute the following Terraform commands:
 
@@ -71,9 +73,9 @@ terraform plan
 terraform apply --auto-approve
 ```
 
-## Outputs
+#### Outputs
 
-Verify the output "ibm_compute_vm_instance.cp4baldap (remote-exec): Start LDAP complete" is displayed and a Public IP created after the process is complete.
+Verify that the message: "ibm_compute_vm_instance.cp4ba ldap (remote-exec): Start LDAP complete" is displayed and a Public IP created after the process is complete.
 
 | Name                 | Description                                                                                                                                |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -82,7 +84,7 @@ Verify the output "ibm_compute_vm_instance.cp4baldap (remote-exec): Start LDAP c
 | `ldapBindDN` | Bind DN (https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-connector-ldap-cp4d) |
 | `ldapBindDNPassword` | Bind DN Password (https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-connector-ldap-cp4d) |
 
-## To access the Virtual Machine
+### 5. Access the Virtual Machine
 
 A public and private key is created to access the Virtual Machine:
 
@@ -103,7 +105,7 @@ For more information on accessing the Virtual Machine, visit (https://cloud.ibm.
 
 Apache Directory Studio can be used to access the server (see https://directory.apache.org/studio/download/download-macosx.html)
 
-## Cleanup
+### 6. Cleanup
 
 When the project is complete, execute: `terraform destroy`.
 
