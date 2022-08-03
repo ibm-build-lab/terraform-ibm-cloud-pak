@@ -1,4 +1,4 @@
-# IBM Red Hat OpenShift Managed Cluster Parameters and Installation
+# Example cp4aiops_on_roks_classic
 
 ## Set up
 
