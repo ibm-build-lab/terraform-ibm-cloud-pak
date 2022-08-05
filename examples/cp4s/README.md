@@ -1,20 +1,21 @@
-# Test CP4S Module
+# Example to provision CP4S Terraform Module
 
-## 1. Set up access to IBM Cloud
+This example provisions an IBM Cloud Platform Classic Infrastructure OpenShift Cluster and installs the Cloud Pak for Security on it.  To install Cloud Pak for Security, a cluster is needed with at least 5 nodes of size 16x32.
 
-If running this module from your local terminal, you need to set the credentials to access IBM Cloud.
+NOTE:
+An LDAP is required for new instances of CP4S.  This is not required for installation but will be required before CP4S can be used.  If you do not have an LDAP you can complete the installation however full features will not be available until after LDAP configuration is complete.  There is terraform automation available to provision and LDAP [here](https://github.com/ibm-build-labs/terraform-ibm-cloud-pak/tree/main/examples/ldap). This link can provide more information [here](https://www.ibm.com/docs/en/cloud-paks/cp-security/1.8?topic=providers-configuring-ldap-authentication).  
 
-You can define the IBM Cloud credentials in the IBM provider block but it is recommended to pass them in as environment variables.
+## Run using IBM Cloud Schematics
 
-Go [here](../../CREDENTIALS.md) for details.
+For instructions to run these examples using IBM Schematics go [here](../Using_Schematics.md)
 
-## 2. Test
+For more information on IBM Schematics, refer [here](https://cloud.ibm.com/docs/schematics?topic=schematics-get-started-terraform).
 
-### Using Terraform client
+## Run using local Terraform Client
 
-Follow these instructions to test the Terraform Module manually
+For instructions to run using the local Terraform Client on your local machine go [here](../Using_Terraform.md). 
 
-Create the file `test.auto.tfvars` with the following input variables, these values are fake examples:
+Set the desired values in the `terraform.tfvars` file:
 
 ```hcl
 source          = "./.."
@@ -40,6 +41,7 @@ These parameters are:
 - `entitled_registry_key`: Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key
 - `entitled_registry_user_email`: IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key
 - `admin_user`: The admin user name that will be used with the LDAP.  Refer to the CP4S documentation on LDAP requirments
+
 Execute the following Terraform commands:
 
 ```bash
@@ -50,8 +52,9 @@ terraform apply -auto-approve
 
 One of the Test Scenarios is to verify the YAML files rendered to install IAF, these files are generated in the directory `rendered_files`. Go to this directory to validate that they are generated correctly.
 
-## 3. Cleanup
+### Cleanup
 
  execute: `terraform destroy`.
 
 There are some directories and files you may want to manually delete, these are: `rm -rf test.auto.tfvars terraform.tfstate* .terraform .kube rendered_files` as well as delete the `cp4s_cli_install` and `ibm-cp-security`
+
