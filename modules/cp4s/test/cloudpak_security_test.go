@@ -34,7 +34,7 @@ func TestAccIBMCP4I(t *testing.T) {
 			"project_name":                 "cp4s",
 			"environment":                  "test",
 			"owner":                        "terratest",
-			"roks_version":                 os.Getenv("ROKS_VERSOIN"),
+			"roks_version":                 os.Getenv("ROKS_VERSION"),
 			"entitled_registry_key":        os.Getenv("CP_ENTITLEMENT"), //pragma: allowlist secret
 			"entitled_registry_user_email": os.Getenv("CP_ENTITLEMENT_EMAIL"),
 		},
