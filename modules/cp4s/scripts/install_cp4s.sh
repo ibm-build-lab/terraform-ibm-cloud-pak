@@ -31,12 +31,6 @@ done
 echo "creating namespace ${NAMESPACE}"
 kubectl create namespace ${NAMESPACE} 
 
-echo "Deploying Catalog Option ${OPERATOR_CATALOG}"
-echo "${OPERATOR_CATALOG}" | kubectl apply -f -
-
-echo "Deploying Catalog Option ${COMMON_SERVICES_CATALOG}"
-echo "${COMMON_SERVICES_CATALOG}" | kubectl apply -f -
-
 create_secret() {
   secret_name=$1
   namespace=$2
@@ -55,26 +49,31 @@ create_secret() {
 
 create_secret ibm-entitlement-key ${NAMESPACE}
 
-create_secret ibm-isc-pull-secret ${NAMESPACE}
+#create_secret ibm-isc-pull-secret ${NAMESPACE}
 
-echo "Deploying Operator Group ${KNATIVE_SUBSCRIPTION}"
-echo "${KNATIVE_SUBSCRIPTION}" | kubectl apply -f -
+echo "Deploying Catalog Option ${OPERATOR_CATALOG}"
+echo "${OPERATOR_CATALOG}" | kubectl apply -f -
 
-sleep 160
-
-echo "Deploying Operator Group ${KNATIVE}"
-echo "${KNATIVE}" | kubectl apply -f -
+# echo "Deploying Catalog Option ${COMMON_SERVICES_CATALOG}"
+# echo "${COMMON_SERVICES_CATALOG}" | kubectl apply -f -
 
 echo "Deploying Operator Group ${OPERATOR_GROUP}"
 echo "${OPERATOR_GROUP}" | kubectl apply -f -
 
+# echo "Deploying Operator Group ${KNATIVE_SUBSCRIPTION}"
+# echo "${KNATIVE_SUBSCRIPTION}" | kubectl apply -f -
+
+# sleep 160
+
+# echo "Deploying Operator Group ${KNATIVE}"
+# echo "${KNATIVE}" | kubectl apply -f -
 
 echo "Deploying Subscription ${SUBSCRIPTION}"
 echo "${SUBSCRIPTION}" | kubectl apply -f -
 
 sleep 60
 
-echo "Deploying Subscription ${CP4S_THREAT_MANAGEMENT}"
+echo "Deploying Threat Management CSV ${CP4S_THREAT_MANAGEMENT}"
 echo "${CP4S_THREAT_MANAGEMENT}" | kubectl apply -f -
 
 # TODO  while kubectl -n ${NAMESPACE} get cpdservice ${SERVICE}-cpdservice --output=json | jq -c -r '.status'
