@@ -52,17 +52,9 @@ terraform apply -auto-approve
 
 One of the Test Scenarios is to verify the YAML files rendered to install IAF, these files are generated in the directory `rendered_files`. Go to this directory to validate that they are generated correctly.
 
-## Cleanup
+### Cleanup
 
  execute: `terraform destroy`.
 
 There are some directories and files you may want to manually delete, these are: `rm -rf test.auto.tfvars terraform.tfstate* .terraform .kube rendered_files` as well as delete the `cp4s_cli_install` and `ibm-cp-security`
 
-
-### Cleanup
-
-Go into the console and delete the platform navigator from the verify section. Delete all installed operators and lastly delete the project.
-
-Finally, execute: `terraform destroy`.
-
-There are some directories and files you may want to manually delete, these are: `rm -rf terraform.tfstate* .terraform .kube`
