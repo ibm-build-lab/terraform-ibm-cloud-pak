@@ -16,7 +16,7 @@ Clone into `$GOPATH/src`:
 
 ```bash
 mkdir -p $GOPATH/src/github.com/ibm-build-labs
-cd $GOPATH/src/github.com/ibm-hcbt
+cd $GOPATH/src/github.com/ibm-build-labs
 git clone https://github.com/ibm-build-labs/terraform-ibm-cloud-pak.git
 cd terraform-ibm-cloud-pak
 ```
