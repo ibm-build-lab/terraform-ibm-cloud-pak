@@ -15,9 +15,9 @@ export PATH=/usr/local/go/bin:$PATH
 Clone into `$GOPATH/src`:
 
 ```bash
-mkdir -p $GOPATH/src/github.com/ibm-hcbt
+mkdir -p $GOPATH/src/github.com/ibm-build-labs
 cd $GOPATH/src/github.com/ibm-hcbt
-git clone https://github.com/ibm-hcbt/terraform-ibm-cloud-pak.git
+git clone https://github.com/ibm-build-labs/terraform-ibm-cloud-pak.git
 cd terraform-ibm-cloud-pak
 ```
 
@@ -46,7 +46,7 @@ export ROKS_VERSION=<version of OpenShift to provision>
 ## 5. Run the test:
 
 ```bash
-cd $GOPATH/srcgithub.com/ibm-hcbt/terraform-ibm-cloud-pak/modules/cp4i/test
+cd $GOPATH/src/github.com/ibm-build-labs/terraform-ibm-cloud-pak/modules/cp4s/test
 go test  -timeout 2h -v -run .
 ```
 
