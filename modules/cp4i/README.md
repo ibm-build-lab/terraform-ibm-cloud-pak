@@ -1,17 +1,8 @@
 # Terraform Module to install Cloud Pak for Integration
 
-This Terraform Module installs **Cloud Pak for Integration** on an Openshift (ROKS) cluster on IBM Cloud.
+This Terraform Module installs **Cloud Pak for Integration** version 2022.2 on an Openshift (ROKS) cluster (4.10+) on IBM Cloud. It follows the instructions located [here](https://www.ibm.com/docs/en/cloud-paks/cp-integration/2022.2?topic=installing-overview-installation).
 
 **Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4i`
-
-- [Terraform Module to install Cloud Pak for Integration](#terraform-module-to-install-cloud-pak-for-integration)
-  - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
-  - [Provisioning this module in a Terraform Script](#provisioning-this-module-in-a-terraform-script)
-    - [Setting up the OpenShift cluster](#setting-up-the-openshift-cluster)
-    - [Using the CP4I Module](#using-the-cp4i-module)
-  - [Input Variables](#input-variables)
-  - [Executing the Terraform Script](#executing-the-terraform-script)
-  - [Clean up](#clean-up)
 
 ## Set up access to IBM Cloud
 
@@ -23,9 +14,9 @@ Go [here](../CREDENTIALS.md) for details.
 
 ### Setting up the OpenShift cluster
 
-NOTE: an OpenShift cluster is required to install the Cloud Pak. This can be an existing cluster or can be provisioned using our `roks` Terraform module.
+**NOTE:** an OpenShift cluster is required to install the Cloud Pak. This can be an existing cluster or can be provisioned using our `roks` Terraform module. The current versions of the operators being installed require OpenShift version 4.10 or higher.
 
-To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script. The recommended size for an OpenShift cluster on IBM Cloud Classic contains `4` workers of flavor `b3c.16x64`, however read the [Cloud Pak for Integration documentation](https://www.ibm.com/docs/en/cloud-paks/cp-integration) to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
+To provision a new cluster, refer [here](https://github.com/ibm-build-labs/terraform-ibm-cloud-pak/blob/main/examples/cp4i_on_roks_classic/main.tf) for the code to add to your Terraform script. The recommended size for an OpenShift cluster on IBM Cloud Classic contains `4` workers of flavor `b3c.16x64`, however read the [Cloud Pak for Integration documentation](https://www.ibm.com/docs/en/cloud-paks/cp-integration) to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
 
 Add the following code to get the OpenShift cluster (new or existing) configuration:
 
