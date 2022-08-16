@@ -45,13 +45,10 @@ module "classic-openshift-single-zone-cluster" {
 The following code retrieves the cluster (new or existing) configuration:
 
 ```hcl
-data "ibm_resource_group" "group" {
-  name = var.resource_group
-}
 
 data "ibm_container_cluster_config" "cluster_config" {
-  cluster_name_id   = var.cluster_name_id
-  resource_group_id = data.ibm_resource_group.group.id
+  cluster_name_id   = "cp4i-dev"
+  resource_group_id = data.ibm_resource_group.rg.id
   download          = true
   config_dir        = "./kube/config"     // Create this directory in advance
   admin             = false
