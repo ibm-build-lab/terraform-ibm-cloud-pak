@@ -14,7 +14,7 @@ Go [here](../CREDENTIALS.md) for details.
 
 ### Setting up the OpenShift cluster
 
-**NOTE:** an OpenShift cluster is required to install the Cloud Pak. This can be an existing cluster or can be provisioned using our `roks` Terraform module. The current versions of the operators being installed require OpenShift version 4.10 or higher.
+**NOTE:** an OpenShift cluster is required to install the Cloud Pak. This can be an existing cluster or can be provisioned using Terraform modules. The current versions of the operators being installed require OpenShift version 4.10 or higher.
 
 The recommended size for an OpenShift cluster on IBM Cloud Classic contains `4` workers of flavor `b3c.16x64`, however read the [Cloud Pak for Integration documentation](https://www.ibm.com/docs/en/cloud-paks/cp-integration) to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
 
