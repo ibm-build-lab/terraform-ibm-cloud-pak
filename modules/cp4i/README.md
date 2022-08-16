@@ -1,6 +1,6 @@
 # Terraform Module to install Cloud Pak for Integration
 
-This Terraform Module installs **Cloud Pak for Integration** version 2022.2 on an Openshift (ROKS) cluster (4.10+) on IBM Cloud. It follows the instructions located [here](https://www.ibm.com/docs/en/cloud-paks/cp-integration/2022.2?topic=installing-overview-installation).
+This Terraform Module installs **Cloud Pak for Integration** version **2022.2** on an **Openshift (ROKS)** cluster **(4.10+)** on IBM Cloud. It follows the instructions located [here](https://www.ibm.com/docs/en/cloud-paks/cp-integration/2022.2?topic=installing-overview-installation).
 
 **Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4i`
 
