@@ -16,9 +16,28 @@ Go [here](../CREDENTIALS.md) for details.
 
 **NOTE:** an OpenShift cluster is required to install the Cloud Pak. This can be an existing cluster or can be provisioned using our `roks` Terraform module. The current versions of the operators being installed require OpenShift version 4.10 or higher.
 
-To provision a new cluster, refer [here](https://github.com/ibm-build-labs/terraform-ibm-cloud-pak/blob/main/examples/cp4i_on_roks_classic/main.tf) for the code to add to your Terraform script. The recommended size for an OpenShift cluster on IBM Cloud Classic contains `4` workers of flavor `b3c.16x64`, however read the [Cloud Pak for Integration documentation](https://www.ibm.com/docs/en/cloud-paks/cp-integration) to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
+The recommended size for an OpenShift cluster on IBM Cloud Classic contains `4` workers of flavor `b3c.16x64`, however read the [Cloud Pak for Integration documentation](https://www.ibm.com/docs/en/cloud-paks/cp-integration) to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
 
-Add the following code to get the OpenShift cluster (new or existing) configuration:
+This code will provision an OpenShift cluster on classic infrastructure: 
+```hcl
+module "classic-openshift-single-zone-cluster" {
+  source = "terraform-ibm-modules/cluster/ibm//modules/classic-openshift-single-zone"
+
+  // Openshift parameters:
+  cluster_name          = local.cluster_name
+  worker_zone           = var.worker_zone
+  hardware              = var.hardware
+  resource_group_id     = data.ibm_resource_group.rg.id
+  worker_nodes_per_zone = (var.workers_count != null ? var.workers_count : 1)
+  worker_pool_flavor    = (var.worker_pool_flavor != null ? var.worker_pool_flavor : null)
+  public_vlan           = (var.public_vlan != null ? var.public_vlan : null)
+  private_vlan          = (var.private_vlan != null ? var.private_vlan : null)
+  kube_version          = local.roks_version
+  tags                  = ["project:${var.project_name}", "env:${var.environment}", "owner:${var.owner}"]
+  entitlement           = (var.entitlement != null ? var.entitlement : "")
+}
+```
+The following code retrieves the cluster (new or existing) configuration:
 
 ```hcl
 data "ibm_resource_group" "group" {
@@ -34,7 +53,6 @@ data "ibm_container_cluster_config" "cluster_config" {
   network           = false
 }
 ```
-
 **NOTE**: Create the `./kube/config` directory if it doesn't exist.
 
 Input:
@@ -46,6 +64,8 @@ Input:
 Output:
 
 `ibm_container_cluster_config` used as input for the `cp4i` module
+
+To provision a new VPC cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script.
 
 ### Using the CP4I Module
 
