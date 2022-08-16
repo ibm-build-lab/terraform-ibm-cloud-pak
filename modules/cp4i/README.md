@@ -20,21 +20,26 @@ The recommended size for an OpenShift cluster on IBM Cloud Classic contains `4` 
 
 This code will provision an OpenShift cluster on classic infrastructure: 
 ```hcl
+
+data "ibm_resource_group" "rg" {
+  name = var.resource_group
+}
+
 module "classic-openshift-single-zone-cluster" {
   source = "terraform-ibm-modules/cluster/ibm//modules/classic-openshift-single-zone"
 
   // Openshift parameters:
-  cluster_name          = local.cluster_name
-  worker_zone           = var.worker_zone
-  hardware              = var.hardware
+  cluster_name          = "cp4i-dev"
+  worker_zone           = "dal13"
+  hardware              = "shared"
   resource_group_id     = data.ibm_resource_group.rg.id
-  worker_nodes_per_zone = (var.workers_count != null ? var.workers_count : 1)
-  worker_pool_flavor    = (var.worker_pool_flavor != null ? var.worker_pool_flavor : null)
-  public_vlan           = (var.public_vlan != null ? var.public_vlan : null)
-  private_vlan          = (var.private_vlan != null ? var.private_vlan : null)
-  kube_version          = local.roks_version
-  tags                  = ["project:${var.project_name}", "env:${var.environment}", "owner:${var.owner}"]
-  entitlement           = (var.entitlement != null ? var.entitlement : "")
+  worker_nodes_per_zone = 4
+  worker_pool_flavor    = "b3c.16x64"
+  public_vlan           = <public vlan for resource group>
+  private_vlan          = <private vlan for resource group>
+  kube_version          = "4.10"
+  tags                  = ["", "", ""]
+  entitlement           = <cloud-pak-entitlement-key>
 }
 ```
 The following code retrieves the cluster (new or existing) configuration:
