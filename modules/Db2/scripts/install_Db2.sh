@@ -299,9 +299,9 @@ fi
 echo
 echo "Patching ${C_DB2UCLUSTER_DB2U} statefulset."
 
-kubectl patch "$statefulsetQualifiedName" -n="${DB2_PROJECT_NAME}" -p='{"spec":{"template":{"spec":{"containers":[{"name":"db2u","tty":false}]}}}}}'
+kubectl patch "$statefulsetQualifiedName" -n="${DB2_PROJECT_NAME}" -p='{"spec":{"template":{"spec":{"containers":[{"name":"db2u","tty":false}]}}}}'
 
-## Wait for  c-db2ucluster-restore-morph job to complte. If this job completes successfully
+## Wait for  c-db2ucluster-restore-morph job to complete. If this job completes successfully
 ## we can tell that the deployment was completed successfully.
 
 function wait_for_job_to_complete_by_name {

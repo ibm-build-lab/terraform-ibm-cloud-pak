@@ -41,7 +41,8 @@ variable "db2_project_name" {
 }
 
 variable "db2_name" {
-  description = "A name you would like to attribute to your Database. i.e: sample-db2"
+  default    = "MYDB01"
+  description = "A name you would like to attribute to your Database. i.e: MYDB01.  Name must be less than or equal to 8 bytes and contain no special characters"
 }
 
 variable "db2_admin_user_password" {
