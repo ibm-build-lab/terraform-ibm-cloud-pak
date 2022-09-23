@@ -53,11 +53,11 @@ echo
 echo "Docker username: ${DOCKER_USERNAME}"
 kubectl create secret docker-registry ibm-registry --docker-server="${DOCKER_SERVER}" --docker-username="${DOCKER_USERNAME}" --docker-password="${ENTITLED_REGISTRY_KEY}" --docker-email="${ENTITLEMENT_REGISTRY_USER_EMAIL}" --namespace="${DB2_PROJECT_NAME}"
 sleep 10
-echo
-kubectl patch storageclass ibmc-block-gold -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
-echo
-kubectl patch storageclass "${DB2_STORAGE_CLASS}" -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
-echo
+# echo
+# kubectl patch storageclass ibmc-block-gold -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
+# echo
+# kubectl patch storageclass "${DB2_STORAGE_CLASS}" -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+# echo
 
 echo
 echo "Installing the IBM Operator Catalog..."
@@ -161,7 +161,7 @@ function wait_for_operator_to_install_successfully {
 
   while [ $current_time -lt $max_waiting_time ]
   do
-    CSV_STATUS=$(kubectl get csv -n "${DB2_PROJECT_NAME}" | grep db2u-operator.v1.1 | grep Succeeded | cat)
+    CSV_STATUS=$(kubectl get csv -n "${DB2_PROJECT_NAME}" | grep db2u-operator | grep Succeeded | cat)
     if [ ! -z "$CSV_STATUS" ]
     then
       break
@@ -299,9 +299,9 @@ fi
 echo
 echo "Patching ${C_DB2UCLUSTER_DB2U} statefulset."
 
-kubectl patch "$statefulsetQualifiedName" -n="${DB2_PROJECT_NAME}" -p='{"spec":{"template":{"spec":{"containers":[{"name":"db2u","tty":false}]}}}}}'
+kubectl patch "$statefulsetQualifiedName" -n="${DB2_PROJECT_NAME}" -p='{"spec":{"template":{"spec":{"containers":[{"name":"db2u","tty":false}]}}}}'
 
-## Wait for  c-db2ucluster-restore-morph job to complte. If this job completes successfully
+## Wait for  c-db2ucluster-restore-morph job to complete. If this job completes successfully
 ## we can tell that the deployment was completed successfully.
 
 function wait_for_job_to_complete_by_name {

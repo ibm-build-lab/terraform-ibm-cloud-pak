@@ -23,7 +23,8 @@ locals {
     db2Cpu                = var.db2_cpu
     db2Memory             = var.db2_memory
     db2StorageSize        = var.db2_storage_size
-    db2OnOcpStorageClassName = var.db2_storage_class
+    db2RWXStorageClassName = var.db2_rwx_storage_class
+    db2RWOStorageClassName = var.db2_rwo_storage_class
   })
 
   security_context_file_content = templatefile("${path.module}/templates/SecurityContextConstraints.yaml.tmpl", {
@@ -65,7 +66,7 @@ resource "null_resource" "install_db2" {
       DB2_CPU                  = var.db2_cpu
       DB2_MEMORY               = var.db2_memory
       DB2_STORAGE_SIZE         = var.db2_storage_size
-      DB2_STORAGE_CLASS        = var.db2_storage_class
+      DB2_STORAGE_CLASS        = var.db2_rwx_storage_class
 
       # ------ FILES ASSIGNMENTS -----------
       DB2_OPERATOR_CATALOG_FILE  = local.db2_operator_catalog_file

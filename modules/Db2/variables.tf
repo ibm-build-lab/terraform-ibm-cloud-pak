@@ -41,7 +41,8 @@ variable "db2_project_name" {
 }
 
 variable "db2_name" {
-  description = "A name you would like to attribute to your Database. i.e: sample-db2"
+  default    = "MYDB01"
+  description = "A name you would like to attribute to your Database. i.e: MYDB01.  Name must be less than or equal to 8 bytes and contain no special characters"
 }
 
 variable "db2_admin_user_password" {
@@ -89,9 +90,14 @@ variable "db2_storage_size" {
   description = "Storage size for the db2 databases"
 }
 
-variable "db2_storage_class" {
+variable "db2_rwx_storage_class" {
   default     = "ibmc-file-gold-gid"
-  description = "Name for the Storage Class"
+  description = "Name for the RWX File Storage Class"
+}
+
+variable "db2_rwo_storage_class" {
+  default     = "ibmc-block-gold"
+  description = "Name for the RWO Block Storage Class. Use `ibmc-block-gold` for classic, `ibmc-vpc-block-10iops-tier` for vpc"
 }
 
 locals {
