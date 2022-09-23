@@ -43,7 +43,8 @@ module "Db2" {
   db2_cpu                  = var.db2_cpu
   db2_memory               = var.db2_memory
   db2_storage_size         = var.db2_storage_size
-  db2_storage_class        = var.db2_storage_class
+  db2_rwx_storage_class    = var.db2_rwx_storage_class
+  db2_rwo_storage_class    = var.db2_rwo_storage_class
   entitled_registry_user_email = var.entitled_registry_user_email
   entitled_registry_key    = var.entitled_registry_key
 }

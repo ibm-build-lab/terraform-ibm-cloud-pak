@@ -91,9 +91,14 @@ variable "db2_storage_size" {
   description = "Storage size for the db2 databases"
 }
 
-variable "db2_storage_class" {
+variable "db2_rwx_storage_class" {
   default     = "ibmc-file-gold-gid"
-  description = "Name for the Storage Class"
+  description = "Name for the RWX File Storage Class"
+}
+
+variable "db2_rwo_storage_class" {
+  default     = "ibmc-block-gold"
+  description = "Name for the RWO Block Storage Class. Use `ibmc-block-gold` for classic, `ibmc-vpc-block-10iops-tier` for vpc"
 }
 
 locals {

@@ -42,20 +42,34 @@ spec:
             memory: ${db2Memory}
   storage:
     - name: meta
-      type: "create"
       spec:
-        storageClassName: ${db2OnOcpStorageClassName}
         accessModes:
-          - ReadWriteMany
+        - ReadWriteMany
         resources:
           requests:
-            storage: ${db2StorageSize}
+            storage: 100Gi
+        storageClassName: ${db2RWXStorageClassName} #ocs-storagecluster-cephfs
+      type: create
     - name: data
-      type: "create"
       spec:
-        storageClassName: ${db2OnOcpStorageClassName}
         accessModes:
-          - ReadWriteMany
+        - ReadWriteOnce
         resources:
           requests:
-            storage: ${db2StorageSize}
+            storage: 100Gi
+        storageClassName: ${db2RWOStorageClassName} #ibmc-vpc-block-10iops-tier
+      type: template
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: icp4data
+            operator: In
+            values:
+            - database-db2oltp
+  tolerations:
+  - key: "icp4data"
+    operator: "Equal"
+    value: "database-db2oltp"
+    effect: "NoSchedule"
