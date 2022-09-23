@@ -48,7 +48,7 @@ spec:
         resources:
           requests:
             storage: 100Gi
-        storageClassName: ${db2RWXStorageClassName} #ocs-storagecluster-cephfs
+        storageClassName: ${db2RWXStorageClassName} # for vpc use ocs-storagecluster-cephfs
       type: create
     - name: data
       spec:
@@ -57,19 +57,5 @@ spec:
         resources:
           requests:
             storage: 100Gi
-        storageClassName: ${db2RWOStorageClassName} #ibmc-vpc-block-10iops-tier
+        storageClassName: ${db2RWOStorageClassName} # for vpc use ibmc-vpc-block-10iops-tier
       type: template
-  affinity:
-    nodeAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-        - matchExpressions:
-          - key: icp4data
-            operator: In
-            values:
-            - database-db2oltp
-  tolerations:
-  - key: "icp4data"
-    operator: "Equal"
-    value: "database-db2oltp"
-    effect: "NoSchedule"
