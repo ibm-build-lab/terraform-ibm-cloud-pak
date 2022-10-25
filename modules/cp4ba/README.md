@@ -2,7 +2,7 @@
 
 This Terraform Module installs **Cloud Pak for Business Automation** on an Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4ba`
+**Module Source**: `github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//modules/cp4ba`
 
 ## Set up access to IBM Cloud
 
@@ -42,7 +42,7 @@ provider "ibm" {
 
 NOTE: an OpenShift cluster is required to install the Cloud Pak. This can be an existing cluster or can be provisioned using our `roks` Terraform module.
 
-To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script. The recommended size for an OpenShift 4.7 cluster on IBM Cloud Classic contains `5` workers of flavor `b3c.16x64`, however read the [Cloud Pak for Business Automation documentation](https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation) to confirm these parameters.
+To provision a new cluster, refer [here](https://github.com/ibm-build-labs/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script. The recommended size for an OpenShift 4.7 cluster on IBM Cloud Classic contains `5` workers of flavor `b3c.16x64`, however read the [Cloud Pak for Business Automation documentation](https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation) to confirm these parameters.
 
 Add the following code to get the OpenShift cluster (new or existing) configuration:
 
@@ -81,7 +81,7 @@ Output:
 
 ### Using the CP4BA Module
 
-Use a `module` block assigning the `source` parameter to the location of this module `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4ba`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Business Automation.
+Use a `module` block assigning the `source` parameter to the location of this module `github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//modules/cp4ba`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Business Automation.
 
 ```hcl
 module "install_cp4ba" {
@@ -134,7 +134,7 @@ module "install_cp4ba" {
 
 ### Executing the Terraform Script
 
-Follow this link to execute this CP4BA module: [Install IBM Cloud Pak Business Automation (CP4BA) Terraform Example](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/examples/cp4ba)
+Follow this link to execute this CP4BA module: [Install IBM Cloud Pak Business Automation (CP4BA) Terraform Example](https://github.com/ibm-build-labs/terraform-ibm-cloud-pak/tree/main/examples/cp4ba)
 
 ### Verify
 

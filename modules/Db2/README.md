@@ -2,7 +2,7 @@
 
 This Terraform Module installs **DB2** on an Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/Db2`
+**Module Source**: `github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//modules/Db2`
 
 - [Terraform DB2 Module to install and configure DB2 on Openshift](#terraform-db2-module-to-install-and-configure-db2-on-openshift)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
@@ -67,7 +67,7 @@ provider "ibm" {
 
 NOTE: an OpenShift cluster is required to install this module. This can be an existing cluster or can be provisioned using our `roks` Terraform module.
 
-To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script. The recommended size for an OpenShift cluster on IBM Cloud Classic contains `4` workers of flavor `b3c.16x64`, however read the [Db2 installation methods](https://www.ibm.com/docs/en/db2/11.1?topic=servers-db2-installation-methods) to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
+To provision a new cluster, refer [here](https://github.com/ibm-build-labs/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script. The recommended size for an OpenShift cluster on IBM Cloud Classic contains `4` workers of flavor `b3c.16x64`, however read the [Db2 installation methods](https://www.ibm.com/docs/en/db2/11.1?topic=servers-db2-installation-methods) to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
 
 Add the following code to get the OpenShift cluster (new or existing) configuration:
 
@@ -101,7 +101,7 @@ Output:
 
 ### Using the DB2 Module
 
-Use a `module` block assigning the `source` parameter to the location of this module `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/Db2`. Then set the [input variables](#input-variables) required to install Db2.
+Use a `module` block assigning the `source` parameter to the location of this module `github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//modules/Db2`. Then set the [input variables](#input-variables) required to install Db2.
 
 ```hcl
 module "Db2" {
@@ -154,7 +154,7 @@ module "Db2" {
 
 ### Executing the Terraform Script
 
-Follow this link to execute this DB2 module: [Install IBM Cloud Pak DB2 Terraform Example](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/examples/Db2)
+Follow this link to execute this DB2 module: [Install IBM Cloud Pak DB2 Terraform Example](https://github.com/ibm-build-labs/terraform-ibm-cloud-pak/tree/main/examples/Db2)
 
 ### Verify
 

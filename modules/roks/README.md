@@ -2,7 +2,7 @@
 
 This Terraform Module creates an Openshift (ROKS) cluster on IBM Cloud Classic or VPC Gen 2 infrastructure.
 
-**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/roks`
+**Module Source**: `github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//modules/roks`
 
 - [Terraform Module to Create an OpenShift Cluster on IBM Cloud](#terraform-module-to-create-an-openshift-cluster-on-ibm-cloud)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
@@ -30,13 +30,13 @@ provider "ibm" {
 }
 ```
 
-Add a `module` block to provision the [roks](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) module. Set `source` to `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/roks`. Then pass the input parameters depending on the infrastructure to deploy the cluster:
+Add a `module` block to provision the [roks](https://github.com/ibm-build-labs/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) module. Set `source` to `github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//modules/roks`. Then pass the input parameters depending on the infrastructure to deploy the cluster:
 
 - **IBM Cloud Classic**
 
   ```hcl
   module "cluster" {
-    source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/roks"
+    source = "github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//modules/roks"
 
     // General variables:
     on_vpc         = false
@@ -62,7 +62,7 @@ Add a `module` block to provision the [roks](https://github.com/ibm-hcbt/terrafo
 
   ```hcl
   module "cluster" {
-    source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/roks"
+    source = "github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//modules/roks"
 
     // General variables:
     on_vpc         = "true"

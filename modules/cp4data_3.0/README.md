@@ -2,7 +2,7 @@
 
 This Terraform Module install **Cloud Pak for Data** on an existing Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4data`
+**Module Source**: `github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//modules/cp4data`
 
 - [Terraform Module to install Cloud Pak for Data](#terraform-module-to-install-cloud-pak-for-data)
   - [Use](#use)
@@ -41,11 +41,11 @@ Before using the Cloud Pak for Data module it's required to have an OpenShift cl
 
 ### Building a ROKS cluster
 
-To build the cluster in your code, use the ROKS module, pointing it with `source` to the location of this module (`github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//roks`). Then pass the input parameters with the cluster specification required to run the cp4data module.
+To build the cluster in your code, use the ROKS module, pointing it with `source` to the location of this module (`github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//roks`). Then pass the input parameters with the cluster specification required to run the cp4data module.
 
 ```hcl
 module "cluster" {
-  source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/roks"
+  source = "github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//modules/roks"
 
   roks_version         = "4.5"
   flavors              = ["b3c.16x64"]
@@ -89,7 +89,7 @@ Using Terraform 0.12 the workaround is to use the boolean input parameter `enabl
 
 ### Using the CP4DATA Module
 
-Use the `module` block assigning the `source` parameter to the location of this module, either local (i.e. `../cp4data`) or remote (`github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4data`). Then pass the input parameters required to install the required Cloud Pak for Data version and their modules.
+Use the `module` block assigning the `source` parameter to the location of this module, either local (i.e. `../cp4data`) or remote (`github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//cp4data`). Then pass the input parameters required to install the required Cloud Pak for Data version and their modules.
 
 ```hcl
 module "cp4data" {

@@ -46,7 +46,7 @@ export ROKS_VERSION=<version of OpenShift to provision>
 ## 5. Run the test:
 
 ```bash
-cd $GOPATH/src github.com/ibm-hcbt/terraform-ibm-cloud-pak/modules/cp4i/test
+cd $GOPATH/src github.com/ibm-build-labs/terraform-ibm-cloud-pak/modules/cp4i/test
 go test  -timeout 2h -v -run .
 ```
 

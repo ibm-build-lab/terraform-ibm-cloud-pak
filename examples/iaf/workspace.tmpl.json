@@ -5,7 +5,7 @@
   "tags": ["owner:{{ OWNER }}", "env:{{ ENV }}", "project:{{ PROJECT }}"],
   "resource_group": "Default",
   "template_repo": {
-    "url": "https://github.com/ibm-hcbt/terraform-ibm-cloud-pak",
+    "url": "https://github.com/ibm-build-labs/terraform-ibm-cloud-pak",
     "branch": "{{ BRANCH }}"
   },
   "template_data": [

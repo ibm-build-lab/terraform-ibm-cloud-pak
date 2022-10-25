@@ -2,7 +2,7 @@
 
 This Terraform Module installs **Cloud Pak for Data** on an Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4data`
+**Module Source**: `github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//modules/cp4data`
 
 - [Terraform Module to install Cloud Pak for Data](#terraform-module-to-install-cloud-pak-for-data)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
@@ -36,7 +36,7 @@ The token and server info can be found on this Openshift `copy login command` dr
 
 ### Installing the CP4Data Module
 
-Use a `module` block assigning `source` to `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4data`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Data.
+Use a `module` block assigning `source` to `github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//cp4data`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Data.
 
 ```hcl
 module "cp4data" {
@@ -109,7 +109,7 @@ module "cp4data" {
 
 **NOTE** The boolean input variable `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
 
-For an example of how to put all this together, refer to our [Cloud Pak for Data Terraform script](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform/cp4data).
+For an example of how to put all this together, refer to our [Cloud Pak for Data Terraform script](https://github.com/ibm-build-labs/cloud-pak-sandboxes/tree/master/terraform/cp4data).
 
 ## Executing the Terraform Script
 

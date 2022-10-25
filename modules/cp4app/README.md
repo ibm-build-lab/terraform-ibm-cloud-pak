@@ -2,7 +2,7 @@
 
 This Terraform Module install **Applications Cloud Pak** on an existing Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4app`
+**Module Source**: `github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//modules/cp4app`
 
 - [Terraform Module to install Cloud Pak for Applications](#terraform-module-to-install-cloud-pak-for-applications)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
@@ -70,11 +70,11 @@ Output:
 
 ### Using the CP4App Module
 
-Use the `module` block assigning the `source` parameter to the location of this module, either local (i.e. `../../modules/cp4app`) or remote (`github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4auto`). Then set the [input variables](#input-variables) required to install the Cloud Pak for Applications.
+Use the `module` block assigning the `source` parameter to the location of this module, either local (i.e. `../../modules/cp4app`) or remote (`github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//modules/cp4auto`). Then set the [input variables](#input-variables) required to install the Cloud Pak for Applications.
 
 ```hcl
 module "cp4app" {
-  source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4auto"
+  source = "github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//modules/cp4auto"
   enable = true
 
   entitled_registry_key        = file("${path.cwd}/entitlement.key")
@@ -96,7 +96,7 @@ module "cp4app" {
 
 **NOTE** The boolean input variable `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
 
-For an example of how to put all this together, refer to our [Cloud Pak for Appplications Terraform script](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform/cp4app).
+For an example of how to put all this together, refer to our [Cloud Pak for Appplications Terraform script](https://github.com/ibm-build-labs/cloud-pak-sandboxes/tree/master/terraform/cp4app).
 
 ## Testing
 

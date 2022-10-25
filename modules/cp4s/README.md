@@ -2,7 +2,7 @@
 
 This Terraform Module installs **Cloud Pak for Security Operator** on an Openshift (ROKS) cluster on IBM Cloud. Once the Terraform module has run a cluster will install the CP4S operator creating the threat management resource.  After the threat management resource is created further configuration will be needed, you can follow the instructions on the CP4S documentation [here](https://www.ibm.com/docs/en/cloud-paks/cp-security/1.10?topic=security-postinstallation)
 
-**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4s`
+**Module Source**: `github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//modules/cp4s`
 
 - [Terraform Module to install Cloud Pak for Security](#terraform-module-to-install-cloud-pak-for-security)
   - [Required command line tools](#setup-tools)
@@ -31,7 +31,7 @@ NOTE: An OpenShift cluster is required to install the Cloud Pak. This can be an 
 
 An LDAP is required for new instances of CP4S.  This is not required for installation but will be required before CP4S can be used.  If you do not have an LDAP you can complete the installation however full features will not be available until after LDAP configuration is complete.  This link can provide more information [here](https://www.ibm.com/docs/en/cloud-paks/cp-security/1.8?topic=providers-configuring-ldap-authentication).  There is terraform automation available to provision and LDAP [here](https://github.com/ibm-build-labs/terraform-ibm-cloud-pak/tree/main/examples/ldap).
 
-To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/roks) for the code to add to your Terraform script. The recommended size for an OpenShift 4.6+ cluster on IBM Cloud Classic contains `5` workers of flavor `b3c.8x32`, however read the [Cloud Pak for Security documentation](https://www.ibm.com/docs/en/cloud-paks/cp-security/1.6.0?topic=requirements-hardware) .
+To provision a new cluster, refer [here](https://github.com/ibm-build-labs/terraform-ibm-cloud-pak/tree/main/modules/roks) for the code to add to your Terraform script. The recommended size for an OpenShift 4.6+ cluster on IBM Cloud Classic contains `5` workers of flavor `b3c.8x32`, however read the [Cloud Pak for Security documentation](https://www.ibm.com/docs/en/cloud-paks/cp-security/1.6.0?topic=requirements-hardware) .
 
 Add the following code to get the OpenShift cluster (new or existing) configuration:
 
@@ -64,11 +64,11 @@ Output:
 
 ### Using the CP4S Module
 
-Use a `module` block assigning the `source` parameter to the location of this module `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4s`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Security.
+Use a `module` block assigning the `source` parameter to the location of this module `github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//modules/cp4s`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Security.
 
 ```hcl
 module "cp4s" {
-  source          = "github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4s"
+  source          = "github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//modules/cp4s"
   enable          = true
 
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
@@ -89,7 +89,7 @@ module "cp4s" {
 | `admin_user`                           | The user name of the LDAP that cp4s will use on default configuration                                                                                                                        |                       | Yes       |
 
 
-For an example of how to put all this together, refer to our [Cloud Pak for Security Terraform script](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform//cp4s).
+For an example of how to put all this together, refer to our [Cloud Pak for Security Terraform script](https://github.com/ibm-build-labs/cloud-pak-sandboxes/tree/master/terraform//cp4s).
 
 ## Executing the Terraform Script
 
