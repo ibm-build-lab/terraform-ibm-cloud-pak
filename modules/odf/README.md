@@ -4,7 +4,7 @@ This Terraform Module installs the **ODF Service** on an Openshift (ROKS) cluste
 
 A ROKS cluster is required with at least three worker nodes. Each worker node must have a minimum of 16 CPUs and 64 GB RAM. https://cloud.ibm.com/docs/openshift?topic=openshift-deploy-odf-vpc for more information.
 
-**Module Source**: `github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//modules/odf`
+**Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/odf`
 
 ## Set up access to IBM Cloud
 
@@ -22,11 +22,11 @@ Make sure you have the latest updates for all IBM Cloud plugins by running `ibmc
 
 NOTE: an OpenShift cluster is required to install this ODF service. This can be an existing cluster or can be provisioned in the Terraform script.
 
-To provision a new cluster, refer [here](https://github.com/ibm-build-labs/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script.
+To provision a new cluster, refer [here](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script.
 
 ### Provisioning the ODF Module
 
-Use a `module` block assigning `source` to `github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//modules/odf`. Then set the [input variables](#input-variables) required to install the ODF service.
+Use a `module` block assigning `source` to `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/odf`. Then set the [input variables](#input-variables) required to install the ODF service.
 
 ```hcl
 provider "ibm" {
@@ -34,7 +34,7 @@ provider "ibm" {
 
 // Module:
 module "odf" {
-  source = "github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//modules/odf"
+  source = "github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/odf"
   cluster = var.cluster
   ibmcloud_api_key = var.ibmcloud_api_key
 
@@ -73,7 +73,7 @@ module "odf" {
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `odf_is_ready`                       | Flag set when ODF has completed its install.  Used when adding this with other modules |
 
-For an example of how to put all this together, refer to our [OpenShift Data Foundation Terraform Example](https://github.com/ibm-build-labs/terraform-ibm-cloud-pak/tree/main/examples/odf).
+For an example of how to put all this together, refer to our [OpenShift Data Foundation Terraform Example](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/examples/odf).
 
 
 ## Executing the Terraform Script

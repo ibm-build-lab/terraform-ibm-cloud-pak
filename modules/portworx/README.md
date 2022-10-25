@@ -2,7 +2,7 @@
 
 This Terraform Module installs the **Portworx Service** on an Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//modules/portworx`
+**Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/portworx`
 
 - [Terraform Module to install Portworx](#terraform-module-to-install-cloud-pak-for-multi-cloud-management)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
@@ -37,7 +37,7 @@ provider "kubernetes" {
 
 NOTE: an OpenShift cluster is required to install this module. This can be an existing cluster or can be provisioned in the Terraform script.
 
-To provision a new cluster, refer [here](https://github.com/ibm-build-labs/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script. 
+To provision a new cluster, refer [here](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script. 
 
 Add the following code to get the OpenShift cluster (new or existing) configuration:
 
@@ -76,11 +76,11 @@ Output:
 
 ### Provisioning the Portworx Module
 
-Use a `module` block assigning `source` to `github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//modules/portworx`. Then set the [input variables](#input-variables) required to install the Portworx service.
+Use a `module` block assigning `source` to `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/portworx`. Then set the [input variables](#input-variables) required to install the Portworx service.
 
 ```hcl
 module "portworx" {
-  source = "github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//modules/portworx"
+  source = "github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/portworx"
   enable = true
   ibmcloud_api_key = "<api-key>"
 
@@ -133,7 +133,7 @@ module "portworx" {
 
 **NOTE** The boolean input variable `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
 
-For an example of how to use this module, refer to our [Portworx Terraform example](https://github.com/ibm-build-labs/terraform-ibm-cloud-pak/tree/main/examples/portworx).
+For an example of how to use this module, refer to our [Portworx Terraform example](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/examples/portworx).
 
 ## Executing the Terraform Script
 

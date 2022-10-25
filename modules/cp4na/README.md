@@ -2,7 +2,7 @@
 
 This Terraform Module installs **Cloud Pak for Security** on an Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//modules/cp4s`
+**Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4s`
 
 - [Terraform Module to install Cloud Pak for Security](#terraform-module-to-install-cloud-pak-for-security)
   - [Required command line tools](#setup-tools)
@@ -31,7 +31,7 @@ NOTE: an OpenShift cluster and and LDAP is required to install the Cloud Pak. Th
 
 If you do not have an LDAP you can complete the installation however full features will not be available until after LDAP configuration is complete.
 
-To provision a new cluster, refer [here](https://github.com/ibm-build-labs/terraform-ibm-cloud-pak/tree/main/modules/roks) for the code to add to your Terraform script. The recommended size for an OpenShift 4.6+ cluster on IBM Cloud Classic contains `5` workers of flavor `b3c.8x32`, however read the [Cloud Pak for Security documentation](https://www.ibm.com/docs/en/cloud-paks/cp-security/1.6.0?topic=requirements-hardware) .
+To provision a new cluster, refer [here](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks) for the code to add to your Terraform script. The recommended size for an OpenShift 4.6+ cluster on IBM Cloud Classic contains `5` workers of flavor `b3c.8x32`, however read the [Cloud Pak for Security documentation](https://www.ibm.com/docs/en/cloud-paks/cp-security/1.6.0?topic=requirements-hardware) .
 
 Add the following code to get the OpenShift cluster (new or existing) configuration:
 
@@ -68,11 +68,11 @@ Output:
 
 ### Using the CP4S Module
 
-Use a `module` block assigning the `source` parameter to the location of this module `github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//modules/cp4s`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Security.
+Use a `module` block assigning the `source` parameter to the location of this module `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4s`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Security.
 
 ```hcl
 module "cp4s" {
-  source          = "github.com/ibm-build-labs/terraform-ibm-cloud-pak.git//modules/cp4s"
+  source          = "github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4s"
   enable          = true
 
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
@@ -100,7 +100,7 @@ module "cp4s" {
 
 **NOTE** The boolean input variable `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
 
-For an example of how to put all this together, refer to our [Cloud Pak for Security Terraform script](https://github.com/ibm-build-labs/cloud-pak-sandboxes/tree/master/terraform//cp4s).
+For an example of how to put all this together, refer to our [Cloud Pak for Security Terraform script](https://github.com/ibm-build-lab/cloud-pak-sandboxes/tree/master/terraform//cp4s).
 
 ## Executing the Terraform Script
 
