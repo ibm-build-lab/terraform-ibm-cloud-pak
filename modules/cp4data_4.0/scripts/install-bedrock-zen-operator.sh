@@ -241,7 +241,7 @@ oc new-project ${NAMESPACE}
 oc project ${NAMESPACE}
 
 # Create the zen operator 
-sed -i -e s#CPD_NAMESPACE#${NAMESPACE}#g cpd-operandrequest.yaml
+sed -i -e "s/CPD_NAMESPACE/${NAMESPACE}/g" cpd-operandrequest.yaml
 
 echo '*** executing **** oc create -f cpd-operandrequest.yaml'
 result=$(oc create -f cpd-operandrequest.yaml)
@@ -258,7 +258,7 @@ else
 fi
 
 # Create lite CR: 
-sed -i -e s#CPD_NAMESPACE#${NAMESPACE}#g ibmcpd-cr.yaml
+sed -i -e "s/CPD_NAMESPACE/${NAMESPACE}/g" ibmcpd-cr.yaml
 echo '*** executing **** oc create -f ibmcpd-cr.yaml'
 result=$(oc create -f ibmcpd-cr.yaml)
 echo $result
