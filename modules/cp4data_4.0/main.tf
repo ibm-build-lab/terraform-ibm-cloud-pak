@@ -29,7 +29,7 @@ resource "null_resource" "bedrock_zen_operator" {
   }
 
   depends_on = [
-    var.portworx_is_ready,
+    var.odf_is_ready,
     null_resource.prereqs_checkpoint,
   ]
 }
@@ -54,7 +54,7 @@ resource "null_resource" "install_wsl" {
   }
 
   depends_on = [
-    var.portworx_is_ready,
+    var.odf_is_ready,
     null_resource.prereqs_checkpoint,
     null_resource.bedrock_zen_operator,
   ]
@@ -80,7 +80,7 @@ resource "null_resource" "install_aiopenscale" {
   }
 
   depends_on = [
-    var.portworx_is_ready,
+    var.odf_is_ready,
     null_resource.prereqs_checkpoint,
     null_resource.bedrock_zen_operator,
     null_resource.install_wsl,
@@ -107,7 +107,7 @@ resource "null_resource" "install_wml" {
   }
 
   depends_on = [
-    var.portworx_is_ready,
+    var.odf_is_ready,
     null_resource.prereqs_checkpoint,
     null_resource.bedrock_zen_operator,
     null_resource.install_wsl,
@@ -134,7 +134,7 @@ resource "null_resource" "install_wkc" {
   }
 
   depends_on = [
-    var.portworx_is_ready,
+    var.odf_is_ready,
     null_resource.prereqs_checkpoint,
     null_resource.bedrock_zen_operator,
     null_resource.install_wsl,
@@ -165,7 +165,7 @@ resource "null_resource" "install_dv" {
   }
 
   depends_on = [
-    var.portworx_is_ready,
+    var.odf_is_ready,
     null_resource.prereqs_checkpoint,
     null_resource.bedrock_zen_operator,
     null_resource.install_wsl,
@@ -195,7 +195,7 @@ resource "null_resource" "install_spss" {
   }
 
   depends_on = [
-    var.portworx_is_ready,
+    var.odf_is_ready,
     null_resource.prereqs_checkpoint,
     null_resource.bedrock_zen_operator,
     null_resource.install_wsl,
@@ -224,7 +224,7 @@ resource "null_resource" "install_cde" {
   }
 
   depends_on = [
-    var.portworx_is_ready,
+    var.odf_is_ready,
     null_resource.prereqs_checkpoint,
     null_resource.bedrock_zen_operator,
     null_resource.install_wsl,
@@ -255,7 +255,7 @@ resource "null_resource" "install_spark" {
   }
 
   depends_on = [
-    var.portworx_is_ready,
+    var.odf_is_ready,
     null_resource.prereqs_checkpoint,
     null_resource.bedrock_zen_operator,
     null_resource.install_wsl,
@@ -288,7 +288,7 @@ resource "null_resource" "install_dods" {
   }
 
   depends_on = [
-    var.portworx_is_ready,
+    var.odf_is_ready,
     null_resource.prereqs_checkpoint,
     null_resource.bedrock_zen_operator,
     null_resource.install_wsl,
@@ -316,7 +316,7 @@ resource "null_resource" "install_ca" {
   }
 
   depends_on = [
-    var.portworx_is_ready,
+    var.odf_is_ready,
     null_resource.prereqs_checkpoint,
     null_resource.bedrock_zen_operator,
     null_resource.install_wsl,
@@ -350,7 +350,7 @@ resource "null_resource" "install_ds" {
   }
 
   depends_on = [
-    var.portworx_is_ready,
+    var.odf_is_ready,
     null_resource.prereqs_checkpoint,
     null_resource.bedrock_zen_operator,
     null_resource.install_wsl,
@@ -383,7 +383,7 @@ resource "null_resource" "install_db2oltp" {
   }
 
   depends_on = [
-    var.portworx_is_ready,
+    var.odf_is_ready,
     null_resource.prereqs_checkpoint,
     null_resource.bedrock_zen_operator,
   ]
@@ -409,7 +409,7 @@ resource "null_resource" "install_db2wh" {
   }
 
   depends_on = [
-    var.portworx_is_ready,
+    var.odf_is_ready,
     null_resource.prereqs_checkpoint,
     null_resource.bedrock_zen_operator,
   ]
@@ -435,7 +435,7 @@ resource "null_resource" "install_big_sql" {
   }
 
   depends_on = [
-    var.portworx_is_ready,
+    var.odf_is_ready,
     null_resource.prereqs_checkpoint,
     null_resource.bedrock_zen_operator,
     null_resource.install_wsl,
@@ -465,7 +465,7 @@ resource "null_resource" "install_wsruntime" {
   }
 
   depends_on = [
-    var.portworx_is_ready,
+    var.odf_is_ready,
     null_resource.prereqs_checkpoint,
     null_resource.bedrock_zen_operator,
   ]
@@ -484,7 +484,7 @@ resource "null_resource" "reencrypt_route" {
   }
 
   depends_on = [
-    var.portworx_is_ready,
+    var.odf_is_ready,
     null_resource.prereqs_checkpoint,
     null_resource.bedrock_zen_operator,
   ]
@@ -495,7 +495,7 @@ data "external" "get_endpoints" {
   count = var.enable ? 1 : 0
 
   depends_on = [
-    var.portworx_is_ready,
+    var.odf_is_ready,
     null_resource.prereqs_checkpoint,
     null_resource.bedrock_zen_operator,
     null_resource.install_wsl,

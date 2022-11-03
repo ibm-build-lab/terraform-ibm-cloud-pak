@@ -8,7 +8,7 @@ locals {
 }
 
 resource "null_resource" "setkernelparams" {
-  depends_on = [var.portworx_is_ready]
+  depends_on = [var.odf_is_ready]
 
   provisioner "local-exec" {
     environment = {
@@ -25,7 +25,7 @@ resource "null_resource" "setkernelparams" {
 ###########################################
 resource "null_resource" "create_registry_route" {
   depends_on = [
-    var.portworx_is_ready,
+    var.odf_is_ready,
     null_resource.setkernelparams,
   ]
   
@@ -55,7 +55,7 @@ resource "null_resource" "annotate_registry_route" {
 #######################
 resource "null_resource" "prereqs_checkpoint" {
   depends_on = [
-    var.portworx_is_ready,
+    var.odf_is_ready,
     null_resource.setkernelparams,
     null_resource.create_registry_route,
     null_resource.annotate_registry_route,

@@ -67,7 +67,7 @@ variable "worker_node_flavor" {
   description = "Flavor used to determine worker node hardware"
 }
 
-variable "portworx_is_ready" {
+variable "odf_is_ready" {
   type    = any
   default = null
 }
@@ -172,7 +172,7 @@ variable "install_wsruntime" {
 
 variable "storage_option" {
   type    = string
-  default = "portworx"
+  default = "odf"
   description = "Choose storage type `portworx`, `odf`, or `nfs`."
 }
 
