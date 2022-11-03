@@ -1,4 +1,4 @@
-# Example to provision CP4Data Terraform module
+# Example to provision CP4Data Terraform module on a ROKS cluster
 
 ## Run using IBM Cloud Schematics
 
@@ -16,11 +16,12 @@ resource_group_name = "Default"
 
 // ROKS cluster parameters:
 cluster_id          = "******************"
-region                = "us-south"
-on_vpc              = false
+region              = "us-south"
+on_vpc              = true
 
 // Prereqs
-worker_node_flavor = "b3c.16x64"
+//worker_node_flavor = "b3c.16x64"        // For Classic
+worker_node_flavor = "bx2.16x64"          // For VPC
 
 // Entitled Registry parameters:
 entitled_registry_key        = "******************"
@@ -28,7 +29,7 @@ entitled_registry_key        = "******************"
 // CP4D License Acceptance
 accept_cpd_license = true
 
-storage_option = "portworx"
+storage_option = "odf"          // odf | portwork | nfs
 
 // Parameters to install submodules
 install_wsl         = false
@@ -49,14 +50,11 @@ install_wsruntime   = false
 ```
 
 These parameters are:
-
-- `enable`: If set to `false` does not install the cloud pak on the given cluster. By default it's enabled
-- `on_vpc`: If set to `false`, it will set the install do classic ROKS. By default it's disabled
-- `openshift_version`: Openshift version installed in the cluster
+- `on_vpc`: If set to `true`, it will set the install for a VPC cluster. By default it's set to `false`
 - `entitled_registry_key`: Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key
 - `resource_group_name`: Resource group that the cluster is provisioned in
 - `accept_cpd_license`: If set to `true`, you accept all cpd license agreements including additional modules installed. By default, it's `false`
-- `storage_option`: Define the storage option. For now it's `portworx`. (odf, nfs, portworx)
+- `storage_option`: Define the storage option. Defaults to `portworx`. (odf, nfs, portworx)
 - `install_wsl`:  Install Watson Studio module. By default it's not installed. 
 - `install_aiopenscale`: Install  Watson AI OpenScale module. By default it's not installed. 
 - `install_wml`: Install Watson Machine Learning module. By default it's not installed.

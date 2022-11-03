@@ -23,27 +23,14 @@ data "ibm_container_cluster_config" "cluster_config" {
   config_dir        = var.cluster_config_path
 }
 
-# Get classic cluster ingress_hostname for output
-# data "ibm_container_cluster" "cluster" {
-#   count           = ! var.on_vpc ? 1 : 0
-#   cluster_name_id = var.cluster_id
-# }
-
-# Get vpc cluster ingress_hostname for output
-# data "ibm_container_vpc_cluster" "cluster" {
-#   count           = var.on_vpc ? 1 : 0
-#   cluster_name_id = var.cluster_id
-# }
-
 // Module:
 module "cp4data" {
-  source = "../../modules/cp4data_4.0"
+  source = "./module"
   enable = true
 
   // ROKS cluster parameters:
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
   on_vpc              = var.on_vpc
-  portworx_is_ready   = 1 // Assuming portworx is installed if using VPC infrastructure
 
   // Prereqs
   worker_node_flavor = var.worker_node_flavor
@@ -59,8 +46,6 @@ module "cp4data" {
   // CP4D Info
   cpd_project_name = "zen"
 
-  # OP_NAMESPACE="ibm-common-services"
-
   // IBM Cloud API Key
   ibmcloud_api_key = var.ibmcloud_api_key
 
@@ -68,8 +53,10 @@ module "cp4data" {
   resource_group_name = var.resource_group_name
   cluster_id          = var.cluster_id
 
-  // Parameters to install submodules
+  // Portworx, ODF, NFS
+  storage_option      = var.storage_option
 
+  // Parameters to install submodules
   install_wsl         = var.install_wsl
   install_aiopenscale = var.install_aiopenscale
   install_wml         = var.install_wml
@@ -85,7 +72,5 @@ module "cp4data" {
   install_db2wh       = var.install_db2wh
   install_big_sql     = var.install_big_sql
   install_wsruntime   = var.install_wsruntime
-
-  storage_option      = var.storage_option
 
 }

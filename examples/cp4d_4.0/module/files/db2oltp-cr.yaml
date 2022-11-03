@@ -1,0 +1,10 @@
+apiVersion: databases.cpd.ibm.com/v1
+kind: Db2oltpService
+metadata:
+  name: db2oltp-cr
+  namespace: REPLACE_NAMESPACE
+spec:
+  version: 4.0.5
+  license:
+    accept: true
+    license: "Advanced"
