@@ -24,7 +24,7 @@ cd ../files
 oc project ${NAMESPACE}
 
 # Create wsruntime CR: 
-sed -i -e s#CPD_NAMESPACE#${NAMESPACE}#g wsruntime-cr.yaml
+sed -i -e "s/CPD_NAMESPACE/${NAMESPACE}/g" wsruntime-cr.yaml
 result=$(oc create -f wsruntime-cr.yaml)
 echo $result
 
