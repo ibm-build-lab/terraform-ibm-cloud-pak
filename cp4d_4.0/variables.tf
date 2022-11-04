@@ -44,6 +44,23 @@ variable "entitled_registry_key" {
   description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
 }
 
+variable "cluster_config_path" {
+  default     = "./.kube/config"
+  description = "Directory to store the kubeconfig file, set the value to empty string to not download the config. If running on Schematics, use `/tmp/.schematics/.kube/config`"
+}
+
+variable "storage_option" {
+  type    = string
+  default = "portworx"
+  description = "Choose storage type `portworx`, `odf`, or `nfs`."
+}
+
+variable "portworx_is_ready" {
+  default = 1
+  description = "Flag used if Portworx is storage option and is ready on the cluster"
+}
+
+
 // Modules available to install on CP4D
 
 variable "install_wsl" {
@@ -136,19 +153,4 @@ variable "install_wsruntime" {
   description = "Install WS Runtime."
 }
 
-variable "cluster_config_path" {
-  default     = "./.kube/config"
-  description = "Directory to store the kubeconfig file, set the value to empty string to not download the config. If running on Schematics, use `/tmp/.schematics/.kube/config`"
-}
-
-variable "storage_option" {
-  type    = string
-  default = "portworx"
-  description = "Choose storage type `portworx`, `odf`, or `nfs`."
-}
-
-variable "portworx_is_ready" {
-  default = 1
-  description = "Flag used if Portworx is storage option and is ready on the cluster"
-}
 
