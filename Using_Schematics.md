@@ -10,11 +10,11 @@ There are two ways to create and execute the Schematics workspace, using [IBM Cl
 
 3. Provide a name, tags, location. Choose **schematics** resource group
 
-4. Once workspace is created, add **https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/examples/<module_name>** as the github URL
+4. Once workspace is created, add **https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/<module_name>** as the github URL
 
 5. Leave **Personal access token** blank
 
-6. Change **Terraform version** to 0.12
+6. Change **Terraform version** to 1.0 or higher
 
 7. Click **Save template information**
 
