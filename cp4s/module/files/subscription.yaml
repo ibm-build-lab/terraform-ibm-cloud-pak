@@ -1,0 +1,11 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+     name: ibm-cp-security-operator
+     namespace: cp4s
+spec:
+     channel: v1.10
+     installPlanApproval: Automatic
+     name: ibm-cp-security-operator
+     source: ibm-operator-catalog
+     sourceNamespace: openshift-marketplace

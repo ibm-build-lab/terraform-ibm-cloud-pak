@@ -1,0 +1,79 @@
+
+variable "ibmcloud_api_key" {
+  description = "IBMCloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
+}
+
+variable "cluster_id" {
+  description = "ROKS cluster id. Use the ROKS terraform module or other way to create it"
+}
+
+variable "on_vpc" {
+  type        = bool
+  default     = false
+  description = "Is cluster a VPC cluster"
+}
+
+variable "region" {
+  default     = "us-south"
+  description = "Region the Openshift cluster is provisioned on. List all available regions with: `ibmcloud regions`"
+}
+
+variable "zone" {
+  default     = "dal10"
+  description = "Zone in the region the Openshift cluster is provisioned on. List all available zones with: `ibmcloud ks zone ls --provider <classic | vpc-gen2>`"
+}
+
+variable "entitled_registry_user_email" {
+  type        = string
+  description = "Email address of the owner of the Entitled Registry Key"
+}
+
+variable "entitled_registry_key" {
+  type        = string
+  description = "Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary"
+}
+
+variable "resource_group" {
+  default     = "Default"
+  type        = string
+  description = "resource group where the cluster is running"
+}
+
+variable "install_infr_mgt_module" {
+  type        = bool
+  default     = false
+  description = "Install Infrastructure Management module"
+}
+
+variable "install_monitoring_module" {
+  type        = bool
+  default     = false
+  description = "Install Monitoring module"
+}
+
+variable "install_security_svcs_module" {
+  type        = bool
+  default     = false
+  description = "Install Security Services module"
+}
+
+variable "install_operations_module" {
+  type        = bool
+  default     = false
+  description = "Install Operations module"
+}
+
+variable "install_tech_prev_module" {
+  type        = bool
+  default     = false
+  description = "Install Tech Preview module"
+}
+
+variable "cluster_config_path" {
+  default     = "./.kube/config"
+  description = "Directory to store the kubeconfig file, set the value to empty string to not download the config. If running on Schematics, use `/tmp/.schematics/.kube/config`"
+}
+
+locals {
+  namespace  = "cp4mcm"
+}

@@ -1,0 +1,15 @@
+apiVersion: ocs.ibm.io/v1
+kind: OcsCluster
+metadata:
+  name: ocscluster-vpc
+spec:
+%{ if roks_version == "4.7" ~}
+  monStorageClassName: ${ monStorageClassName }
+  monSize: ${ monSize }
+%{ endif ~}
+  osdStorageClassName: ${ osdStorageClassName }
+  osdSize: ${ osdSize }
+  numOfOsd: ${ numOfOsd }
+  billingType: ${ billingType }
+  ocsUpgrade: ${ ocsUpgrade }
+  clusterEncryption: ${ clusterEncryption }

@@ -1,0 +1,14 @@
+apiVersion: integration.ibm.com/v1beta1
+kind: PlatformNavigator
+metadata:
+    name: cp4i-navigator
+    namespace: ${ namespace }
+spec:
+    license:
+        accept: true
+        license: L-RJON-CD3JKX
+    mqDashboard: true
+    replicas: 1
+    storage:
+        class: ${ storageclass }
+    version: 2022.2.1

@@ -1,0 +1,42 @@
+// Openshift cluster parameters
+// ----------------------------
+
+// Create a cluster based on values below
+project_name 	= "vpc"
+owner        	= "anonymous"
+environment  	= "test"
+
+// Region, run "ibmcloud regions"
+region       	= "us-south"
+
+// Resource group, run "ibmcloud resource groups" to see options.
+resource_group 	= "cloud-pak-sandbox"
+
+// OpenShift version, run command "ibmcloud ks versions" to see options
+roks_version	= 4.7
+
+// Remove peristent storage during deletion
+force_delete_storage	= true
+
+// Cloud Pak entitlement
+// entitlement    = "cloud-pak"
+entitlement     = ""
+
+// VPC required variables
+on_vpc        	= true
+
+// zone names, run "ibmcloud ks zone ls --provider vpc-gen2"
+vpc_zone_names  = ["us-south-1"]
+// flavor, run "ibmcloud ks flavors --zone <zone> --provider vpc-gen2"
+flavors         = ["bx2.16x64"]
+workers_count   = [4]
+
+// Multi zone
+//vpc_zone_names  = ["eu-de-1", "eu-de-2", "eu-de-3"]
+//flavors	  = ["bx2.8x32","bx2.16x64","bx2.4x16"]
+//workers_count	  = [3,3,3]
+
+// Single Zone, multiple flavors
+//vpc_zone_names  = ["eu-de-1", "eu-de-1"]
+//flavors	  = ["bx2.8x32","bx2.16x64"]
+//workers_count	  = [2,1]
