@@ -4,7 +4,7 @@ This Terraform Module installs **Cloud Pak for Data** on an Openshift cluster on
 
 Based on [cpd-deployment](https://github.com/IBM/cp4d-deployment/tree/master/existing-openshift) opensource project.
 
-**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4data`
+**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4d_4.0/modules`
 
 - [Terraform Module to install Cloud Pak for Data](#terraform-module-to-install-cloud-pak-for-data)
   - [Installing the CP4Data Module](#installing-the-cp4data-module)
@@ -17,11 +17,11 @@ Based on [cpd-deployment](https://github.com/IBM/cp4d-deployment/tree/master/exi
 
 ### Installing the CP4Data Module
 
-Use a `module` block assigning `source` to `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4data_4.0.1_aws`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Data.
+Use a `module` block assigning `source` to `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//cp4d_4.0/modules/cp4data_4.0_aws`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Data.
 
 ```hcl
 module "cp4data" {
-  source                    = "./.."
+  source                    = "github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//cp4d_4.0/modules/cp4data_4.0_aws"
   openshift_api             = var.openshift_api
   openshift_username        = var.openshift_username
   openshift_password        = var.openshift_password
@@ -87,7 +87,6 @@ module "cp4data" {
 | `master_data_management`      | Install Master Data Management module. By default it's not installed.                                                                                                                                                         | `{ "enable" : "no", "version" : "4.0.1", "channel" : "v1.1" }`                     | No       |
 | `decision_optimization`      | Install Decision Optimization module. By default it's not installed.                                                                                                                                                         | `{ "enable" : "no", "version" : "4.0.1", "channel" : "v4.0" }`                     | No       |
 
-**NOTE** The boolean input variable `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
 
 For an example of how to put all this together, refer to our [Cloud Pak for Data Terraform script](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform/cp4data).
 
