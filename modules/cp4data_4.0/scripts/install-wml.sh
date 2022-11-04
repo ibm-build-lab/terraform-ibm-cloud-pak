@@ -35,7 +35,7 @@ else
     sed -i -e "s/portworx-shared-gp3/${STORAGE}/g" wml-cr.yaml
 fi
 
-sed -i -e s#CPD_NAMESPACE#${NAMESPACE}#g wml-cr.yaml
+sed -i -e "s/CPD_NAMESPACE/${NAMESPACE}/g" wml-cr.yaml
 echo '*** executing **** oc create -f wml-cr.yaml'
 result=$(oc create -f wml-cr.yaml)
 echo $result

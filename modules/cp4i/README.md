@@ -2,7 +2,7 @@
 
 This Terraform Module installs **Cloud Pak for Integration** version **2022.2** on an **Openshift (ROKS)** cluster **(4.10+)** on IBM Cloud. It follows the instructions located [here](https://www.ibm.com/docs/en/cloud-paks/cp-integration/2022.2?topic=installing-overview-installation).
 
-**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4i`
+**Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4i`
 
 ## Set up access to IBM Cloud
 
@@ -67,11 +67,11 @@ Output:
 
 `ibm_container_cluster_config` used as input for the `cp4i` module
 
-To provision a new VPC cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script.
+To provision a new VPC cluster, refer [here](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script.
 
 ### Using the CP4I Module
 
-Use a `module` block assigning the `source` parameter to the location of this module `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4i`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Integration.
+Use a `module` block assigning the `source` parameter to the location of this module `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4i`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Integration.
 
 ```hcl
 module "cp4i" {
@@ -103,7 +103,7 @@ module "cp4i" {
 
 **NOTE** The boolean input variable `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
 
-For an example of how to put all this together, refer to our [Cloud Pak for Integration Terraform script](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform/cp4int).
+For an example of how to put all this together, refer to our [Cloud Pak for Integration Terraform script](https://github.com/ibm-build-lab/cloud-pak-sandboxes/tree/master/terraform/cp4int).
 
 ## Executing the Terraform Script
 

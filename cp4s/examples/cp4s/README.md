@@ -3,7 +3,7 @@
 This example provisions an IBM Cloud Platform Classic Infrastructure OpenShift Cluster and installs the Cloud Pak for Security on it.  To install Cloud Pak for Security, a cluster is needed with at least 5 nodes of size 16x32.
 
 NOTE:
-An LDAP is required for new instances of CP4S.  This is not required for installation but will be required before CP4S can be used.  If you do not have an LDAP you can complete the installation however full features will not be available until after LDAP configuration is complete.  There is terraform automation available to provision and LDAP [here](https://github.com/ibm-build-labs/terraform-ibm-cloud-pak/tree/main/examples/ldap). This link can provide more information [here](https://www.ibm.com/docs/en/cloud-paks/cp-security/1.8?topic=providers-configuring-ldap-authentication).  
+An LDAP is required for new instances of CP4S.  This is not required for installation but will be required before CP4S can be used.  If you do not have an LDAP you can complete the installation however full features will not be available until after LDAP configuration is complete.  There is terraform automation available to provision and LDAP [here](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/examples/ldap). This link can provide more information [here](https://www.ibm.com/docs/en/cloud-paks/cp-security/1.8?topic=providers-configuring-ldap-authentication).  
 
 ## Run using IBM Cloud Schematics
 

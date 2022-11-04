@@ -2,7 +2,7 @@
 
 This Terraform Module installs the [**IBM Automation Foundation**](https://www.ibm.com/docs/en/automationfoundation/1.0_ent) on an Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/iaf`
+**Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/iaf`
 
 - [Terraform Module to install IBM Automation Foundation](#terraform-module-to-install-ibm-automation-foundation)
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
@@ -34,7 +34,7 @@ provider "ibm" {
 
 NOTE: an OpenShift cluster is required to install the cloud pak. This can be an existing cluster or can be provisioned in the Terraform script.
 
-To provision a new cluster, refer [here](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script. The recommended size for an OpenShift (required) cluster on IBM Cloud Classic contains `4` workers of type `b3c.16x64` (classic) or `bx2.16x64` (vpc), however read the [IBM Automation Foundation](https://www.ibm.com/docs/en/automationfoundation/1.0_ent?topic=installing-system-requirements) documentation to confirm these parameters.
+To provision a new cluster, refer [here](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script. The recommended size for an OpenShift (required) cluster on IBM Cloud Classic contains `4` workers of type `b3c.16x64` (classic) or `bx2.16x64` (vpc), however read the [IBM Automation Foundation](https://www.ibm.com/docs/en/automationfoundation/1.0_ent?topic=installing-system-requirements) documentation to confirm these parameters.
 
 Add the following code to get the OpenShift cluster (new or existing) configuration:
 
@@ -67,11 +67,11 @@ Output:
 
 ### Provisioning the IAF Module
 
-Use a `module` block assigning `source` to `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/iaf`. Then set the [input variables](#input-variables) required to install Automation Foundation. Refer [here](../../examples/iaf) for an example:
+Use a `module` block assigning `source` to `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/iaf`. Then set the [input variables](#input-variables) required to install Automation Foundation. Refer [here](../../examples/iaf) for an example:
 
 ```hcl
 module "iaf" {
-  source = "github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/iaf"
+  source = "github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/iaf"
   enable = true
 
   // ROKS cluster parameters:
@@ -102,7 +102,7 @@ module "iaf" {
 
 **NOTE** The boolean input variable `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
 
-For an example of how to put all this together, refer to our [IBM Automation Foundation Terraform script](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform/iaf).
+For an example of how to put all this together, refer to our [IBM Automation Foundation Terraform script](https://github.com/ibm-build-lab/cloud-pak-sandboxes/tree/master/terraform/iaf).
 
 ## Testing
 

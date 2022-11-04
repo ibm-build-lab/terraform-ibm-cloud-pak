@@ -1,7 +1,7 @@
 
 # Terraform Module to install and configure IBM Secure Directory Server on a Classic Virtual Server Instance
 
-**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/ldap`
+**Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/ldap`
 
 ## Set up access to IBM Cloud
 

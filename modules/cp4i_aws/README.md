@@ -2,7 +2,7 @@
 
 This Terraform Module installs **Cloud Pak for Integration** on an Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4i_aws`
+**Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4i_aws`
 
 - [Terraform Module to install Cloud Pak for Integration](#terraform-module-to-install-cloud-pak-for-integration)
   - [Provisioning this module in a Terraform Script](#provisioning-this-module-in-a-terraform-script)
@@ -23,15 +23,15 @@ NOTE: an OpenShift cluster is required to install the Cloud Pak. This can be an 
 
 ### Setting up Portworx
 
-NOTE: This module requires Portworx on AWS. To see how to add Portworx, please check this [link](https://github.com/ibm-hcbt/terraform-ibm-cloud-pak/tree/main/modulesportworx_aws)
+NOTE: This module requires Portworx on AWS. To see how to add Portworx, please check this [link](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modulesportworx_aws)
 
 ### Using the CP4I Module
 
-Use a `module` block assigning the `source` parameter to the location of this module `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4i`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Integration.
+Use a `module` block assigning the `source` parameter to the location of this module `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4i`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Integration.
 
 ```hcl
 module "cp4i" {
-  source          = "github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//modules/cp4i_aws"
+  source          = "github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4i_aws"
   enable          = true
 
   // ROKS cluster parameters:
@@ -56,7 +56,7 @@ module "cp4i" {
 
 **NOTE** The boolean input variable `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
 
-For an example of how to put all this together, refer to our [Cloud Pak for Integration Terraform script](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform/cp4int).
+For an example of how to put all this together, refer to our [Cloud Pak for Integration Terraform script](https://github.com/ibm-build-lab/cloud-pak-sandboxes/tree/master/terraform/cp4int).
 
 ## Executing the Terraform Script
 
