@@ -17,11 +17,11 @@ Based on [cpd-deployment](https://github.com/IBM/cp4d-deployment/tree/master/exi
 
 ### Installing the CP4Data Module
 
-Use a `module` block assigning `source` to `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4data_4.0.1_aws`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Data.
+Use a `module` block assigning `source` to `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//cp4d_4.0/modules/cp4data_4.0_aws`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Data.
 
 ```hcl
 module "cp4data" {
-  source                    = "./.."
+  source                    = "github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//cp4d_4.0/modules/cp4data_4.0_aws"
   openshift_api             = var.openshift_api
   openshift_username        = var.openshift_username
   openshift_password        = var.openshift_password
