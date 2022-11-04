@@ -43,7 +43,7 @@ entitled_registry_user_email = "************"
 | Name                       | Description                                                            | Default                | Required |
 | ---------------------------|------------------------------------------------------------------------|------------------------|----------|
 | `ibmcloud_api_key`         | IBM Cloud API key: https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key                                                    |                        | Yes      |
-| `resource_group`           | Region where the cluster is created. Managing resource groups: https://cloud.ibm.com/docs/account?topic=account-rgs&interface=ui | `cloud-pak-sandbox` | Yes      |
+| `resource_group`           | Region where the cluster is created. Managing resource groups: https://cloud.ibm.com/docs/account?topic=account-rgs&interface=ui | `Default` | Yes      |
 | `region`                   | Region code: https://cloud.ibm.com/docs/codeengine?topic=codeengine-regions                                                            | `us-south`             | No       |
 | `cluster_id`               | Add cluster id to install the Cloud Pak on.   |          |   No   |
 | `cluster_config_path`      | Path to the cluster configuration file to access your cluster          | `./.kube/config`        |   No     |
