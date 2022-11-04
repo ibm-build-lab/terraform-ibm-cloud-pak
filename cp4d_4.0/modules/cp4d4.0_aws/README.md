@@ -87,7 +87,6 @@ module "cp4data" {
 | `master_data_management`      | Install Master Data Management module. By default it's not installed.                                                                                                                                                         | `{ "enable" : "no", "version" : "4.0.1", "channel" : "v1.1" }`                     | No       |
 | `decision_optimization`      | Install Decision Optimization module. By default it's not installed.                                                                                                                                                         | `{ "enable" : "no", "version" : "4.0.1", "channel" : "v4.0" }`                     | No       |
 
-**NOTE** The boolean input variable `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
 
 For an example of how to put all this together, refer to our [Cloud Pak for Data Terraform script](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform/cp4data).
 
