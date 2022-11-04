@@ -4,7 +4,7 @@ This Terraform Module installs **Cloud Pak for Data** on an Openshift cluster on
 
 Based on [cpd-deployment](https://github.com/IBM/cp4d-deployment/tree/master/existing-openshift) opensource project.
 
-**Module Source**: `github.com/ibm-hcbt/terraform-ibm-cloud-pak.git//cp4d_4.0/modules`
+**Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//cp4d_4.0/modules`
 
 - [Terraform Module to install Cloud Pak for Data](#terraform-module-to-install-cloud-pak-for-data)
   - [Installing the CP4Data Module](#installing-the-cp4data-module)
@@ -88,7 +88,7 @@ module "cp4data" {
 | `decision_optimization`      | Install Decision Optimization module. By default it's not installed.                                                                                                                                                         | `{ "enable" : "no", "version" : "4.0.1", "channel" : "v4.0" }`                     | No       |
 
 
-For an example of how to put all this together, refer to our [Cloud Pak for Data Terraform script](https://github.com/ibm-hcbt/cloud-pak-sandboxes/tree/master/terraform/cp4data).
+For an example of how to put all this together, refer to our [Cloud Pak for Data Terraform script](https://github.com/ibm-build-lab/cloud-pak-sandboxes/tree/master/terraform/cp4data).
 
 ## Executing the Terraform Script
 
