@@ -24,19 +24,14 @@ data "ibm_container_cluster_config" "cluster_config" {
 
 // Module:
 module "cp4na" {
-  source = "./.."
+  source = "./module"
   enable = var.enable
 
   // ROKS cluster parameters:
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
 
 
-
   // Entitled Registry parameters:
   entitled_registry_key        = var.entitled_registry_key
   entitled_registry_user_email = var.entitled_registry_user_email
-
-  // LDAP configuration
-  ldap_user_id = var.ldap_user_id
-  ldap_status  = var.ldap_status
 }

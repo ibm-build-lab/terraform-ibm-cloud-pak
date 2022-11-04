@@ -1,4 +1,4 @@
-# Example to provision CP4I Terraform Module
+# Example to provision CP4NA Terraform Module
 
 ## Run using IBM Cloud Schematics
 
@@ -15,7 +15,6 @@ Set the desired values in the `terraform.tfvars` file:
 ```hcl
   cluster_id            = "******************"
   region                = "ca-tor"
-  storageclass          = "ibmc-file-gold-gid"
   resource_group_name   = "Default"
   entitled_registry_key = "******************"
   entitled_registry_user_email = "john.doe@email.com"
@@ -24,7 +23,6 @@ Set the desired values in the `terraform.tfvars` file:
 These parameters are:
 
 - `cluster_id`: ID of the cluster to install cloud pak on
-- `storageclass`: Storage Class to use
 - `region`: The region that the cluster is provisioned in
 - `resource_group_name`: Resource group that the cluster is provisioned in
 - `entitled_registry_key`: Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable
