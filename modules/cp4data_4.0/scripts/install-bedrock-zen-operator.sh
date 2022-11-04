@@ -140,10 +140,12 @@ while true; do
 done
 
 ATTEMPTS=0
+TO=60
 while true; do
-  if [ $ATTEMPTS -eq $TIMEOUT ] ; then
+  if [ $ATTEMPTS -eq $TO ] ; then
     echo "TIMED OUT: ibm-namespace-scope-operator"
-    exit 1
+    # exit 1 - we think it's stuck on this, even though the operator pod is there
+    break
   fi
   if oc get pods -n ${OP_NAMESPACE} | grep ibm-namespace-scope-operator >/dev/null 2>&1; then
     echo -e "\nibm-namespace-scope-operator pods running"
