@@ -29,9 +29,9 @@ roks_version            = "<cluster version>"
 
 // ODF Parameters
 monSize = "20Gi"
-monStorageClassName = "ibmc-vpc-block-10iops-tier"
-osdStorageClassName = "ibmc-vpc-block-10iops-tier"
-osdSize = "200Gi"
+monStorageClassName = "ibmc-vpc-block-metro-10iops-tier"
+osdStorageClassName = "ibmc-vpc-block-10iops-ibmc-vpc-block-metro-10iops-tier"
+osdSize = "250Gi"
 numOfOsd = 1
 billingType = "advanced"
 ocsUpgrade = false
