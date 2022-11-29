@@ -7,12 +7,21 @@ locals {
     roks_version = var.roks_version,
     monSize = var.monSize,
     monStorageClassName = var.monStorageClassName,
-    osdStorageClassName = var.osdStorageClassName,
+    monDevicePaths = var.monDevicePaths,
+    autoDiscoverDevices = var.autoDiscoverDevices,
     osdSize = var.osdSize,
+    osdStorageClassName = var.osdStorageClassName,
+    osdDevicePaths = var.osdDevicePaths,
     numOfOsd = var.numOfOsd, 
     billingType = var.billingType,
     ocsUpgrade = var.ocsUpgrade,
-    clusterEncryption = var.clusterEncryption
+    clusterEncryption = var.clusterEncryption,
+    hpcsEncryption = var.hpcsEncryption,
+    hpcsServiceName = var.hpcsServiceName,
+    hpcsInstanceId = var.hpcsInstanceId,
+    hpcsBaseUrl = var.hpcsBaseUrl,
+    hpcsTokenUrl = var.hpcsTokenUrl,
+    hpcsSecretName = var.hpcsSecretName
   })
 }
 
@@ -31,6 +40,7 @@ resource "null_resource" "enable_odf" {
     environment = {
       IC_API_KEY = var.ibmcloud_api_key
       CLUSTER = var.cluster
+      ROKS_VERSION = var.roks_version
       ODF_CR_CONTENT = local.installation_content
     }
   }

@@ -1,17 +1,13 @@
 
-# Terraform Module to install and configure IBM Secure Directory Server on a Classic Virtual Server Instance
+# Example to provision LDAP Terraform Module
 
-**Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/ldap`
+### 1. Clone the repo
 
-## Set up access to IBM Cloud
+```bash
+git clone https://github.com/ibm-build-lab/terraform-ibm-cloud-pak
+```
 
-If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
-
-Go [here](../../CREDENTIALS.md) for details.
-
-### Download required license files
-
-Download required license files from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `./files` folder
+### 2. Download required license files from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `terraform-ibm-cloud-pak/modules/ldap/files` folder
 
 ```console
 DB2:
@@ -23,15 +19,49 @@ Part Number : CRV3IML
 Filename : sds64-premium-feature-act-pkg.zip
 ```
 
-### Update the ldif file
+### 3. Update the ldif file
 
-Update the `./files/cp.ldif` file as needed to change the Directory Structure and user information. For information on LDIF format, go [here](https://www.ibm.com/docs/en/i/7.4?topic=reference-ldap-data-interchange-format-ldif)
+Update the `terraform-ibm-cloud-pak/modules/ldap/files/cp.ldif` file as needed to change the Directory Structure and user information.  For information on LDIF format, go [here](https://www.ibm.com/docs/en/i/7.4?topic=reference-ldap-data-interchange-format-ldif)
 
-## Provisioning this module in a Terraform Script
+### 4. Execute the example
 
-See the example [here](./examples/README.md) on how to provision this module.
+For instructions to run using the local Terraform Client on your local machine go [here](../../Using_Terraform.md).
 
-## Input Variables
+- cd into the `terraform-ibm-cloud-pak/modules/ldap/example` directory
+
+- Set required values in a `terraform.tfvars` file.  Here are some examples:
+
+  ```bash
+  ibmcloud_api_key      = "*******************"
+  iaas_classic_api_key  = "*******************"
+  iaas_classic_username = "******"
+  region                = "us-south"
+  os_reference_code     = "CentOS_7_64"
+  datacenter            = "dal12"
+  hostname              = "ldapvm"
+  ibmcloud_domain       = "ibm.cloud" 
+  cores                 = 2
+  memory                = 4096
+  disks                 = [25]
+  hourly_billing        = true
+  local_disk            = true
+  private_network_only  = false
+  ldapBindDN            = "cn=root"
+  ldapBindDNPassword    = "Passw0rd"
+  ```
+
+- Execute the following Terraform commands:
+
+```bash
+terraform init
+terraform plan
+terraform apply --auto-approve
+```
+
+For instructions to run using the IBM Schematics service on the cloud go [here](../../Using_Schematics.md).
+
+## Inputs
+
 
 | Name                    | Description                                                                                                                                                                                                 | Default | Required |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | -------- |
@@ -53,57 +83,41 @@ See the example [here](./examples/README.md) on how to provision this module.
 | `local_disk`            | The disk type for the instance. When set to `true`, the disks for the computing instance are provisioned on the host that the instance runs. Otherwise, SAN disks are provisioned. The default value is `true`. | `true`  | No      |
 | `ldapBindDN`            | LDAP Bind DN (https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-connector-ldap-cp4d)     | `true`  | Yes      |
 | `ldapBindDNPassword`    | LDAP Bind DN password (https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-connector-ldap-cp4d)      |         | Yes      |
-
-### Executing the Terraform Script
-
-Execute the following Terraform commands:
-
-```bash
-cd ./example
-terraform init
-terraform plan
-terraform apply --auto-approve
-```
-
-### Verify
-
-If LDAP is successful, you should see
-
-```console
-ibm_compute_vm_instance.cp4baldap (remote-exec): Start LDAP complete
-CLASSIC_IP_ADDRESS = "***.**.***.***"
-```
-
-displayed after the process is complete.
-
+  
 ## Outputs
 
-| Name                 | Description    |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `CLASSIC_IP_ADDRESS` | Note: The LDAP server should not be exposed in the Public interface using port 389. Configure the appropriate Security Groups required for the Server. For more information on how to manage Security Groups visit : https://cloud.ibm.com/docs/security-groups?topic=security-groups-managing-sg |
+Verify that the message: "ibm_compute_vm_instance.cp4ba ldap (remote-exec): Start LDAP complete" is displayed and a Public IP created after the process is complete.
 
-A public and private key are created locally to access the Virtual Machine
+| Name                 | Description                                                                                                                                |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `ldap_id` | ID for the LDAP server |
+| `ldap_ip_address` | IP address for LDAP server. Note: The LDAP server should not be exposed in the Public interface using port 389. Configure the appropriate Security Groups required for the Server. For more information on how to manage Security Groups visit : https://cloud.ibm.com/docs/security-groups?topic=security-groups-managing-sg |
+| `ldapBindDN` | Bind DN (https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-connector-ldap-cp4d) |
+| `ldapBindDNPassword` | Bind DN Password (https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-connector-ldap-cp4d) |
+
+### 5. Access the Virtual Machine
+
+A public and private key is created to access the Virtual Machine:
 
 ```console
 generated_key_rsa
 generated_key_rsa.pub
 ```
 
-use ssh to access the server providing the key files.
+use `ssh` to access the server providing the key files.
 
-```console
-ssh root@<CLASSIC_IP_ADDRESS> -k generated_key_rsa
+```bash
+ssh root@<ldap_ip_address> -k generated_key_rsa
 ```
+
+For more information on accessing the Virtual Machine, visit (https://cloud.ibm.com/docs/account?topic=account-mngclassicinfra)
 
 For more information on accessing the Virtual Machine, visit (https://cloud.ibm.com/docs/account?topic=account-mngclassicinfra)
 
 Apache Directory Studio can be used to access the server (see https://directory.apache.org/studio/download/download-macosx.html)
 
-### Clean up
+### 6. Cleanup
 
-When the project is complete, execute:
+When the project is complete, execute: `terraform destroy`.
 
-```bash
-cd ./example
-terraform destroy
-```
+
