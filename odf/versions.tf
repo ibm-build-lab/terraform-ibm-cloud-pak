@@ -4,5 +4,8 @@ terraform {
     ibm = {
       source  = "ibm-cloud/ibm"
     }
+    null = {
+      source = "hashicorp/null"
+    }
   }
 }

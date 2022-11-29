@@ -1,11 +1,10 @@
-variable "cluster" {
-  type = string
-  description = "Cluster name on which ODF is to be enabled"
+variable "ibmcloud_api_key" {
+  description = "Get the ibmcloud api key from https://cloud.ibm.com/iam/apikeys"
 }
 
-variable "ibmcloud_api_key" {
-  type = string
-  description = "IBM Cloud API key (https://cloud.ibm.com/docs/account?topic=account-userapikey#create_user_key)"
+variable "cluster" {
+    description = "The id of the cluster"
+    type = string
 }
 
 variable "roks_version" {
@@ -55,7 +54,7 @@ variable "clusterEncryption" {
 }
 
 # variable "workerNodes" {
-#   description = "**Optional**: Enter the node names for the worker nodes that you want to use for your ODF deployment. Don't specify this parameter if you want to use all the worker nodes in your cluster."
+#   description = "Optional: Enter the node names for the worker nodes that you want to use for your ODF deployment. Don't specify this parameter if you want to use all the worker nodes in your cluster."
 # }
 
 # Options available for Openshift 4.7 only. Run command `ibmcloud oc cluster addon options --addon openshift-data-foundation --version 4.7.`

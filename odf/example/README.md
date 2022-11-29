@@ -1,16 +1,12 @@
-# Terraform Module to install Openshift Data Foundation on a VPC cluster
+# OpenShift Data Foundation Terraform Module Example
 
-This Terraform Module installs the **ODF Service** on an Openshift (ROKS) cluster on IBM Cloud.
+## 1. Set up access to IBM Cloud
 
-A ROKS cluster is required with at least three worker nodes. Each worker node must have a minimum of 16 CPUs and 64 GB RAM. https://cloud.ibm.com/docs/openshift?topic=openshift-deploy-odf-vpc for more information.
+If running this module from your local terminal, you need to set the credentials to access IBM Cloud.
 
-**Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/odf`
+You can define the IBM Cloud credentials in the IBM provider block but it is recommended to pass them in as environment variables.
 
-## Set up access to IBM Cloud
-
-If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
-
-Go [here](../CREDENTIALS.md) for details.
+Go [here](../../CREDENTIALS.md) for details.
 
 You also need to install the [IBM Cloud cli](https://cloud.ibm.com/docs/cli?topic=cli-install-ibmcloud-cli) as well as the [OpenShift cli](https://cloud.ibm.com/docs/openshift?topic=openshift-openshift-cli)
 
@@ -18,46 +14,41 @@ Make sure you have the latest updates for all IBM Cloud plugins by running `ibmc
 
 **NOTE**: These requirements are not required if running this Terraform code within an **IBM Cloud Schematics** workspace. They are automatically set from your account.
 
-## Provisioning this module in a Terraform Script
+## 2. Test
 
-NOTE: an OpenShift cluster is required to install this ODF service. This can be an existing cluster or can be provisioned in the Terraform script.
+### Using Terraform client
 
-To provision a new cluster, refer [here](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script.
+Follow these instructions to test the Terraform Module manually
 
-### Provisioning the ODF Module
-
-Use a `module` block assigning `source` to `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/odf`. Then set the [input variables](#input-variables) required to install the ODF service.
+Create a file `terraform.tfvars` with the following input variables:
 
 ```hcl
-provider "ibm" {
-}
+ibmcloud_api_key        = "<api-key>"
+cluster                 = "<cluster-id>"
+roks_version            = "<cluster version, i.e. 4.7, 4.8, 4.9, 4.10>"
 
-// Module:
-module "odf" {
-  source = "github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/odf"
-  cluster = var.cluster
-  ibmcloud_api_key = var.ibmcloud_api_key
-  roks_version = var.roks_version
-
-  // ODF parameters
-  monSize = var.monSize
-  monStorageClassName = var.monStorageClassName
-  monDevicePaths = var.monDevicePaths
-  autoDiscoverDevices = var.autoDiscoverDevices
-  osdStorageClassName = var.osdStorageClassName
-  osdSize = var.osdSize
-  osdDevicePaths = var.osdDevicePaths
-  numOfOsd = var.numOfOsd
-  billingType = var.billingType
-  ocsUpgrade = var.ocsUpgrade
-  clusterEncryption = var.clusterEncryption
-  hpcsEncryption = var.hpcsEncryption
-  hpcsServiceName = var.hpcsServiceName
-  hpcsInstanceId = var.hpcsInstanceId
-  hpcsBaseUrl = var.hpcsBaseUrl
-  hpcsTokenUrl = var.hpcsTokenUrl
-  hpcsSecretName = var.hpcsSecretName
-}
+// ODF Parameters
+// OpenShift version 4.7 only options
+monSize = "20Gi"
+monStorageClassName = "ibmc-vpc-block-10iops-tier"
+monDevicePaths = ""
+// OpenShift version 4.8+ only options
+autoDiscoverDevices = var.autoDiscoverDevices
+// OpenShift version 4.7+ options
+osdStorageClassName = "ibmc-vpc-block-10iops-tier"
+osdSize = "250Gi"
+osdDevicePaths = ""
+numOfOsd = 1
+billingType = "advanced"
+ocsUpgrade = false
+clusterEncryption = false
+// OpenShift version 4.10+ options
+hpcsEncryption = false
+hpcsServiceName = ""
+hpcsInstanceId = ""
+hpcsBaseUrl = ""
+hpcsTokenUrl = ""
+hpcsSecretName = ""
 ```
 
 ## Input Variables
@@ -83,20 +74,9 @@ module "odf" {
 | `hpcsInstanceId`                   | Enter your Hyper Protect Crypto Services instance ID. For example: d11a1a43-aa0a-40a3-aaa9-5aaa63147aaa |  | No (Only available for roks version 4.10)    |
 | `hpcsSecretName`                   | Enter the name of the secret that you created by using your Hyper Protect Crypto Services credentials. For example: ibm-hpcs-secret |  | No (Only available for roks version 4.10)    |
 | `hpcsBaseUrl`                   | Enter the public endpoint of your Hyper Protect Crypto Services instance. For example: https://api.eu-gb.hs-crypto.cloud.ibm.com:8389 |  | No (Only available for roks version 4.10)    |
-| `workerNodes` | **Optional**: array of node names for the worker nodes that you want to use for your ODF deployment. This parameter is by default not specified, so ODF will use all the worker nodes in the cluster. To add this to the module, uncomment it from the `variables.tf` file, add it to the `spec` section in `templates/install_odf.yaml.tmpl` and in the `templatefile` call in `main.tf` | | No
+| `workerNodes` | **Optional**: array of node names for the worker nodes that you want to use for your ODF deployment. This parameter is by default not specified, so ODF will use all the worker nodes in the cluster. To add this to the module, uncomment it from the `../variables.tf` file, add it to the `spec` section in `../templates/install_odf.yaml.tmpl` and in the `templatefile` call in `../main.tf`. To add it to this example, uncomment it from the `variables.tf` file, and add it to the call to the module in `./main.tf`. | | No
 
-## Output Variable
-
-| Name                           | Description                                                                                                                                                                                                                | 
-| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `odf_is_ready`                       | Flag set when ODF has completed its install.  Used when adding this with other modules |
-
-For an example of how to put all this together, refer to our [OpenShift Data Foundation Terraform Example](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/examples/odf).
-
-
-## Executing the Terraform Script
-
-Run the following commands to execute the TF script (containing the modules to create/use ROKS and ODF). Execution may take about 5-15 minutes:
+Execute the following Terraform commands:
 
 ```bash
 terraform init
@@ -104,7 +84,27 @@ terraform plan
 terraform apply -auto-approve
 ```
 
-## Clean up
+## 3. Verify
+
+To verify installation on the Openshift cluster you need `oc`, then execute:
+
+After the service shows as active in the IBM Cloud resource view, verify the deployment:
+
+    ibmcloud oc cluster addon ls -c <cluster_name>
+
+This should display something like the following:
+
+    openshift-data-foundation                 4.10.0     Normal     Addon Ready
+    
+Verify that the ibm-ocs-operator-controller-manager-***** pod is running in the kube-system namespace.
+
+    oc get pods -A | grep ibm-ocs-operator-controller-manager
+
+This should produce output like:
+
+    kube-system              ibm-ocs-operator-controller-manager-58fcf45bd6-68pq5              1/1     Running            0          5d22h
+
+## 4. Cleanup
 
 When the cluster is no longer needed, run `terraform destroy` if this was created using your local Terraform client with `terraform apply`. 
 
@@ -122,6 +122,4 @@ terraform destroy -target null_resource.enable_odf
 This will disable the ODF on the cluster
 
 Once this completes, execute: `terraform destroy` if this was create locally using Terraform or remove the Schematic's workspace.
-
-
 
