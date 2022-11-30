@@ -104,7 +104,29 @@ Verify that the message: "ibm_compute_vm_instance.cp4ba ldap (remote-exec): Star
 | `ldapBindDN` | Bind DN (https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-connector-ldap-cp4d) |
 | `ldapBindDNPassword` | Bind DN Password (https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-connector-ldap-cp4d) |
 
-### 5. Access the Virtual Machine
+### Executing the Terraform Script
+
+Execute the following Terraform commands:
+
+```bash
+cd ./example
+terraform init
+terraform plan
+terraform apply --auto-approve
+```
+
+### Verify
+
+If LDAP is successful, you should see
+
+```console
+ibm_compute_vm_instance.cp4baldap (remote-exec): Start LDAP complete
+CLASSIC_IP_ADDRESS = "***.**.***.***"
+```
+
+displayed after the process is complete.
+
+## Access the Virtual Machine
 
 A public and private key is created to access the Virtual Machine:
 
