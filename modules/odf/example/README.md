@@ -1,8 +1,8 @@
 # OpenShift Data Foundation Terraform Module Example
 
-NOTE: an OpenShift VPC cluster is required to install this module. This can be an existing cluster or can be provisioned using our [roks](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks) Terraform module.
+**NOTE:** an OpenShift VPC cluster is required to install this module. This can be an existing cluster or can be provisioned using our [roks](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks) Terraform module.
 
-## Execution of example
+## Execution
 
 ### Run using IBM Cloud Schematics
 
