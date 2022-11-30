@@ -11,7 +11,7 @@ data "ibm_resource_group" "group" {
 resource "null_resource" "mkdir_kubeconfig_dir" {
   triggers = { always_run = timestamp() }
   provisioner "local-exec" {
-    command = "mkdir -p ${var.kube_config_path}"
+    command = "mkdir -p ${var.cluster_config_path}"
   }
 }
 
@@ -19,13 +19,13 @@ data "ibm_container_cluster_config" "cluster_config" {
   depends_on        = [null_resource.mkdir_kubeconfig_dir]
   cluster_name_id   = var.cluster_id
   resource_group_id = data.ibm_resource_group.group.id
-  config_dir        = var.kube_config_path
+  config_dir        = var.cluster_config_path
 }
 
 // Module:
 
 module "portworx" {
-  source = "./.."
+  source = "../modules/portworx_ibm"
   enable = true
 
   ibmcloud_api_key = var.ibmcloud_api_key
@@ -35,7 +35,7 @@ module "portworx" {
   worker_nodes     = var.worker_nodes // Number of workers
 
   // Storage parameters
-  install_storage  = var.install_storage
+  install_storage  = true
   storage_capacity = var.storage_capacity // In GBs
   storage_iops     = var.storage_iops     // Must be a number, it will not be used unless a storage_profile is set to a custom profile
   storage_profile  = var.storage_profile
@@ -51,13 +51,7 @@ module "portworx" {
   create_external_etcd = var.create_external_etcd
   etcd_username        = var.etcd_username
   etcd_password        = var.etcd_password
-  etcd_secret_name     = var.etcd_secret_name
+  // Defaulted.  Don't change
+  etcd_secret_name = "px-etcd-certs"
 }
 
-// Kubeconfig downloaded by this module
-output "config_file_path" {
-  value = data.ibm_container_cluster_config.cluster_config.config_file_path
-}
-output "cluster_config" {
-  value = data.ibm_container_cluster_config.cluster_config
-}

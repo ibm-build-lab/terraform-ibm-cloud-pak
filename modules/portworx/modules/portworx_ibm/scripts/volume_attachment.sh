@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ibmcloud api cloud.ibm.com
-ibmcloud login -q --apikey ${IBMCLOUD_API_KEY}
+ibmcloud login -q --apikey ${IBMCLOUD_API_KEY} -r ${REGION} -g ${RESOURCE_GROUP_ID}
 export TOKEN=$(ibmcloud iam oauth-tokens --output json | jq -r '.iam_token')
 
 # Before creating, check to see if attachment for volume is already present
