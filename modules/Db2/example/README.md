@@ -51,7 +51,7 @@ db2_rwo_storage_class        = "ibmc-vpc-block-10iops-tier"
 | `db2_admin_user_password`  | Db2 admin password                          |                        |   Yes    |
 | `db2_standard_license_key` | The standard license key for the Db2 database product. **Note**: The license key is required only for an Advanced DB2 installation.|                       |   No    |
 | `operatorVersion`          | The version of the Db2 Operator. [Db2 Operators and their Associated Db2 Engines](https://www.ibm.com/docs/en/db2/11.5?topic=deployments-db2-red-hat-openshift)  |`db2u-operator.v2.0.0` |   Yes    |
-| `operatorChannel`          | The Operator Channel performs rollout update when new release is available.|   `v1.1`           |   No    |
+| `operatorChannel`          | The Operator Channel performs rollout update when new release is available.|   `v2.0`           |   No    |
 | `db2_instance_version`     | The version of the logical environment for Db2 Database Manager        |`11.5.7.0-cn5`              |   No     |
 | `db2_cpu`                  | CPU setting for the pod requests and limits                            |   `4`                 |   No    |
 | `db2_memory`               | Memory setting for the pod requests and limits                         |  `16Gi`               |   No    |
