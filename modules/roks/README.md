@@ -8,7 +8,6 @@ This Terraform Module creates an Openshift (ROKS) cluster on IBM Cloud Classic o
   - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
   - [Building a new ROKS cluster](#building-a-new-roks-cluster)
   - [Input Variables](#input-variables)
-  - [Executing the module](#executing-the-module)
   - [Output Variables](#output-variables)
   - [Accessing the cluster](#accessing-the-cluster)
   - [Clean up](#clean-up)
@@ -111,17 +110,6 @@ The Terraform script requires the following list of input variables. Here are so
 | `workers_count`        | Array with the amount of workers on each workers group. On Classic it's only possible to have one workers group, so only the first number in the list is taken for the cluster size. Example: `[1, 3, 5]` or `[2]`   | `[2]`            | No       |
 | `force_delete_storage` | If set to `true`, force the removal of persistent storage associated with the cluster during cluster deletion. Default value is `true`.                                                             | `true`          | No       |
 
-
-## Executing the module
-
-After setting all the input parameters, execute the following commands to create the cluster (may take about 30 minutes):
-
-```bash
-cd example
-terraform init
-terraform plan
-terraform apply
-```
 
 ## Output Variables
 
