@@ -12,7 +12,7 @@ Each worker node must have a minimum of 16 CPUs and 64 GB RAM. https://cloud.ibm
 
 For an example of how to provision and execute this module, go [here](./example).
 
-## Input Variables
+## Inputs
 
 | Name                           | Description                                                                                                                                                                                                                | Default | Required |
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | -------- |
@@ -37,30 +37,10 @@ For an example of how to provision and execute this module, go [here](./example)
 | `hpcsBaseUrl`                   | Enter the public endpoint of your Hyper Protect Crypto Services instance. For example: https://api.eu-gb.hs-crypto.cloud.ibm.com:8389 |  | No (Only available for roks version 4.10)    |
 | `workerNodes` | **Optional**: array of node names for the worker nodes that you want to use for your ODF deployment. This parameter is by default not specified, so ODF will use all the worker nodes in the cluster. To add this to the module, uncomment it from the `variables.tf` file, add it to the `spec` section in `templates/install_odf.yaml.tmpl` and in the `templatefile` call in `main.tf` | | No
 
-## Output Variable
+## Outputs
 
 | Name                           | Description                                                                                                                                                                                                                | 
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `odf_is_ready`                       | Flag set when ODF has completed its install.  Used when adding this with other modules |
-
-## Clean up
-
-When the cluster is no longer needed, run `terraform destroy` if this was created using your local Terraform client with `terraform apply`. 
-
-If this cluster was created using `schematics`, just delete the schematics workspace and specify to delete all created resources.
-
-<b>For ODF:</b>
-
-To uninstall ODF and its dependencies from a cluster, execute the following commands:
-
-While logged into the cluster
-
-```bash
-terraform destroy -target null_resource.enable_odf
-```
-This will disable the ODF on the cluster
-
-Once this completes, execute: `terraform destroy` if this was create locally using Terraform or remove the Schematic's workspace.
-
 
 
