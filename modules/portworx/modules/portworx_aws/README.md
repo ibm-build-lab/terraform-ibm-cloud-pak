@@ -62,18 +62,7 @@ module "portworx" {
 | `px_enable_csi`                | Enable CSI on PX  | `true` | No       |
 
 
-For an example of how to put all this together, refer to the `/testing` directory.
-
-
-## Executing the Terraform Script
-
-Run the following commands to execute the TF script (containing the modules to create/use ROKS and Portworx). Execution may take about 5-15 minutes:
-
-```bash
-terraform init
-terraform plan
-terraform apply -auto-approve
-```
+For an example of how to put all this together, refer to the `/testing` directory
 
 ## Clean up
 
