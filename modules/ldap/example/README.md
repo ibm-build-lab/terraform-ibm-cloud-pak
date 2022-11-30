@@ -27,9 +27,15 @@ Update the `terraform-ibm-cloud-pak/modules/ldap/files/cp.ldif` file as needed t
 
 ## Execute the example
 
-For instructions to execute using the **IBM Schematics** service on the cloud go [here](../../../Using_Schematics.md).
+### Run using IBM Cloud Schematics
 
-For instructions to set up and execute using the **Terraform Client** on your local machine go [here](../../../Using_Terraform.md).
+For instructions to run these examples using IBM Schematics go [here](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/blob/main/Using_Schematics.md)
+
+For more information on IBM Schematics, refer [here](https://cloud.ibm.com/docs/schematics?topic=schematics-get-started-terraform).
+
+### Run using local Terraform Client
+
+For instructions to run using the local Terraform Client on your local machine go [here](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/blob/main/Using_Terraform.md). 
 
 For local execution:
 - cd into the `terraform-ibm-cloud-pak/modules/ldap/example` directory
