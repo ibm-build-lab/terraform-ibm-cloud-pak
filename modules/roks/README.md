@@ -6,7 +6,7 @@ This Terraform Module creates an Openshift (ROKS) cluster on IBM Cloud Classic o
 
 ## Building a new ROKS cluster
 
-An example of how to provision this module is located [here](./example)
+An example of how to provision and execute this module is located [here](./example)
 
 ## Input Variables
 
