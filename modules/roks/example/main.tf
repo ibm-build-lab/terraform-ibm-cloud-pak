@@ -8,7 +8,7 @@ provider "kubernetes" {
 }
 
 module "cluster" {
-  source = "./module"
+  source = "./.."
   enable = local.enable
   on_vpc = var.on_vpc
 
@@ -22,8 +22,8 @@ module "cluster" {
   force_delete_storage = var.force_delete_storage
 
   // Parameters for the Workers
-  flavors       = var.flavors
-  workers_count = var.workers_count
+  flavors              = var.flavors
+  workers_count        = var.workers_count
   // Classic only
   datacenter          = var.datacenter
   private_vlan_number = var.private_vlan_number

@@ -35,7 +35,7 @@ variable "resource_group" {
 }
 
 variable "roks_version" {
-  default     = "4.8"
+  default     = "4.10"
   description = "List available versions: ibmcloud ks versions"
 }
 
