@@ -43,19 +43,6 @@ For an example of how to provision and execute this module, go [here](./example)
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `odf_is_ready`                       | Flag set when ODF has completed its install.  Used when adding this with other modules |
 
-For an example of how to put all this together, refer to our [OpenShift Data Foundation Terraform Example](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/examples/odf).
-
-
-## Executing the Terraform Script
-
-Run the following commands to execute the TF script (containing the modules to create/use ROKS and ODF). Execution may take about 5-15 minutes:
-
-```bash
-terraform init
-terraform plan
-terraform apply -auto-approve
-```
-
 ## Clean up
 
 When the cluster is no longer needed, run `terraform destroy` if this was created using your local Terraform client with `terraform apply`. 
