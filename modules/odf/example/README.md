@@ -1,26 +1,20 @@
 # OpenShift Data Foundation Terraform Module Example
 
-## 1. Set up access to IBM Cloud
+NOTE: an OpenShift VPC cluster is required to install this module. This can be an existing cluster or can be provisioned using our [roks](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks) Terraform module.
 
-If running this module from your local terminal, you need to set the credentials to access IBM Cloud.
+## Execution of example
 
-You can define the IBM Cloud credentials in the IBM provider block but it is recommended to pass them in as environment variables.
+### Run using IBM Cloud Schematics
 
-Go [here](../../CREDENTIALS.md) for details.
+For instructions to run these examples using IBM Schematics go [here](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/blob/main/Using_Schematics.md)
 
-You also need to install the [IBM Cloud cli](https://cloud.ibm.com/docs/cli?topic=cli-install-ibmcloud-cli) as well as the [OpenShift cli](https://cloud.ibm.com/docs/openshift?topic=openshift-openshift-cli)
+For more information on IBM Schematics, refer [here](https://cloud.ibm.com/docs/schematics?topic=schematics-get-started-terraform).
 
-Make sure you have the latest updates for all IBM Cloud plugins by running `ibmcloud plugin update`.  
+### Run using local Terraform Client
 
-**NOTE**: These requirements are not required if running this Terraform code within an **IBM Cloud Schematics** workspace. They are automatically set from your account.
+For instructions to run using the local Terraform Client on your local machine go [here](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/blob/main/Using_Terraform.md). 
 
-## 2. Test
-
-### Using Terraform client
-
-Follow these instructions to test the Terraform Module manually
-
-Create a file `terraform.tfvars` with the following input variables:
+Create a file `terraform.tfvars` with the following input variables (these are examples):
 
 ```hcl
 ibmcloud_api_key        = "<api-key>"
@@ -51,6 +45,14 @@ hpcsTokenUrl = ""
 hpcsSecretName = ""
 ```
 
+Execute the following Terraform commands:
+
+```bash
+terraform init
+terraform plan
+terraform apply -auto-approve
+```
+
 ## Input Variables
 
 | Name                           | Description                                                                                                                                                                                                                | Default | Required |
@@ -76,15 +78,7 @@ hpcsSecretName = ""
 | `hpcsBaseUrl`                   | Enter the public endpoint of your Hyper Protect Crypto Services instance. For example: https://api.eu-gb.hs-crypto.cloud.ibm.com:8389 |  | No (Only available for roks version 4.10)    |
 | `workerNodes` | **Optional**: array of node names for the worker nodes that you want to use for your ODF deployment. This parameter is by default not specified, so ODF will use all the worker nodes in the cluster. To add this to the module, uncomment it from the `../variables.tf` file, add it to the `spec` section in `../templates/install_odf.yaml.tmpl` and in the `templatefile` call in `../main.tf`. To add it to this example, uncomment it from the `variables.tf` file, and add it to the call to the module in `./main.tf`. | | No
 
-Execute the following Terraform commands:
-
-```bash
-terraform init
-terraform plan
-terraform apply -auto-approve
-```
-
-## 3. Verify
+## Verify
 
 To verify installation on the Openshift cluster you need `oc`, then execute:
 
@@ -104,7 +98,7 @@ This should produce output like:
 
     kube-system              ibm-ocs-operator-controller-manager-58fcf45bd6-68pq5              1/1     Running            0          5d22h
 
-## 4. Cleanup
+## Cleanup
 
 When the cluster is no longer needed, run `terraform destroy` if this was created using your local Terraform client with `terraform apply`. 
 
