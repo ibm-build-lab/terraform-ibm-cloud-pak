@@ -2,112 +2,13 @@
 
 This Terraform Module installs the **Portworx Service** on an Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/portworx`
+**Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/portworx/modules/portworx_ibm`
 
-- [Terraform Module to install Portworx](#terraform-module-to-install-cloud-pak-for-multi-cloud-management)
-  - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
-  - [Provisioning this module in a Terraform Script](#provisioning-this-module-in-a-terraform-script)
-    - [Setting up the OpenShift cluster](#setting-up-the-openshift-cluster)
-    - [Installing Portworx Module](#provisioning-the-portworx-module)
-  - [Input Variables](#input-variables)
-  - [Executing the Terraform Script](#executing-the-terraform-script)
-  - [Clean up](#clean-up)
+**NOTE:** an OpenShift VPC cluster is required to install this module. This can be an existing cluster or can be provisioned using our [roks](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks) Terraform module.
 
-## Set up access to IBM Cloud
+## Provisioning the Portworx Module
 
-If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
-
-Go [here](../CREDENTIALS.md) for details.
-
-## Provisioning this module in a Terraform Script
-
-In your Terraform code define the `ibm` provisioner block with the `region`.
-
-```hcl
-provider "ibm" {
-  region     = "us-south"
-}
-
-provider "kubernetes" {
-  config_path = "~/.kube/config"
-}
-```
-
-### Setting up the OpenShift cluster
-
-NOTE: an OpenShift cluster is required to install this module. This can be an existing cluster or can be provisioned in the Terraform script.
-
-To provision a new cluster, refer [here](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script. 
-
-Add the following code to get the OpenShift cluster (new or existing) configuration:
-
-```hcl
-data "ibm_resource_group" "group" {
-  name = var.resource_group
-}
-
-resource "null_resource" "mkdir_kubeconfig_dir" {
-  triggers = { always_run = timestamp() }
-
-  provisioner "local-exec" {
-    command = "mkdir -p ./kube/config"
-  }
-}
-
-data "ibm_container_cluster_config" "cluster_config" {
-  cluster_name_id   = var.cluster_name_id
-  resource_group_id = data.ibm_resource_group.group.id
-  download          = true
-  config_dir        = "./kube/config"     // Create this directory in advance
-  admin             = false
-  network           = false
-}
-```
-
-Input:
-
-- `cluster_name_id`: either the cluster name or ID.
-
-- `ibm_resource_group`:  resource group where the cluster is running
-
-Output:
-
-`ibm_container_cluster_config` used as input for the `portworx` module.
-
-### Provisioning the Portworx Module
-
-Use a `module` block assigning `source` to `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/portworx`. Then set the [input variables](#input-variables) required to install the Portworx service.
-
-```hcl
-module "portworx" {
-  source = "github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/portworx"
-  enable = true
-  ibmcloud_api_key = "<api-key>"
-
-  // Cluster parameters
-  kube_config_path      = ".kube/config"
-  worker_nodes          = 2  // Number of workers
-
-  // Storage parameters
-  install_storage       = true
-  storage_capacity      = 200  // In GBs
-  storage_iops          = 10   // Must be a number, it will not be used unless a storage_profile is set to a custom profile
-  storage_profile       = "10iops-tier"
-
-  // Portworx parameters
-  resource_group_name   = "default"
-  region                = "us-east"
-  cluster_id            = "<cluster-id>"
-  unique_id             = "roks-px-tf"
-
-  // These credentials have been hard-coded because the 'Databases for etcd' service instance is not configured to have a publicly accessible endpoint by default.
-  // You may override these for additional security.
-  create_external_etcd  = false
-  etcd_username         = "portworxuser"
-  etcd_password         = "portworxpassword"
-  etcd_secret_name      = "px-etcd-certs" # don't change this
-}
-```
+For an example on how to provision and execute this module go [here](./example).
 
 ## Input Variables
 
@@ -130,20 +31,6 @@ module "portworx" {
 | `etcd_password`                | Password needed for etcd                         | `portworxpassword` | Yes |
 | `etcd_secret_name`             | Etcd secret name, do not change it from default  | `px-etcd-certs`    | Yes |
 
-
-**NOTE** The boolean input variable `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
-
-For an example of how to use this module, refer to our [Portworx Terraform example](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/examples/portworx).
-
-## Executing the Terraform Script
-
-Run the following commands to execute the TF script (containing the modules to create/use ROKS and Portworx). Execution may take about 5-15 minutes:
-
-```bash
-terraform init
-terraform plan
-terraform apply -auto-approve
-```
 
 ## Clean up
 
