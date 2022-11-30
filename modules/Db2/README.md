@@ -49,13 +49,14 @@ For an example on how to provision and execute this module go [here](./example/R
 | `db2_admin_username`       | Db2 default admin username                                             | `db2inst1`             |   Yes    |
 | `db2_admin_user_password`  | Db2 admin username defined in associated LDAP                          |                        |   Yes    |
 | `db2_standard_license_key` | The standard license key for the Db2 database product. **Note**: The license key is required only for an Advanced DB2 installation.|                       |   No    |
-| `operatorVersion`          | The version of the Db2 Operator. [Db2 Operators and their Associated Db2 Engines](https://www.ibm.com/docs/en/db2/11.5?topic=deployments-db2-red-hat-openshift) |`db2u-operator.v1.1.11` |   Yes    |
+| `operatorVersion`          | The version of the Db2 Operator. [Db2 Operators and their Associated Db2 Engines](https://www.ibm.com/docs/en/db2/11.5?topic=deployments-db2-red-hat-openshift) |`db2u-operator.v2.0.0` |   Yes    |
 | `operatorChannel`          | The Operator Channel performs rollout update when new release is available.|   `v1.1`           |   Yes    |
-| `db2_instance_version`     | The version of the logical environment for Db2 Database Manager        |`11.5.6.0`              |   No     |
-| `db2_cpu`                  | CPU setting for the pod requests and limits                            |   `16`                 |   Yes    |
+| `db2_instance_version`     | The version of the logical environment for Db2 Database Manager        |`11.5.7.0-cn5`              |   No     |
+| `db2_cpu`                  | CPU setting for the pod requests and limits                            |   `4`                 |   Yes    |
 | `db2_memory`               | Memory setting for the pod requests and limits                         |  `16Gi`                |   Yes    |
-| `db2_storage_size`         | Storage size for the db2 databases                                     |  `150Gi`               |   Yes    |
-| `db2_storage_class`        | Name for the Storage Class                                             | `ibmc-file-gold-gid`   |   No     |
+| `db2_storage_size`         | Storage size for the db2 databases                                     |  `100Gi`               |   Yes    |
+| `db2_rwx_storage_class`        | Name for the RWX Storage Class                                             | `ibmc-file-gold-gid`   |   No     |
+| `db2_rwo_storage_class`        | Name for the RWO Storage Class                                             | `ibmc-block-gold`   |   No     |
 | `entitled_registry_key`    | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
 | `entitled_registry_user_email`| IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key. i.e: joe@ibm.com |              | Yes      |
 
