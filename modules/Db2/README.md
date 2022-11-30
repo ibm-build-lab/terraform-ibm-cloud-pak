@@ -4,12 +4,6 @@ This Terraform Module installs **DB2** on an Openshift (ROKS) cluster on IBM Clo
 
 **Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/db2`
 
-## Set up access to IBM Cloud
-
-If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
-
-Go [here](../CREDENTIALS.md) for details.
-
 ## Resources Required
 -   1 worker node
 -   Cores: 5.7 (2 for the Db2 engine and 3.7 for Db2 auxiliary services)
