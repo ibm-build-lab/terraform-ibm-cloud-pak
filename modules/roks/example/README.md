@@ -8,8 +8,6 @@ For more information on IBM Schematics, refer [here](https://cloud.ibm.com/docs/
 
 ## Run using local Terraform Client
 
-Set the credentials to access IBM Cloud. Go [here](../../../CREDENTIALS.md) for details.
-
 For instructions to run using the local Terraform Client on your local machine go [here](../../../Using_Terraform.md). 
 
 Set values for required input variables in the file `terraform.tfvars`. Pay attention to the sections required for **Classic** vs **VPC**.
