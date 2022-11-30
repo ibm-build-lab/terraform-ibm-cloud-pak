@@ -59,7 +59,7 @@ variable "db2_standard_license_key" {
 }
 
 variable "operatorVersion" {
-  default     = "db2u-operator.v1.1.12"
+  default     = "db2u-operator.v2.0.0"
   description = "Operator version"
 }
 
