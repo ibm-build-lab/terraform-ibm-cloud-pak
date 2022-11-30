@@ -3,12 +3,6 @@
 
 **Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/ldap`
 
-## Set up access to IBM Cloud
-
-If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
-
-Go [here](../../CREDENTIALS.md) for details.
-
 ### Download required license files
 
 Download required license files from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `./files` folder
