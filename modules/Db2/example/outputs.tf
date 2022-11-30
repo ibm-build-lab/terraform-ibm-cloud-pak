@@ -4,13 +4,13 @@ output "db2_host_address" {
 }
 
 output "db2_pod_name" {
-  description = "This pod for deploying Db2 schemas."
+  description = "Pod for deploying Db2 schemas."
   value = module.Db2.db2_pod_name
 }
 
 output "db2_ip_address" {
   description = "Db2 Host external IP address"
-  value = module.Db2.db2_pod_name
+  value = module.Db2.db2_ip_address
 }
 
 output "db2_ports" {

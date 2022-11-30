@@ -24,7 +24,7 @@ data "ibm_container_cluster_config" "cluster_config" {
 }
 
 module "Db2" {
-  source     = "./module"
+  source     = "../."
   enable_db2 = var.enable_db2
 
   # ----- Cluster -----
