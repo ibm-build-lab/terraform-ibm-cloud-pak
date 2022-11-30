@@ -1,13 +1,15 @@
 
 # Example to provision LDAP Terraform Module
 
-### 1. Clone the repo
+## Clone the repo
 
 ```bash
 git clone https://github.com/ibm-build-lab/terraform-ibm-cloud-pak
 ```
 
-### 2. Download required license files from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `terraform-ibm-cloud-pak/modules/ldap/files` folder
+## Download required license files 
+
+Download the files from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the `terraform-ibm-cloud-pak/modules/ldap/files` folder.
 
 ```console
 DB2:
@@ -19,14 +21,17 @@ Part Number : CRV3IML
 Filename : sds64-premium-feature-act-pkg.zip
 ```
 
-### 3. Update the ldif file
+## Update the ldif file
 
 Update the `terraform-ibm-cloud-pak/modules/ldap/files/cp.ldif` file as needed to change the Directory Structure and user information.  For information on LDIF format, go [here](https://www.ibm.com/docs/en/i/7.4?topic=reference-ldap-data-interchange-format-ldif)
 
-### 4. Execute the example
+## Execute the example
 
-For instructions to run using the local Terraform Client on your local machine go [here](../../Using_Terraform.md).
+For instructions to execute using the **IBM Schematics** service on the cloud go [here](../../../Using_Schematics.md).
 
+For instructions to set up and execute using the **Terraform Client** on your local machine go [here](../../../Using_Terraform.md).
+
+For local execution:
 - cd into the `terraform-ibm-cloud-pak/modules/ldap/example` directory
 
 - Set required values in a `terraform.tfvars` file.  Here are some examples:
@@ -57,8 +62,6 @@ terraform init
 terraform plan
 terraform apply --auto-approve
 ```
-
-For instructions to run using the IBM Schematics service on the cloud go [here](../../Using_Schematics.md).
 
 ## Inputs
 
