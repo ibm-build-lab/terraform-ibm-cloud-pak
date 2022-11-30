@@ -46,7 +46,7 @@ db2_rwo_storage_class        = "ibmc-vpc-block-10iops-tier"
 | `cluster_config_path`      | Directory to store the kubeconfig file, set the value to empty string to not download the config. If running in Schematics, use `/tmp/.schematics/.kube/config`  | `./.kube/config`        |   No     |
 | `enable_db2`               | If set to `false`, IBM DB2 will not be installed. Enabled by default   |  `true`                |   No     |
 | `db2_project_name`         | The namespace or project for Db2                                       | `ibm-db2`              |   No    |
-| `db2_name`                 | The name of your Database.                                             | `sample-db2`           | No      |
+| `db2_name`                 | The name of your Database.                                             | `MYDB01`           | No      |
 | `db2_admin_username`       | Db2 default admin username                                              | `db2inst1`             |   No    |
 | `db2_admin_user_password`  | Db2 admin password                          |                        |   Yes    |
 | `db2_standard_license_key` | The standard license key for the Db2 database product. **Note**: The license key is required only for an Advanced DB2 installation.|                       |   No    |

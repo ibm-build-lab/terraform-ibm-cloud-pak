@@ -3,12 +3,10 @@ variable "ibmcloud_api_key" {
 }
 
 variable "region" {
-  default     = "us-south"
   description = "Region where the cluster is created."
 }
 
 variable "resource_group" {
-  default     = "Default"
   description = "Resource group name where the cluster will be hosted."
 }
 
@@ -17,7 +15,6 @@ variable "cluster_id" {
 }
 
 variable "cluster_config_path" {
-  default     = "./.kube/config"
   description = "Directory to store the kubeconfig file, set the value to empty string to not download the config. If running on Schematics, use `/tmp/.schematics/.kube/config`"
 }
 

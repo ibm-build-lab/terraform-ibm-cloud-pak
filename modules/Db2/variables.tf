@@ -12,10 +12,12 @@ variable "region" {
 }
 
 variable "resource_group" {
+  default     = "Default"
   description = "Resource group name where the cluster will be hosted."
 }
 
 variable "cluster_config_path" {
+  default = "./.kube/config"
   description = "Path to the cluster configuration file to access your cluster"
 }
 

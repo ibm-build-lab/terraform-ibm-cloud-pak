@@ -10,7 +10,7 @@ output "db2_ip_address" {
     data.external.get_endpoints,
   ]
   description = "External IP address to reach DB2 service."
-  value = var.enable_db2 && length(data.external.get_endpoints) > 0 ? data.external.get_endpoints.0.result.ip_address : ""
+  value = var.enable_db2 && length(data.external.get_endpoints) > 0 ? data.external.get_endpoints.0.result.db2_ip_address : ""
 }
 output "db2_pod_name" {
     depends_on = [
