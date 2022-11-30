@@ -68,7 +68,7 @@ variable "db2_standard_license_key" {
 }
 
 variable "operatorChannel" {
-  default     = "v1.1"
+  default     = "v2.0"
   description = "The Operator Channel performs rollout update when new release is available."
 }
 
