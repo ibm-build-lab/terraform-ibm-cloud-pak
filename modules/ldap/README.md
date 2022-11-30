@@ -25,7 +25,7 @@ Update the `./files/cp.ldif` file as needed to change the Directory Structure an
 
 See the example [here](./example/README.md) on how to provision and execute this module.
 
-## Input Variables
+## Inputs
 
 | Name                    | Description                                                                                                                                                                                                 | Default | Required |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | -------- |
@@ -48,56 +48,9 @@ See the example [here](./example/README.md) on how to provision and execute this
 | `ldapBindDN`            | LDAP Bind DN (https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-connector-ldap-cp4d)     | `true`  | Yes      |
 | `ldapBindDNPassword`    | LDAP Bind DN password (https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-connector-ldap-cp4d)      |         | Yes      |
 
-### Executing the Terraform Script
-
-Execute the following Terraform commands:
-
-```bash
-cd ./example
-terraform init
-terraform plan
-terraform apply --auto-approve
-```
-
-### Verify
-
-If LDAP is successful, you should see
-
-```console
-ibm_compute_vm_instance.cp4baldap (remote-exec): Start LDAP complete
-CLASSIC_IP_ADDRESS = "***.**.***.***"
-```
-
-displayed after the process is complete.
-
 ## Outputs
 
 | Name                 | Description    |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | `CLASSIC_IP_ADDRESS` | Note: The LDAP server should not be exposed in the Public interface using port 389. Configure the appropriate Security Groups required for the Server. For more information on how to manage Security Groups visit : https://cloud.ibm.com/docs/security-groups?topic=security-groups-managing-sg |
 
-A public and private key are created locally to access the Virtual Machine
-
-```console
-generated_key_rsa
-generated_key_rsa.pub
-```
-
-use ssh to access the server providing the key files.
-
-```console
-ssh root@<CLASSIC_IP_ADDRESS> -k generated_key_rsa
-```
-
-For more information on accessing the Virtual Machine, visit (https://cloud.ibm.com/docs/account?topic=account-mngclassicinfra)
-
-Apache Directory Studio can be used to access the server (see https://directory.apache.org/studio/download/download-macosx.html)
-
-### Clean up
-
-When the project is complete, execute:
-
-```bash
-cd ./example
-terraform destroy
-```
