@@ -4,6 +4,10 @@ This Terraform Module installs **DB2** on an Openshift (ROKS) cluster on IBM Clo
 
 **Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/db2`
 
+NOTE: an OpenShift cluster is required to install this module. This can be an existing cluster or can be provisioned using our [roks](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks) Terraform module.
+
+The recommended size for an OpenShift cluster on IBM Cloud Classic contains `4` workers of flavor `b3c.16x64`, however read the [Db2 installation methods](https://www.ibm.com/docs/en/db2/11.1?topic=servers-db2-installation-methods) to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
+
 ## Resources Required
 -   1 worker node
 -   Cores: 5.7 (2 for the Db2 engine and 3.7 for Db2 auxiliary services)
@@ -18,12 +22,6 @@ DB2:
 Part Number : CNB21ML
 Filename    : DB2_AWSE_Restricted_Activation_11.5.zip
 ```
-
-## Setting up the OpenShift cluster
-
-NOTE: an OpenShift cluster is required to install this module. This can be an existing cluster or can be provisioned using our [roks](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks) Terraform module.
-
-The recommended size for an OpenShift cluster on IBM Cloud Classic contains `4` workers of flavor `b3c.16x64`, however read the [Db2 installation methods](https://www.ibm.com/docs/en/db2/11.1?topic=servers-db2-installation-methods) to confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
 
 ## Provisioning and executing this module
 
