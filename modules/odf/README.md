@@ -2,7 +2,7 @@
 
 This Terraform Module installs the **ODF Service** on an Openshift (ROKS) cluster on IBM Cloud.
 
-**NOTE:**: an OpenShift cluster with at least three worker nodes is required to install this module. This can be an existing cluster or can be provisioned using our [roks](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks) Terraform module.
+**NOTE:** an OpenShift cluster with at least three worker nodes is required to install this module. This can be an existing cluster or can be provisioned using our [roks](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks) Terraform module.
 
 Each worker node must have a minimum of 16 CPUs and 64 GB RAM. https://cloud.ibm.com/docs/openshift?topic=openshift-deploy-odf-vpc for more information.
 
