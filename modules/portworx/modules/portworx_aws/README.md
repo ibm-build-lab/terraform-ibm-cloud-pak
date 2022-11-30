@@ -62,7 +62,7 @@ module "portworx" {
 | `px_enable_csi`                | Enable CSI on PX  | `true` | No       |
 
 
-For an example of how to put all this together, refer to the `/testing` directory
+For an example of how to put all this together, refer to the `/testing` directory. For instructions to run using the local Terraform Client on your local machine go [here](../../../Using_Terraform.md)
 
 ## Clean up
 
