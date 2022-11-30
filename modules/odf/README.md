@@ -2,65 +2,13 @@
 
 This Terraform Module installs the **ODF Service** on an Openshift (ROKS) cluster on IBM Cloud.
 
-A ROKS cluster is required with at least three worker nodes. Each worker node must have a minimum of 16 CPUs and 64 GB RAM. https://cloud.ibm.com/docs/openshift?topic=openshift-deploy-odf-vpc for more information.
+**NOTE:** An Openshift cluster is required with at least three worker nodes. Each worker node must have a minimum of 16 CPUs and 64 GB RAM. https://cloud.ibm.com/docs/openshift?topic=openshift-deploy-odf-vpc for more information.
 
 **Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/odf`
 
-## Set up access to IBM Cloud
-
-If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
-
-Go [here](../CREDENTIALS.md) for details.
-
-You also need to install the [IBM Cloud cli](https://cloud.ibm.com/docs/cli?topic=cli-install-ibmcloud-cli) as well as the [OpenShift cli](https://cloud.ibm.com/docs/openshift?topic=openshift-openshift-cli)
-
-Make sure you have the latest updates for all IBM Cloud plugins by running `ibmcloud plugin update`.  
-
-**NOTE**: These requirements are not required if running this Terraform code within an **IBM Cloud Schematics** workspace. They are automatically set from your account.
-
-## Provisioning this module in a Terraform Script
-
-NOTE: an OpenShift cluster is required to install this ODF service. This can be an existing cluster or can be provisioned in the Terraform script.
-
-To provision a new cluster, refer [here](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script.
-
 ### Provisioning the ODF Module
 
-Use a `module` block assigning `source` to `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/odf`. Then set the [input variables](#input-variables) required to install the ODF service.
-
-```hcl
-provider "ibm" {
-}
-
-// Module:
-module "odf" {
-  source = "github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/odf"
-  cluster = var.cluster
-  ibmcloud_api_key = var.ibmcloud_api_key
-  roks_version = var.roks_version
-
-  // ODF parameters
-  monSize = var.monSize
-  monStorageClassName = var.monStorageClassName
-  monDevicePaths = var.monDevicePaths
-  autoDiscoverDevices = var.autoDiscoverDevices
-  osdStorageClassName = var.osdStorageClassName
-  osdSize = var.osdSize
-  osdDevicePaths = var.osdDevicePaths
-  numOfOsd = var.numOfOsd
-  billingType = var.billingType
-  ocsUpgrade = var.ocsUpgrade
-  clusterEncryption = var.clusterEncryption
-  hpcsEncryption = var.hpcsEncryption
-  hpcsServiceName = var.hpcsServiceName
-  hpcsInstanceId = var.hpcsInstanceId
-  hpcsBaseUrl = var.hpcsBaseUrl
-  hpcsTokenUrl = var.hpcsTokenUrl
-  hpcsSecretName = var.hpcsSecretName
-}
-```
-
-For an example of how to call the above code, go to `./example/README.md`
+For an example of how to provision and execute this module, go [here](./example).
 
 ## Input Variables
 
