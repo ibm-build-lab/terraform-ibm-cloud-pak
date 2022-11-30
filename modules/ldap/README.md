@@ -23,7 +23,7 @@ Update the `./files/cp.ldif` file as needed to change the Directory Structure an
 
 ## Provisioning this module in a Terraform Script
 
-See the example [here](./examples/README.md) on how to provision this module.
+See the example [here](./example/README.md) on how to provision and execute this module.
 
 ## Input Variables
 
