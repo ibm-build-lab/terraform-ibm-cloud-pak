@@ -50,11 +50,3 @@ After execution has completed, access the cluster using `kubectl` or `oc`:
 ibmcloud ks cluster config -cluster $(terraform output cluster_id)
 kubectl cluster-info
 ```
-
-## Clean up
-
-When you finish using the cluster, you can release the resources by executing the following command, it should finish in about _8 minutes_:
-
-```bash
-terraform destroy
-```
