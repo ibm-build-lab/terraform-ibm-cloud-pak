@@ -5,10 +5,38 @@ This Terraform Module creates an Openshift (ROKS) cluster on IBM Cloud Classic o
 **Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/roks`
 
 ## Building a new ROKS cluster
+Use a `module` block assigning the `source` parameter to the location of this module. Then set the required [input variables](#inputs).
+
+```
+module "cluster" {
+  source = "./.."
+  enable = var.enable
+  on_vpc = var.on_vpc
+
+  // General
+  project_name         = var.project_name
+  owner                = var.owner
+  environment          = var.environment
+  resource_group       = var.resource_group
+  roks_version         = var.roks_version
+  entitlement          = var.entitlement
+  force_delete_storage = var.force_delete_storage
+
+  // Parameters for the Workers
+  flavors              = var.flavors
+  workers_count        = var.workers_count
+  // Classic only
+  datacenter          = var.datacenter
+  private_vlan_number = var.private_vlan_number
+  public_vlan_number  = var.public_vlan_number
+  // VPC only
+  vpc_zone_names = var.vpc_zone_names
+}
+```
 
 An example of how to provision and execute this module is located [here](./example)
 
-## Input Variables
+## Inputs
 
 The Terraform script requires the following list of input variables. Here are some instructions to set their values for Terraform and how to get their values from IBM Cloud.
 
@@ -30,7 +58,7 @@ The Terraform script requires the following list of input variables. Here are so
 | `force_delete_storage` | If set to `true`, force the removal of persistent storage associated with the cluster during cluster deletion. Default value is `true`.                                                             | `true`          | No       |
 
 
-## Output Variables
+## Outputs
 
 The module returns the following output variables:
 
