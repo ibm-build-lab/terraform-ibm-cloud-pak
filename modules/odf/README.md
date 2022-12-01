@@ -2,13 +2,33 @@
 
 This Terraform Module installs the **ODF Service** on an Openshift (ROKS) cluster on IBM Cloud.
 
+**Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/odf`
+
 **NOTE:** an OpenShift cluster with at least three worker nodes is required to install this module. This can be an existing cluster or can be provisioned using our [roks](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks) Terraform module.
 
 Each worker node must have a minimum of 16 CPUs and 64 GB RAM. https://cloud.ibm.com/docs/openshift?topic=openshift-deploy-odf-vpc for more information.
 
-**Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/odf`
 
 ### Provisioning the ODF Module
+Use a `module` block assigning the `source` parameter to the location of this module. Then set the required [input variables](#inputs).
+```
+module "odf" {
+  source = "github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/odf"
+  cluster = var.cluster
+  ibmcloud_api_key = var.ibmcloud_api_key
+  roks_version = var.roks_version
+
+  // ODF parameters
+  monSize = var.monSize
+  monStorageClassName = var.monStorageClassName
+  osdStorageClassName = var.osdStorageClassName
+  osdSize = var.osdSize
+  numOfOsd = var.numOfOsd
+  billingType = var.billingType
+  ocsUpgrade = var.ocsUpgrade
+  clusterEncryption = var.clusterEncryption
+}
+```
 
 For an example of how to provision and execute this module, go [here](./example).
 
