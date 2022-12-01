@@ -23,7 +23,7 @@ data "ibm_container_cluster_config" "cluster_config" {
 // Module:
 
 module "iaf" {
-  source = "./module"
+  source = "../"
   enable = true
 
   // ROKS cluster parameters:
