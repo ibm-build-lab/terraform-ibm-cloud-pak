@@ -22,7 +22,7 @@ data "ibm_container_cluster_config" "cluster_config" {
 }
 
 module "cp4mcm" {
-  source           = "./modules/cp4mcm_ibm"
+  source           = "../modules/cp4mcm_ibm"
   enable           = true
   on_vpc           = var.on_vpc
   region           = var.region
