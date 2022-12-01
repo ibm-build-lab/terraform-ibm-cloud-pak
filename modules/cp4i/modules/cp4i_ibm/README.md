@@ -2,7 +2,7 @@
 
 This Terraform Module installs **Cloud Pak for Integration** version **2022.2** on an **Openshift (ROKS)** cluster **(4.10+)** on IBM Cloud. It follows the instructions located [here](https://www.ibm.com/docs/en/cloud-paks/cp-integration/2022.2?topic=installing-overview-installation).
 
-**Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4i`
+**Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4i/modules/cp4i_ibm`
 
 ## Set up access to IBM Cloud
 
@@ -75,7 +75,7 @@ Use a `module` block assigning the `source` parameter to the location of this mo
 
 ```hcl
 module "cp4i" {
-  source = "../../modules/cp4i"
+  source = "github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4i"
   enable = true
 
   // ROKS cluster parameters:
@@ -90,6 +90,8 @@ module "cp4i" {
 }
 ```
 
+For an example of how provision and execute this module is located [here](../../examples/cp4i).
+
 ## Input Variables
 
 | Name                               | Description                                                                                                                                                                                                                | Default                     | Required |
@@ -100,10 +102,6 @@ module "cp4i" {
 | `cluster_config_path`                           | Path to the Kubernetes configuration file to access your cluster | `./.kube/config`                      | No       |
 | `entitled_registry_key`            | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
 | `entitled_registry_user_email`     | IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key |                             | Yes      |
-
-**NOTE** The boolean input variable `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
-
-For an example of how to put all this together, refer to our [Cloud Pak for Integration Terraform script](https://github.com/ibm-build-lab/cloud-pak-sandboxes/tree/master/terraform/cp4int).
 
 ## Executing the Terraform Script
 
