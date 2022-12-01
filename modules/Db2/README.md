@@ -90,6 +90,8 @@ Outputs:
 db2_host_address =  @@@@@@@@@@@@-clust-c0b572361ba41c9eef42d4d51297b04b-0000.us-south.containers.appdomain.cloud                 
 db2_ports =  00000,
  00001,
+db2_ip_address = xxx.xx.xx.xx
+db2_pod_name = c-db2ucluster-db2u-0
 ```
 
 ## Outputs
@@ -98,19 +100,9 @@ The Terraform code return the following output parameters:
 
 | Name                   | Description                                                                                 |
 |------------------------|---------------------------------------------------------------------------------------------|
-| `db2_host_address`     | Host name for DB2 instance                                                                  |
+| `db2_host_address`     | Host url for DB2 instance                                                                  |
 | `db2_ports`            | Port number for DB2 instance                                                                |
+| `db2_ip_address`       | External IP address to reach DB2 service                                                       |
+| `db2_pod_name`         | Db2 pod for deploying Db2 schemas                                                           |
 
 
-
-### Clean up
-
-When you finish installing Db2, release the resources by executing the following command:: 
-```
-terraform destroy
-```
-
-
-## Uninstall
-
-**Note**: The uninstall or cleanup process is a work in progress at this time, we are identifying the objects that need to be deleted in order to have a successful re-installation.
