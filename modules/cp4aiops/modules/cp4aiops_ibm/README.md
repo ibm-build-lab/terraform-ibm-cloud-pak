@@ -2,7 +2,7 @@
 
 This Terraform Module installs **Cloud Pak for Watson AIOps** on an Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `git::https://github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4aiops`
+**Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4aiops`
 
 **NOTE:** an OpenShift cluster is required to install this module. This can be an existing cluster or can be provisioned using our [roks](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks) Terraform module.
 
@@ -18,7 +18,7 @@ Use a `module` block assigning the `source` parameter to the location of this mo
 
 ```hcl
 module "cp4aiops" {
-  source    = "git::https://github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4aiops/modules/cp4aiops_ibm"
+  source    = "github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4aiops/modules/cp4aiops_ibm"
   enable    = true
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
   on_vpc              = var.on_vpc
