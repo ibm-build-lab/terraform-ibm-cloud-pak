@@ -11,7 +11,7 @@ These examples will install Cloud Paks and supporting utilities on an existing *
 - [DB2 Database (used for CP4BA)](../modules/Db2/example)
 - [Cloud Pak for AIOps (CP4AIOPS)](../modules/cp4aiops/examples/)
 - [Cloud Pak for Business Automation (CP4BA)](../modules/cp4ba/example/)
-- [Cloud Pak for Data 4.0 (CP4Data)](../modules/cp4data_4.0/example/)
+- [Cloud Pak for Data 4.0 (CP4Data)](../modules/cp4d_4.0/example/)
 - [Cloud Pak for Integration (CP4Int)](../modules/cp4int/examples/)
 - [Cloud Pak for Network Automation (CP4NA)](../modules/cpna/example/)
 - [Cloud Pak for Security (CP4S)](../modules/cp4s/examples/)
