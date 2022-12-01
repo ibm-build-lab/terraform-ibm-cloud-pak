@@ -140,9 +140,6 @@ accept_aiops_license             | bool   | Do you accept the licensing agreemen
 enable_aimanager                 | bool   | Install AIManager? `T/F`                                                                                                                           |           | true
 enable_event_manager             | bool   | Install Event Manager? `T/F`                                                                                                                       |           | true
 
-**NOTE** The boolean input variable `enable` is used to enable/disable the module. This parameter may be deprecated when Terraform 0.12 is not longer supported. In Terraform 0.13, the block parameter `count` can be used to define how many instances of the module are needed. If set to zero the module won't be created.
-
-For an example of how to put all this together, refer to our [Cloud Pak for Watson AIOps Terraform script](https://github.com/ibm-build-lab/cloud-pak-sandboxes/tree/master/terraform/cp4aiops).
 
 ## Event Manager Options
 
