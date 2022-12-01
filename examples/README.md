@@ -13,7 +13,7 @@ These examples will install Cloud Paks and supporting utilities on an existing *
 - [Cloud Pak for Business Automation (CP4BA)](../modules/cp4ba/example/)
 - [Cloud Pak for Data 4.0 (CP4Data)](../modules/cp4d_4.0/example/)
 - [Cloud Pak for Integration (CP4Int)](../modules/cp4i/examples/)
-- [Cloud Pak for Network Automation (CP4NA)](../modules/cpna/example/)
+- [Cloud Pak for Network Automation (CP4NA)](../modules/cp4na/example/)
 - [Cloud Pak for Security (CP4S)](../modules/cp4s/examples/)
 
 ## Run using IBM Cloud Schematics
