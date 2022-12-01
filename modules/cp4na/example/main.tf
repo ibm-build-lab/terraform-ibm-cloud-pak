@@ -24,7 +24,7 @@ data "ibm_container_cluster_config" "cluster_config" {
 
 // Module:
 module "cp4na" {
-  source = "./module"
+  source = "../"
   enable = var.enable
 
   // ROKS cluster parameters:
