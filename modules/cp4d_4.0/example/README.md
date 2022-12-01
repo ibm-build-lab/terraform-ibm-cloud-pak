@@ -13,6 +13,7 @@ customizing these values in the `terraform.tfvars` file:
 
 ```hcl
 resource_group_name = "Default"
+ibmcloud_api_key = "*******************"
 
 // ROKS cluster parameters:
 cluster_id          = "******************"
@@ -28,6 +29,7 @@ entitled_registry_key        = "******************"
 
 // CP4D License Acceptance
 accept_cpd_license = true
+cpd_project_name = "cp4d"
 
 storage_option = "odf"          // odf | portwork | nfs
 
@@ -50,10 +52,15 @@ install_wsruntime   = false
 ```
 
 These parameters are:
-- `on_vpc`: If set to `true`, it will set the install for a VPC cluster. By default it's set to `false`
-- `entitled_registry_key`: Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key
+- `ibmcloud_api_key`: IBM Cloud account API Key
+- `cluster_id`: ID of the cluster to install on 
+- `region`: Region that the cluster is provisioned in
 - `resource_group_name`: Resource group that the cluster is provisioned in
+- `on_vpc`: If set to `true`, it will set the install for a VPC cluster. By default it's set to `false`
+- `worker_node_flavor`: Flavor of the cluster worker nodes.  Needed for storage determination.
+- `entitled_registry_key`: Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key
 - `accept_cpd_license`: If set to `true`, you accept all cpd license agreements including additional modules installed. By default, it's `false`
+- `cpd_project_name`: Namespace to install CP4D in
 - `storage_option`: Define the storage option. Defaults to `portworx`. (odf, nfs, portworx)
 - `install_wsl`:  Install Watson Studio module. By default it's not installed. 
 - `install_aiopenscale`: Install  Watson AI OpenScale module. By default it's not installed. 
