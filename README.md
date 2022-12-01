@@ -63,11 +63,13 @@ This directory contains the Terraform HCL code to execute/apply by Terraform eit
 Each Cloud Pak subdirectory contains the following files:
 
 - `main.tf`: contains the code provision the Cloud Pak, you should start here to know what Terraform does.
-- `variables.tf`: contains all the input parameters. You can get additional information about them in the README of each Cloud Pak directory.
-- `outputs.tf`: contains all the output parameters. You can get additional information about them in the README of each Cloud Pak directory.
-- **Optional**`terraform.tfvars`: although the `variables.tf` defines the input variables and the default values, the `terraform.tfvars` also contains default values to access and modify. If you'd like to customize your resources try to modify the values in this file first.
+- `variables.tf`: contains all the input parameters. You can get additional information about them in the README of each directory.
+- `outputs.tf`: contains all the output parameters. You can get additional information about them in the README of each directory.
+- `versions.tf`: sets up the TF versions
 
 ## Provisioning the Cloud Pak Modules
+
+To run these modules, you will need to run the `example` we have provided for each module.  For links to get to these, go [here](../examples)
 
 ### Using IBM Cloud Schematics
 
