@@ -4,75 +4,22 @@ This Terraform Module installs **Cloud Pak for Watson AIOps** on an Openshift (R
 
 **Module Source**: `git::https://github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4aiops`
 
-- [Terraform Module to install Cloud Pak for Watson AIOps](#terraform-module-to-install-cloud-pak-for-aiops)
-  - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
-  - [Setting up the OpenShift cluster](#setting-up-the-openshift-cluster)
-  - [Installing the CP4AIOps Module](#installing-the-cp4aiops-module)
-  - [Input Variables](#input-variables)
-    - [Event Manager Options](#event-manager-options)
-  - [Executing the Terraform Script](#executing-the-terraform-script)
-  - [Accessing the Cloud Pak Console](#accessing-the-cloud-pak-console)
-  - [Post Installation Instructions](#post-installation-instructions)
-  - [Clean up](#clean-up)
-  - [Troubleshooting](#troubleshooting)
-  
-## Set up access to IBM Cloud
+**NOTE:** an OpenShift cluster is required to install this module. This can be an existing cluster or can be provisioned using our [roks](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks) Terraform module.
 
-If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
-
-Go [here](../CREDENTIALS.md) for details.
-
-
-### Setting up the OpenShift cluster
-
-NOTE: an OpenShift cluster is required to install the Cloud Pak. This can be an existing cluster or can be provisioned using our `roks` Terraform module.
-
-To provision a new cluster, refer [here](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks) for the code to add to your Terraform script. The recommended size for an OpenShift 4.7+ cluster on IBM Cloud Classic contains `9` workers (3 for `AIManager` and 6 for `EventManager`) of flavor `b3c.16x64`.
-
-However please read the following documentation:
+The recommended size for an OpenShift 4.7+ cluster on IBM Cloud Classic contains `9` workers (3 for `AIManager` and 6 for `EventManager`) of flavor `16x64`. However please read the following documentation:
 - [Cloud Pak for Watson AIOps documentation (AIManager)](https://www.ibm.com/docs/en/cloud-paks/cloud-pak-watson-aiops/3.2.1?topic=requirements-ai-manager)
 - [Cloud Pak for Watson AIOps documentation (EventManager)](https://www.ibm.com/docs/en/noi/1.6.3?topic=preparing-sizing)
 
 To confirm these parameters or if you are using IBM Cloud VPC or a different OpenShift version.
 
-Add the following code to get the OpenShift cluster (new or existing) configuration:
+### Provisioning the CP4AIOPS Module
 
-```hcl
-data "ibm_resource_group" "group" {
-  name = var.resource_group
-}
-
-data "ibm_container_cluster_config" "cluster_config" {
-  cluster_name_id   = var.cluster_name_id
-  resource_group_id = data.ibm_resource_group.group.id
-  download          = true
-  config_dir        = "./kube/config"     // Create this directory in advance
-  admin             = false
-  network           = false
-}
-```
-
-**NOTE**: Create the `./kube/config` directory if it doesn't exist.
-
-Input:
-
-- `cluster_name_id`: either the cluster name or ID.
-
-- `ibm_resource_group`:  resource group where the cluster is running
-
-Output:
-
-`ibm_container_cluster_config` used as input for the `cp4aiops` module
-
-### Installing the CP4AIOPS Module
-
-Use a `module` block assigning `source` to `git::https://github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4aiops`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Watson AIOps.
+Use a `module` block assigning the `source` parameter to the location of this module. Then set the required [input variables](#inputs).
 
 ```hcl
 module "cp4aiops" {
-  source    = "./.."
+  source    = "git::https://github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4aiops/modules/cp4aiops_ibm"
   enable    = true
-
   cluster_config_path = data.ibm_container_cluster_config.cluster_config.config_file_path
   on_vpc              = var.on_vpc
   portworx_is_ready   = 1          // Assuming portworx is installed if using VPC infrastructure
@@ -82,14 +29,99 @@ module "cp4aiops" {
   entitled_registry_user_email = var.entitled_registry_user_email
 
   // AIOps specific parameters:
-  namespace            = var.namespace
-  accept_aiops_license = var.accept_aiops_license
-  enable_aimanager     = var.enable_aimanager
-  enable_event_manager = var.enable_event_manager
+  accept_aimanager_license     = var.accept_aimanager_license
+  accept_event_manager_license = var.accept_event_manager_license
+  namespace            = "aiops"
+  enable_aimanager     = true
+
+  //************************************
+  // EVENT MANAGER OPTIONS START *******
+  //************************************
+  enable_event_manager = true
+
+  // Persistence option
+  enable_persistence               = var.enable_persistence
+
+  // Integrations - humio
+  humio_repo                       = var.humio_repo
+  humio_url                        = var.humio_url
+
+  // LDAP options
+  ldap_port                        = var.ldap_port
+  ldap_mode                        = var.ldap_mode
+  ldap_user_filter                 = var.ldap_user_filter
+  ldap_bind_dn                     = var.ldap_bind_dn
+  ldap_ssl_port                    = var.ldap_ssl_port
+  ldap_url                         = var.ldap_url
+  ldap_suffix                      = var.ldap_suffix
+  ldap_group_filter                = var.ldap_group_filter
+  ldap_base_dn                     = var.ldap_base_dn
+  ldap_server_type                 = var.ldap_server_type
+
+  // Service Continuity
+  continuous_analytics_correlation = var.continuous_analytics_correlation
+  backup_deployment                = var.backup_deployment
+
+  // Zen Options
+  zen_deploy                       = var.zen_deploy
+  zen_ignore_ready                 = var.zen_ignore_ready
+  zen_instance_name                = var.zen_instance_name
+  zen_instance_id                  = var.zen_instance_id
+  zen_namespace                    = var.zen_namespace
+  zen_storage                      = var.zen_storage
+
+  // TOPOLOGY OPTIONS:
+  // App Discovery -
+  enable_app_discovery             = var.enable_app_discovery
+  ap_cert_secret                   = var.ap_cert_secret
+  ap_db_secret                     = var.ap_db_secret
+  ap_db_host_url                   = var.ap_db_host_url
+  ap_secure_db                     = var.ap_secure_db
+  // Network Discovery
+  enable_network_discovery         = var.enable_network_discovery
+  // Observers
+  obv_docker                       = var.obv_docker
+  obv_taddm                        = var.obv_taddm
+  obv_servicenow                   = var.obv_servicenow
+  obv_ibmcloud                     = var.obv_ibmcloud
+  obv_alm                          = var.obv_alm
+  obv_contrail                     = var.obv_contrail
+  obv_cienablueplanet              = var.obv_cienablueplanet
+  obv_kubernetes                   = var.obv_kubernetes
+  obv_bigfixinventory              = var.obv_bigfixinventory
+  obv_junipercso                   = var.obv_junipercso
+  obv_dns                          = var.obv_dns
+  obv_itnm                         = var.obv_itnm
+  obv_ansibleawx                   = var.obv_ansibleawx
+  obv_ciscoaci                     = var.obv_ciscoaci
+  obv_azure                        = var.obv_azure
+  obv_rancher                      = var.obv_rancher
+  obv_newrelic                     = var.obv_newrelic
+  obv_vmvcenter                    = var.obv_vmvcenter
+  obv_rest                         = var.obv_rest
+  obv_appdynamics                  = var.obv_appdynamics
+  obv_jenkins                      = var.obv_jenkins
+  obv_zabbix                       = var.obv_zabbix
+  obv_file                         = var.obv_file
+  obv_googlecloud                  = var.obv_googlecloud
+  obv_dynatrace                    = var.obv_dynatrace
+  obv_aws                          = var.obv_aws
+  obv_openstack                    = var.obv_openstack
+  obv_vmwarensx                    = var.obv_vmwarensx
+
+  // Backup Restore
+  enable_backup_restore            = var.enable_backup_restore
+
+  //************************************
+  // EVENT MANAGER OPTIONS END *******
+  //************************************
 }
 ```
 
-## Input Variables
+For an example on how to provision and execute this module go [here](../../examples/cp4aiops).
+
+
+## Inputs
 
 Name                             | Type   | Description                                                                                                                                        | Sensitive | Default
 -------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ----------------------------
@@ -174,16 +206,6 @@ obv_vmwarensx                    | bool   | Enable VMWareNSX Topology Observer  
 obv_zabbix                       | bool   | Enable Zabbix Topology Observer                                                                                                                    |           | false
 enable_backup_restore            | bool   | Enable Analytics Backups                                                                                                                           |           | false
 
-
-## Executing the Terraform Script
-
-Execute the following commands to install the Cloud Pak:
-
-```bash
-terraform init
-terraform plan
-terraform apply
-```
 
 ## Accessing the Cloud Pak Console
 

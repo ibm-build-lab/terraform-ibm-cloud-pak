@@ -1,23 +1,26 @@
 # Example to provision CP4AIOps Terraform module
 
+## Requirements for AIOps
+
+**NOTE:** an OpenShift cluster is required to install this module. This can be an existing cluster or can be provisioned using our [roks](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks) Terraform module.
+
+The recommended size for an OpenShift 4.7+ cluster on IBM Cloud Classic contains `9` workers (3 for `AIManager` and 6 for `EventManager`) of flavor `16x64`. However please read the following documentation:
+- [Cloud Pak for Watson AIOps documentation (AIManager)](https://www.ibm.com/docs/en/cloud-paks/cloud-pak-watson-aiops/3.2.1?topic=requirements-ai-manager)
+- [Cloud Pak for Watson AIOps documentation (EventManager)](https://www.ibm.com/docs/en/noi/1.6.3?topic=preparing-sizing)
+
+  
 ## Run using IBM Cloud Schematics
 
 For instructions to run these examples using IBM Schematics go [here](../Using_Schematics.md)
 
 For more information on IBM Schematics, refer [here](https://cloud.ibm.com/docs/schematics?topic=schematics-get-started-terraform).
 
-## Requirements for AIOps
-
-Please ensure your cluster is setup to install AIManager and Eventmanager: `9` nodes.
-
-Current min spec requires:
-- 3 nodes for AIManager    @ 16x64
-- 6 nodes for EventManager @ 16x64
 
 ## Run using local Terraform Client
 
-For instructions to run using the local Terraform Client on your local machine go [here](../Using_Terraform.md)
-customizing these values in the `terraform.tfvars` file:
+For instructions to run using the local Terraform Client on your local machine go [here](../Using_Terraform.md) 
+
+### Customize desired input values in a `terraform.tfvars` file:
 
 ```hcl
   cluster_name_or_id    = "******************"
@@ -31,8 +34,17 @@ customizing these values in the `terraform.tfvars` file:
   accept_aimanager_license  = "true"
   accept_event_manager_license  = "true"
 ```
+### Execute the example
 
-These parameters are:
+Execute the following Terraform commands:
+
+```bash
+terraform init
+terraform plan
+terraform apply -auto-approve
+```
+
+## Inputs
 
 | Name                               | Description                                                           | Default  | Required |
 | ---------------------------------- | --------------------------------------------------------------------- | -------- | -------- |
@@ -104,7 +116,7 @@ These parameters are:
 | `obv_zabbix` | Enable Zabbix Topology Observer | `false` | No |
 | `enable_backup_restore` | Enable Analytics Backups | `false` | No |
 
-## Output Parameters
+## Outputs
 
 The module returns the following output variables:
 
@@ -117,17 +129,8 @@ The module returns the following output variables:
 | `cp4aiops_evtman_user` | Username for your Cloud Pak for AIOPS EventManager deployment. |
 | `cp4aiops_evtman_password` | Password for your Cloud Pak for AIOPS EventManager deployment. |
 
-### Execute the example
 
-Execute the following Terraform commands:
-
-```bash
-terraform init
-terraform plan
-terraform apply -auto-approve
-```
-
-### Verify
+## Verify
 
 To verify installation on the Kubernetes cluster, take the output URL, username and password and log into the CP4AIOps console.
 
