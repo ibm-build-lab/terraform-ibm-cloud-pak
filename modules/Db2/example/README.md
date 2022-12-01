@@ -36,8 +36,17 @@ operatorChannel              = "v2.0"
 db2_rwx_storage_class        = "ocs-storagecluster-cephfs"
 db2_rwo_storage_class        = "ibmc-vpc-block-10iops-tier"
 ``` 
+### Execute the Terraform Script
 
-### Input Variables
+Execute the following Terraform commands from this directory:
+
+```bash
+terraform init
+terraform plan
+terraform apply --auto-approve
+```
+
+## Inputs
 
 | Name                       | Description                                                            | Default                | Required |
 | ---------------------------|------------------------------------------------------------------------|------------------------|----------|
@@ -63,17 +72,8 @@ db2_rwo_storage_class        = "ibmc-vpc-block-10iops-tier"
 | `entitled_registry_key`    | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
 | `entitled_registry_user_email`| IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key. i.e: joe@ibm.com |              | Yes      |
 
-### Execute the Terraform Script
 
-Execute the following Terraform commands from this directory:
-
-```bash
-terraform init
-terraform plan
-terraform apply --auto-approve
-```
-
-### Outputs
+## Outputs
 
 The Terraform code return the following output parameters:
 
