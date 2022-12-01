@@ -21,12 +21,22 @@ module "odf" {
   // ODF parameters
   monSize = var.monSize
   monStorageClassName = var.monStorageClassName
+  monDevicePaths = var.monDevicePaths
+  autoDiscoverDevices = var.autoDiscoverDevices
   osdStorageClassName = var.osdStorageClassName
   osdSize = var.osdSize
+  osdDevicePaths = var.osdDevicePaths
   numOfOsd = var.numOfOsd
   billingType = var.billingType
   ocsUpgrade = var.ocsUpgrade
   clusterEncryption = var.clusterEncryption
+  #workerNodes = var.workerNodes
+  hpcsEncryption = var.hpcsEncryption
+  hpcsServiceName = var.hpcsServiceName
+  hpcsInstanceId = var.hpcsInstanceId
+  hpcsBaseUrl = var.hpcsBaseUrl
+  hpcsTokenUrl = var.hpcsTokenUrl
+  hpcsSecretName = var.hpcsSecretName
 }
 ```
 
