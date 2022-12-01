@@ -25,7 +25,7 @@ Filename    : DB2_AWSE_Restricted_Activation_11.5.zip
 
 ## Provisioning and executing this module
 
-Use a `module` block assigning the `source` parameter to the location of this module `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/Db2`. Then set the [input variables](#input-variables) required to install Db2.
+Use a `module` block assigning the `source` parameter to the location of this module. Then set the required [input variables](#inputs).
 
 ```hcl
 module "Db2" {
@@ -53,7 +53,7 @@ module "Db2" {
 
 For an example on how to provision and execute this module go [here](./example).
 
-## Input Variables
+## Inputs
 
 | Name                       | Description                                                            | Default                | Required |
 | ---------------------------|------------------------------------------------------------------------|------------------------|----------|
@@ -92,7 +92,7 @@ db2_ports =  00000,
  00001,
 ```
 
-## Output Parameters
+## Outputs
 
 The Terraform code return the following output parameters:
 
