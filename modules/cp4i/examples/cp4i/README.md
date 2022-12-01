@@ -51,6 +51,6 @@ To verify installation on the Kubernetes cluster, go to the Openshift console an
 
 Go into the console and delete the platform navigator from the verify section. Delete all installed operators and lastly delete the project.
 
-Finally, execute: `terraform destroy`.
+Finally, execute: `terraform destroy` if running locally.  Destroy the workspace if running in Schematics
 
 There are some directories and files you may want to manually delete, these are: `rm -rf terraform.tfstate* .terraform .kube`
