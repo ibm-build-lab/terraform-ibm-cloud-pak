@@ -77,7 +77,7 @@ For instructions to run these examples using IBM Schematics go [here](./Using_Sc
 
 For more information on IBM Schematics, refer [here](https://cloud.ibm.com/docs/schematics?topic=schematics-get-started-terraform).
 
-**NOTE:** LDAP and CP4Security can not be run from Schematics due to manual steps required.
+**NOTE:** LDAP can not be run from Schematics due to manual steps required.
 
 ### Using local Terraform Client
 
