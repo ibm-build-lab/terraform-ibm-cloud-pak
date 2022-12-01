@@ -1,12 +1,6 @@
 
 # Example to provision LDAP Terraform Module
 
-## Clone the repo
-
-```bash
-git clone https://github.com/ibm-build-lab/terraform-ibm-cloud-pak
-```
-
 ## Download required license files 
 
 Download the files from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the `terraform-ibm-cloud-pak/modules/ldap/files` folder.
