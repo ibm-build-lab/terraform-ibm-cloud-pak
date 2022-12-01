@@ -36,7 +36,7 @@ data "ibm_container_vpc_cluster" "cluster" {
 
 // Module:
 module "cp4data" {
-  source = "./module"
+  source = "../."
   enable = true
 
   // ROKS cluster parameters:

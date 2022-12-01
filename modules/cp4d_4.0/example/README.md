@@ -86,7 +86,28 @@ terraform apply -auto-approve
 
 To verify installation on the Kubernetes cluster go to the console and go to the `Installed Operators` tab. Click on IBM Cloud Pak for Data and click on `Cloud Pak for Data Service` tab. Finally check the status of the lite-cpdservice.
 
-### Cleanup
+
+## Accessing the Cloud Pak Console
+
+After execution has completed, access the cluster using `kubectl` or `oc`:
+
+```bash
+oc get route -n ${NAMESPACE} cpd -o jsonpath='{.spec.host}' && echo
+```
+
+To get default login id:
+
+```bash
+username = "admin"
+```
+
+To get default Password:
+
+```bash
+oc -n ${NAMESPACE} get secret admin-user-details -o jsonpath='{.data.initial_admin_password}' | base64 -d && echo
+```
+
+## Clean up
 
 Go into the console and delete `cpd_project_name` and `cpd-meta-ops` projects.
 
@@ -97,3 +118,19 @@ Under `openshift-image-registry` routes, remove `image-registry`.
 Finally, execute: `terraform destroy`.
 
 There are some directories and files you may want to manually delete, these are: `rm -rf terraform.tfstate* .terraform .kube`
+
+When you finish using the cluster, release the resources by executing the following command:
+
+```bash
+terraform destroy
+```
+
+## Troubleshooting
+
+- Once `module.cp4data.null_resource.bedrock_zen_operator` completes. You can check the logs to find out more information about the installation of Cloud Pak for Data.
+
+```bash
+cpd-meta-operator: oc -n cpd-meta-ops logs -f deploy/ibm-cp-data-operator
+
+cpd-install-operator: oc -n cpd-tenant logs -f deploy/cpd-install-operator
+```

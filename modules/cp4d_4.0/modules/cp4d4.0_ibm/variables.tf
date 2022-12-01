@@ -1,9 +1,7 @@
-# variable "region" {}
-# variable "ibmcloud_api_key" {}
-# variable "resource_group_name" {}
 
 variable "operator_namespace" {
-  description = "Needs to be ibm-common-services."
+  default = "ibm-common-services"
+  description = "Namespace to install operator"
 }
 
 variable "cluster_id" {
@@ -38,7 +36,7 @@ variable "cluster_config_path" {
 }
 
 variable "openshift_version" {
-  default     = "4.7"
+  default     = "4.10"
   description = "Openshift version installed in the cluster"
 }
 
