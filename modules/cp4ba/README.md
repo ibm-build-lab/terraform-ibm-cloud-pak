@@ -4,93 +4,22 @@ This Terraform Module installs **Cloud Pak for Business Automation** on an Opens
 
 **Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4ba`
 
-## Set up access to IBM Cloud
+NOTE: an OpenShift cluster is required to install the Cloud Pak. This can be an existing cluster or can be provisioned using our [roks](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks.) Terraform module.
 
-If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
+The recommended size for an OpenShift cluster contains `5` workers of size `16x64`, however read the [Cloud Pak for Business Automation documentation](https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation) to confirm these parameters.
 
-Go [here](../CREDENTIALS.md) for details.
+### Provisioning the CP4BA Module
 
-## Provisioning this module in a Terraform Script
-
-You will need a `versions.tf` file containing the terraform version:
-
-```hcl
-terraform {
-  required_version = ">= 0.13"
-  required_providers {
-    ibm = {
-      source  = "ibm-cloud/ibm"
-      version = "1.34"
-    }
-    null = {
-      source = "hashicorp/null"
-    }
-  }
-}
-```
-
-And `provider.tf` file containing the  `ibm` provisioner block:
-
-```hcl
-provider "ibm" {
-  region           = var.region
-  ibmcloud_api_key = var.ibmcloud_api_key
-}
-```
-
-### Setting up the OpenShift cluster
-
-NOTE: an OpenShift cluster is required to install the Cloud Pak. This can be an existing cluster or can be provisioned using our `roks` Terraform module.
-
-To provision a new cluster, refer [here](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks#building-a-new-roks-cluster) for the code to add to your Terraform script. The recommended size for an OpenShift 4.7 cluster on IBM Cloud Classic contains `5` workers of flavor `b3c.16x64`, however read the [Cloud Pak for Business Automation documentation](https://www.ibm.com/docs/en/cloud-paks/cp-biz-automation) to confirm these parameters.
-
-Add the following code to get the OpenShift cluster (new or existing) configuration:
-
-```hcl
-data "ibm_resource_group" "resource_group" {
-  name = var.resource_group
-}
-
-resource "null_resource" "mkdir_kubeconfig_dir" {
-  triggers = { always_run = timestamp() }
-
-  provisioner "local-exec" {
-    command = "mkdir -p ${var.cluster_config_path}"
-  }
-}
-
-data "ibm_container_cluster_config" "cluster_config" {
-  depends_on        = [null_resource.mkdir_kubeconfig_dir]
-  cluster_name_id   = var.cluster_id
-  resource_group_id = data.ibm_resource_group.resource_group.id
-  config_dir        = var.cluster_config_path
-}
-```
-
-**NOTE**: Create the `./kube/config` directory if it doesn't exist.
-
-Input:
-
-- `cluster_id`: either the cluster name or ID.
-
-- `ibm_resource_group`:  resource group where the cluster is running
-
-Output:
-
-`ibm_container_cluster_config` used as input for the `cp4ba` module
-
-### Using the CP4BA Module
-
-Use a `module` block assigning the `source` parameter to the location of this module `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4ba`. Then set the [input variables](#input-variables) required to install the Cloud Pak for Business Automation.
+Use a `module` block assigning the `source` parameter to the location of this module. Then set the required [input variables](#inputs).
 
 ```hcl
 module "install_cp4ba" {
-  source = "../../modules/cp4ba"
+  source = "`github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4ba"
   enable_cp4ba           = true
   enable_db2             = true
   ibmcloud_api_key       = var.ibmcloud_api_key
   region                 = var.region
-  cluster_config_path    = data.ibm_container_cluster_config.cluster_config.config_file_path
+  cluster_config_path    = var.cluster_config_path
   ingress_subdomain      = var.ingress_subdomain
   # ---- Platform ----
   cp4ba_project_name     = var.cp4ba_project_name
@@ -132,9 +61,8 @@ module "install_cp4ba" {
 | `entitled_registry_key`    | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
 | `entitled_registry_user_email`| IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key. i.e: joe@ibm.com |              | Yes      |
 
-### Executing the Terraform Script
 
-Follow this link to execute this CP4BA module: [Install IBM Cloud Pak Business Automation (CP4BA) Terraform Example](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/examples/cp4ba)
+For an example of how to provision and execute this module go to [IBM Cloud Pak Business Automation (CP4BA) Terraform Example](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/examples/cp4ba)
 
 ### Verify
 
