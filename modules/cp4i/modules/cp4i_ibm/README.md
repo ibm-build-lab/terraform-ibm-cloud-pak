@@ -75,7 +75,7 @@ Use a `module` block assigning the `source` parameter to the location of this mo
 
 ```hcl
 module "cp4i" {
-  source = "github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4i"
+  source = "github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4i/modules/cp4i_ibm"
   enable = true
 
   // ROKS cluster parameters:
