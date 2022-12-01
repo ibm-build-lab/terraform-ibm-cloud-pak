@@ -40,12 +40,12 @@ terraform plan
 terraform apply -auto-approve
 ```
 
-### Verify
+## Verify
 
 To verify installation on the Kubernetes cluster, go to the Openshift console and go to the `Installed Operators` tab. Choose your `namespace` and click on `IBM Cloud Pak for Integration Platform Navigator
 4.2.0 provided by IBM` and finally click on the `Platform Navigator` tab. Finally check the status of the cp4i-navigator
 
-### Cleanup
+## Cleanup
 
 Go into the console and delete the platform navigator from the verify section. Delete all installed operators and lastly delete the project.
 
