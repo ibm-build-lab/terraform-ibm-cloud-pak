@@ -24,6 +24,7 @@ Update the `./files/cp.ldif` file as needed to change the Directory Structure an
 ## Provisioning this module in a Terraform Script
 Use a `module` block assigning the `source` parameter to the location of this module. Then set the [input variables](#input-variables) required.
 
+```
 module "ldap" {
   source               = "github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/ldap"
   enable               = true
@@ -39,6 +40,7 @@ module "ldap" {
   disks                = var.disks
   local_disk           = var.local_disk
 }
+```
 
 See the example [here](./example) on how to provision and execute this module.
 
