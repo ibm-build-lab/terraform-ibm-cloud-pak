@@ -2,7 +2,11 @@
 
 ## Prereq
 
-This Cloud Pak example depends on having a DB2 instance with the CP4BA Schema set up.  See https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/db2 to create a DB2 instance.  See [https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/cp4ba/database/README.md to set up the CP4BA Schema.
+**NOTE:** an OpenShift cluster is required to install this module. This can be an existing cluster or can be provisioned using our [roks](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks) Terraform module.
+
+This Cloud Pak example depends on having a DB2 instance with the CP4BA Schema set up.  See https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/db2/example to create a DB2 instance.  See [https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/cp4ba/database_setup/README.md to set up the CP4BA Schema.
+
+It also requires an LDAP. See https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/ldap/example to create an LDAP instance. 
 
 ## Run using IBM Cloud Schematics
 
