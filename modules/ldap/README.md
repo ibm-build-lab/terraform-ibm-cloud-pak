@@ -22,8 +22,25 @@ Filename : sds64-premium-feature-act-pkg.zip
 Update the `./files/cp.ldif` file as needed to change the Directory Structure and user information. For information on LDIF format, go [here](https://www.ibm.com/docs/en/i/7.4?topic=reference-ldap-data-interchange-format-ldif)
 
 ## Provisioning this module in a Terraform Script
+Use a `module` block assigning the `source` parameter to the location of this module. Then set the [input variables](#input-variables) required.
 
-See the example [here](./example/README.md) on how to provision and execute this module.
+module "ldap" {
+  source               = "github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/ldap"
+  enable               = true
+  hostname             = var.hostname
+  ibmcloud_domain      = var.ibmcloud_domain
+  os_reference_code    = var.os_reference_code
+  datacenter           = var.datacenter
+  network_speed        = var.network_speed
+  hourly_billing       = var.hourly_billing
+  private_network_only = var.private_network_only
+  cores                = var.cores
+  memory               = var.memory
+  disks                = var.disks
+  local_disk           = var.local_disk
+}
+
+See the example [here](./example) on how to provision and execute this module.
 
 ## Inputs
 
