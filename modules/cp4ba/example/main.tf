@@ -24,7 +24,7 @@ data "ibm_container_cluster_config" "cluster_config" {
 }
 
 module "install_cp4ba" {
-  source     = "./module"
+  source     = "../"
   enable_cp4ba           = true
   enable_db2             = true
   ibmcloud_api_key       = var.ibmcloud_api_key
