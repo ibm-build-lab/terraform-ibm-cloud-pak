@@ -1,23 +1,22 @@
 # IBM Terraform Modules to install Cloud Paks
 
-This repository contains a collection of Terraform examples to be used to install Cloud Paks.
+This repository contains a collection of Terraform modules to be used to install Cloud Paks.
 
 ## Examples
 
 | Name    | Description                                                                                      | Source                                                                  |
 | ------- | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
-| [roks](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/roks/)    | Provisions an IBM OpenShift managed cluster in Classic or VPC infrastructure. An OpenShift cluster is required to install any Cloud Pak module | `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//roks`    |
-| [db2](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/db2)  | Installs Db2 on an existing OpenShift cluster                          | `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//db2`  |
-| [ldap](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/ldap)  | Creates an LDAP                           | `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//ldap`  |
-| [portworx](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/portworx)  | Installs Portworx on an existing OpenShift VPC cluster                          | `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//portworx`  |
-| [odf](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/odf)  | Installs OpenShift Data Foundation Platform on an existing OpenShift cluster                          | `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//odf`  |
-| [iaf](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/iaf)  | Installs the IBM Automation Foundation on an existing OpenShift cluster                          | `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//iaf`  |
+| [roks](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks/)    | Provisions an IBM OpenShift managed cluster in Classic or VPC infrastructure. An OpenShift cluster is required to install any Cloud Pak module | `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/roks`    |
+| [db2](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/db2)  | Installs Db2 on an existing OpenShift cluster                          | `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/db2`  |
+| [ldap](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/ldap)  | Creates an LDAP                           | `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/ldap`  |
+| [portworx](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/portworx)  | Installs Portworx on an existing OpenShift VPC cluster                          | `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/portworx`  |
+| [odf](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/odf)  | Installs OpenShift Data Foundation Platform on an existing OpenShift cluster                          | `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/odf`  |
 | [cp4aiops](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/cp4aiops)  | Installs the Cloud Pak for AIOps on an existing OpenShift cluster                          | `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//cp4aiops`  |
-| [cp4ba](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/cp4ba)  | Installs the Cloud Pak for Business Automation 21.0.x on an existing OpenShift cluster                          | `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//cp4ba`  |
-| [cp4data_4.0](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/cp4data_4.0) | Installs the Cloud Pak for Data 4.0.5 on an existing OpenShift cluster                                 | `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//cp4data_4.0` |
-| [cp4i](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/cp4i)  | Installs the Cloud Pak for Integration on an existing OpenShift cluster                          | `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//cp4i`  |
-| [cp4na](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/cp4na)  | Installs the Cloud Pak for Network Automation on an existing OpenShift cluster                          | `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//cp4na`  |
-| [cp4s](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/cp4s)  | Installs the Cloud Pak for Security on an existing OpenShift cluster                          | `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//cp4s`  |
+| [cp4ba](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/cp4ba)  | Installs the Cloud Pak for Business Automation 21.0.x on an existing OpenShift cluster                          | `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4ba`  |
+| [cp4data_4.0](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/cp4d_4.0) | Installs the Cloud Pak for Data 4.0.5 on an existing OpenShift cluster                                 | `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4d_4.0` |
+| [cp4i](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/cp4i)  | Installs the Cloud Pak for Integration on an existing OpenShift cluster                          | `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4i`  |
+| [cp4na](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/cp4na)  | Installs the Cloud Pak for Network Automation on an existing OpenShift cluster                          | `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4na`  |
+| [cp4s](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/cp4s)  | Installs the Cloud Pak for Security on an existing OpenShift cluster                          | `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4s`  |
 
 ## Requirements
 
