@@ -20,7 +20,7 @@ For more information on IBM Schematics, refer [here](https://cloud.ibm.com/docs/
 
 For instructions to run using the local Terraform Client on your local machine go [here](../Using_Terraform.md) 
 
-### Customize desired input values in a `terraform.tfvars` file:
+Customize desired input values in a `terraform.tfvars` file:
 
 ```hcl
   cluster_name_or_id    = "******************"
@@ -34,7 +34,6 @@ For instructions to run using the local Terraform Client on your local machine g
   accept_aimanager_license  = "true"
   accept_event_manager_license  = "true"
 ```
-### Execute the example
 
 Execute the following Terraform commands:
 
