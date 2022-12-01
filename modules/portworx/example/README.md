@@ -1,5 +1,7 @@
 # Example to provision Portworx Terraform Module on IBM Cloud (this module only supports VPC clusters)
 
+**NOTE:** an OpenShift VPC cluster is required to install this module. This can be an existing cluster or can be provisioned using our [roks](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks) Terraform module.
+
 ## Run using IBM Cloud Schematics
 
 For instructions to run these examples using IBM Schematics go [here](../Using_Schematics.md)
