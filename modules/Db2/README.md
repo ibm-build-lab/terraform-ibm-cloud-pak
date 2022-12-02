@@ -2,7 +2,7 @@
 
 This Terraform Module installs **DB2** on an Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/db2`
+**Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/Db2`
 
 **NOTE:** an OpenShift cluster is required to install this module. This can be an existing cluster or can be provisioned using our [roks](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks) Terraform module.
 
@@ -29,7 +29,7 @@ Use a `module` block assigning the `source` parameter to the location of this mo
 
 ```hcl
 module "Db2" {
-  source     = "github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/db2"
+  source     = "github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/Db2"
   enable_db2 = var.enable_db2
 
   # ----- Cluster -----
