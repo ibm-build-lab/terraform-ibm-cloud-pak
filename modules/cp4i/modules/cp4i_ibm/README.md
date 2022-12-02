@@ -90,7 +90,7 @@ module "cp4i" {
 }
 ```
 
-For an example of how provision and execute this module is located [here](../../examples/cp4i).
+An example of how provision and execute this module is located [here](../../examples/cp4i).
 
 ## Input Variables
 
