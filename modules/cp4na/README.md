@@ -1,27 +1,12 @@
-# Terraform Module to install Cloud Pak for Security
+# Terraform Module to install Cloud Pak for Network Automation
 
-This Terraform Module installs **Cloud Pak for Security** on an Openshift (ROKS) cluster on IBM Cloud.
+This Terraform Module installs **Cloud Pak for Network Automation** on an Openshift (ROKS) cluster on IBM Cloud.
 
-**Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4s`
-
-- [Terraform Module to install Cloud Pak for Security](#terraform-module-to-install-cloud-pak-for-security)
-  - [Required command line tools](#setup-tools)
-  - [Set up access to IBM Cloud](#set-up-access-to-ibm-cloud)
-  - [Provisioning this module in a Terraform Script](#provisioning-this-module-in-a-terraform-script)
-    - [Setting up the OpenShift cluster](#setting-up-the-openshift-cluster)
-    - [Using the CP4S Module](#using-the-cp4s-module)
-  - [Input Variables](#input-variables)
-  - [Executing the Terraform Script](#executing-the-terraform-script)
+**Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4na`
 
 ## Setup Tools
 
 The cloud pak for security installer runs on your machine, for the installer go [here](https://www.ibm.com/docs/en/cloud-paks/cp-security/1.6.0?topic=tasks-installing-developer-tools) to be sure your command line tools are compatible.
-
-## Set up access to IBM Cloud
-
-If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
-
-Go [here](../../CREDENTIALS.md) for details.
 
 ## Provisioning this module in a Terraform Script
 
