@@ -6,10 +6,22 @@ spec:
 %{ if roks_version == "4.7" ~}
   monStorageClassName: ${ monStorageClassName }
   monSize: ${ monSize }
+  monDevicePaths: ${ monDevicePaths }
+%{ else ~}
+  autoDiscoverDevices: ${ autoDiscoverDevices }
 %{ endif ~}
   osdStorageClassName: ${ osdStorageClassName }
   osdSize: ${ osdSize }
+  osdDevicePaths: ${ osdDevicePaths }
   numOfOsd: ${ numOfOsd }
   billingType: ${ billingType }
   ocsUpgrade: ${ ocsUpgrade }
   clusterEncryption: ${ clusterEncryption }
+%{ if roks_version == "4.10" ~}
+  hpcsEncryption: ${ hpcsEncryption } 
+  hpcsServiceName: ${ hpcsServiceName } 
+  hpcsInstanceId: ${ hpcsInstanceId }
+  hpcsSecretName: ${ hpcsSecretName } 
+  hpcsBaseUrl: ${ hpcsBaseUrl }  
+  hpcsTokenUrl: ${ hpcsTokenUrl }
+%{ endif ~}

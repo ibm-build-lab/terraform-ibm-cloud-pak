@@ -12,10 +12,12 @@ variable "region" {
 }
 
 variable "resource_group" {
+  default     = "Default"
   description = "Resource group name where the cluster will be hosted."
 }
 
 variable "cluster_config_path" {
+  default = "./.kube/config"
   description = "Path to the cluster configuration file to access your cluster"
 }
 
@@ -56,7 +58,7 @@ variable "db2_admin_username" {
 
 
 variable "operatorVersion" {
-  default     = "db2u-operator.v1.1.12"
+  default     = "db2u-operator.v2.0.0"
   description = "Operator version"
 }
 
@@ -66,7 +68,7 @@ variable "db2_standard_license_key" {
 }
 
 variable "operatorChannel" {
-  default     = "v1.1"
+  default     = "v2.0"
   description = "The Operator Channel performs rollout update when new release is available."
 }
 

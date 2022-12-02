@@ -1,13 +1,11 @@
 locals {
-
-  # These are the the yamls that will be pulled from the ./files  these will be used to start hte operator
+  # These are the the yamls that will be pulled from the ./files  these will be used to start the operator
   operator_catalog        = file(join("/", [path.module, "files", "operator-catalog.yaml"]))
   common_services_catalog = file(join("/", [path.module, "files", "common-services.yaml"]))
   redis_catalog           = file(join("/", [path.module, "files", "redis-catalog.yaml"]))
   service_account         = file(join("/", [path.module, "files", "service-account.yaml"]))
   operator_group          = file(join("/", [path.module, "files", "operator-group.yaml"]))
   subscription            = file(join("/", [path.module, "files", "subscription.yaml"]))
-
 }
 
 # This section checks to see if the values have been updated through out the script running and is required for any dynamic value
@@ -15,7 +13,7 @@ resource "null_resource" "install_cp4na" {
   count = var.enable ? 1 : 0
 
   triggers = {
-    namespace_sha1               = sha1(local.namespace)
+    namespace_sha1               = sha1(var.namespace)
     docker_params_sha1           = sha1(join("", [var.entitled_registry_user_email, local.entitled_registry_key]))
     operator_catalog_sha1        = sha1(local.operator_catalog)
     common_services_catalog_sha1 = sha1(local.common_services_catalog)
@@ -31,7 +29,7 @@ resource "null_resource" "install_cp4na" {
 
     environment = {
       KUBECONFIG = var.cluster_config_path
-      NAMESPACE  = local.namespace
+      NAMESPACE  = var.namespace
 
       OPERATOR_GROUP          = local.operator_group
       SUBSCRIPTION            = local.subscription

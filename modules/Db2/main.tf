@@ -103,7 +103,6 @@ data "external" "get_endpoints" {
   query = {
     kubeconfig    = var.cluster_config_path
     db2_namespace = var.db2_project_name
-//    cluster_id    = var.cluster_id
   }
 }
 

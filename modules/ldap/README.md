@@ -3,13 +3,7 @@
 
 **Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/ldap`
 
-## Set up access to IBM Cloud
-
-If running these modules from your local terminal, you need to set the credentials to access IBM Cloud.
-
-Go [here](../../CREDENTIALS.md) for details.
-
-### Download required license files
+## Download required license files
 
 Download required license files from [IBM Internal Software Download](https://w3-03.ibm.com/software/xl/download/ticket.wss) or [IBM Passport Advantage](https://www.ibm.com/software/passportadvantage/) into the  `./files` folder
 
@@ -23,15 +17,34 @@ Part Number : CRV3IML
 Filename : sds64-premium-feature-act-pkg.zip
 ```
 
-### Update the ldif file
+## Update the ldif file
 
-Update the `./files/cp.ldif` file as needed to change the Directory Struture and user information. For information on LDIF format, go [here](https://www.ibm.com/docs/en/i/7.4?topic=reference-ldap-data-interchange-format-ldif)
+Update the `./files/cp.ldif` file as needed to change the Directory Structure and user information. For information on LDIF format, go [here](https://www.ibm.com/docs/en/i/7.4?topic=reference-ldap-data-interchange-format-ldif)
 
 ## Provisioning this module in a Terraform Script
+Use a `module` block assigning the `source` parameter to the location of this module. Then set the [input variables](#input-variables) required.
 
-See the example [here](../../examples/ldap) on how to provision this module.
+```
+module "ldap" {
+  source               = "github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/ldap"
+  enable               = true
+  hostname             = var.hostname
+  ibmcloud_domain      = var.ibmcloud_domain
+  os_reference_code    = var.os_reference_code
+  datacenter           = var.datacenter
+  network_speed        = var.network_speed
+  hourly_billing       = var.hourly_billing
+  private_network_only = var.private_network_only
+  cores                = var.cores
+  memory               = var.memory
+  disks                = var.disks
+  local_disk           = var.local_disk
+}
+```
 
-## Input Variables
+See the example [here](./example) on how to provision and execute this module.
+
+## Inputs
 
 | Name                    | Description                                                                                                                                                                                                 | Default | Required |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | -------- |
@@ -54,50 +67,9 @@ See the example [here](../../examples/ldap) on how to provision this module.
 | `ldapBindDN`            | LDAP Bind DN (https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-connector-ldap-cp4d)     | `true`  | Yes      |
 | `ldapBindDNPassword`    | LDAP Bind DN password (https://cloud.ibm.com/docs/discovery-data?topic=discovery-data-connector-ldap-cp4d)      |         | Yes      |
 
-### Executing the Terraform Script
-
-Execute the following Terraform commands:
-
-```bash
-terraform init
-terraform plan
-terraform apply --auto-approve
-```
-
-### Verify
-
-If LDAP is successful, you should see
-
-```console
-ibm_compute_vm_instance.cp4baldap (remote-exec): Start LDAP complete
-CLASSIC_IP_ADDRESS = "***.**.***.***"
-```
-
-displayed after the process is complete.
-
 ## Outputs
 
 | Name                 | Description    |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | `CLASSIC_IP_ADDRESS` | Note: The LDAP server should not be exposed in the Public interface using port 389. Configure the appropriate Security Groups required for the Server. For more information on how to manage Security Groups visit : https://cloud.ibm.com/docs/security-groups?topic=security-groups-managing-sg |
 
-A public and private key are created locally to access the Virtual Machine
-
-```console
-generated_key_rsa
-generated_key_rsa.pub
-```
-
-use ssh to access the server providing the key files.
-
-```console
-ssh root@<CLASSIC_IP_ADDRESS> -k generated_key_rsa
-```
-
-For more information on accessing the Virtual Machine, visit (https://cloud.ibm.com/docs/account?topic=account-mngclassicinfra)
-
-Apache Directory Studio can be used to access the server (see https://directory.apache.org/studio/download/download-macosx.html)
-
-### Clean up
-
-When the project is complete, execute: `terraform destroy`.
