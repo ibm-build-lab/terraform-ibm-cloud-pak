@@ -8,7 +8,7 @@ These examples will install Cloud Paks and supporting utilities on an existing *
 - [Portworx on VPC (on ROKS 4.6)](../modules/portworx/example/README.md)
 - [ODF on VPC (on ROKS 4.7+)](../modules/odf/example/)
 - [LDAP on Classic (used for CP4BA and CP4S)](../modules/ldap/example/)
-- [DB2 Database (used for CP4BA)](../modules/db2/example)
+- [DB2 Database (used for CP4BA)](../modules/Db2/example)
 - [Cloud Pak for AIOps (CP4AIOPS)](../modules/cp4aiops/examples/)
 - [Cloud Pak for Business Automation (CP4BA)](../modules/cp4ba/example/)
 - [Cloud Pak for Data 4.0 (CP4Data)](../modules/cp4d_4.0/example/)
