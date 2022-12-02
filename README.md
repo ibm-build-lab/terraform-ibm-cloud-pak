@@ -2,7 +2,7 @@
 
 This repository contains a collection of Terraform modules to be used to install Cloud Paks.
 
-## Examples
+## Modules
 
 | Name    | Description                                                                                      | Source                                                                  |
 | ------- | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
