@@ -4,10 +4,6 @@ This Terraform Module installs **Cloud Pak for Network Automation** on an Opensh
 
 **Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4na`
 
-## Setup Tools
-
-The cloud pak for security installer runs on your machine, for the installer go [here](https://www.ibm.com/docs/en/cloud-paks/cp-security/1.6.0?topic=tasks-installing-developer-tools) to be sure your command line tools are compatible.
-
 ## Provisioning this module in a Terraform Script
 
 **NOTE:** an OpenShift cluster with at least 5 nodes of size 16x64 is required to install this module. This can be an existing cluster or can be provisioned using our [roks](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks) Terraform module.
