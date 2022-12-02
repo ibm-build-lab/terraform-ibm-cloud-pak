@@ -10,7 +10,7 @@ The cloud pak for security installer runs on your machine, for the installer go 
 
 ## Provisioning this module in a Terraform Script
 
-**NOTE:** an OpenShift cluster is required to install this module. This can be an existing cluster or can be provisioned using our [roks](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks) Terraform module.
+**NOTE:** an OpenShift cluster with at least 5 nodes of size 16x64 is required to install this module. This can be an existing cluster or can be provisioned using our [roks](https://github.com/ibm-build-lab/terraform-ibm-cloud-pak/tree/main/modules/roks) Terraform module.
 
 
 ### Provisioning the CP4NA Module
