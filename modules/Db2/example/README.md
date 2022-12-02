@@ -72,15 +72,17 @@ terraform apply --auto-approve
 | `entitled_registry_key`    | Get the entitlement key from https://myibm.ibm.com/products-services/containerlibrary and assign it to this variable. Optionally you can store the key in a file and use the `file()` function to get the file content/key |                             | Yes      |
 | `entitled_registry_user_email`| IBM Container Registry (ICR) username which is the email address of the owner of the Entitled Registry Key. i.e: joe@ibm.com |              | Yes      |
 
-
 ## Outputs
 
 The Terraform code return the following output parameters:
 
 | Name                   | Description                                                                                 |
 |------------------------|---------------------------------------------------------------------------------------------|
-| `db2_host_address`     | Host name for DB2 instance                                                                  |
-| `db2_ports`            | Port number for DB2 instance  
+| `db2_host_address`     | Host url for DB2 instance                                                                  |
+| `db2_ports`            | Port number for DB2 instance                                                                |
+| `db2_ip_address`       | External IP address to reach DB2 service                                                       |
+| `db2_pod_name`         | Db2 pod for deploying Db2 schemas                                                           |
+
 ## Verify
 
 If DB2 is successful and the process is completed, you should see the following similar outputs:
@@ -93,6 +95,8 @@ Outputs:
 db2_host_address =  @@@@@@@@@@@@-clust-c0b572361ba41c9eef42d4d51297b04b-0000.us-south.containers.appdomain.cloud                 
 db2_ports =  00000,
  00001,
+db2_ip_address = xxx.xx.xx.xx
+db2_pod_name = c-db2ucluster-db2u-0
 ```
 
 ## Clean up
