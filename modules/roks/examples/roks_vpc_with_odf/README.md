@@ -10,7 +10,6 @@ The Terraform script requires the following list of input variables. Here are so
 
 | Name | Description  | Default | Required |
 | - | - | - | - |
-| `cluster_id`          | Name or Id of existing cluster if only installing ODF. If left blank, a new Openshift cluster will be provisioned |              | No       |
 | `entitlement`          | Ignored if `cluster_id` is specified. Enter `cloud_pak` if using a Cloud Pak entitlement. Leave blank if using OCP entitlement |              | No       |
 | `region`               | Ignored if `cluster_id` is specified. IBM Cloud region to host the cluster. List all available zones with: `ibmcloud is regions` | `us-south`           | No       |
 | `resource_group`       | Ignored if `cluster_id` is specified. Resource Group used to host the cluster. List all available resource groups with: `ibmcloud resource groups`   | `Default`        | No       |
