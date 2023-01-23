@@ -72,9 +72,9 @@ terraform apply -auto-approve
 | `monDevicePaths`                   | Please provide IDs of the disks to be used for mon pods if using local disks or standard classic cluster | | No (Only for roks 4.7)       |
 | `autoDiscoverDevices`                   | Auto Discover Devices | false | No (Not available for roks version 4.7)       |
 | `hpcsEncryption`                   | Use Hyper Protect Crypto Services | false | No (Only available for roks version 4.10)       |
-| `hpcsServiceName`                   | Enter the name of your Hyper Protect Crypto Services instance. For example: Hyper-Protect-Crypto-Services-eugb" |  | No (Only available for roks version 4.10)    |
-| `hpcsInstanceId`                   | Enter your Hyper Protect Crypto Services instance ID. For example: d11a1a43-aa0a-40a3-aaa9-5aaa63147aaa |  | No (Only available for roks version 4.10)    |
-| `hpcsSecretName`                   | Enter the name of the secret that you created by using your Hyper Protect Crypto Services credentials. For example: ibm-hpcs-secret |  | No (Only available for roks version 4.10)    |
+| `hpcsServiceName`                   | Enter the name of your Hyper Protect Crypto Services instance. For example: `Hyper-Protect-Crypto-Services-eugb` |  | No (Only available for roks version 4.10)    |
+| `hpcsInstanceId`                   | Enter your Hyper Protect Crypto Services instance ID. For example: `d11a1a43-aa0a-40a3-aaa9-5aaa63147aaa` |  | No (Only available for roks version 4.10)    |
+| `hpcsSecretName`                   | Enter the name of the secret that you created by using your Hyper Protect Crypto Services credentials. For example: `ibm-hpcs-secret` |  | No (Only available for roks version 4.10)    |
 | `hpcsBaseUrl`                   | Enter the public endpoint of your Hyper Protect Crypto Services instance. For example: https://api.eu-gb.hs-crypto.cloud.ibm.com:8389 |  | No (Only available for roks version 4.10)    |
 | `workerNodes` | **Optional**: array of node names for the worker nodes that you want to use for your ODF deployment. This parameter is by default not specified, so ODF will use all the worker nodes in the cluster. To add this to the module, uncomment it from the `../variables.tf` file, add it to the `spec` section in `../templates/install_odf.yaml.tmpl` and in the `templatefile` call in `../main.tf`. To add it to this example, uncomment it from the `variables.tf` file, and add it to the call to the module in `./main.tf`. | | No
 
