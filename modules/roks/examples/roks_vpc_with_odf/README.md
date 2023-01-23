@@ -10,30 +10,30 @@ The Terraform script requires the following list of input variables. Here are so
 
 | Name | Description  | Default | Required |
 | - | - | - | - |
-| `entitlement`          | Ignored if `cluster_id` is specified. Enter `cloud_pak` if using a Cloud Pak entitlement. Leave blank if using OCP entitlement |              | No       |
+| `entitlement`          | Enter `cloud_pak` if using a Cloud Pak entitlement. Leave blank if using OCP entitlement |              | No       |
 | `region`               | Ignored if `cluster_id` is specified. IBM Cloud region to host the cluster. List all available zones with: `ibmcloud is regions` | `us-south`           | No       |
-| `resource_group`       | Ignored if `cluster_id` is specified. Resource Group used to host the cluster. List all available resource groups with: `ibmcloud resource groups`   | `Default`        | No       |
-| `roks_version`         | Ignored if `cluster_id` is specified. OpenShift version to install. List all available versions: `ibmcloud ks versions`. There is no need to include the suffix `_OpenShift`. The module will append it to install the specified version of OpenShift.  | `4.10`            | No       |
-| `project_name`         | Ignored if `cluster_id` is specified. Used to name new cluster along with the `environment` name, like this: `{project_name}-{environment}-cluster`<br />It's also used to label the cluster and other resources  |  | Yes      |
+| `resource_group`       | Resource Group used to host the cluster. List all available resource groups with: `ibmcloud resource groups`   | `Default`        | No       |
+| `roks_version`         | OpenShift version to install. List all available versions: `ibmcloud ks versions`. There is no need to include the suffix `_OpenShift`. The module will append it to install the specified version of OpenShift.  | `4.10`            | No       |
+| `project_name`         | Used to name new cluster along with the `environment` name, like this: `{project_name}-{environment}-cluster`<br />It's also used to label the cluster and other resources  |  | Yes      |
 | `owner`                | Optional: User name or team name. Used to label the cluster and other resources   |  | Yes      |
 | `environment`          | Ignored if `cluster_id` is specified. Used to name the cluster with the `project` name, like this: `{project_name}-{environment}-cluster` | `dev`            | No       |
-| `vpc_zone_names`       | **IBM Cloud VPC Gen 2** only (`on_vpc` = `true`). Ignored if `cluster_id` is specified. Array with the sub-zones in the region to create the workers groups. List all the zones with: `ibmcloud ks zone ls --provider vpc-gen2`. Example: `["us-south-1", "us-south-2", "us-south-3"]`   | `["ca-tor-1"]` | No       |
-| `flavors`              | Ignored if `cluster_id` is specified. Array with the flavors or machine types of each of the workers.  List all flavors for each zone with: `ibmcloud ks flavors --zone us-south-1 --provider vpc-gen2` or `ibmcloud ks flavors --zone dal10 --provider classic`. On Classic it is only possible to have one worker group, so only list one flavor, i.e. `["b3c.16x64"]`. Example on VPC `["mx2.4x32", "mx2.8x64", "cx2.4x8"]` or `["mx2.4x32"]`  | `["mx2.4x32"]`   | No       |
-| `workers_count`        | Ignored if `cluster_id` is specified. Array with the amount of workers on each workers group. On Classic it's only possible to have one workers group, so only the first number in the list is taken for the cluster size. Example: `[1, 3, 5]` or `[2]`   | `[2]`            | Yes       |
-| `force_delete_storage` | Ignored if `cluster_id` is specified. If set to `true`, force the removal of persistent storage associated with the cluster during cluster deletion. Default value is `false`.                                                             | `false`          | Yes       |
-| `ibmcloud_api_key`               | Ignored if ODF is not enabled: IBMCloud API Key for the account the resources will be provisioned on. This is need for ODF. Go here to create an ibmcloud_api_key: https://cloud.ibm.com/iam/apikeys  | ""           | No       |
-| `osdStorageClassName`                   | Storage class that you want to use for your OSD devices | ibmc-vpc-block-metro-10iops-tier | Yes       |
-| `osdSize`                   | Size of your storage devices. The total storage capacity of your ODF cluster is equivalent to the osdSize x 3 divided by the numOfOsd | 250Gi | Yes       |
-| `osdDevicePaths`                   | Please provide IDs of the disks to be used for OSD pods if using local disks or standard classic cluster |  | No   |
-| `numOfOsd`                   | Number object storage daemons (OSDs) that you want to create. ODF creates three times the numOfOsd value | 1 | Yes       |
-| `billingType`                   | Billing Type for your ODF deployment (`essentials` or `advanced`) | advanced | Yes       |
-| `ocsUpgrade`                   | Whether to upgrade the major version of your ODF deployment | false | Yes       |
-| `clusterEncryption`                   | Enable encryption of storage cluster | false | Yes       |
-| `monSize`                   | Size of the storage devices that you want to provision for the monitor pods. The devices must be at least 20Gi each | 20Gi | Yes (Only roks 4.7)       |
-| `monStorageClassName`                   | Storage class to use for your Monitor pods. For VPC clusters you must specify a block storage class | ibmc-vpc-block-metro-10iops-tier | Yes (Only roks 4.7)       |
+| `vpc_zone_names`       | Array with the sub-zones in the region to create the workers groups. List all the zones with: `ibmcloud ks zone ls --provider vpc-gen2`. Example: `["us-south-1", "us-south-2", "us-south-3"]`   | `["ca-tor-1"]` | No       |
+| `flavors`              | Array with the flavors or machine types of each of the workers.  List all flavors for each zone with: `ibmcloud ks flavors --zone us-south-1 --provider vpc-gen2` or `ibmcloud ks flavors --zone dal10 --provider classic`. On Classic it is only possible to have one worker group, so only list one flavor, i.e. `["b3c.16x64"]`. Example on VPC `["mx2.4x32", "mx2.8x64", "cx2.4x8"]` or `["mx2.4x32"]`  | `["mx2.4x32"]`   | No       |
+| `workers_count`        | Array with the amount of workers on each workers group. On Classic it's only possible to have one workers group, so only the first number in the list is taken for the cluster size. Example: `[1, 3, 5]` or `[2]`   | `[2]`            | Yes       |
+| `force_delete_storage` | If set to `true`, force the removal of persistent storage associated with the cluster during cluster deletion. Default value is `false`.                                                             | `false`          | Yes       |
+| `ibmcloud_api_key`   | IBMCloud API Key for the account the resources will be provisioned on. Go to https://cloud.ibm.com/iam/apikeys to create a key  |           | Yes       |
+| `osdStorageClassName`  | Storage class that you want to use for your OSD devices | `ibmc-vpc-block-metro-10iops-tier` | Yes       |
+| `osdSize`   | Size of your storage devices. The total storage capacity of your ODF cluster is equivalent to the osdSize x 3 divided by the numOfOsd | `250Gi` | Yes       |
+| `osdDevicePaths`                   | IDs of the disks to be used for OSD pods if using local disks or standard classic cluster |  | No   |
+| `numOfOsd`      | Number object storage daemons (OSDs) that you want to create. ODF creates three times the numOfOsd value | `1` | Yes       |
+| `billingType`                   | Billing Type for your ODF deployment (`essentials` or `advanced`) | `advanced` | Yes       |
+| `ocsUpgrade`                   | Whether to upgrade the major version of your ODF deployment | `false` | Yes       |
+| `clusterEncryption`                   | Enable encryption of storage cluster | `false` | Yes       |
+| `monSize`                   | Size of the storage devices that you want to provision for the monitor pods. The devices must be at least 20Gi each | `20Gi` | Yes (Only roks 4.7)       |
+| `monStorageClassName`                   | Storage class to use for your Monitor pods. For VPC clusters you must specify a block storage class | `ibmc-vpc-block-metro-10iops-tier` | Yes (Only roks 4.7)       |
 | `monDevicePaths`                   | Please provide IDs of the disks to be used for mon pods if using local disks or standard classic cluster | | No (Only for roks 4.7)       |
-| `autoDiscoverDevices`                   | Auto Discover Devices | false | No (Not available for roks version 4.7)       |
-| `hpcsEncryption`                   | Use Hyper Protect Crypto Services | false | No (Only available for roks version 4.10)       |
+| `autoDiscoverDevices`                   | Auto Discover Devices | `false` | No (Not available for roks version 4.7)       |
+| `hpcsEncryption`                   | Use Hyper Protect Crypto Services | `false` | No (Only available for roks version 4.10)       |
 | `hpcsServiceName`                   | Enter the name of your Hyper Protect Crypto Services instance. For example: `Hyper-Protect-Crypto-Services-eugb`" |  | No (Only available for roks version 4.10)    |
 | `hpcsInstanceId`                   | Enter your Hyper Protect Crypto Services instance ID. For example: `d11a1a43-aa0a-40a3-aaa9-5aaa63147aaa` |  | No (Only available for roks version 4.10)    |
 | `hpcsSecretName`                   | Enter the name of the secret that you created by using your Hyper Protect Crypto Services credentials. For example: `ibm-hpcs-secret` |  | No (Only available for roks version 4.10)    |
