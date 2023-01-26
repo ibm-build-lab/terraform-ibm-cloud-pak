@@ -1,4 +1,9 @@
 
+variable "ibmcloud_api_key" {
+  default = ""
+  description = "IBMCloud API Key for the account the resources will be provisioned on. Go here to create an ibmcloud_api_key: https://cloud.ibm.com/iam/apikeys"
+}
+
 variable "on_vpc" {
   default     = false
   type        = bool

@@ -1,6 +1,7 @@
 
 provider "ibm" {
-  region = var.region
+  region           = var.region
+  ibmcloud_api_key = var.ibmcloud_api_key
 }
 
 provider "kubernetes" {
@@ -8,8 +9,8 @@ provider "kubernetes" {
 }
 
 module "cluster" {
-  source = "./.."
-  enable = local.enable
+  source = "github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/roks"
+  enable = true
   on_vpc = var.on_vpc
 
   // General

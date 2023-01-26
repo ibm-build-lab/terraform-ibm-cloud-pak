@@ -1,6 +1,9 @@
 // Openshift cluster parameters
 // ----------------------------
 
+// IBM Cloud API Key
+ibmcloud_api_key = ""
+
 // Create a cluster based on values below
 project_name 	= "classic"
 owner        	= "anonymous"
