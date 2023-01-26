@@ -82,9 +82,8 @@ variable "public_vlan_number" {
   description = "**Classic Only:** Public VLAN assigned to your zone. List available VLANs in the zone: `ibmcloud target -g <resource_group>; ibmcloud ks vlan ls --zone <zone_name>`, make sure the the VLAN type is public and the router begins with fc. Use the ID or Number"
 }
 
-locals {
-  cluster_id = ""
-  config_dir = "./.kube/config"
-  enable     = true
+variable "config_dir" {
+  default     = "./.kube/config"
+  description = "Directory to store the kubeconfig file, set the value to empty string to not download the config. If running on Schematics, use `/tmp/.schematics/.kube/config`"
 }
 
