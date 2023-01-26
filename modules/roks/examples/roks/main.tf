@@ -5,7 +5,7 @@ provider "ibm" {
 }
 
 provider "kubernetes" {
-  config_path = local.config_dir
+  config_path = var.config_dir
 }
 
 module "cluster" {
