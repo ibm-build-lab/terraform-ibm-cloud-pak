@@ -19,7 +19,7 @@ roks_version	= 4.8
 force_delete_storage	= true
 
 // Cloud Pak entitlement
-entitlement    = "cloud-pak"
+entitlement    = "cloud_pak"
 //entitlement     = ""
 
 // zone names, run "ibmcloud ks zone ls --provider vpc-gen2"
