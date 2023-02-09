@@ -13,7 +13,7 @@ region       	= "us-south"
 resource_group 	= "Default"
 
 // OpenShift version, run command "ibmcloud ks versions" to see options
-roks_version	= 4.8
+roks_version	= "4.10"
 
 // Remove peristent storage during deletion
 force_delete_storage	= true
