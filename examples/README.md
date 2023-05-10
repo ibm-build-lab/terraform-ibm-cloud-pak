@@ -4,7 +4,7 @@ This folder used to contain examples using the Infrastructure as Code or Terrafo
 
 These examples will install Cloud Paks and supporting utilities on an existing **Openshift** (ROKS) cluster on IBM Cloud. To get to the examples, follow the links:
 
-- [ROKS stand alone cluster in either VPC or Classic](../modules/roks/example)
+- [ROKS stand alone cluster in either VPC or Classic](../modules/roks/examples)
 - [Portworx on VPC (on ROKS 4.6)](../modules/portworx/example/README.md)
 - [ODF on VPC (on ROKS 4.7+)](../modules/odf/example/)
 - [LDAP on Classic (used for CP4BA and CP4S)](../modules/ldap/example/)
