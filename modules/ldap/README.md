@@ -1,6 +1,9 @@
 
 # Terraform Module to install and configure IBM Secure Directory Server on a Classic Virtual Server Instance
 
+### NOTE: This module has been deprecated and is no longer supported.
+
+
 **Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/ldap`
 
 ## Download required license files
