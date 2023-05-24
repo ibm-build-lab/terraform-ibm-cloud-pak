@@ -1,5 +1,8 @@
 # Terraform Module to install Portworx on a VPC cluster
 
+### NOTE: This module has been deprecated and is no longer supported.
+
+
 This Terraform Module installs the **Portworx Service** on an Openshift (ROKS) cluster on IBM Cloud.
 
 **Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/portworx/modules/portworx_ibm`
