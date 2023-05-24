@@ -1,5 +1,8 @@
 # Terraform Module to install Portworx on AWS
 
+### NOTE: This module has been deprecated and is no longer supported.
+
+
 This Terraform Module installs the **Portworx Service** on an Openshift (ROKS) cluster on AWS.
 
 **Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/portworx/modules/portworx_aws`
