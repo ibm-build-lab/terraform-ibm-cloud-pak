@@ -1,5 +1,7 @@
 # Terraform Module to install Cloud Pak for Data
 
+**NOTE: This module has been deprecated and is no longer supported.**
+
 This Terraform Module installs **Cloud Pak for Data** 4.0 on an Openshift (ROKS) cluster on IBM Cloud.
 
 **Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4data_4.0/modules/cp4d4.0_ibm`
