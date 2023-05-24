@@ -1,6 +1,6 @@
 # Terraform Module to install Cloud Pak for Watson AIOps
 
-**NOTE: This module has been deprecated and is no longer supported.**
+### NOTE: This module has been deprecated and is no longer supported.
 
 This Terraform Module installs **Cloud Pak for Watson AIOps** on OCS on AWS.
 
