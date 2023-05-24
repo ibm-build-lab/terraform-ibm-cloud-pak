@@ -2,7 +2,7 @@
 
 This repository contains a collection of Terraform modules to be used to install Cloud Paks.
 
-**NOTE: These modules have been deprecated and are no longer supported.**
+## NOTE: These modules have been deprecated and are no longer supported.
 
 ## Modules
 
