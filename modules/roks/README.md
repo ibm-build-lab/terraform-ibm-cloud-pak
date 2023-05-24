@@ -1,5 +1,8 @@
 # Terraform Module to Create an OpenShift Cluster on IBM Cloud
 
+### NOTE: This module has been deprecated and is no longer supported.
+
+
 This Terraform Module creates an Openshift (ROKS) cluster on IBM Cloud Classic or VPC Gen 2 infrastructure.
 
 **Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/roks`
