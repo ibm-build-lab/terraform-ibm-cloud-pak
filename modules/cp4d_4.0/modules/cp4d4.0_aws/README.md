@@ -1,5 +1,7 @@
 # Terraform Module to install Cloud Pak for Data 4.0.x
 
+**NOTE: This module has been deprecated and is no longer supported.**
+
 This Terraform Module installs **Cloud Pak for Data** on an Openshift cluster on AWS.
 
 Based on [cpd-deployment](https://github.com/IBM/cp4d-deployment/tree/master/existing-openshift) opensource project.
