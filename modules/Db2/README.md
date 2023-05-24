@@ -1,6 +1,6 @@
 # Terraform DB2 Module to install and configure DB2 on Openshift
 
-## NOTE: This module has been deprecated and is no longer supported.
+### NOTE: This module has been deprecated and is no longer supported.
 
 This Terraform Module installs **DB2** on an Openshift (ROKS) cluster on IBM Cloud.
 
