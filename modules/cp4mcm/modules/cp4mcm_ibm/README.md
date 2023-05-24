@@ -1,5 +1,8 @@
 # Terraform Module to install Cloud Pak for Multi Cloud Management
 
+### NOTE: This module has been deprecated and is no longer supported.
+
+
 This Terraform Module installs the **Multi Cloud Management Cloud Pak** on an Openshift (ROKS) cluster on IBM Cloud.
 
 **Module Source**: `github.com/ibm-build-lab/terraform-ibm-cloud-pak.git//modules/cp4mcm`
